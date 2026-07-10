@@ -2,19 +2,20 @@
 if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
 ?>
 
-<section id="bo_v_ans_form">
+<section id="bo_v_ans">
     <?php
     if($is_admin) // 관리자이면 답변등록
     {
     ?>
     <h2>답변등록</h2>
 
-    <form name="fanswer" method="post" action="./qawrite_update.php" onsubmit="return fwrite_submit(this);" autocomplete="off">
+    <form name="fanswer" method="post" action="./qawrite_update.php" onsubmit="return fwrite_submit(this);" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" name="qa_id" value="<?php echo $view['qa_id']; ?>">
     <input type="hidden" name="w" value="a">
     <input type="hidden" name="sca" value="<?php echo $sca ?>">
     <input type="hidden" name="stx" value="<?php echo $stx; ?>">
     <input type="hidden" name="page" value="<?php echo $page; ?>">
+    <input type="hidden" name="token" value="<?php echo $token ?>">
     <?php
     $option = '';
     $option_hidden = '';
@@ -33,25 +34,38 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
         <ul>
             <?php if ($option) { ?>
             <li>
-                옵션
+                <span class="sound_only">옵션</span>
                 <?php echo $option; ?>
             </li>
             <?php } ?>
             <li>
                 <label for="qa_subject" class="sound_only">제목</label>
-                <input type="text" name="qa_subject" value="" id="qa_subject" required class="frm_input required full_input" size="50" maxlength="255" placeholder="제목">
+                <input type="text" name="qa_subject" value="" id="qa_subject" required class="frm_input required" size="50" maxlength="255" placeholder="제목">
             </li>
-            <li class="qa_content_wrap <?php echo $is_dhtml_editor ? $config['cf_editor'] : ''; ?>">
+            <li>
                 <label for="qa_content" class="sound_only">내용<strong>필수</strong></label>
-                <span class="wr_content">
-                    <?php echo $editor_html; // 에디터 사용시는 에디터로, 아니면 textarea 로 노출 ?>
-                </span>
+                <?php echo $editor_html; // 에디터 사용시는 에디터로, 아니면 textarea 로 노출 ?>
             </li>
+
+            <li class="bo_w_flie">
+                <div class="file_wr filebox">
+                	<input type="text" class="fileName" readonly="readonly" placeholder="파일을 첨부하세요">
+                    <label for="bf_file[1]"><i class="fa fa-download lb_icon" aria-hidden="true"></i><span class="sound_only">파일 #1</span><span class="btn_file">파일첨부</span></label>
+                    <input type="file" name="bf_file[1]" id="bf_file[1]" title="파일첨부 1 :  용량 <?php echo $upload_max_filesize; ?> 이하만 업로드 가능" class="frm_file uploadBtn">
+                </div>
+				<br>
+                <div class="file_wr filebox">
+                	<input type="text" class="fileName" readonly="readonly" placeholder="파일을 첨부하세요">
+                    <label for="bf_file[2]"><i class="fa fa-download lb_icon" aria-hidden="true"></i><span class="sound_only">파일 #2</span><span class="btn_file">파일첨부</span></label>
+                    <input type="file" name="bf_file[2]" id="bf_file[2]" title="파일첨부 2 :  용량 <?php echo $upload_max_filesize; ?> 이하만 업로드 가능" class="frm_file uploadBtn">
+                </div>
+            </li>
+
         </ul>
     </div>
 
     <div class="btn_confirm">
-        <button type="submit" id="btn_submit" accesskey="s" class="btn_submit">답변등록</button>
+        <input type="submit" value="답변쓰기" id="btn_submit" accesskey="s" class="btn_submit">
     </div>
     </form>
 
@@ -105,6 +119,23 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
                 f.qa_content.focus();
             return false;
         }
+
+        $.ajax({
+            type: "POST",
+            url: g5_bbs_url+"/ajax.write.token.php",
+            data: { 'token_case' : 'qa_write' },
+            cache: false,
+            async: false,
+            dataType: "json",
+            success: function(data) {
+                if (typeof data.token !== "undefined") {
+                    token = data.token;
+                    if(typeof f.token === "undefined")
+                        $(f).prepend('<input type="hidden" name="token" value="">');
+                    $(f).find("input[name=token]").val(token);
+                }
+            }
+        });
 
         document.getElementById("btn_submit").disabled = "disabled";
 

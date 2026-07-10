@@ -14,7 +14,7 @@ if ($himg_src)
 echo '<div id="faq_hhtml">'.conv_content($fm['fm_head_html'], 1).'</div>';
 ?>
 
-<!--fieldset id="faq_sch">
+<fieldset id="faq_sch">
     <legend>FAQ 검색</legend>
     <form name="faq_search_form" method="get">
     <span class="sch_tit">FAQ 검색</span>
@@ -23,12 +23,12 @@ echo '<div id="faq_hhtml">'.conv_content($fm['fm_head_html'], 1).'</div>';
     <input type="text" name="stx" value="<?php echo $stx;?>" required id="stx" class="frm_input" size="15" maxlength="15">
     <button type="submit" value="검색" class="btn_submit"><i class="fa fa-search" aria-hidden="true"></i> 검색</button>
     </form>
-</fieldset-->
+</fieldset>
 
 <?php
 if( count($faq_master_list) ){
 ?>
-<!--nav id="bo_cate">
+<nav id="bo_cate">
     <h2>자주하시는질문 분류</h2>
     <ul id="bo_cate_ul">
         <?php
@@ -45,7 +45,7 @@ if( count($faq_master_list) ){
         }
         ?>
     </ul>
-</nav-->
+</nav>
 <?php } ?>
 
 <div id="faq_wrap" class="faq_<?php echo $fm_id; ?>">
@@ -61,20 +61,13 @@ if( count($faq_master_list) ){
                     continue;
             ?>
             <li>
-                <h3>                	
-					<a href="#none" onclick="return faq_open(this);">
-						<span class="tit_bg">Q</span>
-						<?php echo conv_content($v['fa_subject'], 1); ?>
-						<p class="faq_arr"><img src="<?=G5_THEME_IMG_URL?>/faq_arrow.png"></p>
-					</a>					
-                	<!--button class="tit_btn" onclick="return faq_open(this);"><i class="fa fa-plus" aria-hidden="true"></i><span class="sound_only">열기</span></button-->
+                <h3>
+                	<span class="tit_bg">Q</span><a href="#none" onclick="return faq_open(this);"><?php echo conv_content($v['fa_subject'], 1); ?></a>
+                	<button class="tit_btn" onclick="return faq_open(this);"><i class="fa fa-plus" aria-hidden="true"></i><span class="sound_only">열기</span></button>
                 </h3>
                 <div class="con_inner">
-					<div class="con_wrap">
-						<span class="answer_span">A</span>
-		                <?php echo conv_content($v['fa_content'], 1); ?>
-					</div>
-                    <!--button type="button" class="closer_btn"><i class="fa fa-minus" aria-hidden="true"></i><span class="sound_only">닫기</span></button-->
+                    <?php echo conv_content($v['fa_content'], 1); ?>
+                    <button type="button" class="closer_btn"><i class="fa fa-minus" aria-hidden="true"></i><span class="sound_only">닫기</span></button>
                 </div>
             </li>
             <?php
@@ -112,7 +105,7 @@ if ($timg_src)
 
 <?php
 if ($admin_href)
-    echo '<div class="faq_admin"><a href="'.$admin_href.'" class="btn_admin btn" title="FAQ 수정">FAQ 수정</a></div>';
+    echo '<div class="faq_admin"><a href="'.$admin_href.'" class="btn_admin btn" title="FAQ 수정"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">FAQ 수정</span></a></div>';
 ?>
 
 <script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
@@ -134,12 +127,10 @@ function faq_open(el)
 {	
     var $con = $(el).closest("li").find(".con_inner"),
 		$h3 = $(el).closest("li").find("h3");
-	$('.faq_arr').removeClass('on');
-	$($h3).find('.faq_arr').toggleClass('on');
+
     if($con.is(":visible")) {
         $con.slideUp();
 		$h3.removeClass("faq_li_open");
-		$('.faq_arr').removeClass('on');
     } else {
         $("#faq_con .con_inner:visible").css("display", "none");
 

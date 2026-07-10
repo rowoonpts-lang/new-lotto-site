@@ -44,15 +44,11 @@ function get_social_convert_id($identifier, $service)
     return strtolower($service).'_'.hash('adler32', md5($identifier));
 }
 
-function get_social_callbackurl($provider, $no_domain=false){
+function get_social_callbackurl($provider, $no_domain=false, $no_params=false){
 
     $base_url = G5_SOCIAL_LOGIN_BASE_URL;
 
-    if( $provider === 'kakao' && $no_domain ){
-        $base_url = '/'.ltrim(parse_url($base_url, PHP_URL_PATH), '/');
-    }
-
-    if ( $provider === 'twitter' ){
+    if ( $provider === 'twitter' || ($provider === 'payco' && $no_params) ){
         return $base_url;
     }
 
@@ -90,7 +86,7 @@ function social_login_get_provider_adapter( $provider )
 		include_once G5_SOCIAL_LOGIN_PATH . "/Hybrid/Auth.php";
 	}
 
-    if( ! is_object($g5['hybrid_auth']) ){
+    if( ! (isset($g5['hybrid_auth']) && is_object($g5['hybrid_auth'])) ){
         $setting = social_build_provider_config($provider);
         $g5['hybrid_auth'] = new Hybrid_Auth( $setting );
     }
@@ -125,7 +121,7 @@ function social_before_join_check($url=''){
 
             $row = sql_fetch($sql);
 
-            if( $row['provider'] ){
+            if( isset($row['provider']) && $row['provider'] ){
                 $is_exist = true;
 
                 $time = time() - (86400 * (int) G5_SOCIAL_DELETE_DAY);
@@ -155,7 +151,7 @@ function social_before_join_check($url=''){
     return false;
 }
 
-function social_get_data($by='provider', $provider, $user_profile){
+function social_get_data($by, $provider, $user_profile){
     global $g5;
 
     // 소셜 가입이 되어 있는지 체크
@@ -326,7 +322,7 @@ function social_extends_get_keys($provider){
                     "keys" => array("id" => $config['cf_facebook_appid'], "secret" => $config['cf_facebook_secret']),
                     "display"   =>  "popup",
                     "redirect_uri" => get_social_callbackurl('facebook'),
-                    "scope"   => array('email'), // optional
+                    "scope"   => 'email', // optional
                     "trustForwarded" => false
                 );
 
@@ -336,9 +332,12 @@ function social_extends_get_keys($provider){
                     "keys" => array("id" => $config['cf_google_clientid'],
                     "secret" => $config['cf_google_secret']),
                     "redirect_uri" => get_social_callbackurl('google'),
+                    "scope"   => "https://www.googleapis.com/auth/userinfo.profile "."https://www.googleapis.com/auth/userinfo.email",
+                    /*
                     "scope"   => "https://www.googleapis.com/auth/plus.login ". // optional
                                     "https://www.googleapis.com/auth/plus.me ". // optional
                                     "https://www.googleapis.com/auth/plus.profile.emails.read", // optional
+                    */
                     //"access_type"     => "offline",   // optional
                     //"approval_prompt" => "force",     // optional
                 );
@@ -360,7 +359,7 @@ function social_extends_get_keys($provider){
                 );
     }
 
-    return $r[$provider];
+    return isset($r[$provider]) ? $r[$provider] : array();
 }
 
 function social_escape_request($request){
@@ -369,6 +368,7 @@ function social_escape_request($request){
 
 function social_get_request_provider(){
     $provider_name = isset($_REQUEST['provider']) ? ucfirst(social_escape_request($_REQUEST['provider'])) : '';
+    $provider_name = preg_replace('/[^a-z0-9_]/i', '', $provider_name); // 허용 문자만 유지
 
     return $provider_name;
 }
@@ -392,7 +392,8 @@ function social_session_exists_check(){
     }
 
     if( $provider_name && isset($_SESSION['HA::STORE']['hauth_session.'.strtolower($provider_name).'.is_logged_in']) && !empty($_SESSION['sl_userprofile'][$provider_name]) ){
-        return json_decode($_SESSION['sl_userprofile'][$provider_name]);
+        $decode_value = function_exists('get_string_decrypt') ? json_decode(get_string_decrypt($_SESSION['sl_userprofile'][$provider_name])) : json_decode($_SESSION['sl_userprofile'][$provider_name]);
+        return $decode_value;
     }
 
     return false;
@@ -486,8 +487,9 @@ function social_check_login_before($p_service=''){
                 $_SESSION['sl_userprofile'] = array(); 
             }
 
-            if( ! $is_member ){ 
-                $_SESSION['sl_userprofile'][$provider_name] = json_encode( $user_profile );
+            if( ! $is_member ){
+                $encode_value = function_exists('get_string_encrypt') ? get_string_encrypt(json_encode($user_profile)) : json_encode($user_profile);
+                $_SESSION['sl_userprofile'][$provider_name] = $encode_value;
             }
         }
 
@@ -495,7 +497,7 @@ function social_check_login_before($p_service=''){
         {
             $get_error = social_get_error_msg( $e->getCode() );
 
-            if( is_object( $adapter ) ){
+            if( isset($adapter) && is_object( $adapter ) ){
                 $adapter->logout();
             }
 
@@ -548,6 +550,18 @@ function social_check_login_before($p_service=''){
                 
                 if( $mylink ){
 
+                    // CSRF 토큰 검증 (popup.php에서 설정한 세션 토큰 확인)
+                    $mylink_token = get_session('ss_social_mylink_token');
+                    set_session('ss_social_mylink_token', '');
+                    if (!$mylink_token) {
+                        if ($use_popup == 1 || !$use_popup) {
+                            alert_close('올바른 방법으로 이용해 주십시오.');
+                        } else {
+                            alert('올바른 방법으로 이용해 주십시오.');
+                        }
+                        exit;
+                    }
+
                     social_user_profile_replace($member['mb_id'], $provider_name, $user_profile);
 
                     if( is_object( $adapter ) ){    //연결한것은 인증 받은 즉시 로그아웃한다.
@@ -580,6 +594,7 @@ function social_check_login_before($p_service=''){
                             $params = array('provider'=>$provider_name);
 
                             $url = replaceQueryParams($url, $params);
+                            check_url_host($url, '', G5_URL, true);
                             goto_url($url);
                         } else {
                             goto_url(G5_URL);
@@ -759,6 +774,7 @@ function social_member_comfirm_redirect(){
             $params = array('provider'=>$provider_name);
 
             $url = replaceQueryParams($url, $params);
+            check_url_host($url, '', G5_URL, true);
             goto_url($url);
 
         }
@@ -1030,7 +1046,7 @@ function social_get_nonce($key=''){
 
         $setting = social_build_provider_config($key);
         try{
-            return sha1($setting['providers'][$key]['secret']);
+            return isset($setting['providers'][$key]['secret']) ? sha1($setting['providers'][$key]['secret']) : '';
         } catch(Exception $e) {
             return '';
         }
@@ -1062,4 +1078,3 @@ function social_nonce_generate_hash( $action='' , $user='', $provider = '' ){
     $i = ceil( time() / ( social_get_nonce('d') / 2 ) );
     return md5( $i . $action . $user . social_get_nonce($provider) );
 }
-?>

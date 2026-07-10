@@ -8,7 +8,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
  */
 
 if( !class_exists('HTMLPurifier_Filter_Iframevideo') ){
-	class HTMLPurifier_Filter_iframevideo extends HTMLPurifier_Filter
+	class HTMLPurifier_Filter_Iframevideo extends HTMLPurifier_Filter
 	{
 		public $name = 'Iframevideo';
 
@@ -21,9 +21,10 @@ if( !class_exists('HTMLPurifier_Filter_Iframevideo') ){
 		 */
 		public function preFilter($html, $config, $context)
 		{
-			if (strstr($html, '<iframe')) {
+			if (strstr((string)$html, '<iframe')) {
 				$html = preg_replace_callback('/<iframe.*?src="https?:\/\/www\.youtube\.com\/embed\/([^"]*)[^>]*>(.*?)?\/iframe>/i', array($this, 'trust_url_match'), $html);
 				$html = preg_replace_callback('/<iframe.*?src="https?:\/\/player\.vimeo.com\/video\/([^"]*)[^>]*>(.*?)?\/iframe>/i', array($this, 'trust_url_match'), $html);
+                $html = preg_replace_callback('/<iframe.*?src="https?:\/\/www\.facebook.com\/plugins\/([^"]*)[^>]*>(.*?)?\/iframe>/i', array($this, 'trust_url_match'), $html);
 				//$html = preg_replace('#<iframe#i', '<img class="Iframevideo"', $html);
 				//$html = preg_replace('#</iframe>#i', '</img>', $html);
 			}
@@ -60,11 +61,12 @@ if( !class_exists('HTMLPurifier_Filter_Iframevideo') ){
 		protected function postFilterCallback($matches)
 		{
 			// Domain Whitelist
-			$youTubeMatch = preg_match('#src="https?://www.youtube(-nocookie)?.com/#i', $matches[1]);
-			$vimeoMatch = preg_match('#src="https?://player.vimeo.com/#i', $matches[1]);
-			if ($youTubeMatch || $vimeoMatch) {
+			$youTubeMatch = preg_match('#src="https?://www\.youtube(-nocookie)?\.com/#i', $matches[1]);
+			$vimeoMatch = preg_match('#src="https?://player\.vimeo\.com/#i', $matches[1]);
+            $fackbookMatch = preg_match('#src="https?://www\.facebook\.com/#i', $matches[1]);
+			if ($youTubeMatch || $vimeoMatch || $fackbookMatch) {
 				$extra = ' frameborder="0"';
-				if ($youTubeMatch) {
+				if ($youTubeMatch || $fackbookMatch) {
 					$extra .= ' allowfullscreen';
 				} elseif ($vimeoMatch) {
 					$extra .= ' webkitAllowFullScreen mozallowfullscreen allowFullScreen';
@@ -76,4 +78,32 @@ if( !class_exists('HTMLPurifier_Filter_Iframevideo') ){
 		}
 	}
 }
-?>
+
+if( !class_exists('HTMLPurifierContinueParamFilter') ){
+	class HTMLPurifierContinueParamFilter extends HTMLPurifier_URIFilter
+	{
+		public $name = 'ContinueParamFilter';
+        
+        public function filter(&$uri, $config, $context)
+        {
+            // 쿼리 파라미터 검사
+            $query = $uri->query;
+            $path = $uri->path;
+            
+            if ($path && preg_match('#[\\\\/]logout#i', $path)) {
+                return false;
+            }
+            
+            if ($query) {
+                
+                parse_str($query, $query_params);
+                
+                if (isset($query_params['continue']) || isset($query_params['pcurl'])) {
+                    return false;
+                }
+            }
+
+            return true; // 조건 통과 시 허용
+        }
+	}
+}

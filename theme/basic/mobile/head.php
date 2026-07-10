@@ -1,6 +1,11 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+if(G5_COMMUNITY_USE === false) {
+    define('G5_IS_COMMUNITY_PAGE', true);
+    include_once(G5_THEME_SHOP_PATH.'/shop.head.php');
+    return;
+}
 
 include_once(G5_THEME_PATH.'/head.sub.php');
 include_once(G5_LIB_PATH.'/latest.lib.php');
@@ -9,121 +14,136 @@ include_once(G5_LIB_PATH.'/poll.lib.php');
 include_once(G5_LIB_PATH.'/visit.lib.php');
 include_once(G5_LIB_PATH.'/connect.lib.php');
 include_once(G5_LIB_PATH.'/popular.lib.php');
-
-$basename=basename($_SERVER["PHP_SELF"]);
-include_once(G5_PATH.'/sub/head.tit.php');
-include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 ?>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/noto-sans.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/earlyaccess/notosanskr.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-
-<link rel="stylesheet" href="/css/swiper.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-<script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
-<script type="text/javascript" src="/js/jquery.nicescroll.js"></script>
-<script type="text/javascript" src="http://ianlunn.co.uk/plugins/jquery-parallax/scripts/jquery.scrollTo-1.4.2-min.js"></script>
-
-<?php
-if(defined('_INDEX_')) { // index에서만 실행
-	include G5_MOBILE_PATH.'/newwin.inc.php'; // 팝업레이어
-}
-?>
-
-<?if($basename == "index.php"){?>
-<script>
-$(document).ready(function() {
-	var nice = $("html").niceScroll({
-		cursorcolor:"red",
-	});  // The document page (body)
-});
-</script>
-<?}?>
 
 <header id="hd">
+    <h1 id="hd_h1"><?php echo $g5['title'] ?></h1>
+
+    <div class="to_content"><a href="#container">본문 바로가기</a></div>
+
+    <?php
+    if(defined('_INDEX_')) { // index에서만 실행
+        include G5_MOBILE_PATH.'/newwin.inc.php'; // 팝업레이어
+    } ?>
+
     <div id="hd_wrapper">
 
         <div id="logo">
-            <a href="<?php echo G5_URL ?>"><img src="<?=G5_THEME_IMG_URL?>/logo.png" alt=""></a>
+            <a href="<?php echo G5_URL ?>"><img src="<?php echo G5_IMG_URL ?>/m_logo.png" alt="<?php echo $config['cf_title']; ?>"></a>
         </div>
 
         <button type="button" id="gnb_open" class="hd_opener"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only"> 메뉴열기</span></button>
 
         <div id="gnb" class="hd_div">
-            <button type="button" id="gnb_close" class="hd_closer"><i class="fa fa-close" aria-hidden="true"></i></button>
-			<?if($is_member){?>
-			<p class="main_login_info"><span style="font-weight:600;color:#e31b23"><?=$member['mb_name']?>(<?=$member['mb_type']?>)</span> 회원님<br>환영합니다.</p>
-			<?}?>
+            <button type="button" id="gnb_close" class="hd_closer"><span class="sound_only">메뉴 닫기</span><i class="fa fa-times" aria-hidden="true"></i></button>
+			<?php echo outlogin('theme/basic'); // 외부 로그인 ?>
             <ul id="gnb_1dul">
-				<li class="gnb_1dli">
-                    <a href="<?=G5_URL?>/sub/about.php" class="gnb_1da">로또피크</a>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?=G5_URL?>/sub/system.php" class="gnb_1da">분석시스템</a>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?=G5_URL?>/sub/membership.php" class="gnb_1da">멤버쉽</a>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?=G5_URL?>/sub/data01.php" class="gnb_1da">로또자료실</a>
-					<button type="button" class="btn_gnb_op">하위분류</button>
-					<ul class="gnb_2dul">
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/data01.php" class="gnb_2da">로또 분석용어</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/data02.php" class="gnb_2da">확률과 조합 분석</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/data03.php" class="gnb_2da">로또 구입 잘하는 방법</a></li>
-					</ul>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?=G5_BBS_URL?>/board.php?bo_table=notice" class="gnb_1da">고객센터</a>
-					<button type="button" class="btn_gnb_op">하위분류</button>
-					<ul class="gnb_2dul">
-						 <li class="gnb_2dli"><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice" class="gnb_2da">공지사항</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_BBS_URL?>/qalist.php" class="gnb_2da">1:1 문의</a></li>
-					</ul>
-				</li>
-				<?php if ($is_member) {  ?>
-				<li class="gnb_1dli">
-                    <a href="<?php echo G5_BBS_URL ?>/logout.php" class="gnb_1da">로그아웃</a>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?=G5_URL?>/sub/my_lotto.php" class="gnb_1da">마이페이지</a>
-					<button type="button" class="btn_gnb_op">하위분류</button>
-					<ul class="gnb_2dul">
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/my_lotto.php" class="gnb_2da">나의 당첨현황</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/my_lotto02.php" class="gnb_2da">나의 로또 당첨 현황</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/my_lotto03.php" class="gnb_2da">로또</a></li>
-					</ul>
-				</li>
-				<?php if ($is_admin) {  ?>
-				<li class="gnb_1dli">
-                    <a href="<?php echo G5_ADMIN_URL ?>" class="gnb_1da">관리자</a>
-				</li>
-				<?php }  ?>
-				<?php } else {  ?>
-				<li class="gnb_1dli">
-                    <a href="<?php echo G5_BBS_URL ?>/login.php" class="gnb_1da">로그인</a>
-				</li>
-				<li class="gnb_1dli">
-                    <a href="<?php echo G5_BBS_URL ?>/register.php" class="gnb_1da">회원가입</a>
-				</li>
-				<?php }  ?>
-				<li class="gnb_1dli"><a href="<?=G5_URL?>/sub/notmessage.php" class="gnb_1da">문자가 오지 않을 때</a></li>
-				<li class="gnb_1dli"><a href="<?=G5_URL?>/sub/perfect_member.php" class="gnb_1da" style="color:red">퍼펙트 회원 전용</a></li>
-			</ul>
-			
+            <?php
+            $menu_datas = get_menu_db(1, true);
+			$i = 0;
+			foreach( $menu_datas as $row ){
+				if( empty($row) ) continue;
+            ?>
+                <li class="gnb_1dli">
+                    <a href="<?php echo $row['me_link']; ?>" target="_<?php echo $row['me_target']; ?>" class="gnb_1da"><?php echo $row['me_name'] ?></a>
+                    <?php
+                    $k = 0;
+                    foreach( (array) $row['sub'] as $row2 ){
+						if( empty($row2) ) continue;
+                        if($k == 0)
+                            echo '<button type="button" class="btn_gnb_op"><span class="sound_only">하위분류</span></button><ul class="gnb_2dul">'.PHP_EOL;
+                    ?>
+                        <li class="gnb_2dli"><a href="<?php echo $row2['me_link']; ?>" target="_<?php echo $row2['me_target']; ?>" class="gnb_2da"><span></span><?php echo $row2['me_name'] ?></a></li>
+                    <?php
+					$k++;
+                    }	//end foreach $row2
+
+                    if($k > 0)
+                        echo '</ul>'.PHP_EOL;
+                    ?>
+                </li>
+            <?php
+			$i++;
+            }	//end foreach $row
+
+            if ($i == 0) {  ?>
+                <li id="gnb_empty">메뉴 준비 중입니다.<?php if ($is_admin) { ?> <br><a href="<?php echo G5_ADMIN_URL; ?>/menu_list.php">관리자모드 &gt; 환경설정 &gt; 메뉴설정</a>에서 설정하세요.<?php } ?></li>
+            <?php } ?>
+            <?php if (defined('G5_USE_SHOP') && G5_USE_SHOP) { ?>
+                <li class="gnb_1dli"><a href="<?php echo G5_SHOP_URL ?>" class="gnb_1da"> 쇼핑몰</a></li>
+            <?php } ?>
+            </ul>
+
+            <ul id="hd_nb">
+            	<li class="hd_nb1"><a href="<?php echo G5_BBS_URL ?>/faq.php" id="snb_faq"><i class="fa fa-question" aria-hidden="true"></i>FAQ</a></li>
+                <li class="hd_nb2"><a href="<?php echo G5_BBS_URL ?>/qalist.php" id="snb_qa"><i class="fa fa-comments" aria-hidden="true"></i>1:1문의</a></li>
+                <li class="hd_nb3"><a href="<?php echo G5_BBS_URL ?>/current_connect.php" id="snb_cnt"><i class="fa fa-users" aria-hidden="true"></i>접속자 <span><?php echo connect('theme/basic'); // 현재 접속자수 ?></span></a></li>
+                <li class="hd_nb4"><a href="<?php echo G5_BBS_URL ?>/new.php" id="snb_new"><i class="fa fa-history" aria-hidden="true"></i>새글</a></li>   
+            </ul>
+        </div>
+
+        <button type="button" id="user_btn" class="hd_opener"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">사용자메뉴</span></button>
+        <div class="hd_div" id="user_menu">
+            <button type="button" id="user_close" class="hd_closer"><span class="sound_only">메뉴 닫기</span><i class="fa fa-times" aria-hidden="true"></i></button>
+            <div id="hd_sch">
+                <h2>사이트 내 전체검색</h2>
+                <form name="fsearchbox" action="<?php echo G5_BBS_URL ?>/search.php" onsubmit="return fsearchbox_submit(this);" method="get">
+                <input type="hidden" name="sfl" value="wr_subject||wr_content">
+                <input type="hidden" name="sop" value="and">
+                <input type="text" name="stx" id="sch_stx" placeholder="검색어를 입력해주세요" required maxlength="20">
+                <button type="submit" value="검색" id="sch_submit"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">검색</span></button>
+                </form>
+
+                <script>
+                function fsearchbox_submit(f)
+                {
+                    var stx = f.stx.value.trim();
+                    if (stx.length < 2) {
+                        alert("검색어는 두글자 이상 입력하십시오.");
+                        f.stx.select();
+                        f.stx.focus();
+                        return false;
+                    }
+
+                    // 검색에 많은 부하가 걸리는 경우 이 주석을 제거하세요.
+                    var cnt = 0;
+                    for (var i = 0; i < stx.length; i++) {
+                        if (stx.charAt(i) == ' ')
+                            cnt++;
+                    }
+
+                    if (cnt > 1) {
+                        alert("빠른 검색을 위하여 검색어에 공백은 한개만 입력할 수 있습니다.");
+                        f.stx.select();
+                        f.stx.focus();
+                        return false;
+                    }
+                    f.stx.value = stx;
+
+                    return true;
+                }
+                </script>
+            </div>
+            <?php echo popular('theme/basic'); // 인기검색어 ?>
+            <div id="text_size">
+            <!-- font_resize('엘리먼트id', '제거할 class', '추가할 class'); -->
+                <button id="size_down" onclick="font_resize('container', 'ts_up ts_up2', '', this);" class="select"><img src="<?php echo G5_URL; ?>/img/ts01.png" width="20" alt="기본"></button>
+                <button id="size_def" onclick="font_resize('container', 'ts_up ts_up2', 'ts_up', this);"><img src="<?php echo G5_URL; ?>/img/ts02.png" width="20" alt="크게"></button>
+                <button id="size_up" onclick="font_resize('container', 'ts_up ts_up2', 'ts_up2', this);"><img src="<?php echo G5_URL; ?>/img/ts03.png" width="20" alt="더크게"></button>
+            </div>
         </div>
 
         <script>
         $(function () {
+            //폰트 크기 조정 위치 지정
+            var font_resize_class = get_cookie("ck_font_resize_add_class");
+            if( font_resize_class == 'ts_up' ){
+                $("#text_size button").removeClass("select");
+                $("#size_def").addClass("select");
+            } else if (font_resize_class == 'ts_up2') {
+                $("#text_size button").removeClass("select");
+                $("#size_up").addClass("select");
+            }
 
             $(".hd_opener").on("click", function() {
                 var $this = $(this);
@@ -163,16 +183,13 @@ $(document).ready(function() {
     </div>
 </header>
 
-<?if($basename != "index.php") {?>
-<div id="sub_div" class="zindex10">
-	<?if($sub_top){?>
-	<div class="sub_top" style="background:url(<?=G5_THEME_IMG_URL?>/<?=$sub_top?>) no-repeat center/cover;">
-		<h2><?=$sub_title?></h2>
-	</div>
-	<?}?>
-	<div class="inner <?=$inner?> <?=$pad0?>">
-		<?if($sub_tit){?>
-		<?include_once(G5_PATH."/sub/sub_tab.php");?>
-		<div class="s3_tit"><?=$sub_tit?></div>
-		<?}?>
-<?}?>
+
+
+<div id="wrapper">
+
+    <div id="container">
+    <?php if (!defined("_INDEX_")) { ?>
+    	<h2 id="container_title" class="top" title="<?php echo get_text($g5['title']); ?>">
+    		<a href="javascript:history.back();"><i class="fa fa-chevron-left" aria-hidden="true"></i><span class="sound_only">뒤로가기</span></a> <?php echo get_head_title($g5['title']); ?>
+    	</h2>
+    <?php }

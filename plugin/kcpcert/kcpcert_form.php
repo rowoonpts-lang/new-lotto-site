@@ -6,6 +6,17 @@ certify_count_check($member['mb_id'], 'hp');
 
 setlocale(LC_CTYPE, 'ko_KR.euc-kr');
 
+switch($_GET['pageType']){ // 페이지 타입 체크
+    case "register":
+        $resultPage = "/kcpcert_result.php";
+        break;
+    case "find":
+        $resultPage = "/find_kcpcert_result.php";
+        break;
+    default:
+        alert_close('잘못된 접근입니다.');
+}
+
 // kcp 휴대폰인증파일
 include_once(G5_KCPCERT_PATH.'/kcpcert_config.php');
 
@@ -15,6 +26,8 @@ if(!$ordr_idxx)
 
 $ct_cert = new C_CT_CLI;
 $ct_cert->mf_clear();
+
+$sbParam = '';
 
 $year          = "00";
 $month         = "00";
@@ -36,7 +49,7 @@ $hash_data = $site_cd   .
              $sex_code  .
              $local_code;
 
-$up_hash = $ct_cert->make_hash_data( $home_dir, $hash_data );
+$up_hash = $ct_cert->make_hash_data( $home_dir, $kcp_enc_key, $hash_data );
 
 $ct_cert->mf_clear();
 ?>
@@ -69,7 +82,7 @@ $ct_cert->mf_clear();
 <!-- 사이트코드 -->
 <input type="hidden" name="site_cd"      value="<?php echo $site_cd; ?>" />
 <!-- Ret_URL : 인증결과 리턴 페이지 ( 가맹점 URL 로 설정해 주셔야 합니다. ) -->
-<input type="hidden" name="Ret_URL"      value="<?php echo G5_KCPCERT_URL; ?>/kcpcert_result.php" />
+<input type="hidden" name="Ret_URL"      value="<?php echo G5_KCPCERT_URL.$resultPage; ?>" />
 <!-- cert_otp_use 필수 ( 메뉴얼 참고)
      Y : 실명 확인 + OTP 점유 확인 , N : 실명 확인 only
 -->
@@ -90,10 +103,19 @@ $ct_cert->mf_clear();
 <!-- up_hash 검증 을 위한 필드 -->
 <input type="hidden" name="veri_up_hash" value=""/>
 
+<!-- web_siteid 을 위한 필드 -->
+<input type="hidden" name="web_siteid_hashYN" value=""/>
+
 <!-- 가맹점 사용 필드 (인증완료시 리턴)-->
 <input type="hidden" name="param_opt_1"  value="opt1"/>
 <input type="hidden" name="param_opt_2"  value="opt2"/>
 <input type="hidden" name="param_opt_3"  value="opt3"/>
+
+<?php if ($config['cf_cert_kcp_enckey'] || $kcp_enc_key) { ?>
+<!-- 리턴 암호화 고도화 -->
+<input type="hidden" name="cert_enc_use_ext" value="Y"/>
+<input type='hidden' name='kcp_cert_lib_ver' value="<?php echo $ct_cert->get_kcp_lib_ver( $home_dir ); ?>"/>
+<?php } ?>
 </form>
 
 <script>
@@ -105,17 +127,17 @@ window.onload = function() {
 function cert_page()
 {
     var frm = document.form_auth;
+    // iframe에서 세션공유 문제가 있어서 더 이상 iframe 을 사용하지 않습니다.
+    var use_iframe = false;
 
     if ( ( frm.req_tx.value == "auth" || frm.req_tx.value == "otp_auth" ) )
     {
-        frm.action="./kcpcert_result.php";
+        frm.action=".<?php echo $resultPage; ?>";
 
-       // MOBILE
-        if( ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) )
+        if(use_iframe && ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) )
         {
             self.name="kcp_cert";
         }
-        // PC
         else
         {
             frm.target="kcp_cert";
@@ -128,12 +150,12 @@ function cert_page()
 
     else if ( frm.req_tx.value == "cert" )
     {
-        if( ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) ) // 스마트폰인 경우
+        if(use_iframe && ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) )
         {
             window.parent.$("input[name=veri_up_hash]").val(frm.up_hash.value); // up_hash 데이터 검증을 위한 필드
             self.name="auth_popup";
         }
-        else // 스마트폰 아닐때
+        else
         {
             window.opener.$("input[name=veri_up_hash]").val(frm.up_hash.value); // up_hash 데이터 검증을 위한 필드
             frm.target = "auth_popup";

@@ -18,6 +18,8 @@
 
 class KCAPTCHA{
 
+    private $keystring;
+
 	// generates keystring and image
 	function image(){
         require(dirname(__FILE__).'/kcaptcha_config.php');
@@ -50,13 +52,13 @@ class KCAPTCHA{
             $transparent = (imagecolorat($font, $i, 0) >> 24) == 127;
 
             if(!$reading_symbol && !$transparent){
-                $font_metrics[$alphabet{$symbol}]=array('start'=>$i);
+                $font_metrics[$alphabet[$symbol]]=array('start'=>$i);
                 $reading_symbol=true;
                 continue;
             }
 
             if($reading_symbol && $transparent){
-                $font_metrics[$alphabet{$symbol}]['end']=$i;
+                $font_metrics[$alphabet[$symbol]]['end']=$i;
                 $reading_symbol=false;
                 $symbol++;
                 continue;
@@ -75,7 +77,9 @@ class KCAPTCHA{
         $odd=mt_rand(0,1);
         if($odd==0) $odd=-1;
         for($i=0;$i<$length;$i++){
-            $m=$font_metrics[$this->keystring{$i}];
+
+            if( ! isset($this->keystring[$i]) ) continue;
+            $m=$font_metrics[$this->keystring[$i]];
 
             $y=(($i%2)*$fluctuation_amplitude - $fluctuation_amplitude/2)*$odd
                 + mt_rand(-round($fluctuation_amplitude/3), round($fluctuation_amplitude/3))
@@ -169,10 +173,10 @@ class KCAPTCHA{
 				if($sx<0 || $sy<0 || $sx>=$width-1 || $sy>=$height-1){
 					continue;
 				}else{
-					$color=imagecolorat($img, $sx, $sy) & 0xFF;
-					$color_x=imagecolorat($img, $sx+1, $sy) & 0xFF;
-					$color_y=imagecolorat($img, $sx, $sy+1) & 0xFF;
-					$color_xy=imagecolorat($img, $sx+1, $sy+1) & 0xFF;
+					$color=imagecolorat($img, (int)$sx, (int)$sy) & 0xFF;
+					$color_x=imagecolorat($img, (int)$sx+1, (int)$sy) & 0xFF;
+					$color_y=imagecolorat($img, (int)$sx, (int)$sy+1) & 0xFF;
+					$color_xy=imagecolorat($img, (int)$sx+1, (int)$sy+1) & 0xFF;
 				}
 
 				if($color==255 && $color_x==255 && $color_y==255 && $color_xy==255){
@@ -202,7 +206,7 @@ class KCAPTCHA{
 					$newblue=$newcolor0*$foreground_color[2]+$newcolor*$background_color[2];
 				}
 
-				imagesetpixel($img2, $x, $y, imagecolorallocate($img2, $newred, $newgreen, $newblue));
+				imagesetpixel($img2, (int)$x, (int)$y, imagecolorallocate($img2, (int)$newred, (int)$newgreen, (int)$newblue));
 			}
 		}
 
@@ -240,7 +244,7 @@ function captcha_html($class="captcha")
     if(is_mobile())
         $class .= ' m_captcha';
 
-    $html .= "\n".'<script>var g5_captcha_url  = "'.G5_CAPTCHA_URL.'";</script>';
+    $html = "\n".'<script>var g5_captcha_url  = "'.G5_CAPTCHA_URL.'";</script>';
     //$html .= "\n".'<script>var g5_captcha_path = "'.G5_CAPTCHA_PATH.'";</script>';
     $html .= "\n".'<script src="'.G5_CAPTCHA_URL.'/kcaptcha.js"></script>';
     $html .= "\n".'<fieldset id="captcha" class="'.$class.'">';
@@ -253,7 +257,7 @@ function captcha_html($class="captcha")
     $html .= "\n".'<button type="button" id="captcha_reload"><span></span>새로고침</button>';
     $html .= "\n".'<span id="captcha_info">자동등록방지 숫자를 순서대로 입력하세요.</span>';
     $html .= "\n".'</fieldset>';
-    return $html;
+    return run_replace('kcaptcha_captcha_html', $html, $class);
 }
 
 
@@ -272,12 +276,17 @@ function chk_captcha()
         return false;
     }
 
-    if (!isset($_POST['captcha_key'])) return false;
-    if (!trim($_POST['captcha_key'])) return false;
-    if ($_POST['captcha_key'] != get_session('ss_captcha_key')) {
+    $post_captcha_key = (isset($_POST['captcha_key']) && $_POST['captcha_key']) ? trim($_POST['captcha_key']) : '';
+    if (!trim($post_captcha_key)) return false;
+
+    if( $post_captcha_key && function_exists('get_string_encrypt') ){
+        $ip = md5(sha1($_SERVER['REMOTE_ADDR']));
+        $post_captcha_key = get_string_encrypt($ip.$post_captcha_key);
+    }
+
+    if ($post_captcha_key != get_session('ss_captcha_key')) {
         $_SESSION['ss_captcha_count'] = $captcha_count + 1;
         return false;
     }
     return true;
 }
-?>

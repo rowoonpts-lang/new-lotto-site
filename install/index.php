@@ -1,6 +1,8 @@
 <?php
 @header('Content-Type: text/html; charset=utf-8');
 @header('X-Robots-Tag: noindex');
+$g5_path['path'] = '..';
+include_once('install_common.php');
 include_once ('../config.php');
 $title = G5_VERSION." 라이센스 확인 1/3";
 include_once ('./install.inc.php');
@@ -10,6 +12,7 @@ include_once ('./install.inc.php');
 if ($exists_data_dir && $write_data_dir) {
     // 필수 모듈 체크
     require_once('./library.check.php');
+    if (empty($install_library_required_missing)) {
 ?>
 <form action="./install_config.php" method="post" onsubmit="return frm_submit(this);">
 
@@ -46,9 +49,9 @@ function frm_submit(f)
 }
 </script>
 <?php
+    }
 } // if
 ?>
 
 <?php
 include_once ('./install.inc2.php');
-?>

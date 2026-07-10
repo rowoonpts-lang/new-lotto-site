@@ -7,12 +7,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
 
 <!-- 회원 비밀번호 확인 시작 { -->
 <div id="mb_confirm" class="mbskin">
-    <img src="<?=G5_IMG_URL?>/password_ico.png" alt="">
-    
     <h1><?php echo $g5['title'] ?></h1>
 
     <p>
-        <span class="pink">비밀번호를 한번 더 입력해주세요.</span>
+        <strong>비밀번호를 한번 더 입력해주세요.</strong>
         <?php if ($url == 'member_leave.php') { ?>
         비밀번호를 입력하시면 회원탈퇴가 완료됩니다.
         <?php }else{ ?>
@@ -25,10 +23,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <input type="hidden" name="w" value="u">
 
     <fieldset>
-<!--        <span class="confirm_id">회원아이디</span>
-        <span id="mb_confirm_id"><?php /*echo $member['mb_id'] */?></span>-->
+        <span class="confirm_id">회원아이디</span>
+        <span id="mb_confirm_id"><?php echo $member['mb_id'] ?></span>
         <label for="confirm_mb_password" class="sound_only">비밀번호<strong>필수</strong></label>
-        <input type="password" name="mb_password" id="confirm_mb_password" required class="required frm_input" size="15" maxLength="20">
+        <input type="password" name="mb_password" id="confirm_mb_password" required class="required frm_input" size="15" maxLength="20" placeholder="비밀번호">
         <input type="submit" value="확인" id="btn_submit" class="btn_submit">
     </fieldset>
 

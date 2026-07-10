@@ -12,6 +12,7 @@ $enc_data      = "";
 $req_tx        = "";
 
 $enc_cert_data = "";
+$enc_cert_data2 = "";
 $cert_info     = "";
 
 $tran_cd       = "";
@@ -67,6 +68,11 @@ for($i=0; $i<count($key); $i++)
     {
         $enc_cert_data = f_get_parm_str ( $valParam );
     }
+    
+    if ( $nmParam == "enc_cert_data2" )
+    {
+        $enc_cert_data2 = f_get_parm_str ( $valParam );
+    }
 
     if ( $nmParam == "dn_hash" )
     {
@@ -98,13 +104,25 @@ if( $cert_enc_use == "Y" )
         // 해당 데이터의 위변조를 방지합니다
          $veri_str = $site_cd.$ordr_idxx.$cert_no; // 사이트 코드 + 주문번호 + 인증거래번호
 
-        if ( $ct_cert->check_valid_hash ( $home_dir , $dn_hash , $veri_str ) != "1" )
+        $enc_cert_real_data = $enc_cert_data2;
+        $bin_path = 'bin';
+        
+        if ((int)$config['cf_cert_use'] === 2 && !$config['cf_cert_kcp_enckey']) {
+            $bin_path = 'bin_old';
+            $enc_cert_real_data = $enc_cert_data;
+        }
+        
+        if ( $ct_cert->check_valid_hash ( $home_dir , $kcp_enc_key, $dn_hash , $veri_str ) != "1" )
         {
-            // 검증 실패시 처리 영역
-            if(PHP_INT_MAX == 2147483647) // 32-bit
-                $bin_exe = '/bin/ct_cli';
-            else
-                $bin_exe = '/bin/ct_cli_x64';
+            if(strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+                // 검증 실패시 처리 영역
+                if(PHP_INT_MAX == 2147483647) // 32-bit
+                    $bin_exe = '/'.$bin_path.'/ct_cli';
+                else
+                    $bin_exe = '/'.$bin_path.'/ct_cli_x64';
+            } else {
+                $bin_exe = '/'.$bin_path.'/ct_cli_exe.exe';
+            }
 
             echo "dn_hash 변조 위험있음 (".G5_KCPCERT_PATH.$bin_exe." 파일에 실행권한이 있는지 확인하세요.)";
             exit;
@@ -112,13 +130,13 @@ if( $cert_enc_use == "Y" )
         }
 
         // 가맹점 DB 처리 페이지 영역
-
+            
         // 인증데이터 복호화 함수
         // 해당 함수는 암호화된 enc_cert_data 를
         // site_cd 와 cert_no 를 가지고 복화화 하는 함수 입니다.
         // 정상적으로 복호화 된경우에만 인증데이터를 가져올수 있습니다.
         $opt = "1" ; // 복호화 인코딩 옵션 ( UTF - 8 사용시 "1" )
-        $ct_cert->decrypt_enc_cert( $home_dir , $site_cd , $cert_no , $enc_cert_data , $opt );
+        $ct_cert->decrypt_enc_cert( $home_dir , $kcp_enc_key, $site_cd , $cert_no , $enc_cert_real_data , $opt );
 
         $comm_id        = $ct_cert->mf_get_key_value("comm_id"    );                // 이동통신사 코드
         $phone_no       = $ct_cert->mf_get_key_value("phone_no"   );                // 전화번호
@@ -133,23 +151,35 @@ if( $cert_enc_use == "Y" )
         $dec_res_cd     = $ct_cert->mf_get_key_value("res_cd"     );                // 암호화된 결과코드
         $dec_mes_msg    = $ct_cert->mf_get_key_value("res_msg"    );                // 암호화된 결과메시지
 
+        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && function_exists('mb_detect_encoding') ){
+            if( mb_detect_encoding($user_name, 'EUC-KR') === 'EUC-KR' ){
+                $user_name = iconv_utf8($user_name);
+                $dec_mes_msg = iconv_utf8($dec_mes_msg);
+            }
+        }
+
         // 정상인증인지 체크
         if(!$phone_no)
             alert_close("정상적인 인증이 아닙니다. 올바른 방법으로 이용해 주세요.");
 
         $phone_no = hyphen_hp_number($phone_no);
-        $mb_dupinfo = $di;
+        $mb_dupinfo = md5($ci.$ci);
+
+        // 명의 변경 체크
+        if (!empty($member['mb_certify']) && !empty($member['mb_dupinfo']) && strlen($member['mb_dupinfo']) != 64) { // 이미 인증된 계정중에 dupinfo가 di(64 length)가 아닐때
+            if($member['mb_dupinfo'] != $mb_dupinfo) alert_close("해당 계정은 이미 다른명의로 본인인증 되어있는 계정입니다.");
+        }
 
         $sql = " select mb_id from {$g5['member_table']} where mb_id <> '{$member['mb_id']}' and mb_dupinfo = '{$mb_dupinfo}' ";
         $row = sql_fetch($sql);
-        if ($row['mb_id']) {
+        if (!empty($row['mb_id'])) {
             alert_close("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원아이디 : ".$row['mb_id']);
         }
 
         // hash 데이터
         $cert_type = 'hp';
         $md5_cert_no = md5($cert_no);
-        $hash_data   = md5($user_name.$cert_type.$birth_day.$md5_cert_no);
+        $hash_data   = md5($user_name.$cert_type.$birth_day.$phone_no.$md5_cert_no);
 
         // 성인인증결과
         $adult_day = date("Ymd", strtotime("-19 years", G5_SERVER_TIME));
@@ -195,8 +225,10 @@ $ct_cert->mf_clear();
 $(function() {
     var $opener;
     var is_mobile = false;
+    // iframe에서 세션공유 문제가 있어서 더 이상 iframe 을 사용하지 않습니다.
+    var use_iframe = false;
 
-    if( ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) ) { // 스마트폰인 경우
+    if(use_iframe && ( navigator.userAgent.indexOf("Android") > - 1 || navigator.userAgent.indexOf("iPhone") > - 1 ) ) {
         $opener = window.parent;
         is_mobile = true;
     } else {
@@ -221,10 +253,13 @@ $(function() {
 
     alert("본인의 휴대폰번호로 확인 되었습니다.");
 
+    if($opener.$("form[name=fcertrefreshform]") != undefined){
+        $opener.$("form[name=fcertrefreshform]").submit();
+    }
+
     window.close();
 });
 </script>
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

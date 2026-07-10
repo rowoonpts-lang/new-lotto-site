@@ -1,14 +1,32 @@
 <?php
 include_once('./_common.php');
 
+$check_arrays = array('exe', 'svcTxSeqno', 'name', 'birthday', 'gender', 'ntvFrnrTpCd', 'mblTelCmmCd', 'mbphnNo', 'rsv1', 'rsv2', 'rsv3', 'returnMsg', 'returnUrl', 'inTpBit', 'hsCertMsrCd', 'hsCertRqstCausCd', 'memId', 'clientIp', 'clientDomain', 'endPointURL', 'logPath');
+
+foreach($check_arrays as $key){
+    if( isset($_REQUEST[$key]) && $_REQUEST[$key] ){
+        die('bad request');
+    }
+
+    $$key = '';
+}
+
 // 금일 인증시도 회수 체크
 certify_count_check($member['mb_id'], 'hp');
 
-//include_once('./hpcert.config.php');
-
+switch($_GET['pageType']){		
+    case "register":
+        $resultPage = "/hpcert2.php";
+        break;
+    case "find":
+        $resultPage = "/find_hpcert2.php";
+        break;
+    default:
+        alert_close('잘못된 접근입니다.');
+}
 // KISA 취약점 내용(KVE-2018-0291) hpcert1.php의 $cmd 함수에 대한 인자 값은 hpcert_config.php 파일에서 설정되나, 이를 다른 페이지에서 포함한 뒤 호출할 시 임의 값 설정 가능
-// 이에 include_once 를 include 로 수정함
-include('./hpcert.config.php');
+// 이에 include_once 를 require 로 수정함
+require('./hpcert.config.php');
 /**************************************************************************
 okname 실행
 **************************************************************************/
@@ -80,8 +98,9 @@ if ($retcode == "B000") {
     echo ("<script>request();</script>");
 } else {
     //요청 실패 페이지로 리턴
-    echo ("<script>alert(\"$retcode\"); self.close();</script>");
+    $js_replace = array('\\' => '\\\\', '"' => '\\"', "'" => '\\u0027', '/' => '\\/', "\r" => '\\r', "\n" => '\\n', "\t" => '\\t', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\xE2\x80\xA8" => '\\u2028', "\xE2\x80\xA9" => '\\u2029');
+    $js_retcode = function_exists('get_js_safe_string') ? get_js_safe_string($retcode) : '"'.strtr((string)$retcode, $js_replace).'"';
+    echo ("<script>alert(".$js_retcode."); self.close();</script>");
 }
 
 include_once(G5_PATH.'/tail.sub.php');
-?>

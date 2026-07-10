@@ -5,7 +5,7 @@ if(!$config['cf_cert_use'] || $config['cf_cert_hp'] != 'kcb')
     alert('기본환경설정에서 KCB 휴대폰본인확인 서비스로 설정해 주십시오.');
 
 // key 디렉토리 체크
-include_once('./key_dir_check.php');
+require_once('./key_dir_check.php');
 
 /**************************************************************************
  * okname 생년월일 본인 확인서비스 파라미터
@@ -80,5 +80,5 @@ if($config['cf_cert_use'] == 2) {
 // ########################################################################
 // # 리턴 URL 설정
 // ########################################################################
-$returnUrl = escapeshellarg(G5_OKNAME_URL.'/hpcert2.php');          // 본인인증 완료후 리턴될 URL (도메인 포함 full path)
-?>
+if(!empty($resultPage))
+$returnUrl = escapeshellarg(G5_OKNAME_URL.$resultPage);          // 본인인증 완료후 리턴될 URL (도메인 포함 full path);
