@@ -259,7 +259,7 @@ $list_cnt = count($list);
                                     for ($i=0; $i<$list_cnt; $i++) {
                                         $tmp_name = iconv_substr($list[$i]['wr_name'], 3, 1, "utf-8");
                                         $tel = array();
-                                        list($tel[0], $tel[1], $tel[2]) = explode("-", preg_replace("/^(02|0[0-9]{2})-?([0-9]{3,4})-?([0-9]{4})$/", "$1-$2-$3", $list[$i]['wr_3']) );
+                                        list($tel[0], $tel[1], $tel[2]) = explode("-", preg_replace("/^(02|0[0-9][2])-?([0-9]{3,4})-?([0-9][4])$/", "$1-$2-$3", $list[$i]['wr_3']) );
                                         $tel[1] = preg_replace("/\d/", "*", $tel[1]);
                                         ksort($tel);
                                         $tel_str = implode('-', $tel);

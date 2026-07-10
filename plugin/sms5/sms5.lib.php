@@ -90,7 +90,7 @@ if ( ! function_exists('get_hp')) {
         if ($hyphen) $preg = "$1-$2-$3"; else $preg = "$1$2$3";
 
         $hp = str_replace('-', '', trim($hp));
-        $hp = preg_replace("/^(01[016789])([0-9]{3,4})([0-9]{4})$/", $preg, $hp);
+        $hp = preg_replace("/^(01[016789])([0-9]{3,4})([0-9][4])$/", $preg, $hp);
 
         if ($g5['sms5_demo'])
             $hp = '0100000000';
@@ -102,7 +102,7 @@ if ( ! function_exists('is_hp')) {
     function is_hp($hp)
     {
         $hp = str_replace('-', '', trim($hp));
-        if (preg_match("/^(01[016789])([0-9]{3,4})([0-9]{4})$/", $hp))
+        if (preg_match("/^(01[016789])([0-9]{3,4})([0-9][4])$/", $hp))
             return true;
         else
             return false;

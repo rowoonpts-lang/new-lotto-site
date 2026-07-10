@@ -153,7 +153,7 @@ function parse_formula() {
 
     $this->_formula	 = $formula;
     $this->_current_char = 0;
-    $this->_lookahead    = $this->_formula{1};
+    $this->_lookahead    = $this->_formula[1];
     $this->_advance($formula);
     $parsetree = $this->_condition();
 
@@ -1195,7 +1195,7 @@ function parse($formula)
  {
     $this->_current_char = 0;
     $this->_formula      = $formula;
-    $this->_lookahead    = $formula{1};
+    $this->_lookahead    = $formula[1];
     $this->_advance();
     $this->_parse_tree   = $this->_condition();
     if ($this->isError($this->_parse_tree)) {

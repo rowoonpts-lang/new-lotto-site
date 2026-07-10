@@ -137,7 +137,7 @@ include_once(G5_ADMIN_PATH."/admin.head.php");
 <script>
 function book_submit(){
     var f = document.book_form;
-    var regExp_hp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+    var regExp_hp = /^(01[016789][1]|02|0[3-9][1][0-9][1])-?[0-9]{3,4}-?[0-9][4]$/;
 
     if(!f.bk_hp.value){
         f.bk_hp.focus();

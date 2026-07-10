@@ -3881,7 +3881,7 @@ class HTMLPurifier_Encoder
      * non-SGML codepoints excluded.
      *
      * Specifically, it will permit:
-     * \x{9}\x{A}\x{D}\x{20}-\x{7E}\x{A0}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}
+     * \x[9]\x{A}\x{D}\x[20]-\x{7E}\x{A0}-\x{D7FF}\x{E000}-\x{FFFD}\x[10000]-\x{10FFFF}
      * Source: https://www.w3.org/TR/REC-xml/#NT-Char
      * Arguably this function should be modernized to the HTML5 set
      * of allowed characters:
@@ -3916,7 +3916,7 @@ class HTMLPurifier_Encoder
         // This is an optimization: if the string is already valid UTF-8, no
         // need to do PHP stuff. 99% of the time, this will be the case.
         if (preg_match(
-            '/^[\x{9}\x{A}\x{D}\x{20}-\x{7E}\x{A0}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]*$/Du',
+            '/^[\x[9]\x{A}\x{D}\x[20]-\x{7E}\x{A0}-\x{D7FF}\x{E000}-\x{FFFD}\x[10000]-\x{10FFFF}]*$/Du',
             $str
         )) {
             return $str;
@@ -13422,7 +13422,7 @@ class HTMLPurifier_AttrDef_URI_IPv4 extends HTMLPurifier_AttrDef
      */
     protected function _loadRegex()
     {
-        $oct = '(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])'; // 0-255
+        $oct = '(?:25[0-5]|2[0-4][0-9]|1[0-9][2]|[1-9][0-9]|[0-9])'; // 0-255
         $this->ip4 = "(?:{$oct}\\.{$oct}\\.{$oct}\\.{$oct})";
     }
 }
@@ -13509,7 +13509,7 @@ class HTMLPurifier_AttrDef_URI_IPv6 extends HTMLPurifier_AttrDef_URI_IPv4
 
         //      All the pieces should be 16-bit hex strings. Are they?
         foreach ($aIP as $piece) {
-            if (!preg_match('#^[0-9a-fA-F]{4}$#s', sprintf('%04s', $piece))) {
+            if (!preg_match('#^[0-9a-fA-F][4]$#s', sprintf('%04s', $piece))) {
                 return false;
             }
         }
@@ -14577,7 +14577,7 @@ class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
     protected function _compileRegex()
     {
         $raw = str_replace(' ', '', $this->dtd_regex);
-        if ($raw{0} != '(') {
+        if ($raw[0] != '(') {
             $raw = "($raw)";
         }
         $el = '[#a-zA-Z0-9_.-]+';
@@ -18433,7 +18433,7 @@ class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
         // but with @cscott's backtracking fix and also
         // the Unicode characters un-Unicodified.
         $bits = preg_split(
-            '/\\b((?:[a-z][\\w\\-]+:(?:\\/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]|\\((?:[^\\s()<>]|(?:\\([^\\s()<>]+\\)))*\\))+(?:\\((?:[^\\s()<>]|(?:\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:\'".,<>?\x{00ab}\x{00bb}\x{201c}\x{201d}\x{2018}\x{2019}]))/iu',
+            '/\\b((?:[a-z][\\w\\-]+:(?:\\/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}\\/)(?:[^\\s()<>]|\\((?:[^\\s()<>]|(?:\\([^\\s()<>]+\\)))*\\))+(?:\\((?:[^\\s()<>]|(?:\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:\'".,<>?\x{00ab}\x{00bb}\x{201c}\x{201d}\x[2018]\x[2019]]))/iu',
             $token->data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 
@@ -21060,7 +21060,7 @@ class HTMLPurifier_TagTransform_Font extends HTMLPurifier_TagTransform
         if (isset($attr['size'])) {
             // normalize large numbers
             if ($attr['size'] !== '') {
-                if ($attr['size']{0} == '+' || $attr['size']{0} == '-') {
+                if ($attr['size'][0] == '+' || $attr['size'][0] == '-') {
                     $size = (int)$attr['size'];
                     if ($size < -2) {
                         $attr['size'] = '-2';

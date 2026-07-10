@@ -219,7 +219,7 @@ function url_auto_link($str)
     // http://sir.kr/pg_lecture/463
     $attr_nofollow = (function_exists('check_html_link_nofollow') && check_html_link_nofollow('url_auto_link')) ? ' rel="nofollow"' : '';
     $str = str_replace(array("&lt;", "&gt;", "&amp;", "&quot;", "&nbsp;", "&#039;"), array("\t_lt_\t", "\t_gt_\t", "&", "\"", "\t_nbsp_\t", "'"), $str);
-    //$str = preg_replace("`(?:(?:(?:href|src)\s*=\s*(?:\"|'|)){0})((http|https|ftp|telnet|news|mms)://[^\"'\s()]+)`", "<A HREF=\"\\1\" TARGET='{$config['cf_link_target']}'>\\1</A>", $str);
+    //$str = preg_replace("`(?:(?:(?:href|src)\s*=\s*(?:\"|'|))[0])((http|https|ftp|telnet|news|mms)://[^\"'\s()]+)`", "<A HREF=\"\\1\" TARGET='{$config['cf_link_target']}'>\\1</A>", $str);
     $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#!=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<A HREF=\"\\2\" TARGET=\"{$config['cf_link_target']}\" $attr_nofollow>\\2</A>", $str);
     $str = preg_replace("/(^|[\"'\s(])(www\.[^\"'\s()]+)/i", "\\1<A HREF=\"http://\\2\" TARGET=\"{$config['cf_link_target']}\" $attr_nofollow>\\2</A>", $str);
     $str = preg_replace("/[0-9a-z_-]+@[a-z0-9._-]{4,}/i", "<a href=\"mailto:\\0\" $attr_nofollow>\\0</a>", $str);
@@ -1750,7 +1750,7 @@ function date_select($date, $name='')
     if (substr($date, 0, 4) == "0000") {
         $date = G5_TIME_YMDHIS;
     }
-    preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $date, $m);
+    preg_match("/([0-9][4])-([0-9][2])-([0-9][2])/", $date, $m);
 
     // 년
     $s .= "<select name='{$name}_y'>";
@@ -1794,7 +1794,7 @@ function date_select($date, $name='')
 // 경매에 시간 설정이 가능하게 되면서 추가함
 function time_select($time, $name="")
 {
-    preg_match("/([0-9]{2}):([0-9]{2}):([0-9]{2})/", $time, $m);
+    preg_match("/([0-9][2]):([0-9][2]):([0-9][2])/", $time, $m);
 
     // 시
     $s .= "<select name='{$name}_h'>";
@@ -2007,7 +2007,7 @@ function utf8_strcut( $str, $size, $suffix='...' )
 
         if ( strlen( $str ) > $size ) {
             $str = substr( $str, 0, $size );
-            $str = preg_replace( '/(([\x80-\xff]{3})*?)([\x80-\xff]{0,2})$/', '$1', $str );
+            $str = preg_replace( '/(([\x80-\xff][3])*?)([\x80-\xff]{0,2})$/', '$1', $str );
             $str .= $suffix;
         }
 
@@ -2521,7 +2521,7 @@ class html_process {
 function hyphen_hp_number($hp)
 {
     $hp = preg_replace("/[^0-9]/", "", $hp);
-    return preg_replace("/([0-9]{3})([0-9]{3,4})([0-9]{4})$/", "\\1-\\2-\\3", $hp);
+    return preg_replace("/([0-9][3])([0-9]{3,4})([0-9][4])$/", "\\1-\\2-\\3", $hp);
 }
 
 
@@ -2928,7 +2928,7 @@ function member_delete($mb_id)
     $mb = sql_fetch($sql);
 
     // 이미 삭제된 회원은 제외
-    if(preg_match('#^[0-9]{8}.*삭제함#', $mb['mb_memo']))
+    if(preg_match('#^[0-9][8].*삭제함#', $mb['mb_memo']))
         return;
 
     if ($mb['mb_recommend']) {
@@ -3285,9 +3285,9 @@ function check_vaild_callback($callback){
    if( substr($_callback,0,3) == '030')  if( strlen($_callback) != 10 && strlen($_callback) != 11 ) return false;
 
    if( !preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080|007)\-?\d{3,4}\-?\d{4,5}$/",$_callback) &&
-       !preg_match("/^(15|16|18)\d{2}\-?\d{4,5}$/",$_callback) ){
+       !preg_match("/^(15|16|18)\d[2]\-?\d{4,5}$/",$_callback) ){
              return false;
-   } else if( preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080)\-?0{3,4}\-?\d{4}$/",$_callback )) {
+   } else if( preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080)\-?0{3,4}\-?\d[4]$/",$_callback )) {
              return false;
    } else {
              return true;
@@ -4118,12 +4118,12 @@ function add_hyphen($tel)
 {
     $tel = preg_replace("/[^0-9]/", "", $tel);    // 숫자 이외 제거
     if (substr($tel,0,2)=='02')
-        return preg_replace("/([0-9]{2})([0-9]{3,4})([0-9]{4})$/", "\\1-\\2-\\3", $tel);
+        return preg_replace("/([0-9][2])([0-9]{3,4})([0-9][4])$/", "\\1-\\2-\\3", $tel);
     else if (strlen($tel)=='8' && (substr($tel,0,2)=='15' || substr($tel,0,2)=='16' || substr($tel,0,2)=='18'))
         // 지능망 번호이면
-        return preg_replace("/([0-9]{4})([0-9]{4})$/", "\\1-\\2", $tel);
+        return preg_replace("/([0-9][4])([0-9][4])$/", "\\1-\\2", $tel);
     else
-        return preg_replace("/([0-9]{3})([0-9]{3,4})([0-9]{4})$/", "\\1-\\2-\\3", $tel);
+        return preg_replace("/([0-9][3])([0-9]{3,4})([0-9][4])$/", "\\1-\\2-\\3", $tel);
 }
 
 function getTeamList(){

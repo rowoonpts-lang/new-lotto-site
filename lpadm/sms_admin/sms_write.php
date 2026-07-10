@@ -281,8 +281,8 @@ function hp_add()
     var hp_number = document.getElementById('hp_number'),
         hp_name = document.getElementById('hp_name'),
         hp_list = document.getElementById('hp_list'),
-        pattern = /^01[016789][0-9]{3,4}[0-9]{4}$/,
-        pattern2 = /^01[016789]-[0-9]{3,4}-[0-9]{4}$/;
+        pattern = /^01[016789][0-9]{3,4}[0-9][4]$/,
+        pattern2 = /^01[016789]-[0-9]{3,4}-[0-9][4]$/;
 
     if( !hp_number.value ){
         alert("휴대폰번호를 입력해 주세요.");
@@ -297,7 +297,7 @@ function hp_add()
     }
 
     if (!pattern2.test(hp_number.value)) {
-        hp_number.value = hp_number.value.replace(new RegExp("(01[016789])([0-9]{3,4})([0-9]{4})"), "$1-$2-$3");
+        hp_number.value = hp_number.value.replace(new RegExp("(01[016789])([0-9]{3,4})([0-9][4])"), "$1-$2-$3");
     }
 
     var item = '';
@@ -337,7 +337,7 @@ function hp_list_del()
         return;
     }
 
-    var regExp = /(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}/,
+    var regExp = /(01[016789][1]|02|0[3-9][1][0-9][1])-?[0-9]{3,4}-?[0-9][4]/,
         hp_number_option = hp_list.options[hp_list.selectedIndex],
         result = (hp_number_option.outerHTML.match(regExp));
     if( result !== null ){
@@ -707,7 +707,7 @@ var sms_obj={
             max:total_page == 0 || total_page ? total_page : 45,
             length : 5,
             liitem : 'span',
-            format:'{0}',
+            format:'[0]',
             next:'다음',
             prev:'이전',
             sideClass:'pg_page pg_next',

@@ -156,9 +156,9 @@ class SMTP
 	 * Extend this class to override this property to fulfil your needs.
 	 */
 	protected $smtp_transaction_id_patterns = array(
-		'exim' => '/[0-9]{3} OK id=(.*)/',
-		'sendmail' => '/[0-9]{3} 2.0.0 (.*) Message/',
-		'postfix' => '/[0-9]{3} 2.0.0 Ok: queued as (.*)/'
+		'exim' => '/[0-9][3] OK id=(.*)/',
+		'sendmail' => '/[0-9][3] 2.0.0 (.*) Message/',
+		'postfix' => '/[0-9][3] 2.0.0 Ok: queued as (.*)/'
 	);
 
     /**
@@ -888,7 +888,7 @@ class SMTP
         $this->last_reply = $this->get_lines();
         // Fetch SMTP code and possible error code explanation
         $matches = array();
-        if (preg_match("/^([0-9]{3})[ -](?:([0-9]\\.[0-9]\\.[0-9]) )?/", $this->last_reply, $matches)) {
+        if (preg_match("/^([0-9][3])[ -](?:([0-9]\\.[0-9]\\.[0-9]) )?/", $this->last_reply, $matches)) {
             $code = $matches[1];
             $code_ex = (count($matches) > 2 ? $matches[2] : null);
             // Cut off error code from each response line

@@ -62,7 +62,7 @@ var emoticon_list = {
             max:total_page == 0 || total_page ? total_page : 45,
             length : 5,
             liitem : 'span',
-            format:'{0}',
+            format:'[0]',
             next:'다음',
             prev:'이전',
             sideClass:'pg_page pg_next',

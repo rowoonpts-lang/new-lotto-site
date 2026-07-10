@@ -195,11 +195,11 @@ function is_vaild_callback($callback){
 	$_callback = preg_replace('/[^0-9]/', '', $callback);
 
 	if (!preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080|007)\-?\d{3,4}\-?\d{4,5}$/", $_callback) &&
-		  !preg_match("/^(15|16|18)\d{2}\-?\d{4,5}$/", $_callback)){
+		  !preg_match("/^(15|16|18)\d[2]\-?\d{4,5}$/", $_callback)){
 		return "회신번호오류";
 	}
 
-	if (preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080)\-?0{3,4}\-?\d{4}$/", $_callback)){
+	if (preg_match("/^(02|0[3-6]\d|01(0|1|3|5|6|7|8|9)|070|080)\-?0{3,4}\-?\d[4]$/", $_callback)){
 		return "회신번호오류";
 	}
 }

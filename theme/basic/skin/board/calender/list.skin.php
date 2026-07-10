@@ -11,10 +11,10 @@ if ($is_nogood) $colspan++;
 unset($list);
 
 $sch_year = clean_xss_tags($_GET['sch_year']);
-$sch_year = preg_match("/([0-9]{4})/", $sch_year) ? $sch_year : substr(G5_TIME_YMD,0,4);
+$sch_year = preg_match("/([0-9][4])/", $sch_year) ? $sch_year : substr(G5_TIME_YMD,0,4);
 
 $sch_month = clean_xss_tags($_GET['sch_month']);
-$sch_month = preg_match("/([0-9]{2})/", $sch_month) ? $sch_month : substr(G5_TIME_YMD,5,2);
+$sch_month = preg_match("/([0-9][2])/", $sch_month) ? $sch_month : substr(G5_TIME_YMD,5,2);
 
 $vew_month = $sch_year.'-'.$sch_month;
 
