@@ -29,15 +29,21 @@ include_once(G5_PATH.'/head.sub.php');
 // 공백이 없어야 합니다.
 
 $msg = isset($msg) ? strip_tags($msg) : '';
-$msg2 = str_replace("\\n", "<br>", $msg);
+$msg2 = str_replace(array("\\r\\n", "\\n", "\\r"), "<br>", $msg);
+$alert_msg = str_replace(array("\\r\\n", "\\n", "\\r"), "\n", $msg);
 
-$url = clean_xss_tags($url);
-if (!$url) $url = clean_xss_tags($_SERVER['HTTP_REFERER']);
+$url = isset($url) ? clean_xss_tags($url, 1) : '';
+if (!$url) $url = isset($_SERVER['HTTP_REFERER']) ? clean_xss_tags($_SERVER['HTTP_REFERER'], 1) : '';
 
 $url = preg_replace("/[\<\>\'\"\\\'\\\"\(\)]/", "", $url);
+$url = preg_replace('/\r\n|\r|\n|[^\x20-\x7e]/','', $url);
 
 // url 체크
 check_url_host($url, $msg);
+$alert_url = str_replace('&amp;', '&', $url);
+$js_replace = array('\\' => '\\\\', '"' => '\\"', "'" => '\\u0027', '/' => '\\/', "\r" => '\\r', "\n" => '\\n', "\t" => '\\t', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\xE2\x80\xA8" => '\\u2028', "\xE2\x80\xA9" => '\\u2029');
+$js_alert_msg = function_exists('get_js_safe_string') ? get_js_safe_string($alert_msg) : '"'.strtr((string)$alert_msg, $js_replace).'"';
+$js_alert_url = function_exists('get_js_safe_string') ? get_js_safe_string($alert_url) : '"'.strtr((string)$alert_url, $js_replace).'"';
 
 if($error) {
     $header2 = "다음 항목에 오류가 있습니다.";
@@ -47,12 +53,10 @@ if($error) {
 ?>
 
 <script>
-alert("<?php echo $msg; ?>");
-//document.location.href = "<?php echo $url; ?>";
+alert(<?php echo $js_alert_msg; ?>);
 <?php if ($url) { ?>
-document.location.replace("<?php echo str_replace('&amp;', '&', $url); ?>");
+document.location.replace(<?php echo $js_alert_url; ?>);
 <?php } else { ?>
-//alert('history.back();');
 history.back();
 <?php } ?>
 </script>
@@ -67,7 +71,7 @@ history.back();
     <form method="post" action="<?php echo $url ?>">
     <?php
     foreach($_POST as $key => $value) {
-        
+
         $key = clean_xss_tags($key);
         $value = clean_xss_tags($value);
 
@@ -115,4 +119,3 @@ history.back();
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

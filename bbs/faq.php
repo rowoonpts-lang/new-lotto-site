@@ -13,16 +13,19 @@ $result = sql_query($sql);
 while ($row=sql_fetch_array($result))
 {
     $key = $row['fm_id'];
-    if (!$fm_id) $fm_id = $key;
+    if (!isset($fm_id)) $fm_id = $key;
     $faq_master_list[$key] = $row;
 }
 
-if ($fm_id){
+$fm = array();
+if (isset($fm_id) && $fm_id){
+    $fm_id = (int) $fm_id;
     $qstr .= '&amp;fm_id=' . $fm_id; // 마스터faq key_id
+
+    $fm = $faq_master_list[$fm_id];
 }
 
-$fm = $faq_master_list[$fm_id];
-if (!$fm['fm_id'])
+if (! (isset($fm['fm_id']) && $fm['fm_id']))
     alert('등록된 내용이 없습니다.');
 
 $g5['title'] = $fm['fm_subject'];
@@ -95,4 +98,3 @@ if(is_file($skin_file)) {
 }
 
 include_once('./_tail.php');
-?>

@@ -3,10 +3,12 @@ include_once('./_common.php');
 
 $g5['title'] = "로그인 검사";
 
-$mb_id       = trim($_POST['mb_id']);
-$mb_password = trim($_POST['mb_password']);
+$mb_id       = isset($_POST['mb_id']) ? trim($_POST['mb_id']) : '';
+$mb_password = isset($_POST['mb_password']) ? trim($_POST['mb_password']) : '';
 
-if (!$mb_id || !$mb_password)
+run_event('member_login_check_before', $mb_id);
+
+if (!$mb_id || run_replace('check_empty_member_login_password', !$mb_password, $mb_id))
     alert('회원아이디나 비밀번호가 공백이면 안됩니다.');
 
 $mb = get_member($mb_id);
@@ -25,40 +27,55 @@ if(function_exists('social_is_login_check')){
     $is_social_password_check = social_is_login_password_check($mb_id);
 }
 
-//소셜 로그인이 맞다면 패스워드를 체크하지 않습니다.
+$is_need_not_password = run_replace('login_check_need_not_password', $is_social_password_check, $mb_id, $mb_password, $mb, $is_social_login);
+
+// $is_need_not_password 변수가 true 이면 패스워드를 체크하지 않습니다.
 // 가입된 회원이 아니다. 비밀번호가 틀리다. 라는 메세지를 따로 보여주지 않는 이유는
 // 회원아이디를 입력해 보고 맞으면 또 비밀번호를 입력해보는 경우를 방지하기 위해서입니다.
 // 불법사용자의 경우 회원아이디가 틀린지, 비밀번호가 틀린지를 알기까지는 많은 시간이 소요되기 때문입니다.
-if($mb_password != "dpdlqmf!!"){
-	if (!$is_social_password_check && (!$mb['mb_id'] || !check_password($mb_password, $mb['mb_password'])) ) {
-		alert('가입된 회원아이디가 아니거나 비밀번호가 틀립니다.\\n비밀번호는 대소문자를 구분합니다.');
-	}
+if (!$is_need_not_password && (! (isset($mb['mb_id']) && $mb['mb_id']) || !login_password_check($mb, $mb_password, $mb['mb_password'])) ) {
+
+    run_event('password_is_wrong', 'login', $mb);
+
+    alert('가입된 회원아이디가 아니거나 비밀번호가 틀립니다.\\n비밀번호는 대소문자를 구분합니다.');
 }
 
 // 차단된 아이디인가?
 if ($mb['mb_intercept_date'] && $mb['mb_intercept_date'] <= date("Ymd", G5_SERVER_TIME)) {
-    $date = preg_replace("/([0-9][4])([0-9][2])([0-9][2])/", "\\1년 \\2월 \\3일", $mb['mb_intercept_date']);
+    $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "\\1년 \\2월 \\3일", $mb['mb_intercept_date']);
     alert('회원님의 아이디는 접근이 금지되어 있습니다.\n처리일 : '.$date);
 }
 
 // 탈퇴한 아이디인가?
 if ($mb['mb_leave_date'] && $mb['mb_leave_date'] <= date("Ymd", G5_SERVER_TIME)) {
-    $date = preg_replace("/([0-9][4])([0-9][2])([0-9][2])/", "\\1년 \\2월 \\3일", $mb['mb_leave_date']);
+    $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "\\1년 \\2월 \\3일", $mb['mb_leave_date']);
     alert('탈퇴한 아이디이므로 접근하실 수 없습니다.\n탈퇴일 : '.$date);
 }
 
 // 메일인증 설정이 되어 있다면
 if ( is_use_email_certify() && !preg_match("/[1-9]/", $mb['mb_email_certify'])) {
-    $ckey = md5($mb['mb_ip'].$mb['mb_datetime']);
+    $ckey = function_exists('get_email_cert_key') ? get_email_cert_key($mb_id, $mb['mb_datetime']) : md5($mb['mb_ip'].$mb['mb_datetime']);
     confirm("{$mb['mb_email']} 메일로 메일인증을 받으셔야 로그인 가능합니다. 다른 메일주소로 변경하여 인증하시려면 취소를 클릭하시기 바랍니다.", G5_URL, G5_BBS_URL.'/register_email.php?mb_id='.$mb_id.'&ckey='.$ckey);
 }
 
+run_event('login_session_before', $mb, $is_social_login);
+
 @include_once($member_skin_path.'/login_check.skin.php');
+
+if (! (defined('SKIP_SESSION_REGENERATE_ID') && SKIP_SESSION_REGENERATE_ID)) {
+    session_regenerate_id(false);
+    if (function_exists('session_start_samesite')) {
+        session_start_samesite();
+    }
+}
 
 // 회원아이디 세션 생성
 set_session('ss_mb_id', $mb['mb_id']);
-// FLASH XSS 공격에 대응하기 위하여 회원의 고유키를 생성해 놓는다. 관리자에서 검사함 - 110106
-set_session('ss_mb_key', md5($mb['mb_datetime'] . get_real_client_ip() . $_SERVER['HTTP_USER_AGENT']));
+// FLASH XSS 공격에 대응하기 위하여 회원의 고유키를 생성해 놓는다. 관리자에서 검사함
+generate_mb_key($mb);
+
+// 회원의 토큰키를 세션에 저장한다. /common.php 에서 해당 회원의 토큰값을 검사한다.
+if(function_exists('update_auth_session_token')) update_auth_session_token($mb['mb_datetime']);
 
 // 포인트 체크
 if($config['cf_use_point']) {
@@ -70,13 +87,36 @@ if($config['cf_use_point']) {
 
 // 3.26
 // 아이디 쿠키에 한달간 저장
-if ($auto_login) {
+if (isset($auto_login) && $auto_login) {
     // 3.27
     // 자동로그인 ---------------------------
-    // 쿠키 한달간 저장
-    $key = md5($_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_SOFTWARE'] . $_SERVER['HTTP_USER_AGENT'] . $mb['mb_password']);
+    // 예측 불가능한 랜덤 토큰을 생성하여 g5_member_auto_login 테이블에 저장.
+    // 다중 디바이스 지원: 디바이스마다 별도의 토큰 행이 생성되며 서로 독립적으로 동작.
+
+    $auto_token = get_random_token_string(32);              // 64자 hex - 쿠키에는 원본
+    $auto_token_hash = hash('sha256', $auto_token);         // 64자 hex - DB에는 해시
+    $auto_ua    = isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 0, 255) : '';
+    $auto_ip    = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+    $auto_now   = G5_TIME_YMDHIS;
+    $auto_expire = date('Y-m-d H:i:s', G5_SERVER_TIME + 86400 * 31);
+
+    // 만료된 토큰 정리 (해당 회원 한정)
+    sql_query(" delete from {$g5['member_auto_login_table']}
+                 where mb_id = '{$mb['mb_id']}'
+                   and al_expire < '{$auto_now}' ");
+
+    // 새 토큰 INSERT (해시값만 저장)
+    sql_query(" insert into {$g5['member_auto_login_table']}
+                  set mb_id = '{$mb['mb_id']}',
+                      al_token = '{$auto_token_hash}',
+                      al_user_agent = '".addslashes($auto_ua)."',
+                      al_ip = '".addslashes($auto_ip)."',
+                      al_created = '{$auto_now}',
+                      al_last_used = '{$auto_now}',
+                      al_expire = '{$auto_expire}' ");
+
     set_cookie('ck_mb_id', $mb['mb_id'], 86400 * 31);
-    set_cookie('ck_auto', $key, 86400 * 31);
+    set_cookie('ck_auto', $auto_token, 86400 * 31);   // 쿠키에는 원본 토큰
     // 자동로그인 end ---------------------------
 } else {
     set_cookie('ck_mb_id', '', 0);
@@ -102,6 +142,8 @@ if ($url) {
         $post_check_keys[] = 'provider';
     }
 
+    $post_check_keys = run_replace('login_check_post_check_keys', $post_check_keys, $link, $is_social_login);
+
     foreach($_POST as $key=>$value) {
         if ($key && !in_array($key, $post_check_keys)) {
             $link .= "$split$key=$value";
@@ -120,5 +162,44 @@ if(function_exists('social_login_success_after')){
     social_login_session_clear(1);
 }
 
+//영카트 회원 장바구니 처리
+if(function_exists('set_cart_id')){
+    $member = $mb;
+
+    // 보관기간이 지난 상품 삭제
+    cart_item_clean();
+    set_cart_id('');
+    $s_cart_id = get_session('ss_cart_id');
+
+    $add_cart_where = '';
+
+    // 장바구니에서 주문하기를 하는 경우
+    if (strpos($link, 'orderform.php') !== false) {
+        $add_cart_where = " and ct_select_time < '".date('Y-m-d H:i:s', strtotime('-1 hour', G5_SERVER_TIME))."' ";
+    }
+
+    // 선택필드 초기화
+    $sql = " update {$g5['g5_shop_cart_table']} set ct_select = '0' where od_id = '$s_cart_id' $add_cart_where ";
+    sql_query($sql);
+}
+
+run_event('member_login_check', $mb, $link, $is_social_login);
+
+// 관리자로 로그인시 DATA 폴더의 쓰기 권한이 있는지 체크합니다. 쓰기 권한이 없으면 로그인을 못합니다.
+if( is_admin($mb['mb_id']) && is_dir(G5_DATA_PATH.'/tmp/') ){
+    $tmp_data_file = G5_DATA_PATH.'/tmp/tmp-write-test-'.time();
+    $tmp_data_check = @fopen($tmp_data_file, 'w');
+    if($tmp_data_check){
+        if(! @fwrite($tmp_data_check, G5_URL)){
+            $tmp_data_check = false;
+        }
+    }
+    if (is_resource($tmp_data_check)) @fclose($tmp_data_check);
+    @unlink($tmp_data_file);
+
+    if(! $tmp_data_check){
+        alert("data 폴더에 쓰기권한이 없거나 또는 웹하드 용량이 없는 경우\\n로그인을 못할수도 있으니, 용량 체크 및 쓰기 권한을 확인해 주세요.", $link);
+    }
+}
+
 goto_url($link);
-?>

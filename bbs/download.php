@@ -4,7 +4,7 @@ include_once('./_common.php');
 // clean the output buffer
 ob_end_clean();
 
-$no = (int)$no;
+$no = isset($_REQUEST['no']) ? (int) $_REQUEST['no'] : 0;
 
 @include_once($board_skin_path.'/download.head.skin.php');
 
@@ -15,18 +15,31 @@ if (!get_session('ss_view_'.$bo_table.'_'.$wr_id))
 
 // 다운로드 차감일 때 비회원은 다운로드 불가
 if($board['bo_download_point'] < 0 && $is_guest)
-    alert('다운로드 권한이 없습니다.\\n회원이시라면 로그인 후 이용해 보십시오.', G5_BBS_URL.'/login.php?wr_id='.$wr_id.'&amp;'.$qstr.'&amp;url='.urlencode(G5_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id));
+    alert('다운로드 권한이 없습니다.\\n회원이시라면 로그인 후 이용해 보십시오.', G5_BBS_URL.'/login.php?wr_id='.$wr_id.'&amp;'.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id)));
 
-$sql = " select bf_source, bf_file from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$no' ";
+$sql = " select * from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '$wr_id' and bf_no = '$no' ";
 $file = sql_fetch($sql);
 if (!$file['bf_file'])
     alert_close('파일 정보가 존재하지 않습니다.');
 
+$nonce = isset($_REQUEST['nonce']) ? preg_replace('/[^0-9a-z\|]/i', '', $_REQUEST['nonce']) : '';
+
+if (function_exists('download_file_nonce_is_valid') && !defined('G5_DOWNLOAD_NONCE_CHECK')){
+    if(! download_file_nonce_is_valid($nonce, $bo_table, $wr_id)){
+        alert('토큰 유효시간이 지났거나 토큰이 유효하지 않습니다.\\n브라우저를 새로고침 후 다시 시도해 주세요.', G5_URL);
+    }
+}
+
 // JavaScript 불가일 때
+$js = (isset($_GET['js'])) ? $_GET['js'] : '';
 if($js != 'on' && $board['bo_download_point'] < 0) {
     $msg = $file['bf_source'].' 파일을 다운로드 하시면 포인트가 차감('.number_format($board['bo_download_point']).'점)됩니다.\\n포인트는 게시물당 한번만 차감되며 다음에 다시 다운로드 하셔도 중복하여 차감하지 않습니다.\\n그래도 다운로드 하시겠습니까?';
-    $url1 = G5_BBS_URL.'/download.php?'.clean_query_string($_SERVER['QUERY_STRING']).'&amp;js=on';
-    $url2 = clean_xss_tags($_SERVER['HTTP_REFERER']);
+    $url1 = G5_BBS_URL.'/download.php?'.clean_query_string($_SERVER['QUERY_STRING'], false).'&js=on';
+    $url2 = isset($_SERVER['HTTP_REFERER']) ? clean_xss_tags($_SERVER['HTTP_REFERER']) : '';
+    
+    if( $url2 && stripos($url2, $_SERVER['REQUEST_URI']) !== false ){
+        $url2 = G5_BBS_URL.'/board.php?'.clean_query_string($_SERVER['QUERY_STRING'], false);
+    }
 
     //$url1 = 확인link, $url2=취소link
     // 특정주소로 이동시키려면 $url3 이용
@@ -38,13 +51,16 @@ if ($member['mb_level'] < $board['bo_download_level']) {
     if ($member['mb_id'])
         alert($alert_msg);
     else
-        alert($alert_msg.'\\n회원이시라면 로그인 후 이용해 보십시오.', G5_BBS_URL.'/login.php?wr_id='.$wr_id.'&amp;'.$qstr.'&amp;url='.urlencode(G5_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id));
+        alert($alert_msg.'\\n회원이시라면 로그인 후 이용해 보십시오.', G5_BBS_URL.'/login.php?wr_id='.$wr_id.'&amp;'.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id)));
 }
 
 $filepath = G5_DATA_PATH.'/file/'.$bo_table.'/'.$file['bf_file'];
 $filepath = addslashes($filepath);
-if (!is_file($filepath) || !file_exists($filepath))
+$file_exist_check = (!is_file($filepath) || !file_exists($filepath)) ? false : true;
+
+if ( false === run_replace('download_file_exist_check', $file_exist_check, $file) ){
     alert('파일이 존재하지 않습니다.');
+}
 
 // 사용자 코드 실행
 @include_once($board_skin_path.'/download.skin.php');
@@ -93,23 +109,27 @@ if(preg_match("/[\xA1-\xFE][\xA1-\xFE]/", $file['bf_source'])){
 }
 */
 
-$original = urlencode($file['bf_source']);
+//$original = urlencode($file['bf_source']);
+$original = rawurlencode($file['bf_source']);
 
 @include_once($board_skin_path.'/download.tail.skin.php');
 
+run_event('download_file_header', $file, $file_exist_check);
+
 if(preg_match("/msie/i", $_SERVER['HTTP_USER_AGENT']) && preg_match("/5\.5/", $_SERVER['HTTP_USER_AGENT'])) {
     header("content-type: doesn/matter");
-    header("content-length: ".filesize("$filepath"));
+    header("content-length: ".filesize($filepath));
     header("content-disposition: attachment; filename=\"$original\"");
     header("content-transfer-encoding: binary");
 } else if (preg_match("/Firefox/i", $_SERVER['HTTP_USER_AGENT'])){
     header("content-type: file/unknown");
-    header("content-length: ".filesize("$filepath"));
-    header("content-disposition: attachment; filename=\"".basename($file['bf_source'])."\"");
+    header("content-length: ".filesize($filepath));
+    //header("content-disposition: attachment; filename=\"".basename($file['bf_source'])."\"");
+    header("content-disposition: attachment; filename=\"".$original."\"");
     header("content-description: php generated data");
 } else {
     header("content-type: file/unknown");
-    header("content-length: ".filesize("$filepath"));
+    header("content-length: ".filesize($filepath));
     header("content-disposition: attachment; filename=\"$original\"");
     header("content-description: php generated data");
 }
@@ -140,4 +160,3 @@ while(!feof($fp)) {
 }
 fclose ($fp);
 flush();
-?>

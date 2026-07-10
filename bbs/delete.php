@@ -9,6 +9,8 @@ if (!($token && $delete_token == $token))
 
 //$wr = sql_fetch(" select * from $write_table where wr_id = '$wr_id' ");
 
+$count_write = $count_comment = 0;
+
 @include_once($board_skin_path.'/delete.head.skin.php');
 
 if ($is_admin == 'super') // 최고관리자 통과
@@ -30,7 +32,7 @@ else if ($is_admin == 'group') { // 그룹관리자
         alert('자신의 글이 아니므로 삭제할 수 없습니다.');
 } else {
     if ($write['mb_id'])
-        alert('로그인 후 삭제하세요.', './login.php?url='.urlencode('./board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id));
+        alert('로그인 후 삭제하세요.', G5_BBS_URL.'/login.php?url='.urlencode(get_pretty_url($bo_table, $wr_id)));
     else if (!check_password($wr_password, $write['wr_password']))
         alert('비밀번호가 틀리므로 삭제할 수 없습니다.');
 }
@@ -80,7 +82,11 @@ while ($row = sql_fetch_array($result))
         $sql2 = " select * from {$g5['board_file_table']} where bo_table = '$bo_table' and wr_id = '{$row['wr_id']}' ";
         $result2 = sql_query($sql2);
         while ($row2 = sql_fetch_array($result2)) {
-            @unlink(G5_DATA_PATH.'/file/'.$bo_table.'/'.str_replace('../', '', $row2['bf_file']));
+
+            $delete_file = run_replace('delete_file_path', G5_DATA_PATH.'/file/'.$bo_table.'/'.str_replace('../', '', $row2['bf_file']), $row2);
+            if( file_exists($delete_file) ){
+                @unlink($delete_file);
+            }
             // 썸네일삭제
             if(preg_match("/\.({$config['cf_image_extension']})$/i", $row2['bf_file'])) {
                 delete_board_thumbnail($bo_table, $row2['bf_file']);
@@ -105,7 +111,7 @@ while ($row = sql_fetch_array($result))
     }
 }
 
-// 게시글 삭제
+// 게시글과 댓글 삭제
 sql_query(" delete from $write_table where wr_parent = '{$write['wr_id']}' ");
 
 // 최근게시물 삭제
@@ -134,5 +140,6 @@ if ($count_write > 0 || $count_comment > 0)
 
 delete_cache_latest($bo_table);
 
-goto_url(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;page='.$page.$qstr);
-?>
+run_event('bbs_delete', $write, $board);
+
+goto_url(short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;page='.$page.$qstr));

@@ -6,12 +6,20 @@ if($is_guest)
 
 $qaconfig = get_qa_config();
 
+$token = '';
+if( $is_admin ){
+    $token = _token();
+    set_session('ss_qa_delete_token', $token);
+}
+
 $g5['title'] = $qaconfig['qa_title'];
 include_once('./qahead.php');
 
 $skin_file = $qa_skin_path.'/list.skin.php';
+$is_auth = $is_admin ? true : false;
 
 $category_option = '';
+
 if ($qaconfig['qa_category']) {
     $category_href = G5_BBS_URL.'/qalist.php';
 
@@ -21,7 +29,8 @@ if ($qaconfig['qa_category']) {
     $category_option .= '>전체</a></li>';
 
     $categories = explode('|', $qaconfig['qa_category']); // 구분자가 | 로 되어 있음
-    for ($i=0; $i<count($categories); $i++) {
+    $categories_cnt = count($categories);
+    for ($i=0; $i<$categories_cnt; $i++) {
         $category = trim($categories[$i]);
         if ($category=='') continue;
         $category_msg = '';
@@ -50,15 +59,33 @@ if(is_file($skin_file)) {
 
     $stx = trim($stx);
     if($stx) {
-        if (preg_match("/[a-zA-Z]/", $stx))
-            $sql_search .= " and ( INSTR(LOWER(qa_subject), LOWER('$stx')) > 0 or INSTR(LOWER(qa_content), LOWER('$stx')) > 0 )";
-        else
-            $sql_search .= " and ( INSTR(qa_subject, '$stx') > 0 or INSTR(qa_content, '$stx') > 0 ) ";
+        $sfl = trim($sfl);
+        if ($sfl) {
+            switch ($sfl) {
+                case "qa_subject" :
+                case "qa_content" :
+                case "qa_name" :
+                case "mb_id" :
+                    break;
+                default : 
+                    $sfl = "qa_subject";
+            }
+        } else {
+            $sfl = "qa_subject";
+        }
+        $sql_search .= " and (`{$sfl}` like '%{$stx}%') ";
     }
+    // $stx = trim($stx);
+    // if($stx) {
+    //     if (preg_match("/[a-zA-Z]/", $stx))
+    //         $sql_search .= " and ( INSTR(LOWER(qa_subject), LOWER('$stx')) > 0 or INSTR(LOWER(qa_content), LOWER('$stx')) > 0 )";
+    //     else
+    //         $sql_search .= " and ( INSTR(qa_subject, '$stx') > 0 or INSTR(qa_content, '$stx') > 0 ) ";
+    // }
 
     $sql_order = " order by qa_num ";
 
-    $sql = " select count(*) as cnt
+    $sql = " select count(*) as cnt 
                 $sql_common
                 $sql_search ";
     $row = sql_fetch($sql);
@@ -121,4 +148,3 @@ if(is_file($skin_file)) {
 }
 
 include_once('./qatail.php');
-?>

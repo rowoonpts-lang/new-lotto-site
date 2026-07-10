@@ -99,7 +99,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++) {
     $list[$i]['bo_table'] = $row['bo_table'];
     $list[$i]['name'] = $name;
     $list[$i]['comment'] = $comment;
-    $list[$i]['href'] = './board.php?bo_table='.$row['bo_table'].'&amp;wr_id='.$row2['wr_id'].$comment_link;
+    $list[$i]['href'] = get_pretty_url($row['bo_table'], $row2['wr_id'], $comment_link);
     $list[$i]['datetime'] = $datetime;
     $list[$i]['datetime2'] = $datetime2;
 
@@ -113,4 +113,3 @@ $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['c
 include_once($new_skin_path.'/new.skin.php');
 
 include_once('./_tail.php');
-?>

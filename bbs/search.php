@@ -25,7 +25,7 @@ if ($stx) {
     $sql = " select gr_id, bo_table, bo_read_level from {$g5['board_table']} where bo_use_search = 1 and bo_list_level <= '{$member['mb_level']}' ";
     if ($gr_id)
         $sql .= " and gr_id = '{$gr_id}' ";
-    $onetable = isset($onetable) ? $onetable : "";
+    $onetable = isset($onetable) ? preg_replace('/[^a-z0-9_]/i', '', $onetable) : '';
     if ($onetable) // 하나의 게시판만 검색한다면
         $sql .= " and bo_table = '{$onetable}' ";
     $sql .= " order by bo_order, gr_id, bo_table ";
@@ -72,7 +72,9 @@ if ($stx) {
     $field = explode('||', trim($sfl));
 
     $str = '(';
-    for ($i=0; $i<count($s); $i++) {
+    $s_cnt = count($s);
+    $field_cnt = count($field);
+    for ($i=0; $i<$s_cnt; $i++) {
         if (trim($s[$i]) == '') continue;
 
         $search_str = $s[$i];
@@ -85,7 +87,7 @@ if ($stx) {
 
         $op2 = '';
         // 필드의 수만큼 다중 필드 검색 가능 (필드1+필드2...)
-        for ($k=0; $k<count($field); $k++) {
+        for ($k=0; $k<$field_cnt; $k++) {
             $str .= $op2;
             switch ($field[$k]) {
                 case 'mb_id' :
@@ -119,7 +121,8 @@ if ($stx) {
     $time1 = get_microtime();
 
     $total_count = 0;
-    for ($i=0; $i<count($g5_search['tables']); $i++) {
+    $tables_cnt = count($g5_search['tables']);
+    for ($i=0; $i<$tables_cnt; $i++) {
         $tmp_write_table   = $g5['write_prefix'] . $g5_search['tables'][$i];
 
         $sql = " select wr_id from {$tmp_write_table} where {$sql_search} ";
@@ -148,10 +151,11 @@ if ($stx) {
     if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
     $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
-    for ($i=0; $i<count($search_table); $i++) {
+    $search_table_cnt = count($search_table);
+    for ($i=0; $i<$search_table_cnt; $i++) {
         if ($from_record < $search_table_count[$i]) {
             $table_index = $i;
-            $from_record = $from_record - $search_table_count[$i-1];
+            $from_record = $from_record - ($i > 0 ? $search_table_count[$i-1] : 0);
             break;
         }
     }
@@ -172,7 +176,7 @@ if ($stx) {
         for ($i=0; $row=sql_fetch_array($result); $i++) {
             // 검색어까지 링크되면 게시판 부하가 일어남
             $list[$idx][$i] = $row;
-            $list[$idx][$i]['href'] = './board.php?bo_table='.$search_table[$idx].'&amp;wr_id='.$row['wr_parent'];
+            $list[$idx][$i]['href'] = get_pretty_url($search_table[$idx], $row['wr_parent']);
 
             if ($row['wr_is_comment'])
             {
@@ -183,11 +187,11 @@ if ($stx) {
             }
 
             // 비밀글은 검색 불가
-            if (strstr($row['wr_option'].$row2['wr_option'], 'secret'))
+            if (strpos($row['wr_option'].(isset($row2['wr_option']) ? $row2['wr_option'] : ''), 'secret') !== false)
                 $row['wr_content'] = '[비밀글 입니다.]';
 
             $subject = get_text($row['wr_subject']);
-            if (strstr($sfl, 'wr_subject'))
+            if (strpos($sfl, 'wr_subject') !== false)
                 $subject = search_font($stx, $subject);
 
             if ($read_level[$idx] <= $member['mb_level'])
@@ -199,7 +203,7 @@ if ($stx) {
                 $content = str_replace('&nbsp;', '', $content);
                 $content = cut_str($content, 300, "…");
 
-                if (strstr($sfl, 'wr_content'))
+                if (strpos($sfl, 'wr_content') !== false)
                     $content = search_font($stx, $content);
             }
             else
@@ -228,7 +232,7 @@ $group_select = '<label for="gr_id" class="sound_only">게시판 그룹선택</l
 $sql = " select gr_id, gr_subject from {$g5['group_table']} order by gr_id ";
 $result = sql_query($sql);
 for ($i=0; $row=sql_fetch_array($result); $i++)
-    $group_select .= "<option value=\"".$row['gr_id']."\"".get_selected($_GET['gr_id'], $row['gr_id']).">".$row['gr_subject']."</option>";
+    $group_select .= "<option value=\"".$row['gr_id']."\"".get_selected($gr_id, $row['gr_id']).">".$row['gr_subject']."</option>";
 $group_select .= '</select>';
 
 if (!$sfl) $sfl = 'wr_subject';
@@ -237,4 +241,3 @@ if (!$sop) $sop = 'or';
 include_once($search_skin_path.'/search.skin.php');
 
 include_once('./_tail.php');
-?>

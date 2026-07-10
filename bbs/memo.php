@@ -9,21 +9,25 @@ set_session('ss_memo_delete_token', $token = uniqid(time()));
 $g5['title'] = '내 쪽지함';
 include_once(G5_PATH.'/head.sub.php');
 
-$kind = $kind ? clean_xss_tags(strip_tags($kind)) : 'recv';
+$kind = isset($_GET['kind']) ? clean_xss_tags($_GET['kind'], 0, 1) : 'recv';
 
 if ($kind == 'recv')
     $unkind = 'send';
 else if ($kind == 'send')
     $unkind = 'recv';
-else
-    alert(''.$kind .'값을 넘겨주세요.');
+else {
+    alert("kind 변수 값이 올바르지 않습니다.");
+}
 
-$sql = " select count(*) as cnt from {$g5['memo_table']} where me_{$kind}_mb_id = '{$member['mb_id']}' ";
+if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
+
+run_event('memo_list', $kind, $unkind, $page);
+
+$sql = " select count(*) as cnt from {$g5['memo_table']} where me_{$kind}_mb_id = '{$member['mb_id']}' and me_type = '$kind' ";
 $row = sql_fetch($sql);
 $total_count = $row['cnt'];
 
 $total_page  = ceil($total_count / $config['cf_page_rows']);  // 전체 페이지 계산
-if ($page < 1) { $page = 1; } // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ((int) $page - 1) * $config['cf_page_rows']; // 시작 열을 구함
 
 if ($kind == 'recv')
@@ -44,8 +48,9 @@ $list = array();
 $sql = " select a.*, b.mb_id, b.mb_nick, b.mb_email, b.mb_homepage
             from {$g5['memo_table']} a
             left join {$g5['member_table']} b on (a.me_{$unkind}_mb_id = b.mb_id)
-            where a.me_{$kind}_mb_id = '{$member['mb_id']}'
+            where a.me_{$kind}_mb_id = '{$member['mb_id']}' and a.me_type = '$kind'
             order by a.me_id desc limit $from_record, {$config['cf_page_rows']} ";
+
 $result = sql_query($sql);
 for ($i=0; $row=sql_fetch_array($result); $i++)
 {
@@ -67,6 +72,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
 
     $send_datetime = substr($row['me_send_datetime'],2,14);
 
+    $list[$i]['mb_id'] = $mb_id;
     $list[$i]['name'] = $name;
     $list[$i]['send_datetime'] = $send_datetime;
     $list[$i]['read_datetime'] = $read_datetime;
@@ -79,4 +85,3 @@ $write_pages = get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['c
 include_once($member_skin_path.'/memo.skin.php');
 
 include_once(G5_PATH.'/tail.sub.php');
-?>

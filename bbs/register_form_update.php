@@ -17,25 +17,25 @@ if ($w == 'u' && $is_admin == 'super') {
         alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
 }
 
-if (!chk_captcha()) {
+if (run_replace('register_member_chk_captcha', !chk_captcha(), $w)) {
     alert('자동등록방지 숫자가 틀렸습니다.');
 }
 
 if($w == 'u')
     $mb_id = isset($_SESSION['ss_mb_id']) ? trim($_SESSION['ss_mb_id']) : '';
 else if($w == '')
-    $mb_id = trim($_POST['mb_id']);
+    $mb_id = isset($_POST['mb_id']) ? trim($_POST['mb_id']) : '';
 else
     alert('잘못된 접근입니다', G5_URL);
 
 if(!$mb_id)
     alert('회원아이디 값이 없습니다. 올바른 방법으로 이용해 주십시오.');
 
-$mb_password    = trim($_POST['mb_password']);
-$mb_password_re = trim($_POST['mb_password_re']);
-$mb_name        = trim($_POST['mb_name']);
-$mb_nick        = trim($_POST['mb_nick']);
-$mb_email       = trim($_POST['mb_email']);
+$mb_password    = isset($_POST['mb_password']) ? trim($_POST['mb_password']) : '';
+$mb_password_re = isset($_POST['mb_password_re']) ? trim($_POST['mb_password_re']) : '';
+$mb_name        = isset($_POST['mb_name']) ? trim($_POST['mb_name']) : '';
+$mb_nick        = isset($_POST['mb_nick']) ? trim($_POST['mb_nick']) : '';
+$mb_email       = isset($_POST['mb_email']) ? trim($_POST['mb_email']) : '';
 $mb_sex         = isset($_POST['mb_sex'])           ? trim($_POST['mb_sex'])         : "";
 $mb_birth       = isset($_POST['mb_birth'])         ? trim($_POST['mb_birth'])       : "";
 $mb_homepage    = isset($_POST['mb_homepage'])      ? trim($_POST['mb_homepage'])    : "";
@@ -50,8 +50,9 @@ $mb_addr_jibeon = isset($_POST['mb_addr_jibeon'])   ? trim($_POST['mb_addr_jibeo
 $mb_signature   = isset($_POST['mb_signature'])     ? trim($_POST['mb_signature'])   : "";
 $mb_profile     = isset($_POST['mb_profile'])       ? trim($_POST['mb_profile'])     : "";
 $mb_recommend   = isset($_POST['mb_recommend'])     ? trim($_POST['mb_recommend'])   : "";
-$mb_mailling    = isset($_POST['mb_mailling'])      ? trim($_POST['mb_mailling'])    : "";
-$mb_sms         = isset($_POST['mb_sms'])           ? trim($_POST['mb_sms'])         : "";
+$mb_mailling    = isset($_POST['mb_mailling'])      ? trim($_POST['mb_mailling'])    : "0";
+$mb_sms         = isset($_POST['mb_sms'])           ? trim($_POST['mb_sms'])         : "0";
+$mb_open        = isset($_POST['mb_open'])          ? trim($_POST['mb_open'])        : "0";
 $mb_1           = isset($_POST['mb_1'])             ? trim($_POST['mb_1'])           : "";
 $mb_2           = isset($_POST['mb_2'])             ? trim($_POST['mb_2'])           : "";
 $mb_3           = isset($_POST['mb_3'])             ? trim($_POST['mb_3'])           : "";
@@ -62,25 +63,35 @@ $mb_7           = isset($_POST['mb_7'])             ? trim($_POST['mb_7'])      
 $mb_8           = isset($_POST['mb_8'])             ? trim($_POST['mb_8'])           : "";
 $mb_9           = isset($_POST['mb_9'])             ? trim($_POST['mb_9'])           : "";
 $mb_10          = isset($_POST['mb_10'])            ? trim($_POST['mb_10'])          : "";
-
-$mb_name        = clean_xss_tags($mb_name);
+$mb_name        = addslashes(clean_xss_tags(stripslashes($mb_name), 1, 1));
 $mb_email       = get_email_address($mb_email);
-$mb_homepage    = clean_xss_tags($mb_homepage);
-$mb_tel         = clean_xss_tags($mb_tel);
+$mb_homepage    = addslashes(clean_xss_tags(stripslashes($mb_homepage), 1, 1));
+$mb_tel         = addslashes(clean_xss_tags(stripslashes($mb_tel), 1, 1));
 $mb_zip1        = preg_replace('/[^0-9]/', '', $mb_zip1);
 $mb_zip2        = preg_replace('/[^0-9]/', '', $mb_zip2);
-$mb_addr1       = clean_xss_tags($mb_addr1);
-$mb_addr2       = clean_xss_tags($mb_addr2);
-$mb_addr3       = clean_xss_tags($mb_addr3);
-$mb_addr_jibeon = preg_match("/^(N|R)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '';
+$mb_addr1       = addslashes(clean_xss_tags(stripslashes($mb_addr1), 1, 1));
+$mb_addr2       = addslashes(clean_xss_tags(stripslashes($mb_addr2), 1, 1));
+$mb_addr3       = addslashes(clean_xss_tags(stripslashes($mb_addr3), 1, 1));
+$mb_addr_jibeon = preg_match("/^(N|R|J)$/", $mb_addr_jibeon) ? $mb_addr_jibeon : '';
 
+$mb_marketing_agree     = isset($_POST['mb_marketing_agree'])   ? trim($_POST['mb_marketing_agree'])    : "0";
+$mb_thirdparty_agree    = isset($_POST['mb_thirdparty_agree'])  ? trim($_POST['mb_thirdparty_agree'])   : "0";
 
-if(!$mb_hp){
-	$mb_hp = $mb_1.$mb_2.$mb_3;
+// _default 변수 명시적 초기화 (폼에 해당 섹션이 없으면 null)
+$mb_marketing_agree_default  = isset($_POST['mb_marketing_agree_default'])  ? trim($_POST['mb_marketing_agree_default'])  : null;
+$mb_mailling_default         = isset($_POST['mb_mailling_default'])         ? trim($_POST['mb_mailling_default'])         : null;
+$mb_sms_default              = isset($_POST['mb_sms_default'])              ? trim($_POST['mb_sms_default'])              : null;
+$mb_thirdparty_agree_default = isset($_POST['mb_thirdparty_agree_default']) ? trim($_POST['mb_thirdparty_agree_default']) : null;
+
+// 폼에 수신설정 섹션이 없는 경우 기존 DB 값 유지 (회원정보 수정 시)
+if ($w == 'u') {
+    if ($mb_marketing_agree_default === null) $mb_marketing_agree = $member['mb_marketing_agree'];
+    if ($mb_mailling_default === null)        $mb_mailling = $member['mb_mailling'];
+    if ($mb_sms_default === null)             $mb_sms = $member['mb_sms'];
+    if ($mb_thirdparty_agree_default === null) $mb_thirdparty_agree = $member['mb_thirdparty_agree'];
 }
-if(!$mb_tel){
-	$mb_tel = $mb_1.$mb_2.$mb_3;
-}
+
+run_event('register_form_update_before', $mb_id, $w);
 
 if ($w == '' || $w == 'u') {
 
@@ -99,10 +110,15 @@ if ($w == '' || $w == 'u') {
         alert('닉네임을 올바르게 입력해 주십시오.');
     }
 
-    if ($w == '' && !$mb_password)
-        alert('비밀번호가 넘어오지 않았습니다.');
-    if($w == '' && $mb_password != $mb_password_re)
-        alert('비밀번호가 일치하지 않습니다.');
+    // 비밀번호를 체크하는 상태의 기본값은 true이며, 비밀번호를 체크하지 않으려면 hook 을 통해 false 값으로 바꿔야 합니다.
+    $is_check_password = run_replace('register_member_password_check', true, $mb_id, $mb_nick, $mb_email, $w);
+
+    if ($is_check_password){
+        if ($w == '' && !$mb_password)
+            alert('비밀번호가 넘어오지 않았습니다.');
+        if ($w == '' && $mb_password != $mb_password_re)
+            alert('비밀번호가 일치하지 않습니다.');
+    }
 
     if ($msg = empty_mb_name($mb_name))       alert($msg, "", true, true);
     if ($msg = empty_mb_nick($mb_nick))     alert($msg, "", true, true);
@@ -116,7 +132,7 @@ if ($w == '' || $w == 'u') {
     if ($msg = prohibit_mb_email($mb_email))alert($msg, "", true, true);
 
     // 휴대폰 필수입력일 경우 휴대폰번호 유효성 체크
-    if (($config['cf_use_hp'] || $config['cf_cert_hp']) && $config['cf_req_hp']) {
+    if (($config['cf_use_hp'] || $config['cf_cert_hp'] || $config['cf_cert_simple']) && $config['cf_req_hp']) {
         if ($msg = valid_mb_hp($mb_hp))     alert($msg, "", true, true);
     }
 
@@ -133,7 +149,8 @@ if ($w == '' || $w == 'u') {
 
         // 본인확인 체크
         if($config['cf_cert_use'] && $config['cf_cert_req']) {
-            if(trim($_POST['cert_no']) != $_SESSION['ss_cert_no'] || !$_SESSION['ss_cert_no'])
+            $post_cert_no = isset($_POST['cert_no']) ? trim($_POST['cert_no']) : '';
+            if($post_cert_no !== get_session('ss_cert_no') || ! get_session('ss_cert_no'))
                 alert("회원가입을 위해서는 본인확인을 해주셔야 합니다.");
         }
 
@@ -154,6 +171,8 @@ if ($w == '' || $w == 'u') {
         $old_email = $member['mb_email'];
     }
 
+    run_event('register_form_update_valid', $w, $mb_id, $mb_nick, $mb_email);
+
     if ($msg = exist_mb_nick($mb_nick, $mb_id))     alert($msg, "", true, true);
     if ($msg = exist_mb_email($mb_email, $mb_id))   alert($msg, "", true, true);
 }
@@ -164,47 +183,41 @@ if ($w == '' || $w == 'u') {
 //===============================================================
 //  본인확인
 //---------------------------------------------------------------
-
-
-
 $mb_hp = hyphen_hp_number($mb_hp);
-$mb_hp = str_replace("-","",$mb_hp);
-if($config['cf_cert_use'] && $_SESSION['ss_cert_type'] && $_SESSION['ss_cert_dupinfo']) {
+if($config['cf_cert_use'] && get_session('ss_cert_type') && get_session('ss_cert_dupinfo')) {
     // 중복체크
-    $sql = " select mb_id from {$g5['member_table']} where mb_id <> '{$member['mb_id']}' and mb_dupinfo = '{$_SESSION['ss_cert_dupinfo']}' ";
+    $sql = " select mb_id from {$g5['member_table']} where mb_id <> '{$member['mb_id']}' and mb_dupinfo = '".get_session('ss_cert_dupinfo')."' ";
     $row = sql_fetch($sql);
-    if ($row['mb_id']) {
-        alert("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원아이디 : ".$row['mb_id']);
+    if (!empty($row['mb_id'])) {
+        alert("입력하신 본인확인 정보로 가입된 내역이 존재합니다.");
     }
 }
 
-$sql2 = "select count(*) cnt from {$g5['member_table']} where 1=1 and mb_hp = '{$mb_hp}'";
-$row2 = sql_fetch($sql2);
-if($row2['cnt'] > 0 ){
-	alert("입력하신 휴대폰 번호 정보로 가입된 내역이 존재합니다.");
-}
-
-
-$sql_certify = ", mb_hp = '{$mb_hp}' ";
-$md5_cert_no = $_SESSION['ss_cert_no'];
-$cert_type = $_SESSION['ss_cert_type'];
-/*if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
+$sql_certify = '';
+$md5_cert_no = get_session('ss_cert_no');
+$cert_type = get_session('ss_cert_type');
+if ($config['cf_cert_use'] && $cert_type && $md5_cert_no) {
     // 해시값이 같은 경우에만 본인확인 값을 저장한다.
-    if ($_SESSION['ss_cert_hash'] == md5($mb_name.$cert_type.$_SESSION['ss_cert_birth'].$md5_cert_no)) {
+    if ($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
         $sql_certify .= " , mb_certify  = '{$cert_type}' ";
-        $sql_certify .= " , mb_adult = '{$_SESSION['ss_cert_adult']}' ";
-        $sql_certify .= " , mb_birth = '{$_SESSION['ss_cert_birth']}' ";
-        $sql_certify .= " , mb_sex = '{$_SESSION['ss_cert_sex']}' ";
-        $sql_certify .= " , mb_dupinfo = '{$_SESSION['ss_cert_dupinfo']}' ";
+        $sql_certify .= " , mb_adult = '".get_session('ss_cert_adult')."' ";
+        $sql_certify .= " , mb_birth = '".get_session('ss_cert_birth')."' ";
+        $sql_certify .= " , mb_sex = '".get_session('ss_cert_sex')."' ";
+        $sql_certify .= " , mb_dupinfo = '".get_session('ss_cert_dupinfo')."' ";
         if($w == 'u')
             $sql_certify .= " , mb_name = '{$mb_name}' ";
-    } else {
+    } else if($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
         $sql_certify .= " , mb_hp = '{$mb_hp}' ";
-        $sql_certify .= " , mb_certify  = '' ";
-        $sql_certify .= " , mb_adult = 0 ";
-        $sql_certify .= " , mb_birth = '' ";
-        $sql_certify .= " , mb_sex = '' ";
+        $sql_certify .= " , mb_certify  = '{$cert_type}' ";
+        $sql_certify .= " , mb_adult = '".get_session('ss_cert_adult')."' ";
+        $sql_certify .= " , mb_birth = '".get_session('ss_cert_birth')."' ";
+        $sql_certify .= " , mb_sex = '".get_session('ss_cert_sex')."' ";
+        $sql_certify .= " , mb_dupinfo = '".get_session('ss_cert_dupinfo')."' ";
+        if($w == 'u')
+            $sql_certify .= " , mb_name = '{$mb_name}' ";
+    }else {
+        alert('본인인증된 정보와 입력된 회원정보가 일치하지않습니다. 다시시도 해주세요');
     }
 } else {
     if (get_session("ss_reg_mb_name") != $mb_name || get_session("ss_reg_mb_hp") != $mb_hp) {
@@ -214,13 +227,11 @@ $cert_type = $_SESSION['ss_cert_type'];
         $sql_certify .= " , mb_birth = '' ";
         $sql_certify .= " , mb_sex = '' ";
     }
-}*/
+}
 //===============================================================
-
 if ($w == '') {
     $sql = " insert into {$g5['member_table']}
                 set mb_id = '{$mb_id}',
-					mb_code = '".fnNewMbCode()."',
                      mb_password = '".get_encrypt_string($mb_password)."',
                      mb_name = '{$mb_name}',
                      mb_nick = '{$mb_nick}',
@@ -243,8 +254,8 @@ if ($w == '') {
                      mb_recommend = '{$mb_recommend}',
                      mb_login_ip = '{$_SERVER['REMOTE_ADDR']}',
                      mb_mailling = '{$mb_mailling}',
-                     mb_sms = '1',
-                     mb_open = '1',
+                     mb_sms = '{$mb_sms}',
+                     mb_open = '{$mb_open}',
                      mb_open_date = '".G5_TIME_YMD."',
                      mb_1 = '{$mb_1}',
                      mb_2 = '{$mb_2}',
@@ -256,12 +267,45 @@ if ($w == '') {
                      mb_8 = '{$mb_8}',
                      mb_9 = '{$mb_9}',
                      mb_10 = '{$mb_10}',
-					 mb_type = '무료회원'
+                     mb_marketing_agree = '{$mb_marketing_agree}',
+                     mb_thirdparty_agree = '{$mb_thirdparty_agree}'
                      {$sql_certify} ";
 
     // 이메일 인증을 사용하지 않는다면 이메일 인증시간을 바로 넣는다
     if (!$config['cf_use_email_certify'])
         $sql .= " , mb_email_certify = '".G5_TIME_YMDHIS."' ";
+
+    $agree_items = array();
+    // 마케팅 목적의 개인정보 수집 및 이용
+    if ($mb_marketing_agree == 1) {
+        $sql .=  " , mb_marketing_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "마케팅 목적의 개인정보 수집 및 이용(동의)";
+    }
+
+    // 광고성 이메일 수신
+    if ($mb_mailling == 1) {
+        $sql .=  " , mb_mailling_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "광고성 이메일 수신(동의)";
+    }
+
+    // 광고성 SMS/카카오톡 수신
+    if ($mb_sms == 1) {
+        $sql .=  " , mb_sms_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "광고성 SMS/카카오톡 수신(동의)";
+    }
+
+    // 개인정보 제3자 제공
+    if ($mb_thirdparty_agree == 1) {
+        $sql .=  " , mb_thirdparty_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "개인정보 제3자 제공(동의)";
+    }
+
+    // 동의 로그 추가
+    if (!empty($agree_items)) {
+        $agree_log = "[".G5_TIME_YMDHIS.", 회원가입] " . implode(' | ', $agree_items) . "\n";
+        $sql .= " , mb_agree_log = CONCAT('{$agree_log}', IFNULL(mb_agree_log, ''))";
+    }
+
     sql_query($sql);
 
     // 회원가입 포인트 부여
@@ -275,9 +319,9 @@ if ($w == '') {
     if ($config['cf_email_mb_member']) {
         $subject = '['.$config['cf_title'].'] 회원가입을 축하드립니다.';
 
-        // 어떠한 회원정보도 포함되지 않은 일회용 난수를 생성하여 인증에 사용
+        // 어떠한 회원정보도 포함되지 않은 일회용 난수를 생성하여 인증에 사용 (CSPRNG 사용)
         if ($config['cf_use_email_certify']) {
-            $mb_md5 = md5(pack('V*', rand(), rand(), rand(), rand()));
+            $mb_md5 = get_random_token_string(16);
             sql_query(" update {$g5['member_table']} set mb_email_certify2 = '$mb_md5' where mb_id = '$mb_id' ");
             $certify_href = G5_BBS_URL.'/email_certify.php?mb_id='.$mb_id.'&amp;mb_md5='.$mb_md5;
         }
@@ -286,8 +330,12 @@ if ($w == '') {
         include_once ('./register_form_update_mail1.php');
         $content = ob_get_contents();
         ob_end_clean();
+        
+        $content = run_replace('register_form_update_mail_mb_content', $content, $mb_id);
 
         mailer($config['cf_admin_email_name'], $config['cf_admin_email'], $mb_email, $subject, $content, 1);
+
+        run_event('register_form_update_send_mb_mail', $config['cf_admin_email_name'], $config['cf_admin_email'], $mb_email, $subject, $content);
 
         // 메일인증을 사용하는 경우 가입메일에 인증 url이 있으므로 인증메일을 다시 발송되지 않도록 함
         if($config['cf_use_email_certify'])
@@ -296,29 +344,36 @@ if ($w == '') {
 
     // 최고관리자님께 메일 발송
     if ($config['cf_email_mb_super_admin']) {
-        $subject = '['.$config['cf_title'].'] '.$mb_nick .' 님께서 회원으로 가입하셨습니다.';
+        $subject = run_replace('register_form_update_mail_admin_subject', '['.$config['cf_title'].'] '.$mb_nick .' 님께서 회원으로 가입하셨습니다.', $mb_id, $mb_nick);
 
         ob_start();
         include_once ('./register_form_update_mail2.php');
         $content = ob_get_contents();
         ob_end_clean();
+        
+        $content = run_replace('register_form_update_mail_admin_content', $content, $mb_id);
 
         mailer($mb_nick, $mb_email, $config['cf_admin_email'], $subject, $content, 1);
+
+        run_event('register_form_update_send_admin_mail', $mb_nick, $mb_email, $config['cf_admin_email'], $subject, $content);
     }
 
     // 메일인증 사용하지 않는 경우에만 로그인
-    if (!$config['cf_use_email_certify'])
+    if (!$config['cf_use_email_certify']) {
         set_session('ss_mb_id', $mb_id);
+        if(function_exists('update_auth_session_token')) update_auth_session_token(G5_TIME_YMDHIS);
+    }
 
     set_session('ss_mb_reg', $mb_id);
 
-	//etc 테이블에 추가
-	setEtcInfo($mb_id, '직접가입');
-
-
+    if($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함)
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'), get_session('ss_cert_type') ); // 본인인증 후 정보 수정 시 내역 기록
+    }else if($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'), get_session('ss_cert_type') ); // 본인인증 후 정보 수정 시 내역 기록
+    }
 
 } else if ($w == 'u') {
-    if (!trim($_SESSION['ss_mb_id']))
+    if (!trim(get_session('ss_mb_id')))
         alert('로그인 되어 있지 않습니다.');
 
     if (trim($_POST['mb_id']) != $mb_id)
@@ -333,13 +388,50 @@ if ($w == '') {
         $sql_nick_date =  " , mb_nick_date = '".G5_TIME_YMD."' ";
 
     $sql_open_date = "";
-    if ($mb_open_default != $mb_open)
+    if (isset($mb_open_default) && $mb_open_default != $mb_open)
         $sql_open_date =  " , mb_open_date = '".G5_TIME_YMD."' ";
 
     // 이전 메일주소와 수정한 메일주소가 틀리다면 인증을 다시 해야하므로 값을 삭제
     $sql_email_certify = '';
     if ($old_email != $mb_email && $config['cf_use_email_certify'])
         $sql_email_certify = " , mb_email_certify = '' ";
+
+    $agree_items = array();
+    
+    // 마케팅 목적의 개인정보 수집 및 이용
+    $sql_marketing_date = "";
+    if ($mb_marketing_agree_default !== null && $mb_marketing_agree_default !== $mb_marketing_agree) {
+        $sql_marketing_date .= " , mb_marketing_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "마케팅 목적의 개인정보 수집 및 이용(" . ($mb_marketing_agree == 1 ? "동의" : "철회") . ")";
+    }
+
+    // 광고성 이메일 수신
+    $sql_mailling_date = "";
+    if ($mb_mailling_default !== null && $mb_mailling_default !== $mb_mailling) {
+        $sql_mailling_date .= " , mb_mailling_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "광고성 이메일 수신(" . ($mb_mailling == 1 ? "동의" : "철회") . ")";
+    }
+    
+    // 광고성 SMS/카카오톡 수신
+    $sql_sms_date = "";
+    if ($mb_sms_default !== null && $mb_sms_default !== $mb_sms) {
+        $sql_sms_date .= " , mb_sms_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "광고성 SMS/카카오톡 수신(" . ($mb_sms == 1 ? "동의" : "철회") . ")";
+    }
+    
+    // 개인정보 제3자 제공
+    $sql_thirdparty_date = "";
+    if ($mb_thirdparty_agree_default !== null && $mb_thirdparty_agree_default !== $mb_thirdparty_agree) {
+        $sql_thirdparty_date .= " , mb_thirdparty_date = '".G5_TIME_YMDHIS."' ";
+        $agree_items[] = "개인정보 제3자 제공(" . ($mb_thirdparty_agree == 1 ? "동의" : "철회") . ")";
+    }
+    
+    // 동의 로그 추가
+    $sql_agree_log = "";
+    if (!empty($agree_items)) {
+        $agree_log = "[".G5_TIME_YMDHIS.", 회원 정보 수정] " . implode(' | ', $agree_items) . "\n";
+        $sql_agree_log .= " , mb_agree_log = CONCAT('{$agree_log}', IFNULL(mb_agree_log, ''))";
+    }
 
     $sql = " update {$g5['member_table']}
                 set mb_nick = '{$mb_nick}',
@@ -366,14 +458,27 @@ if ($w == '') {
                     mb_7 = '{$mb_7}',
                     mb_8 = '{$mb_8}',
                     mb_9 = '{$mb_9}',
-                    mb_10 = '{$mb_10}'
+                    mb_10 = '{$mb_10}',
+                    mb_marketing_agree = '{$mb_marketing_agree}',
+                    mb_thirdparty_agree = '{$mb_thirdparty_agree}'
                     {$sql_password}
                     {$sql_nick_date}
                     {$sql_open_date}
                     {$sql_email_certify}
                     {$sql_certify}
+                    {$sql_mailling_date}
+                    {$sql_sms_date}
+                    {$sql_marketing_date}
+                    {$sql_thirdparty_date}
+                    {$sql_agree_log}
               where mb_id = '$mb_id' ";
     sql_query($sql);
+
+    if($cert_type == 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$md5_cert_no)) { // 아이핀일때 hash 값 체크 hp미포함)
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'), get_session('ss_cert_type') ); // 본인인증 후 정보 수정 시 내역 기록
+    }else if($cert_type != 'ipin' && get_session('ss_cert_hash') == md5($mb_name.$cert_type.get_session('ss_cert_birth').$mb_hp.$md5_cert_no)) { // 간편인증, 휴대폰일때 hash 값 체크 hp포함
+        insert_member_cert_history($mb_id, $mb_name, $mb_hp, get_session('ss_cert_birth'), get_session('ss_cert_type') ); // 본인인증 후 정보 수정 시 내역 기록
+    }
 }
 
 
@@ -382,7 +487,7 @@ $mb_dir = G5_DATA_PATH.'/member/'.substr($mb_id,0,2);
 
 // 아이콘 삭제
 if (isset($_POST['del_mb_icon'])) {
-    @unlink($mb_dir.'/'.$mb_id.'.gif');
+    @unlink($mb_dir.'/'.get_mb_icon_name($mb_id).'.gif');
 }
 
 $msg = "";
@@ -390,7 +495,7 @@ $msg = "";
 // 아이콘 업로드
 $mb_icon = '';
 $image_regex = "/(\.(gif|jpe?g|png))$/i";
-$mb_icon_img = $mb_id.'.gif';
+$mb_icon_img = get_mb_icon_name($mb_id).'.gif';
 
 if (isset($_FILES['mb_icon']) && is_uploaded_file($_FILES['mb_icon']['tmp_name'])) {
     if (preg_match($image_regex, $_FILES['mb_icon']['name'])) {
@@ -499,8 +604,8 @@ if( $config['cf_member_img_size'] && $config['cf_member_img_width'] && $config['
 if ($config['cf_use_email_certify'] && $old_email != $mb_email) {
     $subject = '['.$config['cf_title'].'] 인증확인 메일입니다.';
 
-    // 어떠한 회원정보도 포함되지 않은 일회용 난수를 생성하여 인증에 사용
-    $mb_md5 = md5(pack('V*', rand(), rand(), rand(), rand()));
+    // 어떠한 회원정보도 포함되지 않은 일회용 난수를 생성하여 인증에 사용 (CSPRNG 사용)
+    $mb_md5 = get_random_token_string(16);
 
     sql_query(" update {$g5['member_table']} set mb_email_certify2 = '$mb_md5' where mb_id = '$mb_id' ");
 
@@ -510,22 +615,76 @@ if ($config['cf_use_email_certify'] && $old_email != $mb_email) {
     include_once ('./register_form_update_mail3.php');
     $content = ob_get_contents();
     ob_end_clean();
+    
+    $content = run_replace('register_form_update_mail_certify_content', $content, $mb_id);
 
     mailer($config['cf_admin_email_name'], $config['cf_admin_email'], $mb_email, $subject, $content, 1);
+
+    run_event('register_form_update_send_certify_mail', $config['cf_admin_email_name'], $config['cf_admin_email'], $mb_email, $subject, $content);
+}
+
+
+// 신규회원 쿠폰발생
+if($w == '' && isset($default['de_member_reg_coupon_use']) && $default['de_member_reg_coupon_use'] && $default['de_member_reg_coupon_term'] > 0 && $default['de_member_reg_coupon_price'] > 0) {
+    $j = 0;
+    $create_coupon = false;
+
+    do {
+        $cp_id = get_coupon_id();
+
+        $sql3 = " select count(*) as cnt from {$g5['g5_shop_coupon_table']} where cp_id = '$cp_id' ";
+        $row3 = sql_fetch($sql3);
+
+        if(!$row3['cnt']) {
+            $create_coupon = true;
+            break;
+        } else {
+            if($j > 20)
+                break;
+        }
+    } while(1);
+
+    if($create_coupon) {
+        $cp_subject = '신규 회원가입 축하 쿠폰';
+        $cp_method = 2;
+        $cp_target = '';
+        $cp_start = G5_TIME_YMD;
+        $cp_end = date("Y-m-d", (G5_SERVER_TIME + (86400 * ((int)$default['de_member_reg_coupon_term'] - 1))));
+        $cp_type = 0;
+        $cp_price = $default['de_member_reg_coupon_price'];
+        $cp_trunc = 1;
+        $cp_minimum = $default['de_member_reg_coupon_minimum'];
+        $cp_maximum = 0;
+
+        $sql = " INSERT INTO {$g5['g5_shop_coupon_table']}
+                    ( cp_id, cp_subject, cp_method, cp_target, mb_id, cp_start, cp_end, cp_type, cp_price, cp_trunc, cp_minimum, cp_maximum, cp_datetime )
+                VALUES
+                    ( '$cp_id', '$cp_subject', '$cp_method', '$cp_target', '$mb_id', '$cp_start', '$cp_end', '$cp_type', '$cp_price', '$cp_trunc', '$cp_minimum', '$cp_maximum', '".G5_TIME_YMDHIS."' ) ";
+
+        $res = sql_query($sql, false);
+
+        if($res)
+            set_session('ss_member_reg_coupon', 1);
+    }
 }
 
 
 // 사용자 코드 실행
 @include_once ($member_skin_path.'/register_form_update.tail.skin.php');
 
-unset($_SESSION['ss_cert_type']);
-unset($_SESSION['ss_cert_no']);
-unset($_SESSION['ss_cert_hash']);
-unset($_SESSION['ss_cert_birth']);
-unset($_SESSION['ss_cert_adult']);
+if(isset($_SESSION['ss_cert_type'])) unset($_SESSION['ss_cert_type']);
+if(isset($_SESSION['ss_cert_no'])) unset($_SESSION['ss_cert_no']);
+if(isset($_SESSION['ss_cert_hash'])) unset($_SESSION['ss_cert_hash']);
+if(isset($_SESSION['ss_cert_birth'])) unset($_SESSION['ss_cert_birth']);
+if(isset($_SESSION['ss_cert_adult'])) unset($_SESSION['ss_cert_adult']);
 
-if ($msg)
-    echo '<script>alert(\''.$msg.'\');</script>';
+if ($msg) {
+    $js_replace = array('\\' => '\\\\', '"' => '\\"', "'" => '\\u0027', '/' => '\\/', "\r" => '\\r', "\n" => '\\n', "\t" => '\\t', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\xE2\x80\xA8" => '\\u2028', "\xE2\x80\xA9" => '\\u2029');
+    $js_msg = function_exists('get_js_safe_string') ? get_js_safe_string($msg) : '"'.strtr((string)$msg, $js_replace).'"';
+    echo '<script>alert('.$js_msg.');</script>';
+}
+
+run_event('register_form_update_after', $mb_id, $w);
 
 if ($w == '') {
     goto_url(G5_HTTP_BBS_URL.'/register_result.php');
@@ -558,4 +717,3 @@ if ($w == '') {
         </html>';
     }
 }
-?>

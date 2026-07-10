@@ -4,7 +4,10 @@ include_once(G5_PATH.'/head.sub.php');
 
 $msg = isset($msg) ? strip_tags($msg) : '';
 
-$msg2 = str_replace("\\n", "<br>", $msg);
+$msg2 = str_replace(array("\\r\\n", "\\n", "\\r"), "<br>", $msg);
+$alert_msg = str_replace(array("\\r\\n", "\\n", "\\r"), "\n", $msg);
+$js_replace = array('\\' => '\\\\', '"' => '\\"', "'" => '\\u0027', '/' => '\\/', "\r" => '\\r', "\n" => '\\n', "\t" => '\\t', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\xE2\x80\xA8" => '\\u2028', "\xE2\x80\xA9" => '\\u2029');
+$js_alert_msg = function_exists('get_js_safe_string') ? get_js_safe_string($alert_msg) : '"'.strtr((string)$alert_msg, $js_replace).'"';
 
 if($error) {
     $header2 = "다음 항목에 오류가 있습니다.";
@@ -16,8 +19,18 @@ if($error) {
 ?>
 
 <script>
-alert("<?php echo $msg; ?>");
-window.close();
+alert(<?php echo $js_alert_msg; ?>);
+try {
+    window.close();
+} catch(error) {
+    history.back();
+}
+
+setTimeout(function() {
+    if (window.history.length) {
+        window.history.back();
+    }
+}, 500);
 </script>
 
 <noscript>
@@ -60,4 +73,3 @@ window.close();
 
 <?php
 include_once(G5_PATH.'/tail.sub.php');
-?>

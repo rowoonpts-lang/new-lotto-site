@@ -1,10 +1,14 @@
 <?php
 include_once('./_common.php');
 
+$good = isset($_REQUEST['good']) ? preg_replace('/[^a-z0-9]/i', '', $_REQUEST['good']) : '';
+
+run_event('bbs_good_before', $bo_table, $wr_id, $good);
+
 @include_once($board_skin_path.'/good.head.skin.php');
 
 // 자바스크립트 사용가능할 때
-if($_POST['js'] == "on") {
+if(isset($_POST['js']) && $_POST['js'] === "on") {
     $error = $count = "";
 
     function print_result($error, $count)
@@ -60,7 +64,7 @@ if($_POST['js'] == "on") {
                     and mb_id = '{$member['mb_id']}'
                     and bg_flag in ('good', 'nogood') ";
         $row = sql_fetch($sql);
-        if ($row['bg_flag'])
+        if (isset($row['bg_flag']) && $row['bg_flag'])
         {
             if ($row['bg_flag'] == 'good')
                 $status = '추천';
@@ -72,15 +76,23 @@ if($_POST['js'] == "on") {
         }
         else
         {
-            // 추천(찬성), 비추천(반대) 카운트 증가
+            // 레이스 컨디션 방지: g5_board_good 테이블의 UNIQUE KEY(bo_table, wr_id, mb_id)를
+            // 이용해 INSERT IGNORE를 먼저 수행하고, 성공한 경우에만 카운터를 증가시킨다.
+            sql_query(" insert ignore into {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
+            if (get_sql_affected_rows() <= 0) {
+                $error = '이미 추천 또는 비추천 하신 글 입니다.';
+                print_result($error, $count);
+            }
+
+            // INSERT 성공 시에만 카운터 증가
             sql_query(" update {$g5['write_prefix']}{$bo_table} set wr_{$good} = wr_{$good} + 1 where wr_id = '{$wr_id}' ");
-            // 내역 생성
-            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
 
             $sql = " select wr_{$good} as count from {$g5['write_prefix']}{$bo_table} where wr_id = '$wr_id' ";
             $row = sql_fetch($sql);
 
             $count = $row['count'];
+
+			run_event('bbs_increase_good_json', $bo_table, $wr_id, $good);
 
             print_result($error, $count);
         }
@@ -90,7 +102,7 @@ if($_POST['js'] == "on") {
 
     if (!$is_member)
     {
-        $href = './login.php?'.$qstr.'&amp;url='.urlencode('./board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id);
+        $href = G5_BBS_URL.'/login.php?'.$qstr.'&amp;url='.urlencode(get_pretty_url($bo_table, $wr_id));
 
         alert('회원만 가능합니다.', $href);
     }
@@ -123,7 +135,7 @@ if($_POST['js'] == "on") {
                     and mb_id = '{$member['mb_id']}'
                     and bg_flag in ('good', 'nogood') ";
         $row = sql_fetch($sql);
-        if ($row['bg_flag'])
+        if (isset($row['bg_flag']) && $row['bg_flag'])
         {
             if ($row['bg_flag'] == 'good')
                 $status = '추천';
@@ -134,22 +146,30 @@ if($_POST['js'] == "on") {
         }
         else
         {
-            // 추천(찬성), 비추천(반대) 카운트 증가
+            // 레이스 컨디션 방지: g5_board_good 테이블의 UNIQUE KEY(bo_table, wr_id, mb_id)를
+            // 이용해 INSERT IGNORE를 먼저 수행하고, 성공한 경우에만 카운터를 증가시킨다.
+            sql_query(" insert ignore into {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
+            if (get_sql_affected_rows() <= 0) {
+                alert('이미 추천 또는 비추천 하신 글 입니다.');
+            }
+
+            // INSERT 성공 시에만 카운터 증가
             sql_query(" update {$g5['write_prefix']}{$bo_table} set wr_{$good} = wr_{$good} + 1 where wr_id = '{$wr_id}' ");
-            // 내역 생성
-            sql_query(" insert {$g5['board_good_table']} set bo_table = '{$bo_table}', wr_id = '{$wr_id}', mb_id = '{$member['mb_id']}', bg_flag = '{$good}', bg_datetime = '".G5_TIME_YMDHIS."' ");
 
             if ($good == 'good')
                 $status = '추천';
             else
                 $status = '비추천';
 
-            $href = './board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr_id;
+            $href = get_pretty_url($bo_table, $wr_id);
+
+			run_event('bbs_increase_good_html', $bo_table, $wr_id, $good, $href);
 
             alert("이 글을 $status 하셨습니다.", '', false);
         }
     }
 }
 
+run_event('bbs_good_after', $bo_table, $wr_id, $good);
+
 @include_once($board_skin_path.'/good.tail.skin.php');
-?>

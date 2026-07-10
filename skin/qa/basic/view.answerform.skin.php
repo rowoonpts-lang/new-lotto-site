@@ -9,12 +9,13 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
     ?>
     <h2>답변등록</h2>
 
-    <form name="fanswer" method="post" action="./qawrite_update.php" onsubmit="return fwrite_submit(this);" autocomplete="off">
+    <form name="fanswer" method="post" action="./qawrite_update.php" onsubmit="return fwrite_submit(this);" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" name="qa_id" value="<?php echo $view['qa_id']; ?>">
     <input type="hidden" name="w" value="a">
     <input type="hidden" name="sca" value="<?php echo $sca ?>">
     <input type="hidden" name="stx" value="<?php echo $stx; ?>">
     <input type="hidden" name="page" value="<?php echo $page; ?>">
+    <input type="hidden" name="token" value="<?php echo $token ?>">
     <?php
     $option = '';
     $option_hidden = '';
@@ -47,11 +48,25 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
                     <?php echo $editor_html; // 에디터 사용시는 에디터로, 아니면 textarea 로 노출 ?>
                 </span>
             </li>
+
+            <li class="bo_w_flie">
+                <div class="file_wr">
+                    <label for="bf_file_1" class="lb_icon"><i class="fa fa-download" aria-hidden="true"></i><span class="sound_only"> 파일 #1</span></label>
+                    <input type="file" name="bf_file[1]" id="bf_file_1" title="파일첨부 1 :  용량 <?php echo $upload_max_filesize; ?> 이하만 업로드 가능" class="frm_file">
+                </div>
+            </li>
+
+            <li class="bo_w_flie">
+                <div class="file_wr">
+                    <label for="bf_file_2" class="lb_icon"><i class="fa fa-download" aria-hidden="true"></i><span class="sound_only"> 파일 #2</span></label>
+                    <input type="file" name="bf_file[2]" id="bf_file_2" title="파일첨부 2 :  용량 <?php echo $upload_max_filesize; ?> 이하만 업로드 가능" class="frm_file">
+                </div>
+            </li>
         </ul>
     </div>
 
     <div class="btn_confirm">
-        <input type="submit" value="답변쓰기" id="btn_submit" accesskey="s" class="btn_submit">
+        <button type="submit" id="btn_submit" accesskey="s" class="btn_submit">답변등록</button>
     </div>
     </form>
 
@@ -105,6 +120,23 @@ if (!defined("_GNUBOARD_")) exit; // 개별 페이지 접근 불가
                 f.qa_content.focus();
             return false;
         }
+
+        $.ajax({
+            type: "POST",
+            url: g5_bbs_url+"/ajax.write.token.php",
+            data: { 'token_case' : 'qa_write' },
+            cache: false,
+            async: false,
+            dataType: "json",
+            success: function(data) {
+                if (typeof data.token !== "undefined") {
+                    token = data.token;
+                    if(typeof f.token === "undefined")
+                        $(f).prepend('<input type="hidden" name="token" value="">');
+                    $(f).find("input[name=token]").val(token);
+                }
+            }
+        });
 
         document.getElementById("btn_submit").disabled = "disabled";
 

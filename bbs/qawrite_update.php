@@ -12,8 +12,18 @@ if($is_guest)
 
 $msg = array();
 
+$write_token = get_session('ss_qa_write_token');
+set_session('ss_qa_write_token', '');
+
+$token = isset($_POST['token']) ? clean_xss_tags($_POST['token'], 1, 1) : '';
+
+//모든 회원의 토큰을 검사합니다.
+if (!($token && $write_token === $token))
+    alert('올바른 방법으로 이용해 주십시오.');
+
 // 1:1문의 설정값
 $qaconfig = get_qa_config();
+$qa_id = isset($_POST['qa_id']) ? (int) $_POST['qa_id'] : 0;
 
 if(trim($qaconfig['qa_category'])) {
     if($w != 'a') {
@@ -56,8 +66,7 @@ if (!empty($msg)) {
     alert($msg);
 }
 
-if($qa_hp)
-    $qa_hp = preg_replace('/[^0-9\-]/', '', strip_tags($qa_hp));
+$qa_hp = isset($_POST['qa_hp']) ? preg_replace('/[^0-9\-]/', '', $_POST['qa_hp']) : '';
 
 // 090710
 if (substr_count($qa_content, '&#') > 50) {
@@ -70,6 +79,15 @@ $upload_max_filesize = ini_get('upload_max_filesize');
 if (empty($_POST)) {
     alert("파일 또는 글내용의 크기가 서버에서 설정한 값을 넘어 오류가 발생하였습니다.\\npost_max_size=".ini_get('post_max_size')." , upload_max_filesize=".$upload_max_filesize."\\n게시판관리자 또는 서버관리자에게 문의 바랍니다.");
 }
+
+$qa_type = 0;
+$qa_parent = 0;
+$qa_related = 0;
+$qa_email_recv = (isset($_POST['qa_email_recv']) && $_POST['qa_email_recv']) ? 1 : 0;
+$qa_sms_recv = (isset($_POST['qa_sms_recv']) && $_POST['qa_sms_recv']) ? 1 : 0;
+$qa_status = 0;
+$qa_html = (isset($_POST['qa_html']) && $_POST['qa_html']) ? (int) $_POST['qa_html'] : 0;
+$answer_id = null;
 
 for ($i=1; $i<=5; $i++) {
     $var = "qa_$i";
@@ -114,7 +132,7 @@ if($w == 'u' || $w == 'a' || $w == 'r') {
 
 // 파일개수 체크
 $file_count   = 0;
-$upload_count = count($_FILES['bf_file']['name']);
+$upload_count = isset($_FILES['bf_file']['name']) ? count($_FILES['bf_file']['name']) : 0;
 
 for ($i=1; $i<=$upload_count; $i++) {
     if($_FILES['bf_file']['name'][$i] && is_uploaded_file($_FILES['bf_file']['tmp_name'][$i]))
@@ -133,7 +151,7 @@ $chars_array = array_merge(range(0,9), range('a','z'), range('A','Z'));
 // 가변 파일 업로드
 $file_upload_msg = '';
 $upload = array();
-for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
+for ($i=1; $i<=$upload_count; $i++) {
     $upload[$i]['file']     = '';
     $upload[$i]['source']   = '';
     $upload[$i]['del_check'] = false;
@@ -141,7 +159,7 @@ for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
     // 삭제에 체크가 되어있다면 파일을 삭제합니다.
     if (isset($_POST['bf_file_del'][$i]) && $_POST['bf_file_del'][$i]) {
         $upload[$i]['del_check'] = true;
-        @unlink(G5_DATA_PATH.'/qa/'.$write['qa_file'.$i]);
+        @unlink(G5_DATA_PATH.'/qa/'.clean_relative_paths($write['qa_file'.$i]));
         // 썸네일삭제
         if(preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file'.$i])) {
             delete_qa_thumbnail($write['qa_file'.$i]);
@@ -156,11 +174,11 @@ for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
     // 서버에 설정된 값보다 큰파일을 업로드 한다면
     if ($filename) {
         if ($_FILES['bf_file']['error'][$i] == 1) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일의 용량이 서버에 설정('.$upload_max_filesize.')된 값보다 크므로 업로드 할 수 없습니다.\\n';
+            $file_upload_msg .= '"'.$filename.'" 파일의 용량이 서버에 설정('.$upload_max_filesize.')된 값보다 크므로 업로드 할 수 없습니다.\\n';
             continue;
         }
         else if ($_FILES['bf_file']['error'][$i] != 0) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
+            $file_upload_msg .= '"'.$filename.'" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
             continue;
         }
     }
@@ -168,7 +186,7 @@ for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
     if (is_uploaded_file($tmp_file)) {
         // 관리자가 아니면서 설정한 업로드 사이즈보다 크다면 건너뜀
         if (!$is_admin && $filesize > $qaconfig['qa_upload_size']) {
-            $file_upload_msg .= '\"'.$filename.'\" 파일의 용량('.number_format($filesize).' 바이트)이 게시판에 설정('.number_format($qaconfig['qa_upload_size']).' 바이트)된 값보다 크므로 업로드 하지 않습니다.\\n';
+            $file_upload_msg .= '"'.$filename.'" 파일의 용량('.number_format($filesize).' 바이트)이 게시판에 설정('.number_format($qaconfig['qa_upload_size']).' 바이트)된 값보다 크므로 업로드 하지 않습니다.\\n';
             continue;
         }
 
@@ -181,14 +199,15 @@ for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
         // image type
         if ( preg_match("/\.({$config['cf_image_extension']})$/i", $filename) ||
              preg_match("/\.({$config['cf_flash_extension']})$/i", $filename) ) {
-            if ($timg['2'] < 1 || $timg['2'] > 16)
+            // webp 파일의 type 이 18 이므로 업로드가 가능하도록 수정
+            if ($timg['2'] < 1 || $timg['2'] > 18)
                 continue;
         }
         //=================================================================
 
         if ($w == 'u') {
             // 존재하는 파일이 있다면 삭제합니다.
-            @unlink(G5_DATA_PATH.'/qa/'.$write['qa_file'.$i]);
+            @unlink(G5_DATA_PATH.'/qa/'.clean_relative_paths($write['qa_file'.$i]));
             // 이미지파일이면 썸네일삭제
             if(preg_match("/\.({$config['cf_image_extension']})$/i", $write['qa_file'.$i])) {
                 delete_qa_thumbnail($row['qa_file'.$i]);
@@ -200,13 +219,13 @@ for ($i=1; $i<=count($_FILES['bf_file']['name']); $i++) {
         $upload[$i]['filesize'] = $filesize;
 
         // 아래의 문자열이 들어간 파일은 -x 를 붙여서 웹경로를 알더라도 실행을 하지 못하도록 함
-        $filename = preg_replace("/\.(php|pht|phtm|htm|cgi|pl|exe|jsp|asp|inc)/i", "$0-x", $filename);
+        $filename = preg_replace("/\.(php|pht|phtm|htm|shtml|shtm|cgi|pl|exe|jsp|asp|inc|phar|svg|svgz)/i", "$0-x", $filename);
 
         shuffle($chars_array);
         $shuffle = implode('', $chars_array);
 
         // 첨부파일 첨부시 첨부파일명에 공백이 포함되어 있으면 일부 PC에서 보이지 않거나 다운로드 되지 않는 현상이 있습니다. (길상여의 님 090925)
-        $upload[$i]['file'] = abs(ip2long($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle,0,8).'_'.replace_filename($filename);
+        $upload[$i]['file'] = md5(sha1($_SERVER['REMOTE_ADDR'])).'_'.substr($shuffle,0,8).'_'.replace_filename($filename);
 
         $dest_file = G5_DATA_PATH.'/qa/'.$upload[$i]['file'];
 
@@ -228,10 +247,15 @@ if($w == '' || $w == 'a' || $w == 'r') {
         $qa_num = $write['qa_num'];
         $qa_parent = $write['qa_id'];
         $qa_related = $write['qa_related'];
-        $qa_category = $write['qa_category'];
+        $qa_category = addslashes($write['qa_category']);
         $qa_type = 1;
         $qa_status = 1;
     }
+
+    $insert_qa_file1 = isset($upload[1]['file']) ? $upload[1]['file'] : '';
+    $insert_qa_source1 = isset($upload[1]['source']) ? $upload[1]['source'] : '';
+    $insert_qa_file2 = isset($upload[2]['file']) ? $upload[2]['file'] : '';
+    $insert_qa_source2 = isset($upload[2]['source']) ? $upload[2]['source'] : '';
 
     $sql = " insert into {$g5['qa_content_table']}
                 set qa_num          = '$qa_num',
@@ -249,10 +273,10 @@ if($w == '' || $w == 'a' || $w == 'r') {
                     qa_subject      = '$qa_subject',
                     qa_content      = '$qa_content',
                     qa_status       = '$qa_status',
-                    qa_file1        = '{$upload[1]['file']}',
-                    qa_source1      = '{$upload[1]['source']}',
-                    qa_file2        = '{$upload[2]['file']}',
-                    qa_source2      = '{$upload[2]['source']}',
+                    qa_file1        = '{$insert_qa_file1}',
+                    qa_source1      = '{$insert_qa_source1}',
+                    qa_file2        = '{$insert_qa_file2}',
+                    qa_source2      = '{$insert_qa_source2}',
                     qa_ip           = '{$_SERVER['REMOTE_ADDR']}',
                     qa_datetime     = '".G5_TIME_YMDHIS."',
                     qa_1            = '$qa_1',
@@ -279,6 +303,7 @@ if($w == '' || $w == 'a' || $w == 'r') {
     }
 
     if($w == 'a') {
+        $answer_id = (int) sql_insert_id();
         $sql = " update {$g5['qa_content_table']}
                     set qa_status = '1'
                     where qa_id = '{$write['qa_parent']}' ";
@@ -316,6 +341,16 @@ if($w == '' || $w == 'a' || $w == 'r') {
     $sql .= " where qa_id = '$qa_id' ";
     sql_query($sql);
 }
+
+/**
+ * 1:1 문의/답변의 변경 시 Event Hook
+ * @var int $qa_id 삽입/수정 또는 답글/추가질문 대상 글의 ID
+ * @var array $write 삽입/수정 또는 답글/추가질문 대상 글의 데이터
+ * @var string $w 동작 모드 ('': 질문글 작성, 'a': 답변글 작성, 'u': 질문/답변 수정, 'r': 추가(관련) 질문)
+ * @var array $qaconfig 1:1 문의 설정
+ * @var ?int $answer_id 답변글 작성($w = 'a') 시 답변글의 ID
+*/
+run_event('qawrite_update', $qa_id, $write, $w, $qaconfig, ($w === 'a') ? $answer_id : null);
 
 // SMS 알림
 if($config['cf_sms_use'] == 'icode' && $qaconfig['qa_use_sms']) {
@@ -448,4 +483,3 @@ if ($file_upload_msg)
     alert($file_upload_msg, $result_url);
 else
     goto_url($result_url);
-?>

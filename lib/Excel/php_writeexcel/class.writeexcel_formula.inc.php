@@ -663,10 +663,10 @@ function _convertRange2d($range)
 
     // Split the range into 2 cell refs
     if (preg_match('/^\$?([A-Ia-i]?[A-Za-z])\$?(\d+)\:\$?([A-Ia-i]?[A-Za-z])\$?(\d+)$/',$range)) {
-        list($cell1, $cell2) = split(':', $range);
+        list($cell1, $cell2) = explode(':', $range);
     }
  elseif (preg_match('/^\$?([A-Ia-i]?[A-Za-z])\$?(\d+)\.\.\$?([A-Ia-i]?[A-Za-z])\$?(\d+)$/',$range)) {
-        list($cell1, $cell2) = split('\.\.', $range);
+        list($cell1, $cell2) = preg_split('/\.\./', $range);
     }
  else {
         // TODO: use real error codes
@@ -714,7 +714,7 @@ function _convertRange3d($token)
     $class = 2; // as far as I know, this is magick.
 
     // Split the ref at the ! symbol
-    list($ext_ref, $range) = split('!', $token);
+    list($ext_ref, $range) = explode('!', $token);
 
     // Convert the external reference part
     $ext_ref = $this->_packExtRef($ext_ref);
@@ -723,7 +723,7 @@ function _convertRange3d($token)
     }
 
     // Split the range into 2 cell refs
-    list($cell1, $cell2) = split(':', $range);
+    list($cell1, $cell2) = explode(':', $range);
 
     // Convert the cell references
     if (preg_match('/^(\$)?[A-Ia-i]?[A-Za-z](\$)?(\d+)$/', $cell1))
@@ -812,7 +812,7 @@ function _convertRef3d($cell)
     $class = 2; // as far as I know, this is magick.
 
     // Split the ref at the ! symbol
-    list($ext_ref, $cell) = split('!', $cell);
+    list($ext_ref, $cell) = explode('!', $cell);
 
     // Convert the external reference part
     $ext_ref = $this->_packExtRef($ext_ref);
@@ -853,7 +853,7 @@ function _packExtRef($ext_ref) {
     // Check if there is a sheet range eg., Sheet1:Sheet2.
     if (preg_match("/:/", $ext_ref))
  {
-        list($sheet_name1, $sheet_name2) = split(':', $ext_ref);
+        list($sheet_name1, $sheet_name2) = explode(':', $ext_ref);
 
         $sheet1 = $this->_getSheetIndex($sheet_name1);
         if ($sheet1 == -1) {
@@ -1005,7 +1005,7 @@ function _cellToRowcol($cell)
     $col    = 0;
     for ($i=0; $i < strlen($col_ref); $i++)
  {
-        $col += (ord($col_ref{$i}) - ord('A') + 1) * pow(26, $expn);
+        $col += (ord($col_ref[$i]) - ord('A') + 1) * pow(26, $expn);
         $expn--;
     }
 
@@ -1027,19 +1027,19 @@ function _advance()
     // eat up white spaces
     if ($i < strlen($this->_formula))
  {
-        while ($this->_formula{$i} == " ") {
+        while ($this->_formula[$i] == " ") {
             $i++;
         }
         if ($i < strlen($this->_formula) - 1) {
-            $this->_lookahead = $this->_formula{$i+1};
+            $this->_lookahead = $this->_formula[$i+1];
         }
         $token = "";
     }
     while ($i < strlen($this->_formula))
  {
-        $token .= $this->_formula{$i};
+        $token .= $this->_formula[$i];
         if ($i < strlen($this->_formula) - 1) {
-            $this->_lookahead = $this->_formula{$i+1};
+            $this->_lookahead = $this->_formula[$i+1];
         }
  else {
             $this->_lookahead = '';
@@ -1054,7 +1054,7 @@ function _advance()
             return 1;
         }
         if ($i < strlen($this->_formula) - 2) {
-            $this->_lookahead = $this->_formula{$i+2};
+            $this->_lookahead = $this->_formula[$i+2];
         }
  else {
         // if we run out of characters _lookahead becomes empty
@@ -1605,6 +1605,3 @@ function toReversePolish($tree = array())
 }
 
 }
-
-
-?>

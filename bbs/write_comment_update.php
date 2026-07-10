@@ -6,7 +6,7 @@ include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
 // 토큰체크
 $comment_token = trim(get_session('ss_comment_token'));
 set_session('ss_comment_token', '');
-if(!trim($_POST['token']) || !$comment_token || $comment_token != $_POST['token'])
+if(empty($_POST['token']) || !$comment_token || $comment_token != $_POST['token'])
     alert('올바른 방법으로 이용해 주십시오.');
 
 // 090710
@@ -15,13 +15,31 @@ if (substr_count($wr_content, "&#") > 50) {
     exit;
 }
 
-@include_once($board_skin_path.'/write_comment_update.head.skin.php');
+$w = isset($_POST['w']) ? clean_xss_tags($_POST['w']) : '';
+$wr_name  = isset($_POST['wr_name']) ? addslashes(clean_xss_tags(stripslashes(trim($_POST['wr_name'])))) : '';
+$wr_name  = preg_replace("#[\\\]+$#", "", $wr_name);
+$wr_secret = isset($_POST['wr_secret']) ? addslashes(clean_xss_tags(stripslashes($_POST['wr_secret']))) : '';
+$wr_email = $wr_subject = '';
+$reply_array = array();
 
-$w = $_POST["w"];
-$wr_name  = trim($_POST['wr_name']);
-$wr_email = '';
+$wr_1 = isset($_POST['wr_1']) ? $_POST['wr_1'] : '';
+$wr_2 = isset($_POST['wr_2']) ? $_POST['wr_2'] : '';
+$wr_3 = isset($_POST['wr_3']) ? $_POST['wr_3'] : '';
+$wr_4 = isset($_POST['wr_4']) ? $_POST['wr_4'] : '';
+$wr_5 = isset($_POST['wr_5']) ? $_POST['wr_5'] : '';
+$wr_6 = isset($_POST['wr_6']) ? $_POST['wr_6'] : '';
+$wr_7 = isset($_POST['wr_7']) ? $_POST['wr_7'] : '';
+$wr_8 = isset($_POST['wr_8']) ? $_POST['wr_8'] : '';
+$wr_9 = isset($_POST['wr_9']) ? $_POST['wr_9'] : '';
+$wr_10 = isset($_POST['wr_10']) ? $_POST['wr_10'] : '';
+$wr_facebook_user = isset($_POST['wr_facebook_user']) ? addslashes(clean_xss_tags(stripslashes($_POST['wr_facebook_user']), 1, 1)) : '';
+$wr_twitter_user = isset($_POST['wr_twitter_user']) ? addslashes(clean_xss_tags(stripslashes($_POST['wr_twitter_user']), 1, 1)) : '';
+$wr_homepage = isset($_POST['wr_homepage']) ? addslashes(clean_xss_tags(stripslashes($_POST['wr_homepage']), 1, 1)) : '';
+
 if (!empty($_POST['wr_email']))
     $wr_email = get_email_address(trim($_POST['wr_email']));
+
+@include_once($board_skin_path.'/write_comment_update.head.skin.php');
 
 // 비회원의 경우 이름이 누락되는 경우가 있음
 if ($is_guest) {
@@ -40,7 +58,7 @@ else
 
 // 세션의 시간 검사
 // 4.00.15 - 댓글 수정시 연속 게시물 등록 메시지로 인한 오류 수정
-if ($w == 'c' && $_SESSION['ss_datetime'] >= (G5_SERVER_TIME - $config['cf_delay_sec']) && !$is_admin)
+if ($w == 'c' && !$is_admin && isset($_SESSION['ss_datetime']) && $_SESSION['ss_datetime'] >= (G5_SERVER_TIME - $config['cf_delay_sec']))
     alert('너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.');
 
 set_session('ss_datetime', G5_SERVER_TIME);
@@ -54,18 +72,20 @@ if (empty($wr['wr_id']))
 // 이 옵션을 사용 안 함으로 설정할 경우 어떤 스크립트도 실행 되지 않습니다.
 //if (!trim($_POST["wr_content"])) die ("내용을 입력하여 주십시오.");
 
+$post_wr_password = '';
 if ($is_member)
 {
     $mb_id = $member['mb_id'];
     // 4.00.13 - 실명 사용일때 댓글에 닉네임으로 입력되던 오류를 수정
     $wr_name = addslashes(clean_xss_tags($board['bo_use_name'] ? $member['mb_name'] : $member['mb_nick']));
-    $wr_password = $member['mb_password'];
+    $wr_password = '';
     $wr_email = addslashes($member['mb_email']);
     $wr_homepage = addslashes(clean_xss_tags($member['mb_homepage']));
 }
 else
 {
     $mb_id = '';
+    $post_wr_password = $wr_password;
     $wr_password = get_encrypt_string($wr_password);
 }
 
@@ -83,9 +103,7 @@ if ($w == 'c') // 댓글 입력
     // 댓글 답변
     if ($comment_id)
     {
-        $sql = " select wr_id, wr_parent, wr_comment, wr_comment_reply from $write_table
-                    where wr_id = '$comment_id' ";
-        $reply_array = sql_fetch($sql);
+        $reply_array = get_write($write_table, $comment_id, true);
         if (!$reply_array['wr_id'])
             alert('답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.');
 
@@ -205,7 +223,7 @@ if ($w == 'c') // 댓글 입력
 
         $subject = '['.$config['cf_title'].'] '.$board['bo_subject'].' 게시판에 '.$str.'글이 올라왔습니다.';
         // 4.00.15 - 메일로 보내는 댓글의 바로가기 링크 수정
-        $link_url = G5_BBS_URL."/board.php?bo_table=".$bo_table."&amp;wr_id=".$wr_id."&amp;".$qstr."#c_".$comment_id;
+        $link_url = get_pretty_url($bo_table, $wr_id, $qstr."#c_".$comment_id);
 
         include_once(G5_LIB_PATH.'/mailer.lib.php');
 
@@ -238,7 +256,8 @@ if ($w == 'c') // 댓글 입력
         // 중복된 메일 주소는 제거
         $unique_email = array_unique($array_email);
         $unique_email = array_values($unique_email);
-        for ($i=0; $i<count($unique_email); $i++) {
+        $unique_email_cnt = count($unique_email);
+        for ($i=0; $i<$unique_email_cnt; $i++) {
             mailer($wr_name, $wr_email, $unique_email[$i], $subject, $content, 1);
         }
     }
@@ -289,7 +308,7 @@ else if ($w == 'cu') // 댓글 수정
         if ($member['mb_id'] !== $comment['mb_id'])
             alert('자신의 글이 아니므로 수정할 수 없습니다.');
     } else {
-        if($comment['wr_password'] != $wr_password)
+        if( !($comment['mb_id'] === '' && $comment['wr_password'] && check_password($post_wr_password, $comment['wr_password'])) )
             alert('댓글을 수정할 권한이 없습니다.');
     }
 
@@ -307,9 +326,7 @@ else if ($w == 'cu') // 댓글 수정
     if (!$is_admin)
         $sql_ip = " , wr_ip = '{$_SERVER['REMOTE_ADDR']}' ";
 
-    $sql_secret = "";
-    if ($wr_secret)
-        $sql_secret = " , wr_option = '$wr_secret' ";
+    $sql_secret = " , wr_option = '$wr_secret' ";
 
     $sql = " update $write_table
                 set wr_subject = '$wr_subject',
@@ -323,11 +340,11 @@ else if ($w == 'cu') // 댓글 수정
                      wr_7 = '$wr_7',
                      wr_8 = '$wr_8',
                      wr_9 = '$wr_9',
-                     wr_10 = '$wr_10',
-                     wr_option = '$wr_option'
+                     wr_10 = '$wr_10'
                      $sql_ip
                      $sql_secret
               where wr_id = '$comment_id' ";
+
     sql_query($sql);
 }
 
@@ -337,5 +354,8 @@ else if ($w == 'cu') // 댓글 수정
 
 delete_cache_latest($bo_table);
 
-goto_url(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr['wr_parent'].'&amp;'.$qstr.'&amp;#c_'.$comment_id);
-?>
+$redirect_url = short_url_clean(G5_HTTP_BBS_URL.'/board.php?bo_table='.$bo_table.'&amp;wr_id='.$wr['wr_parent'].'&amp;'.$qstr.'&amp;#c_'.$comment_id);
+
+run_event('comment_update_after', $board, $wr_id, $w, $qstr, $redirect_url, $comment_id, $reply_array);
+
+goto_url($redirect_url);
