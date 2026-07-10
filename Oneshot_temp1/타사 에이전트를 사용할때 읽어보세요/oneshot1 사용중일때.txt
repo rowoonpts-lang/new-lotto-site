@@ -1,0 +1,16 @@
+﻿추가사항(MS-SQL 기준)
+
+	1. oneshot_tran 테이블 필드 추가
+		Spam_Check		Char(1)		not null default('N'),
+		Deny_No			Varchar(20),
+		Result			Int,
+		Telecom			Varchar(3),
+		Delivery_Time	DateTime,
+		Result_Time		DateTime
+		
+	2. 로그테이블 필드추가(현재월, 전월 두개의 테이블에 추가해야함)
+		Status			Int,
+		Spam_Check		Char(1),
+		Deny_No			Varchar(20)
+		
+	3.Oneshot_Rst 테이블은 사용하지 않는다.	

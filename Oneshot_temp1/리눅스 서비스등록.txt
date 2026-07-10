@@ -1,0 +1,18 @@
+centos 7기준으로 작성됨
+/etc/system/system에 Oneshot2.service 파일 복사
+
+systemctl enable Oneshot2
+systemctl start Oneshot2
+systemctl daemon-reload
+
+에이전트 상태확인
+systemctl status Oneshot2
+
+에이전트 시작
+systemctl start Oneshot2
+
+에이전트 중지
+systemctl stop Oneshot2
+
+에이전트 재시작
+systemctl restart Oneshot2

@@ -1,0 +1,19 @@
+centOS 6.8 서비스등록방법입니다
+
+1. vi /etc/init.d/oneshot (엔터)
+
+2 .oneshot 파일 에디트 --> jdk 경로(또는 설정하신 java 서비스명)를 명시해 주시고 oneshot2의 Oneshot2.jar 파일을 실행하는 명령어를 명시하시면 됩니다.
+#!/bin/sh -
+nohup /home/{중간경로}/jdk1.6.0_29/bin/java -jar /home/{중간경로}/Oneshot2.jar /home/{중간경로}/Oneshot2.conf &
+
+3. 권한상승
+chmod 755 /etc/init.d/oneshot
+
+4. 자동시작 설정
+chkconfig --add oneshot
+chkconfig oneshot on
+chkconfig --level 6 oneshot on
+
+
+5. 서비스시작
+service oneshot start

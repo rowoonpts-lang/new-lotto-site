@@ -1,0 +1,199 @@
+
+body{
+	background-color: #000;
+}
+/***********pc header css***********/
+div.header{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100px;
+	background-color: #323232;
+	overflow: hidden;
+	z-index: 999999;
+}
+div.header > div.header_wrap{
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0px 50px;
+	margin: 0px auto;
+	height: 100%;
+	overflow: hidden;
+}
+
+div.header > div.header_wrap > h1{
+	float: left;
+	line-height: 100px;
+}
+div.header > div.header_wrap > h1 > a > img{
+	vertical-align: middle;
+}
+div.header > div.header_wrap > h1 > a > img.logo01{
+	margin-right: 20px;
+}
+div.header > div.header_wrap > ul{
+	float: right;
+	overflow: hidden;
+	height: 100%;
+}
+div.header > div.header_wrap > ul > li{
+	float: left;
+	overflow: hidden;
+	height: 100%;
+}
+div.header > div.header_wrap > ul > li > a{
+	font-size: 18px;
+	display: block;
+	color: #fff;
+	margin-left: 30px;
+	line-height: 100px;
+	height: 100%;
+	box-sizing: border-box;
+	border-bottom: 4px solid rgba(0,0,0,0);
+	-webkit-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+	-ms-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	transition: all 0.2s;
+}
+div.header > div.header_wrap > ul > li > a:hover{
+	border-bottom: 4px solid #fff;
+}
+div.header> div.header_wrap > div.apply_btn{
+	float: right;
+	height: 100%;
+	padding-top: 25px;
+	box-sizing: border-box;
+	margin-left: 40px;
+}
+div.header> div.header_wrap > div.apply_btn > a{
+	display: block;
+	width: 180px;
+	height: 50px;
+	border-radius: 30px;
+	text-align: center;
+	line-height: 50px;
+	border: 1px solid #fff;
+	color: #fff;
+	font-size: 25px;
+	font-weight: bold;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+	
+}
+div.header> div.header_wrap > div.apply_btn > a:hover{
+	background-color: #fff;
+	color: #222;	
+}
+@media all and (max-width:1400px) {
+div.header > div.header_wrap{
+	padding: 0px 30px;
+}
+div.header > div.header_wrap > h1 > a > img{
+	width: 180px;
+}
+div.header > div.header_wrap > ul > li > a{
+	font-size: 16px;
+	margin-left: 25px;
+}
+div.header> div.header_wrap > div.apply_btn{
+	padding-top: 30px;
+	margin-left: 20px;
+}
+div.header> div.header_wrap > div.apply_btn > a{
+	width: 150px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 20px;	
+}
+}
+/***********mobile header css***********/
+div.mheader{
+	position: absolute;
+	overflow: hidden;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 70px;
+	background-color: #ff002e;
+	z-index: 99999;
+	padding: 0px 10px;
+}
+div.mheader > div.header_wrap{
+	width: 100%;
+	box-sizing: border-box;
+	margin: 0px auto;
+	height: 100%;
+	overflow: hidden;
+}
+
+div.mheader > div.header_wrap > h1{
+	float: left;
+	line-height: 70px;
+	height: 100%;
+}
+div.mheader > div.header_wrap > h1 > a{
+	display: block;
+	height: 100%;
+}
+div.mheader > div.header_wrap > h1 > a > img{
+	vertical-align: middle;
+	height: 50%;
+}
+div.mheader > div.header_wrap > h1 > a > img:last-child{
+	height: 35%;
+	margin-left: 10px;
+}
+div.mheader > div.header_wrap > div.menu_btn{
+	float: right;
+	height: 100%;
+	line-height: 65px;
+}
+div.mheader > div.header_wrap > div.menu_btn > img{
+	vertical-align: middle;
+	height: 40%;
+	opacity: 0.9;
+}
+div.menu_box{
+	position: fixed;
+	top: 0px;
+	right: -100%;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	box-sizing: border-box;
+	background-color: rgba(0,0,0,0.9);
+	z-index: 999999;
+}
+div.menu_box > div.close_btn{
+	width: 100%;
+	text-align: right;
+	height: 70px;
+	box-sizing: border-box;
+	padding: 0px 20px;
+	line-height: 70px;
+}
+div.menu_box > div.close_btn > img{
+	height: 40%;
+	vertical-align: middle;
+	opacity: 0.9;
+}
+div.menu_box > ul{
+	width: 100%;
+	text-align: center;
+	margin-top: 30px;
+}
+div.menu_box > ul > li > a{
+	font-size: 20px;
+	line-height: 50px;
+	color: #fff;
+}
+
+#header.stick {
+  background-color: rgba(255,0,46,0.8);
+}

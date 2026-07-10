@@ -1,0 +1,8 @@
+AES256 사용을 위해서는 
+
+jdk버전과 일치하는 jce파일의 압축을 해제한 후
+
+local_policy.jar  와 US_export_policy.jar 파일을
+ 
+jdk폴더의 jre/lib/security 폴더에 overwrite 해 주면 된다.
+

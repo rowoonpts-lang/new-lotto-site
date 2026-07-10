@@ -1,0 +1,30 @@
+.bo_vc_w {position:relative;margin:10px 0;display:block;}
+.bo_vc_w:after {display:block;visibility:hidden;clear:both;content:""}
+.bo_vc_w h2 {position:absolute;font-size:0;line-height:0;overflow:hidden}
+.bo_vc_w #char_cnt {display:block;margin:0 0 5px}
+.bo_vc_w textarea{border:1px solid #ccc;background:#fff;color:#000;vertical-align:middle;border-radius:3px;padding:5px;width:100%;height:80px;border:0px;background:#F6F6F9;padding:20px;font-size:17px}
+#wr_secret{}
+.bo_vc_w_info{margin:10px 0;float:left}
+.bo_vc_w_info:after {display:block;visibility:hidden;clear:both;content:""}
+.bo_vc_w_info .frm_input{float:left;margin-right:5px}
+.bo_vc_w_info #captcha{padding-top:10px;display:block;clear:both}
+.bo_vc_w .btn_confirm{float:right;margin-top:10px}
+.bo_vc_w .btn_confirm label{display:inline-block;margin-right:10px;border-radius:3px;font-size:1.5em;text-align:center;}
+.bo_vc_w .btn_submit{height:45px;padding:0 20px;border-radius:3px;font-weight:bold;font-size:1.083em;}
+.bo_vc_w_wr:after {display:block;visibility:hidden;clear:both;content:""}
+
+
+#bo_vc article {overflow:hidden;width:100%}
+#bo_vc header {width:150px;text-align:center;}
+#bo_vc header .member {display:inline-block;width:90px;height:90px;position:relative;border-radius:200px;line-height:90px;color:#fff;font-size:15px;font-family:"Malgun Gothic", sans-serif}
+#bo_vc .cmt_contents {background:#fff;font-size:13px;font-family:"Malgun Gothic", sans-serif;margin-top:0;min-height:90px}
+.float_div {float:left;}
+.bo_vc_w {position:inherit;}
+
+.float_div1 {}
+.float_div2 {width:calc(100% - 150px);width:-webkit-calc(100% - 150px);}
+
+.member_hd_1 span {background:#2A9AAF}
+.member_hd_2 span {background:#D13F4A}
+.member_hd_3 span {background:#4C4F6F}
+.member_hd_4 span {background:#828CE8}

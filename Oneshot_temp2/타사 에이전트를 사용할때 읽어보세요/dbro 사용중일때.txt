@@ -1,0 +1,9 @@
+﻿추가사항(MS-SQL 기준)
+
+	1. 발송 테이블 필드 추가
+		Spam_Check		Char(1)		not null default('N'),
+		Deny_No			Varchar(20)
+		
+	2. 로그테이블 필드추가(현재월, 전월 두개의 테이블에 추가해야함)
+		Spam_Check		Char(1),
+		Deny_No			Varchar(20)

@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+body, form, address, h1, h2, h3, h4, h5, h6, fieldset, ul, ol, dl, dd ,dt{margin:0; padding:0;}
+p, div, th, td, legend, select, input, textarea, button, li, dt, dd, input, textarea, select, button{font-family:inherit; font-size:inherit; color:inherit;}
+a img{border:0}
+button{padding:0; border:0;}
+button::-moz-focus-inner{border:0; padding:0}
+ul,ol,dl{list-style-type:none;}
+fieldset{border:0 none;}
+legend{position:absolute; width:0; height:0; font-size:0; line-height:0; overflow:hidden; visibility:hidden;}

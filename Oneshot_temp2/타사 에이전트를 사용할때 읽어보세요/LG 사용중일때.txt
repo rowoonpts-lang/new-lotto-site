@@ -1,0 +1,29 @@
+﻿추가사항
+
+	1. 발송 테이블 필드 추가
+		SPAM_CHECK		VARCHAR(1)		NOT NULL DEFAULT('N'),
+		DENY_NO			VARCHAR(20)
+		
+	2. 로그테이블 필드추가(현재월, 전월 두개의 테이블에 추가해야함)
+		SPAM_CHECK		VARCHAR(1),
+		DENY_NO			VARCHAR(20)
+		
+	3. Ver2.2.6 이하 버전을 사용중이고
+           SC_TRAN 테이블의 TR_SERIALNUM 필드
+           MMS_MSG 테이블의 REPCNT 필드를 사용중일때 기술팀에 문의 바랍니다.
+	   (Ver2.2.7에서는 해당 필드가 없음)	   
+
+	4. SC_PCB 테이블 (발신번호 사전 등록 테이블) 사용안함
+	
+	5. SC_SPAM 테이블 (수신거부 번호 등록 테이블) 사용안함
+		스팸관련 사용할때는 기술팀에 문의 바랍니다.
+		
+	6. MO관련 테이블 사용안함
+
+	7.스팸테이블은 MSG_SPAM 테이블을 사용함(테이블 명은 바꿔도 상관없음)
+
+	8. MSG_CHANGEPHONE 테이블은 번호이동 정보 테이블임(필수사용)
+
+	9. MULTI_SEQ 필드가 없을경우
+		MULTI_SEQ 			VARCHAR(10)
+	   를 발송테이블, 현재/전월 로그테이블에 추가

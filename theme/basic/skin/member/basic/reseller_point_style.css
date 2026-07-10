@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+
+#profit_gnb_btn{margin:15px 0;background-color:#fff;}
+#profit_gnb_btn .pgb_wr{ margin:0 0;text-align:center;border:1px solid #ddd;padding:15px 0;background-color:#fcfcfc;}
+#profit_gnb_btn .pgb_wr:after{content:'';display:block;clear:both;}
+#profit_gnb_btn .pgb_wr a{border:1px solid #ddd; font-size:15px;padding:5px 10px;margin-right:5px;display:inline-block; border-radius:3px;}
+#profit_gnb_btn .pgb_wr a:last-child{margin-right:0;}
+#profit_gnb_btn .pgb_wr a.on{background-color:#ff2769;color:#fff;border-color:#ff2769;}
+
+
+
+
+/* 피키샵안내 pikishop.php */
+#point_wrap{position:relative;display:table;margin:0 auto ;padding-bottom:50px;width:1200px;}
+#point_wrap .point_text{background-color:#fcfcfc;border:1px solid #ddd;margin-bottom:15px;margin-top:30px;}
+#point_wrap .point_text p{color:#555555;padding:20px 30px;line-height:2em;font-size:1.3em;}
+#point_wrap .point_text p i{margin-right:10px}
+#point_wrap .point_text .my_point{color:#ff2769}
+#point_wrap .point_text .go_profit_form a{font-size:14px;position: relative;line-height:1.5;margin:0 10px;background-color:#ff2769;display:inline-block;padding:4px 12px;color:#fff;}
+
+
+.tbl_wrap table{border:none !important}
+
+.tbl_head01 thead th{color:#292929;border-top:2px solid #ff2769;font-size:18px;padding:15px 0;background-color:#fafafa}
+.tbl_head01 td{text-align:center;font-size:16px;color:#545454;border-bottom:1px solid #e1e1e1}
+.tbl_head01 .number{width:100px}
+.tbl_head01 .id{width:140px}
+.tbl_head01 .name{width:140px}
+.tbl_head01 .profit{width:180px;color:#ff2769}
+.tbl_head01 .regi_date{width:145px}
+.tbl_head01 .pay_date{width:145px}
+#sfl{border:1px solid #ddd;margin-right:10px;height:40px;}
+
+
+.local_sch{margin:30px auto 0 auto;text-align:center}
+.local_sch:after{content:'';display:block;clear:both;}
+.local_sch p{font-size:14px;color:#ff2768;}
+#stx{width:240px;}
+.btn_submit{margin-left:10px}
+
+.date_search{text-align:center;width:100%;position:relative;border:5px solid #efefef;padding:20px 20px;margin:0 auto 15px auto}
+.date_search .p{font-size:14px;color:#777777;line-height:1.5}
+.date_search .date_sel{height:30px;vertical-align:middle;font-size:16px;margin-bottom:20px}
+.date_search .frm_input{height:30px;font-size:14px;padding:0 10px;margin-right:5px}
+.date_search .frm_input.right{margin-left:10px}
+.date_search .btn_submit{border:2px solid #cccccc;border-radius:5px 5px;color:#252525;background-color:#fff;font-size:14px;padding:3px 20px}
+.date_search .btn_submit2{border:2px solid #cccccc;border-radius:5px 5px;color:#252525;line-height:26px;height:30px;margin-left:5px;background-color:#fff;font-size:14px;padding:3px 20px;vertical-align:middle;}
+
+.date_search img{margin-right:10px}
+
+.total{background-color:#fafafa;font-weight:500;color:#262626 !important;font-size:18px}
+.total span{color:#ff2769 !important;font-size:24px;margin-left:20px;}

@@ -1,0 +1,20 @@
+﻿* 추가사항(MS-SQL 기준)
+
+	1. msg_queue 테이블 필드추가
+		check_dcnt			int				not null default 0
+		spam_check			Char(1)				not null default 'N'
+		deny_no				varchar(20)
+		
+	2. msg_result_yyyymm 테이블 필드 추가(현재월, 이전월)
+		check_dcnt			int	
+		spam_check			Char(1)
+		deny_no				varchar(20)			
+	
+	5.msg_dstaddr_list 인덱스 추가
+		Create Index ix_msg_dstaddr_list_0 On msg_dstaddr_list(dkey, stat)	
+	
+		
+	6. msg_dstaddr_list 결과 수신 후 테이블 데이터 삭제
+	
+
+	

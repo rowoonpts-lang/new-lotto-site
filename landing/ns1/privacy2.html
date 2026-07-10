@@ -1,0 +1,45 @@
+<?php
+if (strpos($_SERVER['HTTP_HOST'], 'lotto-js.co.kr') === false) {
+    exit;
+} else {
+    if (preg_match('/^\/lotto-js\//', $_SERVER['REQUEST_URI'])) {
+        $request_uri = preg_replace('/^\/lotto-js\//', '', $_SERVER['REQUEST_URI']);
+        $http = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=='on') ? 's' : '') . '://';
+        header("Location: ".$http.$_SERVER['HTTP_HOST'].'/'.$request_uri);
+        exit;
+    }
+}
+
+include '_common.php';
+$page_title = '마케팅 정보 수신 동의';
+?>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, target-densitydpi=medium-dpi">
+<meta name="format-detection" content="telephone=no" />
+<title><?php echo $page_title ?></title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="popup-body">
+<div class="popup">
+    <h1><?php echo $page_title ?></h1>
+    <p class="pre">
+[마케팅 정보 수신 동의]
+
+회사는 광고 목적 등으로 이용자의 정보를 사용할 수 있고, 이용자는 광고성 정보 활용동의를 거부할 권리가 있습니다. 단, 동의 거부 시 회사의서비스 홍보/리서치/이벤트, 다양한 서비스에 대한 안내를 받으실 수 없습니다.[시행일] 본 약관은 2020년 01월 01일부터 시행합니다.
+    </p>
+    <div class="close-popup"><a href="javascript:;">닫기</a></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(function(){
+	$('.close-popup a').on('click', function(){
+		window.close();
+	});
+});
+</script>
+</body>
+</html>

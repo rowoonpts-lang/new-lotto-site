@@ -1,0 +1,172 @@
+<?php
+	include_once("_common.php");
+	include_once(G5_PATH."/_head.php");
+?>
+
+<section id="s21">
+	<div class="s21_left">
+		<div class="s21_lefttit">멤버쉽 소개</div>
+		<ul class="s21_leftul">
+			<li>
+				<div class="tit">로또클릭 무통장입금</div>
+				<div class="cont">
+					<div class="desc1">농협은행</div>
+					<div class="desc2 font_mont">301-0290-3839-01</div>
+					<div class="desc3">예금주 : 김현호(클릭컴퍼니)</div>
+				</div>
+			</li>
+			<li>
+				<div class="tit">로또클릭 고객센터</div>
+				<div class="cont">
+					<div class="desc4">오전 10 - 오후 6시</div>
+					<div class="desc5 font_mont">02-1800-6361</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="s21_right">
+		<ul class="s21_rightul">
+			<li>
+				<div class="tit font_mont">V3</div>
+				<div class="desc">2개월  [10~20조합]</div>
+				<div class="pri"><b class="font_mont">22,000</b>원</div>
+				<ul class="link_ul">
+					<li class="link" onClick="popOpen('1','V3')">상담문의</li>
+					<li class="link" onClick="fnSendMuSms()">결제하기</li>
+				</ul>
+			</li>
+			<li>
+				<div class="tit font_mont">V5</div>
+				<div class="desc">15개월  [10~20조합]</div>
+				<div class="pri"><b class="font_mont">154,000</b>원</div>
+				<ul class="link_ul">
+					<li class="link" onClick="popOpen('2','V5')">상담문의</li>
+					<li class="link" onClick="fnSendMuSms()">결제하기</li>
+				</ul>
+			</li>
+			<li>
+				<div class="tit font_mont">V7</div>
+				<div class="desc">2년~4년  [20~40조합]</div>
+				<div class="pri"><b class="font_mont">770,000</b>원</div>
+				<ul class="link_ul">
+					<li class="link" onClick="popOpen('3','V7')">상담문의</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</section>
+
+<div class="s21_pop">
+	<div class="s21_pop_bg" onClick="popClose()"></div>
+	<div class="s21_pop_cont">
+		<div class="s21_pop_x" onClick="popClose()"><img src="<?=G5_THEME_IMG_URL?>/pop_x.png" alt=""></div>
+		<form id="frm_1" name="frm_1" method="post">
+		<input type="hidden" name="lr_type" id="lr_type_1" value="결제시도">
+		<input type="hidden" name="lr_etc" id="lr_etc_1" value="">
+			<div class="s21_form">
+				<input type="hidden" id="lr_etc_1" name="lr_etc_1">
+				<div class="s21_picon"><img src="<?=G5_THEME_IMG_URL?>/pop_icon.png" alt=""></div>
+				<div class="tit"><b class="font_mont" id="s21_popgd"></b>&nbsp;상담 문의</div>
+				<div class="desc">무엇이 궁금하신가요?<br>로또클릭이 친절하게 상담하겠습니다!</div>
+				<ul class="res_ul">
+					<li><input type="text" id="lr_name_1" name="lr_name" placeholder="성함을 입력해 주세요."></li>
+					<li>
+						<input type="text" id="lr_hp1_1" name="lr_hp1" value="010" maxlength="3">
+						<span>-</span>
+						<input type="text" id="lr_hp2_1" name="lr_hp2" maxlength="4">
+						<span>-</span>
+						<input type="text" id="lr_hp3_1" name="lr_hp3" maxlength="4">
+					</li>
+				</ul>
+				<ul class="s21_ck_box">
+					<li>
+						<input type="checkbox" id="chk_1" name="chk" checked>
+						<label for="chk_1">로또클릭 이용약관 동의</label>
+					</li>
+					<li>
+						<input type="checkbox" id="chk2_1" name="chk2" checked>
+						<label for="chk2_1">개인정보처리방침</label>
+					</li>
+				</ul>
+				<button class="s21_pop_btn hv08" type="button"  onclick="fnSubmit('_1')">신청하기</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+function fnSendMuSms(){
+	if("<?=$is_member?>" != "1"){
+		alert("로그인 후 이용바랍니다.");
+		return false;
+	}
+	if(confirm("가입하신 번호로 무통장 입금계좌 정보를 받아보시겠습니까?")==true){
+		$.ajax({
+			type: "POST",
+			url: "/sub/ajax.smsMu.php",
+			data: {}, 
+			cache: false,
+			async: false,
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+			success: function(data) {
+				alert("정상적으로 발송되었습니다.");		
+			}
+		});
+		return false;
+
+	}
+}
+
+$(window).scroll(function() {
+	var scroll = $(window).scrollTop(); 
+	var s21_right_h = $('.s21_right').height(); 
+	var s21_left_h = $('.s21_left').height(); 
+
+	if (scroll >= 400) { 
+		$(".s21_left").addClass("abs"); 
+	} else {
+		$(".s21_left").removeClass("abs");
+	}
+
+	if (scroll >= s21_right_h - 135) { 
+		$(".s21_left").addClass("absb"); 
+	} else {
+		$(".s21_left").removeClass("absb"); 
+	}
+
+});
+</script>
+
+<script>
+	function popOpen(v, ty){
+		$('html, body').css('overflow-y','hidden');
+		$('.s21_pop').fadeIn(400);
+		var v_val = v;
+		
+
+		$('#s21_popgd').text(ty);
+		$('#lr_etc_1').val(ty);
+
+
+		/*if(v_val == 1){
+			
+		}
+		else if(v_val == 2){
+			$('#s21_popgd').text('V5');
+			$('#lr_etc_1').val("V5");
+		}
+		else if(v_val == 3){
+			$('#s21_popgd').text('V7');
+			$('#lr_etc_1').val("V7");
+		}*/
+	};
+
+	function popClose(v){
+		$('html, body').css('overflow-y','visible');
+		$('.s21_pop').fadeOut(200);
+	}
+</script>
+
+<?php
+	include_once(G5_THEME_PATH.'/tail.php');
+?>

@@ -1,0 +1,5 @@
+data/dbconfig.php
+data/session/*
+data/cache/*
+*.tar.gz
+*.sql

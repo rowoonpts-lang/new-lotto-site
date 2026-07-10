@@ -1,0 +1,188 @@
+/*드레스 slider*/
+div.dress_slider{
+	position: relative;
+	text-align: center;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0px;
+}
+div.dress_slider > img{
+	position: relative;
+	left: 50%;
+	margin-left: -100%;
+}
+div.dress_slider > div.wrap{
+	position: absolute;
+	top: 350px;
+	width: 100%;
+}
+/*웨딩홀 slider*/
+li.slider_wrap{
+	position: relative;
+}
+div.slider_box{
+	position: absolute !important;
+	top: 340px !important;
+	left: 50% !important;
+	width: 1200px !important;
+	margin-left: -600px !important;
+}
+div.lg_content > ul > li > div.slider_box .bx-wrapper .bx-pager{
+	display: none;
+}
+/* video_00 */
+.video_00 {
+	position:absolute;
+	top:100px;
+	left:50%;
+	margin-left:-600px;
+	z-index:9999;
+	background-color:#000000;
+}
+/*map*/
+li#map{
+	position: relative;
+	background-color: #fff;
+	overflow: hidden;
+	padding-bottom: 50px;
+}
+div.map_wrap{
+	position: absolute;
+	top: 210px;
+	left: 50%;
+	margin-left: -600px;
+	width: 1200px;
+	overflow: hidden;
+}
+div.map_wrap > div.text_box{
+	margin-top: 30px;
+	text-align: center;
+}
+div.map_wrap > div.text_box > h2{
+	font-size: 40px;
+	color: #222;
+	margin-bottom: 10px;
+	font-weight: normal;
+	line-height: normal;
+}
+div.map_wrap > div.text_box > p.big{
+	font-size: 30px;
+	color: #666;
+	font-weight: 300;
+	line-height: normal;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+}
+div.map_wrap > div.text_box > p.jucha{
+	margin-top:30px;
+	margin-bottom: 50px;
+}
+
+
+div.map_wrap > div.text_box > p.small{
+	font-size: 20px;
+	color: #fff;
+	font-weight: 300;
+	line-height: 30px;
+}
+div.map_wrap > div.text_box > p.small > span{
+	font-size: 20px;
+	color: #999;
+	font-weight: 200;
+}
+/*main_btn*/
+div.main_img {
+	padding-top:100px;
+}
+div.main_img div.main_btn_box {
+	position: absolute;
+	top: 730px;
+	left: 50%;
+	margin-left:400px;
+	width:200px;
+	height: 60px;
+}
+div.main_btn_box a{
+	display: block;
+	width: 100% !important;
+	height:100%;
+	box-sizing: border-box;
+	float: left;
+}
+
+a.content_in_btn > p{
+	font-size: 15px;
+	font-weight: 100;
+	color: #fff;
+	margin-top: 15px;
+}
+.lg_content .content_in_btn p {
+	color: #666;
+}
+/* 참가신청하기 버튼  content_in_btn */
+a.content_in_btn{
+	position: absolute;
+	width: 390px;
+	height: 130px;
+	display: block;
+	bottom: 50px;
+	left: 50%;
+	margin-left: -195px;
+	text-align: center;
+}
+a.content_in_btn > p{
+	font-size: 15px;
+	font-weight: 100;
+	color: #fff;
+	margin-top: 15px;
+}
+
+div.lg_content ul > li > a{
+	position:absolute;
+	width:400px;
+	height:100px;
+	left:50%;
+	margin-left:-200px;
+	bottom:100px;
+}
+
+div.apply_box {background-image: url(../img/apply_bg.jpg) !important;}
+div.apply_box > form {    width: 599px !important;}
+
+div.apply_box > form > div.apply_form > table > tbody > tr.interest > td > ul > li {
+	width:15% !important;
+}
+
+
+
+
+/*주최 주관*/
+#host_logo {
+	margin-top: -70px;
+	width: 100%;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    line-height: 0px;
+}
+#host_logo img{
+	position: relative;
+	left: 50%;
+	margin-left: -100%;
+}
+
+
+/*메인 신청*/
+
+
+.apply_main div.apply_box {
+	padding: 230px 0px 129px 0px;
+}
+.lg_wrap div.apply_box {
+	padding: 245px 0px 129px 0px;
+}
+
+.lg_footer {display:flex; justify-content:center;}
+#footer_logo {padding-top:50px; margin-right:50px;}
+div.lg_footer > ul.lg_center {width:auto; margin:0;}
+div.lg_footer > ul.lg_center > li {text-align:left;}
