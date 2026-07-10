@@ -1450,7 +1450,7 @@ function sql_connect($host, $user, $pass, $db=G5_MYSQL_DB)
             die('Connect Error: '.mysqli_connect_error());
         }
     } else {
-        $link = mysql_connect($host, $user, $pass);
+        $link = mysqli_connect($host, $user, $pass);
     }
 
     return $link;
@@ -1465,7 +1465,7 @@ function sql_select_db($db, $connect)
     if(function_exists('mysqli_select_db') && G5_MYSQLI_USE)
         return @mysqli_select_db($connect, $db);
     else
-        return @mysql_select_db($db, $connect);
+        return @mysqli_select_db($db, $connect);
 }
 
 
@@ -1479,7 +1479,7 @@ function sql_set_charset($charset, $link=null)
     if(function_exists('mysqli_set_charset') && G5_MYSQLI_USE)
         mysqli_set_charset($link, $charset);
     else
-        mysql_query(" set names {$charset} ", $link);
+        mysqli_query(" set names {$charset} ", $link);
 }
 
 
@@ -1508,9 +1508,9 @@ function sql_query($sql, $error=G5_DISPLAY_SQL_ERROR, $link=null)
         }
     } else {
         if ($error) {
-            $result = @mysql_query($sql, $link) or die("<p>$sql<p>" . mysql_errno() . " : " .  mysql_error() . "<p>error file : {$_SERVER['SCRIPT_NAME']}");
+            $result = @mysqli_query($sql, $link) or die("<p>$sql<p>" . mysql_errno() . " : " .  mysqli_error() . "<p>error file : {$_SERVER['SCRIPT_NAME']}");
         } else {
-            $result = @mysql_query($sql, $link);
+            $result = @mysqli_query($sql, $link);
         }
     }
 
@@ -1630,7 +1630,7 @@ function sql_error_info($link=null)
     if(function_exists('mysqli_error') && G5_MYSQLI_USE) {
         return mysqli_errno($link) . ' : ' . mysqli_error($link);
     } else {
-        return mysql_errno($link) . ' : ' . mysql_error($link);
+        return mysql_errno($link) . ' : ' . mysqli_error($link);
     }
 }
 
