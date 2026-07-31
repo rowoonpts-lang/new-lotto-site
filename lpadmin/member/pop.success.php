@@ -30,9 +30,9 @@
 				<!-- form start -->
 				<div class="row">				
 					<div class="col-2" style="padding:10px 20px 0px">
-						<form id="frm">
+						<form id="turnForm">
 							<input type="hidden" name="mb_id" value="<?=base64_encode($mb_id)?>">
-							<select id="turn" name="turn" class="form-control select2 select2-hidden-accessible" style="width: 100%;" aria-hidden="true" onChange="$('#frm').submit();">
+							<select id="turn" name="turn" class="form-control select2 select2-hidden-accessible" style="width: 100%;" aria-hidden="true" onChange="$('#turnForm').submit();">
 								<?
 									for($i=getTurn(); $i >= $config[cf_1]; $i--){
 								?>
