@@ -1,9 +1,6 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
-
-	sql_query("alter table ".$g5['member_table']." add column `mb_type` varchar(50) NOT NULL");
-	echo $mb_no;
 	if(!$mb_no){
 		$mb_code = fnNewMbCode();
 		
@@ -69,7 +66,6 @@
 					and mb_id = '{$mb_id}'
 				";
 		sql_query($sql);
-		echo $sql;
 	}
 
 ?>
