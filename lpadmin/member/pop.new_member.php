@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 ?>
@@ -15,7 +15,7 @@
 				</div>
 				<!-- /.card-header -->
 				<!-- form start -->
-				<form name="frm" id="frm" role="form" autocomplete="off" action="member.save.php" onSubmit="return fnSubmit();">
+				<form name="frm" id="frm" role="form" method="post" autocomplete="off" action="member.save.php" onSubmit="return fnSubmit();">
 				<input type="hidden" id="mb_hp_chk" value="0">
 				<input type="hidden" id="mb_id_chk" value="0">
 					<div class="card-body">
