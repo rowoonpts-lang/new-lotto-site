@@ -1,10 +1,6 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
-
-
-
-	sql_query("alter table ".$g5['member_table']." add column `mb_type` varchar(50) NOT NULL");
 	$mb_code = fnNewMbCode();
 
 	$sql = " insert into {$g5['member_table']}
@@ -54,7 +50,7 @@
 	$mb_no = sql_insert_id();
 
 	setEtcInfo($mb_id, $mb_db);
-	fnSetMemo($mb_id, $member[mb_id], '대리가입', $lm_memo = '대리가입 완료');
+	fnSetMemo($mb_id, $member['mb_id'], '대리가입', $lm_memo = '대리가입 완료');
 ?>
 <script>
 $(function(){
