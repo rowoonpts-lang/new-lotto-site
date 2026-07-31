@@ -3,3 +3,6 @@ data/session/*
 data/cache/*
 *.tar.gz
 *.sql
+
+# Track documented database schema files
+!docs/database/*.sql
