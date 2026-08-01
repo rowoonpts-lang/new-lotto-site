@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -32,7 +32,7 @@ $(function(){
 		<div class="col-md-12 col-12">
 			<!-- general form elements -->
 			<div class="card card-primary">
-				<?include_once("./member.head.php");?>
+				<?php include_once("./member.head.php"); ?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" autocomplete="off" action="pop.memo.update.php" onSubmit="return fnSubmit();">
