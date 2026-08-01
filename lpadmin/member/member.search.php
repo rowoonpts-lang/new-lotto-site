@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	$spamList = fnGetSpan();
@@ -47,10 +47,10 @@
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
 				<div class="col-md-4">
@@ -99,21 +99,21 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['mb_code']?></td>
 					<td>
 						<?=$row['mb_name']?><br>
 						<?=$row['mb_hp']?>
-						<?if (in_array($row['mb_hp'], $spamList)) {?>
+						<?php if (in_array($row['mb_hp'], $spamList)) {?>
 						<br>
 						<span style="color:red">[080스팸]</span>
-						<?}?>
+						<?php }?>
 					</td>
 					<td><?=$row['mb_id']?></td>
 					<td>
-						<?
+						<?php
 							if($row['left_day'] > 0){
 								echo "일시정지";
 							}else{
@@ -122,7 +122,7 @@
 						?>
 					</td>
 					<td>
-						<?
+						<?php
 							if(intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400) > 0){
 								echo intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400);
 							}else{
@@ -131,7 +131,7 @@
 						?>일
 					</td>
 					<td>
-						<?
+						<?php
 							$tot_num = 0;
 							$tot_text = "";
 							$tot_num = $row['num_mon']+$row['num_tue']+$row['num_wed']+$row['num_thur']+$row['num_fri']+$row['num_sat'];
@@ -150,7 +150,7 @@
 					</td>
 					<td><?=$row['mb_datetime']?><br><?=$row['mb_today_login']?></td>
 					<td>
-						<?
+						<?php
 							if(!$row['mb_yak']){
 								echo "N";
 							}else{
@@ -160,18 +160,18 @@
 					</td>
 					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-						<?if($row['recent_select']){?>
+						<?php if($row['recent_select']){?>
 							<?=$row['recent_select']?>
-						<?}?>
+						<?php }?>
 					</td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">상세상담</button></td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="13">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
 				<?php 
@@ -207,6 +207,6 @@ function fnMemmberMemo(mb_id){
 	window.open(url, name, option);
 }
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
