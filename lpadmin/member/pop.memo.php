@@ -684,8 +684,8 @@ $(function(){
 <script>
 $(function(){
 	fnGetPrice('mu_mb_price', $("input:radio[name='mu_mb_type']:checked").val());		
-	fnGetPrice('cre_mb_price', $("input:radio[name='cre_mb_type']:checked").val());		
-	fnGetPrice('cre_mb_price2', $("input:radio[name='cre_mb_type']:checked").val());		
+	fnGetPrice('cre_mb_price', $("#frm_cre input:radio[name='cre_mb_type']:checked").val());
+	fnGetPrice('cre_mb_price2', $("#frm_cre2 input:radio[name='cre_mb_type']:checked").val());
 	$(".on_mir").hide();
 	$("input[name='pay_company']").change(function(){
 
