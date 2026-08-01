@@ -571,9 +571,9 @@ $(function(){
 			<!-- /.card-header -->
 			<div class="card-body">
 				<form id="frm_cre2" name="frm_cre2">
-				<input type="hidden" name="mb_id" id="cre_mb_id" value="<?=$row['mb_id']?>">
-				<input type="hidden" name="mb_name" id="cre_mb_name" value="<?=$row['mb_name']?>">
-				<input type="hidden" name="cre_emp_id" id="cre_emp_id" value="<?=$member['mb_id']?>">
+				<input type="hidden" name="mb_id" id="cre2_mb_id" value="<?=$row['mb_id']?>">
+				<input type="hidden" name="mb_name" id="cre2_mb_name" value="<?=$row['mb_name']?>">
+				<input type="hidden" name="cre_emp_id" id="cre2_emp_id" value="<?=$member['mb_id']?>">
 				<!--input type="hidden" name="pay_company" value="수기결제"-->
 				<div class="callout callout-info">
 					<h5>결제수단</h5>
@@ -627,7 +627,7 @@ $(function(){
 						</div>
 						<div class="col-6">
 							<h5>할부</h5>
-							<select class="form-control select2 select2-hidden-accessible" id="card_sell_mm" name="card_sell_mm" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
+							<select class="form-control select2 select2-hidden-accessible" id="card_sell_mm2" name="card_sell_mm" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
 								<?php for($i=0; $i<=12; $i++){?>
 								<?php if($i==0){?>
 								<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>">일시불</option>
