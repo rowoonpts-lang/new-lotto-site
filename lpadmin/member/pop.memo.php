@@ -809,9 +809,11 @@ function fnCreditSave(v){
 		}
 	}
 
-	if($("#mu_mb_price").val() < 1){
+	var priceField = (v == "su") ? "#cre_mb_price2" : "#cre_mb_price";
+
+	if($(priceField).val() < 1){
 		alert("결제금액을 입력하세요.");
-		$("#mu_mb_price").focus();
+		$(priceField).focus();
 		return false;
 	}
 
