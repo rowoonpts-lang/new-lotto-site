@@ -47,7 +47,7 @@ $(function(){
 										</div>
 										<div class="col-9">
 											<div class="row">
-												<span style="font-size:20px;font-weight:900;;line-height:23px"><?=$row[mb_name]?> / </span><span style="font-size:26px;font-weight:900;;line-height:23px"><?=$row[mb_hp]?></span>
+												<span style="font-size:20px;font-weight:900;;line-height:23px"><?=$row['mb_name']?> / </span><span style="font-size:26px;font-weight:900;;line-height:23px"><?=$row['mb_hp']?></span>
 											</div>
 										</div>
 									</div>
@@ -94,10 +94,10 @@ $(function(){
 											<label for="mb_hp">인계처리</label>
 										</div>
 										<div class="col-9">
-											<?php if($row[mb_in] == ""){?>
-											<button type="button" class="btn btn-block btn-primary" onClick="fnInProc('처리', '<?=$row[mb_id]?>')">인계처리</button>
+											<?php if($row['mb_in'] == ""){?>
+											<button type="button" class="btn btn-block btn-primary" onClick="fnInProc('처리', '<?=$row['mb_id']?>')">인계처리</button>
 											<?php }else{?>
-											<button type="button" class="btn btn-block btn-danger" onClick="fnInProc('', '<?=$row[mb_id]?>')">인계취소</button>
+											<button type="button" class="btn btn-block btn-danger" onClick="fnInProc('', '<?=$row['mb_id']?>')">인계취소</button>
 											<?php }?>
 										</div>
 									</div>
@@ -109,7 +109,7 @@ $(function(){
 											<label for="mb_hp">카드승인</label>
 										</div>
 										<div class="col-9">
-											<button type="button" class="btn btn-block btn-primary" onClick="openCredit2('처리', '<?=$row[mb_id]?>')">카드승인요청</button>
+											<button type="button" class="btn btn-block btn-primary" onClick="openCredit2('처리', '<?=$row['mb_id']?>')">카드승인요청</button>
 										</div>
 									</div>
 								</div>
@@ -240,7 +240,7 @@ $(function(){
 										<th>상태</th>
 										<th style="width:30%">내용</th>
 										<th>알람시간</th>
-										<?php if($member[mb_level] >= 10){?>
+										<?php if($member['mb_level'] >= 10){?>
 										<th>삭제</th>
 										<?php }?>
 									</tr>
@@ -273,20 +273,20 @@ $(function(){
 										for($i = 0; $row2 = sql_fetch_array($result2); $i++){
 									?>
 									<tr>
-										<td><?=$row2[lm_datetime]?></td>
-										<td><?=$member_info[$row2[from_mb_id]]?></td>
-										<td><?php if($row2[lm_price]){echo number_format($row2[lm_price]);}?></td>
-										<td><?php if($row2[lm_misu]){echo number_format($row2[lm_misu]);}?></td>
-										<td><?=$row2[lm_memo_type]?></td>
-										<td style="text-align:left"><?=$row2[lm_memo]?></td>
+										<td><?=$row2['lm_datetime']?></td>
+										<td><?=$member_info[$row2['from_mb_id']]?></td>
+										<td><?php if($row2['lm_price']){echo number_format($row2['lm_price']);}?></td>
+										<td><?php if($row2['lm_misu']){echo number_format($row2['lm_misu']);}?></td>
+										<td><?=$row2['lm_memo_type']?></td>
+										<td style="text-align:left"><?=$row2['lm_memo']?></td>
 										<td>
-											<?php if($row2[lm_alarm_view] == "0"){?>
-											<?=str_replace("0000-00-00 00:00:00","",$row2[lm_alarm_date])?>
+											<?php if($row2['lm_alarm_view'] == "0"){?>
+											<?=str_replace("0000-00-00 00:00:00","",$row2['lm_alarm_date'])?>
 											<?php }?>
 										</td>
-										<?php if($member[mb_level] >= 10){?>
+										<?php if($member['mb_level'] >= 10){?>
 										<td>
-											<button type="button" class="btn btn-danger" onClick="fnProcDel('l_memo','lm_id','<?=$row2[lm_id]?>')">삭제</button>
+											<button type="button" class="btn btn-danger" onClick="fnProcDel('l_memo','lm_id','<?=$row2['lm_id']?>')">삭제</button>
 										</td>
 										<?php }?>
 									</tr>
@@ -330,16 +330,16 @@ $(function(){
 			<!-- /.card-header -->
 			<div class="card-body">
 				<form id="frm_mu" name="frm_mu">
-				<input type="hidden" name="mb_id" value="<?=$row[mb_id]?>">
-				<input type="hidden" name="mb_name" value="<?=$row[mb_name]?>">
-				<input type="hidden" name="mu_emp_id" value="<?=$member[mb_id]?>">
+				<input type="hidden" name="mb_id" value="<?=$row['mb_id']?>">
+				<input type="hidden" name="mb_name" value="<?=$row['mb_name']?>">
+				<input type="hidden" name="mu_emp_id" value="<?=$member['mb_id']?>">
 				<div class="callout callout-info">
 					<h5>이름</h5>
-					<p><?=$row[mb_name]?></p>
+					<p><?=$row['mb_name']?></p>
 				</div>
 				<div class="callout callout-info">
 					<h5>연락처</h5>
-					<p><input type="text" id="mu_mb_hp" name="mu_mb_hp" class="form-control" placeholder="<?=$row[mb_hp]?>" value="<?=$row[mb_hp]?>"></p>
+					<p><input type="text" id="mu_mb_hp" name="mu_mb_hp" class="form-control" placeholder="<?=$row['mb_hp']?>" value="<?=$row['mb_hp']?>"></p>
 				</div>
 				<div class="callout callout-info">
 					<h5>결제계좌</h5>
@@ -354,7 +354,7 @@ $(function(){
 				</div>
 				<div class="callout callout-info">
 					<h5>입금자명</h5>
-					<p><input type="text" class="form-control" placeholder="" id="mu_mb_name" name="mu_mb_name" value="<?=$row[mb_name]?>"></p>
+					<p><input type="text" class="form-control" placeholder="" id="mu_mb_name" name="mu_mb_name" value="<?=$row['mb_name']?>"></p>
 				</div>
 				<div class="callout callout-info">
 					<h5>상품선택</h5>
@@ -433,7 +433,7 @@ $(function(){
 				</div>
 				<div class="callout callout-info">
 					<h5>이름</h5>
-					<p><?=$row[mb_name]?></p>
+					<p><?=$row['mb_name']?></p>
 				</div>
 				<div class="callout callout-info">
 					<div class="row">
