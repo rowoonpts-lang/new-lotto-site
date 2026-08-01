@@ -1,8 +1,10 @@
-<?
+<?php
 	include_once("_common.php");
 
-	fnSetLog($member[mb_id],'메모 작성');
-	
+	$memberId = $member['mb_id'] ?? '';
+
+	fnSetLog($memberId, '메모 작성');
+
 	// 원본 값 선언 (이미 외부에서 할당되었다고 가정)
 	$mb_id = $mb_id ?? '';
 	$recent_select = $recent_select ?? '';
@@ -35,7 +37,7 @@
 	// 알람테이블에 저장
 	$sql = "insert into l_memo set
 				mb_id = '{$mb_id}'
-				, from_mb_id = '{$member[mb_id]}'
+				, from_mb_id = '{$memberId}'
 				, lm_memo_type = '{$recent_select}'
 				, lm_memo = '{$recent_memo}'
 				, lm_misu = '{$recent_misu}'
@@ -44,8 +46,8 @@
 				, lm_datetime = now()
 			";
 	sql_query($sql);
-	
 
-	alert("정상적으로 저장되었습니다.")
+
+	alert("정상적으로 저장되었습니다.");
 
 ?>
