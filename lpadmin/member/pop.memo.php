@@ -61,12 +61,12 @@ $(function(){
 										<div class="col-9">
 											<select id="recent_select" name="recent_select" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
 												<option selected="selected" data-select2-id="11" value="">메모선택</option>
-												<?
+												<?php
 													$memoList = fnGetMemoStatus();
 													for($k=0; $k < count($memoList); $k++){
 												?>
 												<option value="<?=$memoList[$k]?>"><?=$memoList[$k]?></option>
-												<?	}?>
+												<?php	}?>
 											</select>
 										</div>
 									</div>
@@ -94,11 +94,11 @@ $(function(){
 											<label for="mb_hp">인계처리</label>
 										</div>
 										<div class="col-9">
-											<?if($row[mb_in] == ""){?>
+											<?php if($row[mb_in] == ""){?>
 											<button type="button" class="btn btn-block btn-primary" onClick="fnInProc('처리', '<?=$row[mb_id]?>')">인계처리</button>
-											<?}else{?>
+											<?php }else{?>
 											<button type="button" class="btn btn-block btn-danger" onClick="fnInProc('', '<?=$row[mb_id]?>')">인계취소</button>
-											<?}?>
+											<?php }?>
 										</div>
 									</div>
 								</div-->
@@ -123,12 +123,12 @@ $(function(){
 											<div class="row">
 												<div class="col-7">
 													<select id="yak_select" name="yak_select" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-														<?
+														<?php
 															$mb_type_ary = fnGetTypeYak();
 															for($i=0; $i < count($mb_type_ary); $i++){
 														?>
 														<option value="<?=$mb_type_ary[$i]?>"><?=$mb_type_ary[$i]?></option>
-														<?	}?>
+														<?php	}?>
 													</SELECT>
 												</div>
 												<div class="col-5">
@@ -240,14 +240,14 @@ $(function(){
 										<th>상태</th>
 										<th style="width:30%">내용</th>
 										<th>알람시간</th>
-										<?if($member[mb_level] >= 10){?>
+										<?php if($member[mb_level] >= 10){?>
 										<th>삭제</th>
-										<?}?>
+										<?php }?>
 									</tr>
 									</thead>
 									<tbody>
 									</tbody>
-									<?
+									<?php
 										
 										$sql_common = " from l_memo a, g5_member b ";
 										$sql_search = " where 1=1 and a.mb_id = b.mb_id and a.mb_id = '{$mb_id}' ";
@@ -275,28 +275,28 @@ $(function(){
 									<tr>
 										<td><?=$row2[lm_datetime]?></td>
 										<td><?=$member_info[$row2[from_mb_id]]?></td>
-										<td><?if($row2[lm_price]){echo number_format($row2[lm_price]);}?></td>
-										<td><?if($row2[lm_misu]){echo number_format($row2[lm_misu]);}?></td>
+										<td><?php if($row2[lm_price]){echo number_format($row2[lm_price]);}?></td>
+										<td><?php if($row2[lm_misu]){echo number_format($row2[lm_misu]);}?></td>
 										<td><?=$row2[lm_memo_type]?></td>
 										<td style="text-align:left"><?=$row2[lm_memo]?></td>
 										<td>
-											<?if($row2[lm_alarm_view] == "0"){?>
+											<?php if($row2[lm_alarm_view] == "0"){?>
 											<?=str_replace("0000-00-00 00:00:00","",$row2[lm_alarm_date])?>
-											<?}?>
+											<?php }?>
 										</td>
-										<?if($member[mb_level] >= 10){?>
+										<?php if($member[mb_level] >= 10){?>
 										<td>
 											<button type="button" class="btn btn-danger" onClick="fnProcDel('l_memo','lm_id','<?=$row2[lm_id]?>')">삭제</button>
 										</td>
-										<?}?>
+										<?php }?>
 									</tr>
-									<?	}
+									<?php	}
 										if($total_count < 1){
 									?>
 									<tr>
 										<td colspan="10" style="text-align:center;">등록된 메모가 없습니다.</td>
 									</tr>
-									<?	}?>
+									<?php	}?>
 									</table>
 									<?php 
 										$qstr .= "&mb_id=".base64_encode($mb_id);
@@ -344,12 +344,12 @@ $(function(){
 				<div class="callout callout-info">
 					<h5>결제계좌</h5>
 					<select class="form-control select2 select2-hidden-accessible" id="mu_num" name="mu_num" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-						<?
+						<?php
 							$mu = explode("\r\n", $config['cf_mu_num']);
 							for($i=0; $i < count($mu); $i++){
 						?>
 						<option data-select2-id="11" value="<?=$mu[$i]?>"><?=$mu[$i]?></option>
-						<?	}?>
+						<?php	}?>
 					</select>
 				</div>
 				<div class="callout callout-info">
@@ -358,35 +358,35 @@ $(function(){
 				</div>
 				<div class="callout callout-info">
 					<h5>상품선택</h5>
-					<?
+					<?php
 						$mb_type_ary = fnGetTypePre();
 						for($i=0; $i < count($mb_type_ary); $i++){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioPrimary<?=$i?>"  id="mu_mb_type" name="mu_mb_type" <?if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('mu_mb_price',this.value)">
+							<input type="radio" id="radioPrimary<?=$i?>"  id="mu_mb_type" name="mu_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('mu_mb_price',this.value)">
 							<label for="radioPrimary<?=$i?>">
 								<?=$mb_type_ary[$i]?>
 							</label>
 						</div>
 					
-					<?	}?>
+					<?php	}?>
 				</div>
 				<div class="callout callout-info">
 					<h5>문자전송</h5>
-					<?
+					<?php
 						$mb_sms_ary = array("발송", "미발송");
 						for($i=0; $i < count($mb_sms_ary); $i++){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioSms<?=$i?>"  id="mu_sms" name="mu_sms" <?if($i == 0){echo "checked";}?> value="<?=$mb_sms_ary[$i]?>">
+							<input type="radio" id="radioSms<?=$i?>"  id="mu_sms" name="mu_sms" <?php if($i == 0){echo "checked";}?> value="<?=$mb_sms_ary[$i]?>">
 							<label for="radioSms<?=$i?>">
 								<?=$mb_sms_ary[$i]?>
 							</label>
 						</div>
 					
-					<?	}?>
+					<?php	}?>
 				</div>
 				<div class="callout callout-info">
 					<h5>금액</h5>
@@ -457,13 +457,13 @@ $(function(){
 						<div class="col-6">
 							<h5>할부</h5>
 							<select class="form-control select2 select2-hidden-accessible" id="card_sell_mm" name="card_sell_mm" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-								<?for($i=0; $i<=10; $i++){?>
-								<?if($i==0){?>
+								<?php for($i=0; $i<=10; $i++){?>
+								<?php if($i==0){?>
 								<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>">일시불</option>
-								<?}else{?>
+								<?php }else{?>
 								<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>"><?=$i?>개월</option>
-								<?}?>
-								<?}?>
+								<?php }?>
+								<?php }?>
 							</select>
 
 						</div>
@@ -526,19 +526,19 @@ $(function(){
 				</div>
 				<div class="callout callout-info">
 					<h5>상품선택</h5>
-					<?
+					<?php
 						$mb_type_ary = fnGetTypePre();
 						for($i=0; $i < count($mb_type_ary); $i++){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioPrimary_cre<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price',this.value)">
+							<input type="radio" id="radioPrimary_cre<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price',this.value)">
 							<label for="radioPrimary_cre<?=$i?>">
 								<?=$mb_type_ary[$i]?>
 							</label>
 						</div>
 					
-					<?	}?>
+					<?php	}?>
 				</div>
 				<div class="callout callout-info">
 					<h5>금액</h5>
@@ -628,13 +628,13 @@ $(function(){
 						<div class="col-6">
 							<h5>할부</h5>
 							<select class="form-control select2 select2-hidden-accessible" id="card_sell_mm" name="card_sell_mm" style="width: 100%;" data-select2-id="9" tabindex="-1" aria-hidden="true">
-								<?for($i=0; $i<=12; $i++){?>
-								<?if($i==0){?>
+								<?php for($i=0; $i<=12; $i++){?>
+								<?php if($i==0){?>
 								<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>">일시불</option>
-								<?}else{?>
+								<?php }else{?>
 								<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>"><?=$i?>개월</option>
-								<?}?>
-								<?}?>
+								<?php }?>
+								<?php }?>
 							</select>
 
 						</div>
@@ -646,19 +646,19 @@ $(function(){
 				</div-->
 				<div class="callout callout-info">
 					<h5>상품선택</h5>
-					<?
+					<?php
 						$mb_type_ary = fnGetTypePre();
 						for($i=0; $i < count($mb_type_ary); $i++){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioPrimary_cre2<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price2',this.value)">
+							<input type="radio" id="radioPrimary_cre2<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price2',this.value)">
 							<label for="radioPrimary_cre2<?=$i?>">
 								<?=$mb_type_ary[$i]?>
 							</label>
 						</div>
 					
-					<?	}?>
+					<?php	}?>
 				</div>
 				<div class="callout callout-info">
 					<h5>금액</h5>
