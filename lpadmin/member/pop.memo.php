@@ -532,7 +532,7 @@ $(function(){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioPrimary_cre<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price',this.value)">
+							<input type="radio" id="radioPrimary_cre<?=$i?>" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price',this.value)">
 							<label for="radioPrimary_cre<?=$i?>">
 								<?=$mb_type_ary[$i]?>
 							</label>
@@ -652,7 +652,7 @@ $(function(){
 					?>
 					
 						<div class="icheck-primary d-inline col-6">
-							<input type="radio" id="radioPrimary_cre2<?=$i?>"  id="cre_mb_type" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price2',this.value)">
+							<input type="radio" id="radioPrimary_cre2<?=$i?>" name="cre_mb_type" <?php if($i == 0){echo "checked";}?> value="<?=$mb_type_ary[$i]?>" onChange="fnGetPrice('cre_mb_price2',this.value)">
 							<label for="radioPrimary_cre2<?=$i?>">
 								<?=$mb_type_ary[$i]?>
 							</label>
