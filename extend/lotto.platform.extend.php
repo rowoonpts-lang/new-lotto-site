@@ -157,3 +157,28 @@ function fnGetMemoStatus()
         '대리가입',
     ];
 }
+
+/**
+ * 유료 회원 등급 목록을 반환합니다.
+ */
+function fnGetTypePre()
+{
+    return [
+        '프로',
+        '탑클래스',
+        '퍼펙트',
+        '퍼스트',
+    ];
+}
+
+/**
+ * 약정 대상 회원 등급 목록을 반환합니다.
+ */
+function fnGetTypeYak()
+{
+    return [
+        '탑클래스',
+        '퍼펙트',
+        '퍼스트',
+    ];
+}
