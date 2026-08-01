@@ -123,8 +123,8 @@
 					</td>
 					<td>
 						<?
-							if(intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400) > 0){
-								echo intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400);
+							if(intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400) > 0){
+								echo intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400);
 							}else{
 								echo "0";
 							}
@@ -145,26 +145,26 @@
 							}
 							
 						?>
-						남은조합 : <?=($tot_num-$row[use_num])?><br>
+						남은조합 : <?=($tot_num-$row['use_num'])?><br>
 						<?=$tot_text?>
 					</td>
-					<td><?=$row[mb_datetime]?><br><?=$row[mb_today_login]?></td>
+					<td><?=$row['mb_datetime']?><br><?=$row['mb_today_login']?></td>
 					<td>
 						<?
-							if(!$row[mb_yak]){
+							if(!$row['mb_yak']){
 								echo "N";
 							}else{
 								echo "<span style='color:blue'>".$row['mb_yak']."</span>";
 							}
 						?>
 					</td>
-					<td><?=str_replace("homepage","home",$row[mb_db])?></td>
+					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-						<?if($row[recent_select]){?>
-							<?=$row[recent_select]?>
+						<?if($row['recent_select']){?>
+							<?=$row['recent_select']?>
 						<?}?>
 					</td>
-					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row[mb_id])?>')">상세상담</button></td>
+					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">상세상담</button></td>
 				</tr>
 				<?}?>
 				<?if($total_count < 1){?>
