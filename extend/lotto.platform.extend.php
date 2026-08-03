@@ -212,3 +212,19 @@ function fnGetTypePrice($mbType)
 
     return $prices[$mbType] ?? 0;
 }
+
+/**
+ * 080 수신거부 번호 목록을 반환합니다.
+ */
+function fnGetSpan()
+{
+    $sql = "SELECT `Phone_No` FROM `Msg_Spam`";
+    $result = sql_query($sql);
+    $list = [];
+
+    while ($row = sql_fetch_array($result)) {
+        $list[] = $row['Phone_No'];
+    }
+
+    return $list;
+}

@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS `Msg_Spam` (
+    `Phone_No` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`Phone_No`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
