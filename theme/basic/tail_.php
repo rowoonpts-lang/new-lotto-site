@@ -10,8 +10,7 @@ if($basename != "index.php") {
 ?>
 	</div>
 </div>
-<?}
-?>
+<?php } ?>
 
   
 

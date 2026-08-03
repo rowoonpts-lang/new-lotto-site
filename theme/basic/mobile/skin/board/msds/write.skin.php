@@ -97,7 +97,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 <?php echo $category_option ?>
             </select>
         </li>
-		<?}?>
+		<?php } ?>
 
 		<li class="bo_w_tit write_div">
             <span class="op_name">제목</span>

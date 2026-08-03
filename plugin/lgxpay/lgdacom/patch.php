@@ -21,7 +21,7 @@
     }
 
     require_once("./XPayClient.php");
-    $xpay = &new XPayClient($configPath, $CST_PLATFORM);
+    $xpay = new XPayClient($configPath, $CST_PLATFORM);
     $xpay->Init_TX($LGD_MID);
 
     echo "patch result = ".$xpay->Patch("lgdacom.conf");

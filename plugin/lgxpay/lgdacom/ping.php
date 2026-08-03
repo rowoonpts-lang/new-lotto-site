@@ -21,7 +21,7 @@
     }
 
     require_once("./XPayClient.php");
-    $xpay = &new XPayClient($configPath, $CST_PLATFORM);
+    $xpay = new XPayClient($configPath, $CST_PLATFORM);
     $xpay->Init_TX($LGD_MID);
 
     $xpay->Set("LGD_TXNAME", "Ping");
