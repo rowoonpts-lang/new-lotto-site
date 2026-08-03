@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -20,7 +20,7 @@
 		<div class="col-md-12 col-12">
 			<!-- general form elements -->
 			<div class="card card-primary">
-				<?include_once("./member.head.php");?>
+				<?php include_once("./member.head.php");?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" autocomplete="off" action="pop.member_info.update.php" onSubmit="return fnSubmit();">
@@ -84,19 +84,19 @@
 										</div>
 										<div class="col-9">
 											<div class="row">
-											<?
+											<?php
 												$mb_type_ary = fnGetType();
 												for($i=0; $i < count($mb_type_ary); $i++){
 											?>
 											
 												<div class="icheck-primary d-inline col-6">
-													<input type="radio" id="radioPrimary<?=$i?>" name="mb_type" <?if($row[mb_type] == $mb_type_ary[$i] || (!$row[mb_type] && $i == 0)){echo "checked";}?> value="<?=$mb_type_ary[$i]?>">
+													<input type="radio" id="radioPrimary<?=$i?>" name="mb_type" <?php if($row[mb_type] == $mb_type_ary[$i] || (!$row[mb_type] && $i == 0)){echo "checked";}?> value="<?=$mb_type_ary[$i]?>">
 													<label for="radioPrimary<?=$i?>">
 														<?=$mb_type_ary[$i]?>
 													</label>
 												</div>
 											
-											<?	}?>
+											<?php 	}?>
 											</div>
 										</div>
 									</div>
@@ -107,11 +107,11 @@
 											<label for="mb_hp">일시정지</label>
 										</div>
 										<div class="col-9">
-											<?if($row['left_day'] < 1){?>
+											<?php if($row['left_day'] < 1){?>
 											<button type="button" class="btn btn-block btn-danger" onClick="fnStop('<?=base64_encode($mb_id)?>')">일시정지</button>
-											<?}else{?>
+											<?php }else{?>
 											<button type="button" class="btn btn-block btn-primary" onClick="fnStart('<?=base64_encode($mb_id)?>')">일시정지 해제</button>
-											<?}?>
+											<?php }?>
 										</div>
 									</div>
 								</div>
@@ -159,13 +159,13 @@
 											<label for="mb_hp">이용기간시작</label>
 										</div>
 										<div class="col-3">
-											<input type="text" class="form-control dateinput" id="start_date" name="start_date" placeholder="" value="<?if($row[start_date] != "0000-00-00"){echo $row[start_date];}?>" onChange="setDateSE()">
+											<input type="text" class="form-control dateinput" id="start_date" name="start_date" placeholder="" value="<?php if($row[start_date] != "0000-00-00"){echo $row[start_date];}?>" onChange="setDateSE()">
 										</div>
 										<div class="col-3">
 											<label for="mb_hp">이용기간종료</label>
 										</div>
 										<div class="col-3">
-											<input type="text" class="form-control dateinput" id="end_date" name="end_date" placeholder="" value="<?if($row[end_date] != "0000-00-00"){echo $row[end_date];}?>" onChange="setDateSE()">
+											<input type="text" class="form-control dateinput" id="end_date" name="end_date" placeholder="" value="<?php if($row[end_date] != "0000-00-00"){echo $row[end_date];}?>" onChange="setDateSE()">
 										</div>
 									</div>
 								</div>
@@ -175,7 +175,7 @@
 											<label for="mb_hp">남은일수</label>
 										</div>
 										<div class="col-9">
-											<?
+											<?php
 												$left_date_tmp = 0;
 												if(intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400) > 0){
 													$left_date_tmp = intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400);
@@ -240,7 +240,7 @@
 									$("#left_num").val(totDay);
 								}
 								</script>
-								<?
+								<?php
 									// 남은 조합수
 									$sql2 = "select * from g5_member_etc where 1=1 and mb_id = '{$mb_id}'";
 									$row2 = sql_fetch($sql2);

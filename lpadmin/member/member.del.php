@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	
 	$mb_id = base64_decode($mb_id);

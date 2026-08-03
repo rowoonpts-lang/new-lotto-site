@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	
 	fnSetLog($member[mb_id], $mb_id.'님 회원 아이디 전송');

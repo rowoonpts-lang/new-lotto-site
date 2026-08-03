@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -16,7 +16,7 @@
 		<div class="col-md-12 col-12">
 			<!-- general form elements -->
 			<div class="card card-primary">
-				<?include_once("./member.head.php");?>
+				<?php include_once("./member.head.php");?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" autocomplete="off" action="sms.udpate.php" onSubmit="return fnSubmit();">
@@ -80,7 +80,7 @@
 									</thead>
 									<tbody>
 									</tbody>
-									<?
+									<?php
 										$sql_common = " from msg_cust_log ";
 										$sql_search = " where 1=1 and phone_no = '{$row[mb_hp]}' ";
 										$sql_order = " order by send_time desc ";
@@ -109,7 +109,7 @@
 										<td style="text-align:left"><?=nl2br($row2[message])?></td>
 										<td><?=$row2[send_time]?></td>
 										<td>
-											<?
+											<?php
 												//$rt = getSmsResult($row2[table_name], $row2[msg_id]);
 												$rt = $row2['etc'];
 												if($rt == "0"){
@@ -123,15 +123,15 @@
 										</td>
 										<td><button type="button" class="btn btn-primary" onClick="fnSmsReSend('<?=$row2[idx]?>')">재전송</button></td>
 									</tr>
-									<?	}?>
-									<?if($total_count < 1){?>
+									<?php 	}?>
+									<?php if($total_count < 1){?>
 									<tr>
 										<td colspan="10" style="text-align:center;">발송된 문자가 없습니다.</td>
 									</tr>
-									<?	}?>
+									<?php 	}?>
 									</table>
 
-									<?php 
+									<?php
 										$qstr .="&mb_id=".base64_encode($mb_id);
 										echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 									?>

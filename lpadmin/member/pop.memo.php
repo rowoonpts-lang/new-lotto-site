@@ -298,7 +298,7 @@ $(function(){
 									</tr>
 									<?php	}?>
 									</table>
-									<?php 
+									<?php
 										$qstr .= "&mb_id=".base64_encode($mb_id);
 										echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 									?>

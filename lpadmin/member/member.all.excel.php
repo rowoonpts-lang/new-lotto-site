@@ -1,15 +1,15 @@
-<?
+<?php
 include_once("./_common.php");
 if($_SESSION['ss_step2'] != $config['cf_10'] || !$is_admin){
 	die();
 }
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = memberAll.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = memberAll.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>회원코드</th>
@@ -27,7 +27,7 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>디비경로</th>
 	<th>상태</th>
 </tr>
-<?
+<?php
 	$sql_common = " from g5_member a, g5_member_etc b ";
 	$sql_search = " where 1=1 and a.mb_id = b.mb_id and a.mb_id != 'admin' and mb_level < 5 ";
 	$sql_order = " order by mb_datetime desc ";
@@ -47,7 +47,7 @@ header( "Content-Description: PHP4 Generated Data" );
 			if($sch_mb_type == "일시정지"){
 				$sql_search .= " and left_day > 0 ";
 			}else{
-				$sql_search .= " and mb_type = '{$sch_mb_type}' and left_day < 1 ";				
+				$sql_search .= " and mb_type = '{$sch_mb_type}' and left_day < 1 ";
 			}
 		}else if($sch_mb_type == "종료등급"){
 			$sql_search .= " and free_pre_type != '' ";
@@ -98,7 +98,7 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 	<td style="mso-number-format:'\@';"><?=$row['mb_hp']?></td>
 	<td style="mso-number-format:'\@';"><?=$row['mb_id']?></td>
 	<td>
-		<?
+		<?php
 			if($row['left_day'] > 0){
 				echo "일시정지";
 			}else{
@@ -108,7 +108,7 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 	</td>
 	<td><?=$row['free_pre_type']?></td>
 	<td>
-		<?
+		<?php
 			if($row['left_day'] < 1){
 				if(intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400) > 0){
 					echo intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400);
@@ -116,13 +116,13 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 					echo "0";
 				}
 		}else{
-			echo $row['left_day'];							
+			echo $row['left_day'];
 		}
 		?>일
-		<?//if($row[start_date]&& $row[end_date]){echo intval((strtotime($row[end_date]) - strtotime($row[start_date])) / 86400);}?>
+		<?php //if($row[start_date]&& $row[end_date]){echo intval((strtotime($row[end_date]) - strtotime($row[start_date])) / 86400);}?>
 	</td>
 	<td>
-		<?
+		<?php
 			$tot_num = 0;
 			$tot_text = "";
 			$tot_num = $row['num_mon']+$row['num_tue']+$row['num_wed']+$row['num_thur']+$row['num_fri']+$row['num_sat'];
@@ -134,7 +134,7 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 					$tot_text.= $totAryKor[$k]." : ".$row[$totAry[$k]];
 				}
 			}
-			
+
 		?>
 		<?=$tot_text?>
 	</td>
@@ -142,7 +142,7 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 	<td><?=$row[mb_datetime]?></td>
 	<td><?=$row[mb_today_login]?></td>
 	<td>
-		<?
+		<?php
 			if(!$row[mb_yak]){
 				echo "N";
 			}else{
@@ -152,16 +152,16 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 	</td>
 	<td><?=str_replace("homepage","home",$row[mb_db])?></td>
 	<td>
-		<?if($row[recent_select]){?>
+		<?php if($row[recent_select]){?>
 			<?=$row[recent_select]?>
-		<?}?>
+		<?php }?>
 	</td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>

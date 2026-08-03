@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if($t == "set"){
 		$t_date = $e;

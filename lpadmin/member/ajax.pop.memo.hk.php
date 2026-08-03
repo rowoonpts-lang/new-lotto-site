@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	sql_query("alter table `g5_member` add column `mb_hyunkm` varchar(255) NOT NULL");

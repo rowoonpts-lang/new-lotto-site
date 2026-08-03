@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	
@@ -72,10 +72,10 @@
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
 				<div class="col-md-2">
@@ -84,28 +84,28 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_type" aria-hidden="true">
 						<option selected="selected" value="">등급전체</option>
-						<option value="일시정지" <?if($sch_mb_type == "일시정지"){echo "selected";}?>>일시정지</option>
-						<?
+						<option value="일시정지" <?php if($sch_mb_type == "일시정지"){echo "selected";}?>>일시정지</option>
+						<?php
 						$mb_type_ary = fnGetType();
 						for($i=0; $i < count($mb_type_ary); $i++){
 						?>
-						<option value="<?=$mb_type_ary[$i]?>" <?if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
-						<?
+						<option value="<?=$mb_type_ary[$i]?>" <?php if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
+						<?php
 						}
 						?>
-						<option value="종료등급" <?if($sch_mb_type == "종료등급"){echo "selected";}?>>종료등급</option>
+						<option value="종료등급" <?php if($sch_mb_type == "종료등급"){echo "selected";}?>>종료등급</option>
 					</select>
 				</div>
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_db" aria-hidden="true">
 						<option selected="selected" value="">DB경로</option>
-						<?
+						<?php
 						$sql_db = "select distinct mb_db from g5_member_etc where 1=1 and mb_db not in ('','기타','통화중') order by mb_db asc";
 						$result_db = sql_query($sql_db);
 						for($i=0; $row_db = sql_fetch_array($result_db); $i++){
 						?>
-						<option value="<?=$row_db['mb_db']?>" <?if($sch_mb_db == $row_db['mb_db']){echo "selected";}?>><?=$row_db['mb_db']?></option>
-						<?
+						<option value="<?=$row_db['mb_db']?>" <?php if($sch_mb_db == $row_db['mb_db']){echo "selected";}?>><?=$row_db['mb_db']?></option>
+						<?php
 						}
 						?>
 					</select>
@@ -113,12 +113,12 @@
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_status" aria-hidden="true">
 						<option selected="selected" value="">DB상태</option>
-						<?
+						<?php
 							$memoList = fnGetMemoStatus();
 							for($k=0; $k < count($memoList); $k++){
 						?>
-						<option value="<?=$memoList[$k]?>" <?if($sch_mb_status == $memoList[$k]){echo "selected";}?>><?=$memoList[$k]?></option>
-						<?	}?>
+						<option value="<?=$memoList[$k]?>" <?php if($sch_mb_status == $memoList[$k]){echo "selected";}?>><?=$memoList[$k]?></option>
+						<?php 	}?>
 					</select>
 				</div>
 				<div class="col-md-5">
@@ -198,7 +198,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><input type="checkbox" name="chk[]" value="<?=$row['mb_id']?>"></td>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
@@ -206,14 +206,14 @@
 					<td>
 						<?=$row['mb_name']?><br>
 						<?=$row['mb_hp']?>
-						<?if (in_array($row['mb_hp'], $spamList)) {?>
+						<?php if (in_array($row['mb_hp'], $spamList)) {?>
 						<br>
 						<span style="color:red">[080스팸]</span>
-						<?}?>
+						<?php }?>
 					</td>
 					<td><?=$row['mb_id']?></td>
 					<td>
-						<?
+						<?php
 							if($row['left_day'] > 0){
 								echo "일시정지";
 							}else{
@@ -223,7 +223,7 @@
 					</td>
 					<td><?=$row['free_pre_type']?></td>
 					<td>
-						<?
+						<?php
 							if($row['left_day'] < 1){
 								if(intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400) > 0){
 									echo intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400);
@@ -236,7 +236,7 @@
 						?>일
 					</td>
 					<td>
-						<?
+						<?php
 							$tot_num = 0;
 							$tot_text = "";
 							$tot_num = $row['num_mon']+$row['num_tue']+$row['num_wed']+$row['num_thur']+$row['num_fri']+$row['num_sat'];
@@ -255,7 +255,7 @@
 					</td>
 					<td><?=$row[mb_datetime]?><br><?=$row[mb_today_login]?></td>
 					<td>
-						<?
+						<?php
 							if(!$row[mb_yak]){
 								echo "N";
 							}else{
@@ -265,23 +265,23 @@
 					</td>
 					<td><?=str_replace("homepage","home",$row[mb_db])?></td>
 					<td>
-						<?if($row[recent_select]){?>
+						<?php if($row[recent_select]){?>
 							<?=$row[recent_select]?>
-						<?}?>
+						<?php }?>
 					</td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row[mb_id])?>')">상세상담</button></td>
 					<td><button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row[mb_id])?>')">삭제</button></td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="13">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
 				</form>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}&sch_mb_status={$sch_mb_status}&sch_mb_db={$sch_mb_db}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -340,6 +340,6 @@ function fnMemberDel(mb_id){
 	}
 }
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

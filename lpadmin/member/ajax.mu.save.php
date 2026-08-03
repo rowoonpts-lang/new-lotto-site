@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "insert into l_pay set

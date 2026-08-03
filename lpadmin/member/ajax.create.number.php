@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	
 	include_once(G5_LADMIN_PATH."/program/lotto.number.php");

@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "select * from l_turn_{$turn} where 1=1 and mb_id = '{$mb_id}' and result = '낙첨' limit 1";

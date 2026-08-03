@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	/*$sql = "update l_pay set confirm_user = '{$member[mb_id]}' where lp_id = '{$lp_id}'";

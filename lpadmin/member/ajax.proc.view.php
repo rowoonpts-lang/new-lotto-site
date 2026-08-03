@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	
 	$sql = "select * from g5_member where 1=1 and mb_id = '{$mb_id}'";

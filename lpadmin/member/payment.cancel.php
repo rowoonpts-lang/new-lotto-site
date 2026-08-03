@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "select * from l_pay where 1=1 and lp_id = '{$_GET['lp_id']}'";

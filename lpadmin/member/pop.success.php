@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -25,7 +25,7 @@
 		<div class="col-md-12 col-12">
 			<!-- general form elements -->
 			<div class="card card-primary">
-				<?include_once("./member.head.php");?>
+				<?php include_once("./member.head.php");?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				<div class="row">				
@@ -33,11 +33,11 @@
 						<form id="turnForm">
 							<input type="hidden" name="mb_id" value="<?=base64_encode($mb_id)?>">
 							<select id="turn" name="turn" class="form-control select2 select2-hidden-accessible" style="width: 100%;" aria-hidden="true" onChange="$('#turnForm').submit();">
-								<?
+								<?php
 									for($i=getTurn(); $i >= $config[cf_1]; $i--){
 								?>
-								<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?> 회차</option>
-								<?	}?>
+								<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?> 회차</option>
+								<?php 	}?>
 							</select>
 						</form>
 					</div>
@@ -70,7 +70,7 @@
 									</thead>
 									<tbody>
 									</tbody>
-									<?
+									<?php
 										$sql_common = " from l_turn_{$turn} a, g5_member b, g5_member_etc c ";
 										$sql_search = " where 1=1 and a.mb_id = b.mb_id and b.mb_id = c.mb_id and a.mb_id = '{$row[mb_id]}' ";
 										$sql_order = " order by a.lt_id desc ";
@@ -107,15 +107,15 @@
 										<td><?=$row2[lt_datetime]?></td>										
 										<td><?=$row2[result]?></td>
 									</tr>
-									<?	}?>
-									<?if($total_count < 1){?>
+									<?php 	}?>
+									<?php if($total_count < 1){?>
 									<tr>
 										<td colspan="10" style="text-align:center;">발송된 문자가 없습니다.</td>
 									</tr>
-									<?}?>
+									<?php }?>
 									</table>
 
-									<?php 
+									<?php
 										$qstr .="&mb_id=".base64_encode($mb_id)."&turn=".$turn;
 										echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 									?>

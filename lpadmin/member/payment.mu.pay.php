@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	$lp_id = $_GET['lp_id'];
 

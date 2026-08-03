@@ -8,8 +8,8 @@
 	<td class="center"><?=$row[lm_alarm_date]?></td>
 	<td class="center"><?=$member_info[$row[from_mb_id]]?></td>
 	<td class="center">
-		<?if($row[lm_alarm_view] == "0"){?>
+		<?php if($row[lm_alarm_view] == "0"){?>
 		<button type="button" class="btn btn-default" onClick="fnCheckAlarm('<?=$row[lm_id]?>','<?=base64_encode($row[mb_id])?>');">확인</button>
-		<?}?>
+		<?php }?>
 	</td>
 </tr>

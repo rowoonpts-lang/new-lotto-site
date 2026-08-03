@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -29,7 +29,7 @@ $(function(){
 		<div class="col-md-12 col-12">
 			<!-- general form elements -->
 			<div class="card card-primary">
-				<?include_once("./member.head.php");?>
+				<?php include_once("./member.head.php");?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				
@@ -56,7 +56,7 @@ $(function(){
 									</thead>
 									<tbody>
 									</tbody>
-									<?
+									<?php
 										$cnt = 0;
 										$sql2 = "select * 
 												from l_pay a, g5_member b
@@ -90,23 +90,23 @@ $(function(){
 													<td><?=number_format($row2[lp_price]/11*10)?></td>
 													<td>
 														<select id="" name="confirm_mb_type" class="form-control select2 select2-hidden-accessible">
-														<?
+														<?php
 															$preUser = fnGetTypePre();
 															for($j=0; $j < count($preUser); $j++){
 														?>
-															<option value="<?=$preUser[$j]?>" <?if($row2[mb_type] == $preUser[$j]){echo "selected";}?>><?=$preUser[$j]?></option>
-														<?	}?>
+															<option value="<?=$preUser[$j]?>" <?php if($row2[mb_type] == $preUser[$j]){echo "selected";}?>><?=$preUser[$j]?></option>
+														<?php 	}?>
 														</select>
 													</td>
 													<td>
 														<select id="" name="confirm_mb_type_memo" class="form-control select2 select2-hidden-accessible">
 															<option value="">선택안함</option>
-														<?
+														<?php
 															$preUser = fnGetTypePre();
 															for($j=0; $j < count($preUser); $j++){
 														?>
 															<option value="<?=$preUser[$j]?>"><?=$preUser[$j]?></option>
-														<?	}?>
+														<?php 	}?>
 														</select>
 													</td>
 												</tr>
@@ -155,28 +155,28 @@ $(function(){
 													<td><?=number_format($row2[lp_price]/11*10)?></td>
 													<td>
 														<select id="" name="confirm_mb_type" class="form-control select2 select2-hidden-accessible">
-														<?
+														<?php
 															$preUser = fnGetTypePre();
 															for($j=0; $j < count($preUser); $j++){
 														?>
-															<option value="<?=$preUser[$j]?>" <?if($row2[mb_type] == $preUser[$j]){echo "selected";}?>><?=$preUser[$j]?></option>
-														<?	}?>
+															<option value="<?=$preUser[$j]?>" <?php if($row2[mb_type] == $preUser[$j]){echo "selected";}?>><?=$preUser[$j]?></option>
+														<?php 	}?>
 														</select>
 													</td>
 													<td>
 														<select id="" name="confirm_mb_type_memo" class="form-control select2 select2-hidden-accessible">
 															<option value="">선택안함</option>
-														<?
+														<?php
 															$preUser = fnGetTypePre();
 															for($j=0; $j < count($preUser); $j++){
 														?>
 															<option value="<?=$preUser[$j]?>"><?=$preUser[$j]?></option>
-														<?	}?>
+														<?php 	}?>
 														</select>
 													</td>
 												</tr>
 												</table>
-												<?
+												<?php
 													// 1차 인계회원 찾기
 													$sql_bf = "select * from l_pay where mb_id = '{$mb_id}' order by lp_datetime limit 1";
 													$row_bf = sql_fetch($sql_bf);
@@ -187,12 +187,12 @@ $(function(){
 													<td><input type="text" class="form-control" name="confirm_in1_price" id="confirm_in1_price_<?=$row2[lp_id]?>" placeholder="0" onkeyup="inputNumberFormat(this)" onChange="fnCgIn('<?=number_format($row2[lp_price]/11*10)?>',this.value,'<?=$row2[lp_id]?>','1','2')"></td>
 													<th>
 														<select class="form-control select2 select2-hidden-accessible" name="confirm_in2">
-															<?
+															<?php
 															$teamList = getTeamList2();
 															for($j=0; $j < count($teamList); $j++){
 															?>
 															<option value="<?=$teamList[$j]?>"><?=$teamList[$j]?></option>
-															<?}?>
+															<?php }?>
 														</select>
 													</td>
 													<td><input type="text" name="confirm_in2_price" id="confirm_in2_price_<?=$row2[lp_id]?>" class="form-control" placeholder="0" onkeyup="inputNumberFormat(this)" onChange="fnCgIn('<?=number_format($row2[lp_price]/11*10)?>',this.value,'<?=$row2[lp_id]?>','2','1')"></td>
@@ -232,49 +232,49 @@ $(function(){
 										<td><?=number_format($row2[lp_price]/11*10)?></td>
 										<td>
 											<?=$row2[pay_method]?>
-											<?if($row2[pay_method]=="무통장"){?>
+											<?php if($row2[pay_method]=="무통장"){?>
 											<br>
-											<?
+											<?php
 												$tmp = explode(" ",$row2[mu_num]);
 												echo "(".$tmp[0].")";
 											?>
-											<?}else{?>
+											<?php }else{?>
 											<br><?=$row['card_name']?> (<?=$row2[card_sell_mm]?>개월)
-											<?}?>
+											<?php }?>
 										</td>
 										<td><?=$row2[transaction_no]?></td>
 										<td><?=$row2[lp_pay_datetime]?></td>
 										<td><?=$member_info[$row2[confirm_user]]?></td>
 										<td>
-											<?
+											<?php
 												if($row['mb_in'] == ""){
 													if(!$row2[confirm_user]){
 											?>
 											<button type="button" class="btn btn-block btn-primary" onClick="fnConfirm1('<?=$row2[lp_id]?>')">일반승인</button>
-											<?		}else{?>
+											<?php 		}else{?>
 											<button type="button" class="btn btn-block btn-danger" onClick="fnConfirm1Cancel('<?=$row2[lp_id]?>')">일반승인취소</button>
-											<?	
+											<?php
 													}
 												}else{
 													if(!$row2[confirm_in1] && !$row2[confirm_in2]){
 											?>
 											<button type="button" class="btn btn-block btn-primary" onClick="fnConfirmIn('<?=$row2[lp_id]?>')">인계승인</button>
-											<?	
+											<?php
 													}else{
 											?>
 											<button type="button" class="btn btn-block btn-danger" onClick="fnConfirmInCancel('<?=$row2[lp_id]?>')">인계승인취소</button>
-											<?
+											<?php
 													}
 												}
 											?>
 										</td>
 									</tr>
-									<?	}?>
-									<?if($cnt < 1){?>
+									<?php 	}?>
+									<?php if($cnt < 1){?>
 									<tr>
 										<td colspan="11" style="text-align:center;">결제된 결과가 없습니다.</td>
 									</tr>
-									<?}?>
+									<?php }?>
 									</table>
 								</div>
 							</div>

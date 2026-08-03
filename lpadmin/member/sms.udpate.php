@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	$cf080 = "";
 	if($chk == "1"){
