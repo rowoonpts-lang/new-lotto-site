@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "select * from g5_config limit 1";

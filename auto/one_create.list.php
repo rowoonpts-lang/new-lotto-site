@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	if(!$is_admin){
@@ -20,9 +20,9 @@
 총 <?=number_format($cnt)?>개 생성 예정 <span id="progress1">□□□□□□□□□□</span> [<span id="per1">0</span> %]
 
 <button type="button" onClick="fnStartProc()" id="fnStartProc">생성시작</button> [<span id="status1">미처리</span>] <button type="button" id="fnUpdateProcBef" onClick="fnUpdateProcBef()">적용</button>
-<?	}else{?>
+<?php	}else{?>
 <?=$turn?>회차는 무료번호가 발송되었습니다.
-<?	}?>
+<?php	}?>
 <script>
 var iii = 0;
 var cnt_share = "<?=$cnt_share?>"*1;

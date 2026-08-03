@@ -1,1 +1,1 @@
-<?include_once("../common.php");?>
+<?phpinclude_once("../common.php");?>
