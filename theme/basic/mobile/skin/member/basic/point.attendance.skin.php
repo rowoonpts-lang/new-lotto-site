@@ -50,7 +50,7 @@ if ($sum_point1 > 0)
         <div class="pgb_wr">
             <a href="<?=G5_BBS_URL;?>/reseller_point.php">리셀러수익리스트</a>
             <a href="<?=G5_BBS_URL;?>/shop_point.php">쇼핑수익리스트</a>
-            <?if($member['mb_9'] == 'attendance'){?><a href="<?=G5_BBS_URL;?>/attendance_point.php" class="on">출석수익리스트</a><?}?>
+            <?php if($member['mb_9'] == 'attendance'){?><a href="<?=G5_BBS_URL;?>/attendance_point.php" class="on">출석수익리스트</a><?php }?>
         </div>
     </div>
 
@@ -91,7 +91,7 @@ if ($sum_point1 > 0)
                         $expr = ' txt_expired';
                     ?>
                     <tr >
-                        <td class="number"><? echo $num;;?></td>
+                        <td class="number"><?php  echo $num;;?></td>
                         <td class="service" ><?=$row['po_content'];?></td>
                         <td class="profit" ><?php if ($point1) echo $point1; else echo $point2; ?></td>
                         <td class="regi_date" ><?=$row['po_datetime'];?></td>
@@ -109,7 +109,7 @@ if ($sum_point1 > 0)
                 }
                 ?>
                 <tr >
-                    <td colspan="7" class="total" style="background-color:#fafafa">소계 <span><? echo $sum_point1;?> <?php //echo $sum_point2; ?>원</span></td>
+                    <td colspan="7" class="total" style="background-color:#fafafa">소계 <span><?php  echo $sum_point1;?> <?php //echo $sum_point2; ?>원</span></td>
                 </tr>
                 </tbody>
             </table>

@@ -35,9 +35,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
         include_once(G5_SNS_PATH."/view.sns.skin.php");
         ?>
 	</div>
-	<?if($view[wr_9]){?>
+	<?php if($view[wr_9]){?>
 	<div>
-		<?
+		<?php
 			$all_img = get_all_thumbnail($bo_table, 3, $wr_id, 972, 0); 
 
 			foreach($all_img as $v) { 
@@ -46,7 +46,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 		?>
 		<a href="<?=$view[wr_9]?>" target="<?=$view[wr_8]?>"><img src="<?=$v['src']?>"></a>
 	</div>
-	<?}?>
+	<?php }?>
 	<div class="list_a">
 		<a href="<?php echo $list_href ?>">목록</a>
 	</div>
@@ -55,7 +55,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 			<script src="<?php echo G5_JS_URL ?>/jquery.bxslider.min.js"></script>
 			<link rel="stylesheet" href="<?php echo G5_CSS_URL; ?>/jquery.bxslider.css">
 			<ul class="bxslider">
-			<?
+			<?php
 				$sql2 = "select * from g5_write_{$bo_table} where 1=1 and wr_comment = 0 and wr_id != {$wr_id} order by rand()";
 				$result2 = sql_query($sql2);
 				for($j=0; $row2 = sql_fetch_array($result2); $j++){
@@ -65,7 +65,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 				<a href="<?=G5_BBS_URL?>/board.php?bo_table=<?=$bo_table?>&wr_id=<?=$row2[wr_id]?>">
 				<dl class="bx_dl">
 					<dt>
-						<?
+						<?php
 							if($thumb['src']) {
                                 $img_content = '<img src="'.$thumb['src'].'" alt="'.$thumb['alt'].'" >';
                             } else {
@@ -79,7 +79,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 				</dl>
 				</a>
 			</li>
-			<?}?>
+			<?php }?>
 		</ul>		
 		<script>
 		$('.bxslider').bxSlider({
@@ -106,7 +106,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 
 
 <!-- 게시물 상단 버튼 시작 { -->
-<?if($is_admin){?>
+<?php if($is_admin){?>
     <div id="bo_v_top">
         <?php
         ob_start();
@@ -133,7 +133,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
          ?>
     </div>
     <!-- } 게시물 상단 버튼 끝 -->
-<?}?>
+<?php }?>
 <script>
 <?php if ($board['bo_download_point'] < 0) { ?>
 $(function() {

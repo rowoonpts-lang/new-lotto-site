@@ -17,7 +17,7 @@ include_once(G5_THEME_PATH.'/head.php');
 		<div id="visual">
 			<div class="swiper-container visual_swiper">
 				<ul class="swiper-wrapper">
-					<?
+					<?php
 						$sql = " select * from g5_write_main_slider where 1=1 and ca_name = 'PC' order by wr_datetime desc ";
 						$result = sql_query($sql);
 						for($i=0; $row=sql_fetch_array($result); $i++){
@@ -29,7 +29,7 @@ include_once(G5_THEME_PATH.'/head.php');
 							<img src="<?=$v['src']?>" alt="">
 						</a>
 					</li>
-					<?}?>
+					<?php }?>
 				</ul>
 			</div>
 			<div class="swiper-pagination"></div>
@@ -61,8 +61,8 @@ include_once(G5_THEME_PATH.'/head.php');
 	<div class="inner_2">
 		<ul class="product_ul2">
 			<li id="view_turn_result">
-				<? $turn = getTurn()-1; ?>
-				<?include_once(G5_PATH."/sub/ajax.turn.list.view.php");?>
+				<?php  $turn = getTurn()-1; ?>
+				<?php include_once(G5_PATH."/sub/ajax.turn.list.view.php");?>
 			</li>
 			<li class="product_li2">
 				<h4>동행복권 <?=$turn?>회차</h4>
@@ -212,7 +212,7 @@ include_once(G5_THEME_PATH.'/head.php');
 				<p class="news_more_btn"><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice_"><img src="<?=G5_THEME_IMG_URL?>/plus.png" alt=""></a></p>
 			</h3>
 			<div class="news_top">
-				<?
+				<?php
 					$sql = " select * from g5_write_notice_ where 1=1 order by wr_datetime desc limit 1 ";
 					$row = sql_fetch($sql);
 				?>
@@ -229,7 +229,7 @@ include_once(G5_THEME_PATH.'/head.php');
 			</div>
 			<div class="news_bottom">
 				<ul>
-					<?
+					<?php
 						$sql = " select * from g5_write_notice_ where 1=1 order by wr_datetime desc limit 1, 3 ";
 						$result = sql_query($sql);
 						for($i=0; $row=sql_fetch_array($result); $i++){
@@ -238,7 +238,7 @@ include_once(G5_THEME_PATH.'/head.php');
 						<a href="<?=G5_BBS_URL?>/board.php?bo_table=notice_&wr_id=<?=$row['wr_id']?>" class="news_title"><?=$row['wr_subject']?></a>
 						<span class="news_date"><?=substr($row['wr_datetime'],0,10)?></span>
 					</li>
-					<?}?>
+					<?php }?>
 				</ul>
 			</div>
 		</div><!-- a_news 끝 -->

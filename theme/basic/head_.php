@@ -224,9 +224,9 @@ function fnSubmit(v){
 </script>
 
 
-<?if($basename != "index.php") {?>
+<?php if($basename != "index.php") {?>
 <div id="sub_div">
-	<?if($basename != "sub0101.php" && $basename != "sub0102.php" && $basename != "sub0201.php" && $basename != "prize.php" && $basename != "sub0301.php" && $basename != "deluxe.php") {?>
+	<?php if($basename != "sub0101.php" && $basename != "sub0102.php" && $basename != "sub0201.php" && $basename != "prize.php" && $basename != "sub0301.php" && $basename != "deluxe.php") {?>
 	<div class="sub_top <?=$sub_top_bg?>">
 		<div class="s01_li1">LOTTO JOONGSI<span>M</span></div>
 		<div class="s01_li2"><?=$s01_li2?></div>
@@ -237,6 +237,6 @@ function fnSubmit(v){
 		</ul>
 	</div>
 	<div class="sub_tit"><?=$sub_tit?></div>
-	<?}?>
+	<?php }?>
 	<div class="inner_3 <?=$inner_x?>">
-<?}?>
+<?php }?>

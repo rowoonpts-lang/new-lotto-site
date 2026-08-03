@@ -51,7 +51,7 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 	    <div class="tbl_frm01 tbl_wrap register_form_inner">
 	        <h2>개인정보 입력</h2>
 	        <ul>
-                <?php 
+                <?php
 					$desc_name = '';
 					$desc_phone = '';
 					if ($config['cf_cert_use']) {
@@ -430,7 +430,7 @@ $(function() {
     $("#win_hp_cert").click(function() {
 		if(!cert_confirm()) return false;
         params = "?" + pageTypeParam;
-        <?php     
+        <?php
         switch($config['cf_cert_hp']) {
             case 'kcb':                
                 $cert_url = G5_OKNAME_URL.'/hpcert1.php';

@@ -225,7 +225,7 @@ $( window ).resize(function(){
                             if (isset($list[$i]['icon_secret'])) echo rtrim($list[$i]['icon_secret']);
                              ?>
                             <!-- 모바일 작성표시 추가 -->
-                            <? if($list[$i]['wr_9'] =='mobile'){
+                            <?php  if($list[$i]['wr_9'] =='mobile'){
                             echo "<img src='$board_skin_url/img/icon_wifi.png'>";
                             }
                             ?>   

@@ -76,13 +76,13 @@ include_once(G5_THEME_PATH.'/head.php');
 				<li>
 					<a href="<?=G5_URL?>/bbs/board.php?bo_table=notice_" class="tit">NOTICE&nbsp;+</a>
 					<ul class="left_ul">
-						<?
+						<?php
 							$sql = " select * from g5_write_notice_ where 1=1 order by wr_datetime desc limit 2";
 							$result = sql_query($sql);
 							for($i=0; $row=sql_fetch_array($result); $i++){
 						?>
 						<li><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice_&wr_id=<?=$row['wr_id']?>">[공지]&nbsp;<?php echo cut_str($row['wr_subject'],40,'...')?></a></li>
-						<?}?>
+						<?php }?>
 						<!-- <li><a href="">[공지]&nbsp;동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세...</a></li> -->
 					</ul>
 				</li>
@@ -122,7 +122,7 @@ include_once(G5_THEME_PATH.'/head.php');
 		</div>
 	</article>
 	<article class="main3">
-		<? $turn = getTurn()-1; ?>
+		<?php  $turn = getTurn()-1; ?>
 		<div class="inner">
 			<div class="main3_left">
 				<div class="main3_tit">로또클릭&nbsp;<span><?=$turn?></span>회차 당첨실적</div>
@@ -147,7 +147,7 @@ include_once(G5_THEME_PATH.'/head.php');
 				</div>
 			</div>
 			<div class="main3_mid">
-				<?include_once(G5_PATH."/sub/main.lucky.php");?>
+				<?php include_once(G5_PATH."/sub/main.lucky.php");?>
 			</div>
 			<div class="main3_right">
 				<div class="main3_tit">동행복권 추첨방송</div>

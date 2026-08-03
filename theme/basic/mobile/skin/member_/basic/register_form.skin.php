@@ -24,11 +24,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$member_skin_url.'/style.css">', 
     <input type="hidden" name="mb_nick_default" value="<?php echo get_text($member['mb_nick']) ?>">
     <input type="hidden" name="mb_nick" value="<?php echo get_text($member['mb_nick']) ?>">
     <?php } ?>
-	<?if($w == 'u'){?>
+	<?php if($w == 'u'){?>
     <input type="hidden" name="mb_8" value="<?php echo $member['mb_8']; ?>">
     <input type="hidden" name="mb_9" value="<?php echo $member['mb_9']; ?>">
     <input type="hidden" name="mb_10" value="<?php echo $member['mb_10']; ?>">
-    <?}?>
+    <?php }?>
 	<input type="hidden" name="mb_nick_default" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>">
 	<input type="hidden" name="mb_nick" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):'nick'.date("YmdHisB"); ?>" id="reg_mb_nick" required class="frm_input required nospace  half_input" size="10" maxlength="20">
 

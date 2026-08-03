@@ -39,13 +39,13 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 					</p>
 				</li>
 				<li>
-					<?
+					<?php
 						$sql2 = "select * from g1_file where 1=1 and wr_id = '{$wr_id}' order by gf_num";
 						$result2 = sql_query($sql2);
 						for($i=0; $row2 = sql_fetch_array($result2); $i++){
 					?>
 					<p style="width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap"> 파일 #<?=$i+1?> : <a href="<?=G5_DATA_URL?>/<?=$bo_table?>/<?=$row2[gf_name]?>"><?=$row2[gf_name_bf]?></a></p>
-					<?}?>
+					<?php }?>
 				</li>
 			</ul>
 		</div>

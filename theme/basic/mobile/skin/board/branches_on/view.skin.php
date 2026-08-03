@@ -92,11 +92,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 					<tr>
 						<th>홈페이지</th>
 						<td>
-							<?if($view[wr_3]){?>
+							<?php if($view[wr_3]){?>
 								<?=$view[wr_3]?>
-							<?}else{?>
+							<?php }else{?>
 								없음
-							<?}?>
+							<?php }?>
 						</td>
 					</tr>
 				</tbody>

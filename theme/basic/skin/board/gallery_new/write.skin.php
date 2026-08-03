@@ -6,21 +6,21 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 ?>
 
 <div class="tit_wrap" >
-	<?if($bo_table == "talk_talk" ) {?>
+	<?php if($bo_table == "talk_talk" ) {?>
 	<p class="tit" ><span>Talk Talk 칼럼</span> 책상위치만 바꿔도 아이 성적이 달라진다</p>
-	<?}?>
-	<?if($bo_table == "new_magazine" ) {?>
+	<?php }?>
+	<?php if($bo_table == "new_magazine" ) {?>
 	<p class="tit" ><span>NEW 매거진</span> NEW 매거진</p>
-	<?}?>
-	<?if($bo_table == "consulting_case" ) {?>
+	<?php }?>
+	<?php if($bo_table == "consulting_case" ) {?>
 	<p class="tit" ><span>컨설팅사례</span> 웰스터디를 통해 컨설팅을 받으신 분들을 소개합니다</p>
-	<?}?>
-	<?if($bo_table == "event" ) {?>
+	<?php }?>
+	<?php if($bo_table == "event" ) {?>
 	<p class="tit" ><span>이벤트</span> 웰스터디 이벤트를 확인하세요</p>
-	<?}?>
-	<?if($bo_table == "schedule" ) {?>
+	<?php }?>
+	<?php if($bo_table == "schedule" ) {?>
 	<p class="tit" ><span>특강 진행현황</span></p>
-	<?}?>
+	<?php }?>
 </div>
 
 <section id="bo_w">
@@ -111,10 +111,10 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <div class="write_div">
         <span class="sound_only">옵션</span>
         <?php echo $option ?>
-		<?if($bo_table == "talk_talk"){?>
-			<input type="checkbox" id="wr_2" name="wr_2" value="Y" <?if($wr_2 == "Y" ){?>checked<?}?>>
+		<?php if($bo_table == "talk_talk"){?>
+			<input type="checkbox" id="wr_2" name="wr_2" value="Y" <?php if($wr_2 == "Y" ){?>checked<?php }?>>
 			<label for="wr_2">메인노출여부</label>   
-		<?}?>
+		<?php }?>
     </div>
     <?php } ?>
 
@@ -190,8 +190,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     </div>
 	<div class="bo_w_link bo_w_select ">
 		<select style="width:100px;" name="wr_8">
-			<option value="_self" <?if($write[wr_8] == "_self"){?>selected<?}?>>현재창</option>
-			<option value="_blank" <?if($write[wr_8] == "_blank"){?>selected<?}?>>새창</option>
+			<option value="_self" <?php if($write[wr_8] == "_self"){?>selected<?php }?>>현재창</option>
+			<option value="_blank" <?php if($write[wr_8] == "_blank"){?>selected<?php }?>>새창</option>
 		</select>
 	</div>
 	<div class="bo_w_flie write_div">

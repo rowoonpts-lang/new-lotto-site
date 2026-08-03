@@ -10,35 +10,35 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 <script src="<?php echo G5_JS_URL; ?>/viewimageresize.js"></script>
 
 <div class="tit_wrap" >
-	<?if($bo_table == "talk_talk" ) {?>
+	<?php if($bo_table == "talk_talk" ) {?>
 	<p class="tit" ><span>Talk Talk 칼럼</span> 책상위치만 바꿔도 아이 성적이 달라진다</p>
-	<?}?>
-	<?if($bo_table == "new_magazine" ) {?>
+	<?php }?>
+	<?php if($bo_table == "new_magazine" ) {?>
 	<p class="tit" ><span>NEW 매거진</span> NEW 매거진</p>
-	<?}?>
-	<?if($bo_table == "consulting_case" ) {?>
+	<?php }?>
+	<?php if($bo_table == "consulting_case" ) {?>
 	<p class="tit" ><span>컨설팅사례</span> 웰스터디를 통해 컨설팅을 받으신 분들을 소개합니다</p>
-	<?}?>
-	<?if($bo_table == "event" ) {?>
+	<?php }?>
+	<?php if($bo_table == "event" ) {?>
 	<p class="tit" ><span>이벤트</span> 웰스터디 이벤트를 확인하세요</p>
-	<?}?>
-	<?if($bo_table == "schedule" ) {?>
+	<?php }?>
+	<?php if($bo_table == "schedule" ) {?>
 	<p class="tit" ><span>특강 진행현황</span></p>
-	<?}?>
+	<?php }?>
 </div>
 
 <!-- 게시물 읽기 시작 { -->
 <div>
 	<!--<div class="bo_tit_area"><?=$board[bo_subject]?></div>-->
 	<div class="wr_subejct_area"><?=$view[wr_subject]?></div>
-	<?if($view[ca_name]){?>
+	<?php if($view[ca_name]){?>
 	<ul class="bo_table_desc">
 		<!--li><?=$view[wr_name]?></li>
 		<li><?=date("Y.m.d",$view[wr_datetime])?></li>
 		<li><?=date("Y.m.d",strtotime($view[wr_datetime]))?></li-->
 		<li><?=$view[ca_name]?></li>
 	</ul>
-	<?}?>
+	<?php }?>
 	<div class="wr_content_area">
 		<?php echo get_view_thumbnail($view['content']); ?>
 	</div>
@@ -57,9 +57,9 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
         include_once(G5_SNS_PATH."/view.sns.skin.php");
         ?>
 	</div>
-	<?if($view[wr_9]){?>
+	<?php if($view[wr_9]){?>
 	<div>
-		<?
+		<?php
 			$all_img = get_all_thumbnail($bo_table, 3, $wr_id, 972, 0); 
 
 			foreach($all_img as $v) { 
@@ -68,7 +68,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 		?>
 		<a href="<?=$view[wr_9]?>" target="<?=$view[wr_8]?>"><img src="<?=$v['src']?>"></a>
 	</div>
-	<?}?>
+	<?php }?>
 	<div class="list_a">
 		<a href="<?php echo $list_href ?>">목록</a>
 	</div>
@@ -77,7 +77,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 			<script src="<?php echo G5_JS_URL ?>/jquery.bxslider.min.js"></script>
 			<link rel="stylesheet" href="<?php echo G5_CSS_URL; ?>/jquery.bxslider.css">
 			<ul class="bxslider">
-			<?
+			<?php
 				$sql2 = "select * from g5_write_{$bo_table} where 1=1 and wr_comment = 0 and wr_id != {$wr_id} order by rand()";
 				$result2 = sql_query($sql2);
 				for($j=0; $row2 = sql_fetch_array($result2); $j++){
@@ -87,7 +87,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 				<a href="<?=G5_BBS_URL?>/board.php?bo_table=<?=$bo_table?>&wr_id=<?=$row2[wr_id]?>">
 				<dl class="bx_dl">
 					<dt>
-						<?
+						<?php
 							if($thumb['src']) {
                                 $img_content = '<img src="'.$thumb['src'].'" alt="'.$thumb['alt'].'" >';
                             } else {
@@ -101,7 +101,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 				</dl>
 				</a>
 			</li>
-			<?}?>
+			<?php }?>
 		</ul>		
 		<script>
 		$('.bxslider').bxSlider({
@@ -128,7 +128,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
 
 
 <!-- 게시물 상단 버튼 시작 { -->
-<?if($is_admin){?>
+<?php if($is_admin){?>
     <div id="bo_v_top">
         <?php
         ob_start();
@@ -155,7 +155,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style2.css">', 
          ?>
     </div>
     <!-- } 게시물 상단 버튼 끝 -->
-<?}?>
+<?php }?>
 <script>
 <?php if ($board['bo_download_point'] < 0) { ?>
 $(function() {

@@ -61,7 +61,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             <option value="">분류를 선택하세요</option>
             <?php echo $category_option ?>
         </select>
-		<select name="wr_3" id="wr_3" style="<?if($write['wr_3']){?>display:inline-block;<?}else{?>display:none;<?}?>"></select>
+		<select name="wr_3" id="wr_3" style="<?php if($write['wr_3']){?>display:inline-block;<?php }else{?>display:none;<?php }?>"></select>
     </div>
     <?php } ?>
 

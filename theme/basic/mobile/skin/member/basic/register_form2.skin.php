@@ -31,11 +31,11 @@ if( $member['mb_recommend']){
         <input type="hidden" name="mb_nick_default" value="<?php echo get_text($member['mb_nick']) ?>">
         <input type="hidden" name="mb_nick" value="<?php echo get_text($member['mb_nick']) ?>">
     <?php }  ?>
-    <?if($w == 'u'){?>
+    <?php if($w == 'u'){?>
         <input type="hidden" name="mb_8" value="<?php echo $member['mb_8']; ?>">
         <input type="hidden" name="mb_9" value="<?php echo $member['mb_9']; ?>">
         <input type="hidden" name="mb_10" value="<?php echo $member['mb_10']; ?>">
-    <?}?>
+    <?php }?>
 
 
 
@@ -48,7 +48,7 @@ if( $member['mb_recommend']){
                     <div class="form_name"><p>아이디</p></div>
                     <label for="reg_mb_id" class="sound_only">아이디<strong>필수</strong></label>
                     <input type="text" name="mb_id" value="<?php echo $member['mb_id'] ?>" id="reg_mb_id" <?php echo $required ?> <?php echo $readonly ?> class="frm_input half_input <?php echo $required ?> <?php echo $readonly ?>" minlength="3" maxlength="20">
-                    <?php if ($w=='') {?> <button type="button" class="btn_overlap" id="idcheck">중복확인</button><?}?>
+                    <?php if ($w=='') {?> <button type="button" class="btn_overlap" id="idcheck">중복확인</button><?php }?>
                     <span id="msg_mb_id"></span>
                     <!--                <span class="frm_info">영문자, 숫자, _ 만 입력 가능. 최소 3자이상 입력하세요.</span>-->
                 </li>
@@ -91,7 +91,7 @@ if( $member['mb_recommend']){
 
                         <input type="hidden" name="mb_nick_default" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>">
                         <input type="text" name="mb_nick" value="<?php echo isset($member['mb_nick'])?get_text($member['mb_nick']):''; ?>" id="reg_mb_nick" required class="frm_input required nospace  half_input" size="10" maxlength="20">
-                        <?php if ($w=='') {?>  <button type="button" class="btn_overlap" id="nickcheck">중복확인</button><?}?>
+                        <?php if ($w=='') {?>  <button type="button" class="btn_overlap" id="nickcheck">중복확인</button><?php }?>
                         <span id="msg_mb_nick"></span>
                     </li>
                 <?php }  ?>
@@ -246,7 +246,7 @@ if( $member['mb_recommend']){
                 <?php }  ?>
                 </span>
 
-                <?  if($member['mb_level'] >= '4'){?>
+                <?php   if($member['mb_level'] >= '4'){?>
                     <li id="myshopimg1">
 
                         <div class="form_name"><p style="line-height:1.5">마이샵 상단이미지<br>(pc)</p></div>
@@ -264,7 +264,7 @@ if( $member['mb_recommend']){
                         </div>
                     </li>
                 <?php } ?>
-                <?  if($member['mb_level'] >= '4'){?>
+                <?php   if($member['mb_level'] >= '4'){?>
                     <li>
 
                         <div class="form_name"><p style="line-height:1.5">마이샵 상단이미지<br>(mobile)</p></div>

@@ -34,7 +34,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <!-- 본문 회원이미지 추가하기 추가 -->
 	<!--
     <section id="bo_v_info_img" class="mb_disp_no">
-                <?php 
+                <?php
                     $mb_dir = substr($view[mb_id],0,2); 
                     $icon_file = G5_DATA_PATH.'/member_image/'.$mb_dir.'/'.$view[mb_id].'.gif'; 
                     if (file_exists($icon_file)) { 
@@ -69,7 +69,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         }
          ?>
         <!-- 유튜브 동영상 시작 { -->
-        <?php 
+        <?php
             $youtube_link = $view['wr_10'];
             $youtube_url = parse_url($youtube_link);
             parse_str($youtube_url['query']);

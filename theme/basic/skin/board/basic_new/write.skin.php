@@ -6,21 +6,21 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 ?>
 
 <div class="tit_wrap" >
-	<?if($bo_table == "consultation_status" ) {?>
+	<?php if($bo_table == "consultation_status" ) {?>
 	<p class="tit" ><span>컨설팅 상담신청 현황</span></p>
-	<?}?>
-	<?if($bo_table == "free" ) {?>
+	<?php }?>
+	<?php if($bo_table == "free" ) {?>
 	<p class="tit" ><span>자유게시판</span></p>
-	<?}?>
-	<?if($bo_table == "news" ) {?>
+	<?php }?>
+	<?php if($bo_table == "news" ) {?>
 	<p class="tit" ><span>언론보도</span></p>
-	<?}?>
-	<?if($bo_table == "notice" ) {?>
+	<?php }?>
+	<?php if($bo_table == "notice" ) {?>
 	<p class="tit" ><span>공지사항</span></p>
-	<?}?>
-	<?if($bo_table == "review" ) {?>
+	<?php }?>
+	<?php if($bo_table == "review" ) {?>
 	<p class="tit" ><span>리뷰</span></p>
-	<?}?>
+	<?php }?>
 </div>
 <section id="bo_w">
     <h2 class="sound_only"><?php echo $g5['title'] ?></h2>
@@ -184,8 +184,8 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     </div>
 	<div class="bo_w_link bo_w_select ">
 		<select style="width:100px;" name="wr_8">
-			<option value="_self" <?if($write[wr_8] == "_self"){?>selected<?}?>>현재창</option>
-			<option value="_blank" <?if($write[wr_8] == "_blank"){?>selected<?}?>>새창</option>
+			<option value="_self" <?php if($write[wr_8] == "_self"){?>selected<?php }?>>현재창</option>
+			<option value="_blank" <?php if($write[wr_8] == "_blank"){?>selected<?php }?>>새창</option>
 		</select>
 	</div>
 	<div class="bo_w_flie write_div">
