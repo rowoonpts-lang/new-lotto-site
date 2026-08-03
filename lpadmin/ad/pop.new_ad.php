@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -23,8 +23,8 @@
 				<!-- /.card-header -->
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" autocomplete="off" action="pop.new_ad.update.php" onSubmit="return fnSubmit();">
-				<input type="hidden" id="lu_code_chk" value="<?if($w == ""){?>0<?}else{?>1<?}?>">
-				<input type="hidden" id="lu_id_chk" value="<?if($w == ""){?>0<?}else{?>1<?}?>">
+				<input type="hidden" id="lu_code_chk" value="<?php if($w == ""){?>0<?php }else{?>1<?php }?>">
+				<input type="hidden" id="lu_id_chk" value="<?php if($w == ""){?>0<?php }else{?>1<?php }?>">
 				<input type="hidden" name="idx" value="<?=$idx?>">
 					<div class="card-body">
 						<div class="form-group">
@@ -32,54 +32,54 @@
 							<div class="row">
 								<div class="col-6">
 									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="lu_type_select" id="lu_type_select" onChange="fnCngLu(this.value)" aria-hidden="true">
-									<?if($w == ""){?>
+									<?php if($w == ""){?>
 										<option value="">저장된 매체사 선택</option>
-										<?
+										<?php
 											$sql2 = "select * from (select lu_type, lu_name from l_ad_user where 1=1 and del_yn = '0' group by lu_type) a order by lu_type asc";
 											$result2 = sql_query($sql2);
 											for($j=0; $row2 = sql_fetch_array($result2); $j++){
 										?>
 										<option value="<?=$row2[lu_type]?>|<?=$row2[lu_name]?>"><?=$row2[lu_name]?></option>
-										<?
+										<?php
 											}
 										?>
-										<?}else{?>
+										<?php }else{?>
 										<option><?=$row['lu_name']?></option>
-										<?}?>
+										<?php }?>
 									</select>
 								</div>
 								<div class="col-6">
-									<input type="text" class="form-control" id="lu_type" name="lu_type" placeholder="매체사 코드" value="<?=$row['lu_type']?>" <?if($w == "u"){echo "readonly";}?>>
+									<input type="text" class="form-control" id="lu_type" name="lu_type" placeholder="매체사 코드" value="<?=$row['lu_type']?>" <?php if($w == "u"){echo "readonly";}?>>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="mb_name">매체사 이름</label>
-							<input type="text" class="form-control" id="lu_name" name="lu_name" placeholder="" required value="<?=$row['lu_name']?>" <?if($w == "u"){echo "readonly";}?>>
+							<input type="text" class="form-control" id="lu_name" name="lu_name" placeholder="" required value="<?=$row['lu_name']?>" <?php if($w == "u"){echo "readonly";}?>>
 						</div>
 						<div class="form-group">
 							<label for="mb_name">광고 코드</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="lu_code" name="lu_code" placeholder="" required value="<?=$row['lu_code']?>" <?if($w == "u"){echo "readonly";}?>>
+									<input type="text" class="form-control" id="lu_code" name="lu_code" placeholder="" required value="<?=$row['lu_code']?>" <?php if($w == "u"){echo "readonly";}?>>
 								</div>
-								<?if($w == ""){?>
+								<?php if($w == ""){?>
 								<div class="col-4">
 									<button type="button" class="btn btn-block btn-primary" onClick="fnFindCode()">중복검사</button>
 								</div>
-								<?}?>
+								<?php }?>
 						</div>
 						<div class="form-group">
 							<label for="mb_id">아이디</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="lu_id" name="lu_id" placeholder="" value="<?=$row['lu_id']?>" <?if($w == "u"){echo "readonly";}?>>
+									<input type="text" class="form-control" id="lu_id" name="lu_id" placeholder="" value="<?=$row['lu_id']?>" <?php if($w == "u"){echo "readonly";}?>>
 								</div>
-								<?if($w == ""){?>
+								<?php if($w == ""){?>
 								<div class="col-4">
 									<button type="button" class="btn btn-block btn-primary" onClick="fnFindID()">중복검사</button>
 								</div>
-								<?}?>
+								<?php }?>
 							</div>
 						</div>
 						<div class="form-group">
@@ -94,13 +94,13 @@
 							<label for="exampleInputPassword1">관리자 페이지 권한</label>
 							<div class="form-group clearfix">
 								<div class="icheck-primary d-inline">
-									<input type="radio" id="radioPrimary1" name="st_tp" <?if($w == ""){?>checked<?}else{if($row[st_tp] == "1"){echo "checked";}}?> value="1">
+									<input type="radio" id="radioPrimary1" name="st_tp" <?php if($w == ""){?>checked<?php }else{if($row[st_tp] == "1"){echo "checked";}}?> value="1">
 									<label for="radioPrimary1">
 										접속가능
 									</label>
 								</div>
 								<div class="icheck-primary d-inline">
-									<input type="radio" id="radioPrimary2" name="st_tp" <?if($row[st_tp] == "0"){echo "checked";}?> value="0">
+									<input type="radio" id="radioPrimary2" name="st_tp" <?php if($row[st_tp] == "0"){echo "checked";}?> value="0">
 									<label for="radioPrimary2">
 										접속금지
 									</label>
@@ -112,11 +112,11 @@
 				<!-- /.card-body -->
 
 				<div class="card-footer">
-					<?if($w == ""){?>
+					<?php if($w == ""){?>
 					<button type="submit" class="btn btn-primary">생성</button>
-					<?}else{?>
+					<?php }else{?>
 					<button type="submit" class="btn btn-primary">저장</button>
-					<?}?>
+					<?php }?>
 				</div>
 			</form>
 		</div>

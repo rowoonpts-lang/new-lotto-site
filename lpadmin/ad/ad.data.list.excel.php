@@ -1,17 +1,17 @@
-<?
+<?php
 include_once("./_common.php");
 
 if($_SESSION['ss_step2'] != $config['cf_10']){
 	die();
 }
 
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = adData.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = adData.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>매체사</th>
@@ -24,11 +24,11 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>최근중복일</th>
 	<th>IP</th>
 </tr>
-<?
+<?php
 	$sql_common = " from l_ad_list a, l_ad_user b ";
 	$sql_search = " where 1=1 and a.lu_type = b.lu_type and a.lu_code = b.lu_code and a.tel not in ('01063411646','01063943588 ','01064491829','01047118874','01094430200','01030211877')";
 	$sql_order = " order by a.ll_datetime desc ";
-	
+
 	if($start_num){
 		$sql_search .= " and a.idx >= {$start_num} ";
 	}
@@ -41,7 +41,7 @@ header( "Content-Description: PHP4 Generated Data" );
 	if($end_date){
 		$sql_search .= " and substr(a.ll_datetime,1,10) <= '{$end_date}' ";
 	}
-	
+
 	if($sch_text){
 		$sql_search .= " and tel like '%{$sch_text}%' ";
 	}
@@ -79,13 +79,13 @@ header( "Content-Description: PHP4 Generated Data" );
 	<td><?=$row['name']?></td>
 	<td><?=$row['etc1']?></td>
 	<td><?=$row['ll_datetime']?></td>
-	<td><?echo $row['cnt'];?></td>
+	<td><?php echo $row['cnt'];?></td>
 	<td><?=$row['lll_datetime'];?></td>
 	<td style="mso-number-format:'\@';"><?=$row['ip']?></td>
 </tr>
-<?}?>
+<?php }?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>

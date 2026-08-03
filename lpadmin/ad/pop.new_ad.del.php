@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "update l_ad_user set del_yn = '1' where idx = '{$idx}'";
