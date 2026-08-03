@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	
@@ -55,7 +55,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){
 					$sql2 = "select * 
 							from g1_now_page a, g5_member b, g5_member_etc c
 							where 1=1
@@ -71,7 +71,7 @@
 						$nowtr = true;
 					}
 				?>
-				<tr <?if($nowtr){?>style='background:#ffffd7'<?}?>>
+				<tr <?php if($nowtr){?>style='background:#ffffd7'<?php }?>>
 					<td><input type="checkbox" name="chk[]" value="<?=$row['mb_id']?>"></td>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><a style="cursor:pointer" onclick="fnMemmberMemo('<?=base64_encode($row2[mb_id])?>')"><?=$row2['mb_code']?></a></td>
@@ -85,16 +85,16 @@
 					<td><?=$row2['gn_device']?></td>
 					<td><?=$row2['gn_datetime']?></td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="13">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
 				</form>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}&sch_mb_status={$sch_mb_status}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -153,6 +153,6 @@ function fnMemberDel(mb_id){
 	}
 }
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
