@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "update l_res set del_yn = '1' where lr_id = '{$lr_id}'";

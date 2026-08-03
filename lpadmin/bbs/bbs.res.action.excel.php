@@ -1,16 +1,16 @@
-<?
+<?php
 include_once("./_common.php");
 if($_SESSION['ss_step2'] != $config['cf_10']){
 	die();
 }
 
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = bbsList.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = bbsList.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>연락처</th>
@@ -20,18 +20,18 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>중복횟수</th>
 	<th>IP</th>
 </tr>
-<?
+<?php
 	$sql_common = " from l_res a ";
 	$sql_search = " where 1=1   and lr_hp != '' and lr_type ='결제시도' ";
 	$sql_order = " order by a.lr_datetime desc ";
-	
+
 	if($start_date){
 		$sql_search .= " and substr(a.lr_datetime,1,10) >= substr('{$start_date}',1,10) ";
 	}
 	if($end_date){
 		$sql_search .= " and substr(a.lr_datetime,1,10) <= substr('{$end_date}',1,10) ";
 	}
-	
+
 
 	$sql = " select count(distinct a.lr_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 
@@ -60,12 +60,12 @@ header( "Content-Description: PHP4 Generated Data" );
 	<td><?=$row['lr_name']?></td>
 	<td><?=$row['lr_etc']?></td>
 	<td><?=$row['lr_datetime']?></td>
-	<td><?echo $row['cnt'];?></td>
+	<td><?php echo $row['cnt'];?></td>
 	<td><?=$row['ip']?></td>
 </tr>
-<?}?>
+<?php }?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>

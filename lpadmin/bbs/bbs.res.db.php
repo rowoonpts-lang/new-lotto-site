@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	$sql_common = " from l_ad_list_in a";
@@ -42,10 +42,10 @@
 				<!--div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div-->
 				<div class="col-md-3">
@@ -104,7 +104,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$row['idx']?></td>
 					<td><?=$row['lu_type']?></td>
@@ -114,25 +114,25 @@
 					<td><?=$row['cnt'];?></td>
 					<td><?=$row['ip']?></td>
 					<td>
-						<?if($row['del_yn'] == "0"){?>
+						<?php if($row['del_yn'] == "0"){?>
 						<button type="button" class="btn btn-block btn-danger" onClick="fnDelData('<?=$row['idx']?>')">처리</button>
-						<?}else{?>
+						<?php }else{?>
 						처리완료
-						<?}?>
+						<?php }?>
 					</td>
 					<td>
 						<button type="button" class="btn btn-danger" onClick="fnProcDel('l_ad_list_in','idx','<?=$row[idx]?>')">삭제</button>
 					</td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="10">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -160,6 +160,6 @@ function fnDelData(idx){
 
 
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
