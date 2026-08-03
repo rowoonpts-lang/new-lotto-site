@@ -1,6 +1,13 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
+
+	$sch_text = $sch_text ?? "";
+	$sch_select = $sch_select ?? "";
+	$sch_mb_type = $sch_mb_type ?? "";
+	$start_date = $start_date ?? "";
+	$end_date = $end_date ?? "";
+
 	$spamList = fnGetSpan();
 	$sql_common = " from g5_member a, g5_member_etc b ";
 	$sql_search = " where 1=1 and a.mb_id = b.mb_id and a.mb_id != 'admin' and mb_level < 5 ";
