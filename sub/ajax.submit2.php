@@ -50,21 +50,76 @@
 	sql_query(" update $write_table set wr_parent = '$wr_id', wr_num = $wr_id*(-1) where wr_id = '$wr_id' ");
 	sql_query("update g5_board set bo_count_write = bo_count_write+1 where 1=1 and bo_table = '$bo_table'");
 
-	foreach ($_FILES['multi_file']['name'] as $f => $name) {   
-		$name = $_FILES['multi_file']['name'][$f];
-		$uploadName = explode('.', $name);
-		$uploadname = time().$f.'.'.$uploadName[1];
-		$uploadFile = $uploadBase.$uploadname;
+        $allowed_extensions = array(
+                'zip', '7z', 'dwg', 'stl', '3dm',
+                'jpg', 'jpeg', 'gif', 'png', 'bmp',
+                'pdf', 'ppt', 'pptx', 'hwp', 'hwpx',
+                'doc', 'docx', 'xls', 'xlsx', 'txt'
+        );
+        $max_file_count = 4;
+        $max_total_size = 10 * 1024 * 1024;
+        $uploaded_count = 0;
+        $total_size = 0;
 
-		if(move_uploaded_file($_FILES['multi_file']['tmp_name'][$f], $uploadFile)){
-			$sql2 = "insert into g1_file set wr_id = '{$wr_id}', gf_num = '{$f}', gf_name = '{$uploadname}', gf_name_bf = '{$name}'";
-			sql_query($sql2);
+        if (isset($_FILES['multi_file']['name']) && is_array($_FILES['multi_file']['name'])) {
+                foreach ($_FILES['multi_file']['name'] as $f => $name) {
+                        if ($name === '') {
+                                continue;
+                        }
 
-			//echo $sql2;
-		}else{
-		//echo 'error';
-		}
-	}
+                        $uploaded_count++;
+
+                        if ($uploaded_count > $max_file_count) {
+                                http_response_code(400);
+                                exit('첨부파일은 최대 4개까지 등록할 수 있습니다.');
+                        }
+
+                        $error = isset($_FILES['multi_file']['error'][$f])
+                                ? (int) $_FILES['multi_file']['error'][$f]
+                                : UPLOAD_ERR_NO_FILE;
+                        $tmp_name = isset($_FILES['multi_file']['tmp_name'][$f])
+                                ? $_FILES['multi_file']['tmp_name'][$f]
+                                : '';
+                        $file_size = isset($_FILES['multi_file']['size'][$f])
+                                ? (int) $_FILES['multi_file']['size'][$f]
+                                : 0;
+
+                        if ($error !== UPLOAD_ERR_OK || !$tmp_name || !is_uploaded_file($tmp_name)) {
+                                http_response_code(400);
+                                exit('첨부파일 업로드에 실패했습니다.');
+                        }
+
+                        $total_size += $file_size;
+
+                        if ($total_size > $max_total_size) {
+                                http_response_code(400);
+                                exit('첨부파일 전체 용량은 10MB를 초과할 수 없습니다.');
+                        }
+
+                        $original_name = basename($name);
+                        $extension = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+
+                        if (!$extension || !in_array($extension, $allowed_extensions, true)) {
+                                http_response_code(400);
+                                exit('허용되지 않은 첨부파일 형식입니다.');
+                        }
+
+                        $uploadname = bin2hex(random_bytes(16)) . '.' . $extension;
+                        $uploadFile = $uploadBase . $uploadname;
+
+                        if (!move_uploaded_file($tmp_name, $uploadFile)) {
+                                http_response_code(500);
+                                exit('첨부파일 저장에 실패했습니다.');
+                        }
+
+                        $sql2 = "insert into g1_file
+                                        set wr_id = '{$wr_id}',
+                                            gf_num = '{$f}',
+                                            gf_name = '{$uploadname}',
+                                            gf_name_bf = '{$original_name}'";
+                        sql_query($sql2);
+                }
+        }
 
 	include_once(G5_LIB_PATH.'/mailer.lib.php');	
 	
