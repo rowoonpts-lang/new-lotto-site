@@ -8,6 +8,19 @@
 	$start_date = $start_date ?? "";
 	$end_date = $end_date ?? "";
 
+	$allowedSearchFields = [
+		"a.mb_code",
+		"a.mb_name",
+		"a.mb_hp",
+		"a.mb_id",
+	];
+
+	if (!in_array($sch_select, $allowedSearchFields, true)) {
+		$sch_select = "";
+	}
+
+	$sch_text = sql_escape_string(trim($sch_text));
+
 	$spamList = fnGetSpan();
 	$sql_common = " from g5_member a, g5_member_etc b ";
 	$sql_search = " where 1=1 and a.mb_id = b.mb_id and a.mb_id != 'admin' and mb_level < 5 ";
