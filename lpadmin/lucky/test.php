@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	$type = "실버에디션6";
 	if($f_type){

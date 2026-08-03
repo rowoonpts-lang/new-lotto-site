@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	sql_query("alter table g5_config add column `cf_lucky_1` varchar(50) NOT NULL");

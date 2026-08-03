@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$sql = "delete from l_filter_temp where 1=1 and type = '{$f_type}'";

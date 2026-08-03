@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 
@@ -26,7 +26,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?
+				<?php
 					for($i=0; $row = sql_fetch_array($result); $i++){
 						$sql2 = "
 								SELECT SUM(num_mon) AS mon, SUM(num_tue) AS tue, SUM(num_wed) AS wed, SUM(num_thur) AS thur, SUM(num_fri) AS fri, SUM(num_sat) AS sat
@@ -41,7 +41,7 @@
 				<tr>
 					<td style="width:450px">
 						<?=$row['f_type']?><br>
-						<?
+						<?php
 							$sql_cnt = "select count(lf_id) cnt from l_filter_temp where 1=1 and type = '{$row['f_type']}' and st_tp = '1'";
 							$row_cnt = sql_fetch($sql_cnt);
 						?>
@@ -49,7 +49,7 @@
 						사용가능갯수 : <?=number_format($row_cnt['cnt'])?>개
 
 						<br><br>
-						<?
+						<?php
 							$sql3 = "select * from l_filter_temp where 1=1 and type = '{$row['f_type']}' and st_tp = '1' order by rand() limit 10";
 							$result3 = sql_query($sql3);
 							for($k=0; $row3 = sql_fetch_array($result3); $k++){
@@ -83,7 +83,7 @@
 								AF필터
 							</div>
 							<div class="col-11">
-								<input type="checkbox" name="f_filter3" class="" <?if($row['f_filter3']){ echo "checked";}?> value="1">
+								<input type="checkbox" name="f_filter3" class="" <?php if($row['f_filter3']){ echo "checked";}?> value="1">
 							</div>
 						</div>
 						<div class="row">
@@ -94,14 +94,14 @@
 								<!--input type="text" name="f_filter4" class="form-control" value="<?=$row['f_filter4']?>" min="0" max="6">
 								홀수의 갯수만 입력하세요.<br>ex. 0~6, 숫자 오버시 치명적인 오류가 발생될 수 있습니다.<br>사용하지 않으려면 비워주세요.-->
 								<ul class="ul-horizen">
-									<!--li><label><input name="f_filter4[]" type="checkbox" value="" <?if($row['f_filter4'] == ""){echo "checked";}?>>사용안함</label></li-->
-									<li><label><input name="f_filter4[]" type="checkbox" value="0" <?if(strpos($row['f_filter4'],"0") !== false){echo "checked";}?>>홀 0 : 짝 6</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="1" <?if(strpos($row['f_filter4'],"1") !== false){echo "checked";}?>>홀 1 : 짝 5</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="2" <?if(strpos($row['f_filter4'],"2") !== false){echo "checked";}?>>홀 2 : 짝 4</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="3" <?if(strpos($row['f_filter4'],"3") !== false){echo "checked";}?>>홀 3 : 짝 3</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="4" <?if(strpos($row['f_filter4'],"4") !== false){echo "checked";}?>>홀 4 : 짝 2</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="5" <?if(strpos($row['f_filter4'],"5") !== false){echo "checked";}?>>홀 5 : 짝 1</label></li>
-									<li><label><input name="f_filter4[]" type="checkbox" value="6" <?if(strpos($row['f_filter4'],"6") !== false){echo "checked";}?>>홀 6 : 짝 0</label></li>
+									<!--li><label><input name="f_filter4[]" type="checkbox" value="" <?php if($row['f_filter4'] == ""){echo "checked";}?>>사용안함</label></li-->
+									<li><label><input name="f_filter4[]" type="checkbox" value="0" <?php if(strpos($row['f_filter4'],"0") !== false){echo "checked";}?>>홀 0 : 짝 6</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="1" <?php if(strpos($row['f_filter4'],"1") !== false){echo "checked";}?>>홀 1 : 짝 5</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="2" <?php if(strpos($row['f_filter4'],"2") !== false){echo "checked";}?>>홀 2 : 짝 4</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="3" <?php if(strpos($row['f_filter4'],"3") !== false){echo "checked";}?>>홀 3 : 짝 3</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="4" <?php if(strpos($row['f_filter4'],"4") !== false){echo "checked";}?>>홀 4 : 짝 2</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="5" <?php if(strpos($row['f_filter4'],"5") !== false){echo "checked";}?>>홀 5 : 짝 1</label></li>
+									<li><label><input name="f_filter4[]" type="checkbox" value="6" <?php if(strpos($row['f_filter4'],"6") !== false){echo "checked";}?>>홀 6 : 짝 0</label></li>
 								</ul>
 							</div>
 						</div>
@@ -112,14 +112,14 @@
 							<div class="col-11">
 								<!--input type="text" name="f_filter5" class="form-control" value="<?=$row['f_filter5']?>" min="0" max="6"-->
 								<ul class="ul-horizen">
-									<!--li><label><input name="f_filter5[]" type="checkbox" value="" <?if($row['f_filter5'] == ""){echo "checked";}?>>사용안함</label></li-->
-									<li><label><input name="f_filter5[]" type="checkbox" value="0" <?if(strpos($row['f_filter5'],"0") !== false){echo "checked";}?>>저 0 : 고 6</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="1" <?if(strpos($row['f_filter5'],"1") !== false){echo "checked";}?>>저 1 : 고 5</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="2" <?if(strpos($row['f_filter5'],"2") !== false){echo "checked";}?>>저 2 : 고 4</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="3" <?if(strpos($row['f_filter5'],"3") !== false){echo "checked";}?>>저 3 : 고 3</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="4" <?if(strpos($row['f_filter5'],"4") !== false){echo "checked";}?>>저 4 : 고 2</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="5" <?if(strpos($row['f_filter5'],"5") !== false){echo "checked";}?>>저 5 : 고 1</label></li>
-									<li><label><input name="f_filter5[]" type="checkbox" value="6" <?if(strpos($row['f_filter5'],"6") !== false){echo "checked";}?>>저 6 : 고 0</label></li>
+									<!--li><label><input name="f_filter5[]" type="checkbox" value="" <?php if($row['f_filter5'] == ""){echo "checked";}?>>사용안함</label></li-->
+									<li><label><input name="f_filter5[]" type="checkbox" value="0" <?php if(strpos($row['f_filter5'],"0") !== false){echo "checked";}?>>저 0 : 고 6</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="1" <?php if(strpos($row['f_filter5'],"1") !== false){echo "checked";}?>>저 1 : 고 5</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="2" <?php if(strpos($row['f_filter5'],"2") !== false){echo "checked";}?>>저 2 : 고 4</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="3" <?php if(strpos($row['f_filter5'],"3") !== false){echo "checked";}?>>저 3 : 고 3</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="4" <?php if(strpos($row['f_filter5'],"4") !== false){echo "checked";}?>>저 4 : 고 2</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="5" <?php if(strpos($row['f_filter5'],"5") !== false){echo "checked";}?>>저 5 : 고 1</label></li>
+									<li><label><input name="f_filter5[]" type="checkbox" value="6" <?php if(strpos($row['f_filter5'],"6") !== false){echo "checked";}?>>저 6 : 고 0</label></li>
 								</ul>
 								낮은수 1~22가 나오는 갯수 입니다.
 							</div>
@@ -130,14 +130,14 @@
 							</div>
 							<div class="col-11">
 								<ul class="ul-horizen">
-									<!--li><label><input name="f_filter6[]" type="checkbox" value="" <?if(strpos($row['f_filter6'],"0") !== ""){echo "checked";}?>>사용안함</label></li-->
-									<li><label><input name="f_filter6[]" type="checkbox" value="0" <?if(strpos($row['f_filter6'],"0") !== false){echo "checked";}?>>0개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="1" <?if(strpos($row['f_filter6'],"1") !== false){echo "checked";}?>>1개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="2" <?if(strpos($row['f_filter6'],"2") !== false){echo "checked";}?>>2개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="3" <?if(strpos($row['f_filter6'],"3") !== false){echo "checked";}?>>3개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="4" <?if(strpos($row['f_filter6'],"4") !== false){echo "checked";}?>>4개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="5" <?if(strpos($row['f_filter6'],"5") !== false){echo "checked";}?>>5개</label></li>
-									<li><label><input name="f_filter6[]" type="checkbox" value="6" <?if(strpos($row['f_filter6'],"6") !== false){echo "checked";}?>>6개</label></li>
+									<!--li><label><input name="f_filter6[]" type="checkbox" value="" <?php if(strpos($row['f_filter6'],"0") !== ""){echo "checked";}?>>사용안함</label></li-->
+									<li><label><input name="f_filter6[]" type="checkbox" value="0" <?php if(strpos($row['f_filter6'],"0") !== false){echo "checked";}?>>0개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="1" <?php if(strpos($row['f_filter6'],"1") !== false){echo "checked";}?>>1개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="2" <?php if(strpos($row['f_filter6'],"2") !== false){echo "checked";}?>>2개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="3" <?php if(strpos($row['f_filter6'],"3") !== false){echo "checked";}?>>3개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="4" <?php if(strpos($row['f_filter6'],"4") !== false){echo "checked";}?>>4개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="5" <?php if(strpos($row['f_filter6'],"5") !== false){echo "checked";}?>>5개</label></li>
+									<li><label><input name="f_filter6[]" type="checkbox" value="6" <?php if(strpos($row['f_filter6'],"6") !== false){echo "checked";}?>>6개</label></li>
 								</ul>
 							</div>
 						</div>
@@ -147,17 +147,17 @@
 							</div>
 							<div class="col-11">
 								<ul class="ul-horizen">
-									<!--li><label><input name="f_filter7[]" type="checkbox" value="" <?if($row['f_filter7'] == ""){echo "checked";}?>>사용안함</label></li-->
-									<li><label><input name="f_filter7[]" type="checkbox" value="0" <?if(strpos($row['f_filter7'],"0") !== false){echo "checked";}?>>0</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="1" <?if(strpos($row['f_filter7'],"1") !== false){echo "checked";}?>>1</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="2" <?if(strpos($row['f_filter7'],"2") !== false){echo "checked";}?>>2</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="3" <?if(strpos($row['f_filter7'],"3") !== false){echo "checked";}?>>3</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="4" <?if(strpos($row['f_filter7'],"4") !== false){echo "checked";}?>>4</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="5" <?if(strpos($row['f_filter7'],"5") !== false){echo "checked";}?>>5</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="6" <?if(strpos($row['f_filter7'],"6") !== false){echo "checked";}?>>6</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="7" <?if(strpos($row['f_filter7'],"7") !== false){echo "checked";}?>>7</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="8" <?if(strpos($row['f_filter7'],"8") !== false){echo "checked";}?>>8</label></li>
-									<li><label><input name="f_filter7[]" type="checkbox" value="9" <?if(strpos($row['f_filter7'],"9") !== false){echo "checked";}?>>9</label></li>
+									<!--li><label><input name="f_filter7[]" type="checkbox" value="" <?php if($row['f_filter7'] == ""){echo "checked";}?>>사용안함</label></li-->
+									<li><label><input name="f_filter7[]" type="checkbox" value="0" <?php if(strpos($row['f_filter7'],"0") !== false){echo "checked";}?>>0</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="1" <?php if(strpos($row['f_filter7'],"1") !== false){echo "checked";}?>>1</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="2" <?php if(strpos($row['f_filter7'],"2") !== false){echo "checked";}?>>2</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="3" <?php if(strpos($row['f_filter7'],"3") !== false){echo "checked";}?>>3</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="4" <?php if(strpos($row['f_filter7'],"4") !== false){echo "checked";}?>>4</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="5" <?php if(strpos($row['f_filter7'],"5") !== false){echo "checked";}?>>5</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="6" <?php if(strpos($row['f_filter7'],"6") !== false){echo "checked";}?>>6</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="7" <?php if(strpos($row['f_filter7'],"7") !== false){echo "checked";}?>>7</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="8" <?php if(strpos($row['f_filter7'],"8") !== false){echo "checked";}?>>8</label></li>
+									<li><label><input name="f_filter7[]" type="checkbox" value="9" <?php if(strpos($row['f_filter7'],"9") !== false){echo "checked";}?>>9</label></li>
 								</ul>
 							</div>
 						</div>
@@ -166,17 +166,17 @@
 							
 							<button class="btn btn-block btn-success" type="button" onClick="fnSave('<?=$row['f_id']?>')">저장</button>
 							<button class="btn btn-block btn-primary" type="button" onClick="fnCreate('<?=$row['f_type']?>')">생성</button>
-							<?if($row_cnt['cnt'] > 0){?>
+							<?php if($row_cnt['cnt'] > 0){?>
 							<button class="btn btn-block btn-danger" type="button" onClick="fnDel('<?=$row['f_type']?>')">기존번호 제거</button>
-							<?}?>
+							<?php }?>
 						</p>
 					</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
 
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&lucky_result={$lucky_result}&turn={$turn}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -241,6 +241,6 @@ function fnDel(f_type){
 }
 </script>
 
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	if(!$turn){
@@ -67,20 +67,20 @@
 				
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="turn" aria-hidden="true">
-						<?
+						<?php
 							for($i=getTurn(); $i >= $config[cf_1]; $i--){
 						?>
-						<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?></option>
-						<?	}?>
+						<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?></option>
+						<?php 	}?>
 					</select>
 				</div>
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true">
 						<option selected="selected" value="">전체</option>
-						<option value="b.mb_code" <?if($sch_select == "b.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="b.mb_name" <?if($sch_select == "b.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="b.mb_code" <?php if($sch_select == "b.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="b.mb_name" <?php if($sch_select == "b.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
 				<div class="col-md-2">
@@ -96,30 +96,30 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_type" aria-hidden="true">
 						<option selected="selected" value="">등급전체</option>
-						<?
+						<?php
 						$mb_type_ary = fnGetType();
 						for($i=0; $i < count($mb_type_ary); $i++){
 						?>
-						<option value="<?=$mb_type_ary[$i]?>" <?if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
-						<?
+						<option value="<?=$mb_type_ary[$i]?>" <?php if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
+						<?php
 						}
 						?>
 					</select>
 				</div>
 				<div class="col-md-4" style="padding-top:7px">
-					<?
+					<?php
 						$resultAry = array('전체','낙첨','1등','2등','3등','4등','5등');
 						for($i=0; $i < count($resultAry); $i++){
 					?>
 					<div class="icheck-primary d-inline">
 						
-						<input type="radio" id="radioPrimary<?=$i?>" name="lucky_result" <?if(($i==0 && !$lucky_result) || $resultAry[$i] == $lucky_result){?>checked=""<?}?> value="<?=$resultAry[$i]?>">
+						<input type="radio" id="radioPrimary<?=$i?>" name="lucky_result" <?php if(($i==0 && !$lucky_result) || $resultAry[$i] == $lucky_result){?>checked=""<?php }?> value="<?=$resultAry[$i]?>">
 						<label for="radioPrimary<?=$i?>">
 							<?=$resultAry[$i]?>
 						</label>
 						
 					</div>
-					<?	}?>
+					<?php 	}?>
 				</div>
 				<div class="col-md-1">
 					<button class="btn btn-block btn-success" type="button" onClick="fnExcel()">엑셀다운</button>
@@ -158,7 +158,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?
+				<?php
 					for($i=0; $row = sql_fetch_array($result); $i++){
 						$ball_text = "";
 						$ball_text = $row[num1].",".$row[num2].",".$row[num3].",".$row[num4].",".$row[num5].",".$row[num6];				
@@ -177,22 +177,22 @@
 						<?=getBall($ball_text)?>
 					</td>
 					<td>
-						<?if($row['result']){echo $row['result'];}else{echo "-";}?>
+						<?php if($row['result']){echo $row['result'];}else{echo "-";}?>
 					</td>
 					<td><?=$row[lp_pay_datetime]?></td>
 					<td><?=$row[lt_datetime]?></td>
 					<td><?=$row['direct_yn']?></td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="10">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
 
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&lucky_result={$lucky_result}&turn={$turn}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -208,6 +208,6 @@ function fnExcel(){
 }
 </script>
 
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

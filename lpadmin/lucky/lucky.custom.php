@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 
@@ -87,7 +87,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?
+				<?php
 					$tturn = "";
 					for($i=0; $row = sql_fetch_array($result); $i++){
 						$ball_text = "";
@@ -107,15 +107,15 @@
 					<td><?=$row[lc_datetime]?></td>
 					<td><button class="btn btn-block btn-danger" type="button" onClick="fnProcDel('l_lucky_custom', 'lc_id', '<?=$row[lc_id]?>')">삭제</button></td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="11">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&num1={$num1}&sch_mb_type={$sch_mb_type}&lucky_result={$lucky_result}&turn={$turn}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -133,6 +133,6 @@ function fnSave(){
 
 </script>
 
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

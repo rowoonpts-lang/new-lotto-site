@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	
 	$table = "l_turn_".$turn;

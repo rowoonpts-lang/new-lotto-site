@@ -1,13 +1,13 @@
-<?
+<?php
 include_once("./_common.php");
 
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = lucky.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = lucky.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>회차</th>
@@ -20,7 +20,7 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>번호발송시간</th>
 	<th>수동발송여부</th>
 </tr>
-<?
+<?php
 	if(!$turn){
 		$turn = getTurn();
 	}
@@ -65,7 +65,7 @@ header( "Content-Description: PHP4 Generated Data" );
 
 	for($i=0; $row = sql_fetch_array($result); $i++){
 		$ball_text = "";
-		$ball_text = $row[num1].",".$row[num2].",".$row[num3].",".$row[num4].",".$row[num5].",".$row[num6];				
+		$ball_text = $row[num1].",".$row[num2].",".$row[num3].",".$row[num4].",".$row[num5].",".$row[num6];
 ?>
 <tr>
 	<td><?=$total_count-($page-1)*$rows-$i?></td>
@@ -75,15 +75,15 @@ header( "Content-Description: PHP4 Generated Data" );
 	<td style="mso-number-format:'\@';"><?=$row['mb_hp']?></td>
 	<td><?=$row['lucky_type']?></td>
 	<td>
-		<?if($row['result']){echo $row['result'];}else{echo "-";}?>
+		<?php if($row['result']){echo $row['result'];}else{echo "-";}?>
 	</td>
 	<td><?=$row[lp_pay_datetime]?></td>
 	<td><?=$row[lt_datetime]?></td>
 	<td><?=$row['direct_yn']?></td>
 </tr>
-<?}?>
+<?php }?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>
