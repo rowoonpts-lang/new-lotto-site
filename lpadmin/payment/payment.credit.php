@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	
@@ -52,10 +52,10 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
 				<div class="col-md-2">
@@ -71,12 +71,12 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_type" aria-hidden="true">
 						<option selected="selected" value="">등급전체</option>
-						<?
+						<?php
 						$mb_type_ary = fnGetType();
 						for($i=0; $i < count($mb_type_ary); $i++){
 						?>
-						<option value="<?=$mb_type_ary[$i]?>" <?if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
-						<?
+						<option value="<?=$mb_type_ary[$i]?>" <?php if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
+						<?php
 						}
 						?>
 					</select>
@@ -142,7 +142,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['lp_datetime']?></td>
@@ -160,14 +160,14 @@
 					<td><?=number_format($row['lp_price'])?></td>
 					<td><?=$member_info[$row['emp_id']]?></td>
 					<td>
-						<?if($row[lp_status] == "주문"){?>
+						<?php if($row[lp_status] == "주문"){?>
 						<button type="button" class="btn btn-success" onClick="fnPayCredit('<?=$row[lp_id]?>')">승인</button>
-						<?}?>
+						<?php }?>
 					</td>
 					
 					<!--td><?=number_format($row['lp_price']/11*10)?></td-->
 					<!--td>
-						<?
+						<?php
 							if($row['lp_status'] == "입금"){
 								echo "완료";
 							}else{
@@ -179,23 +179,23 @@
 					<td><?=$row['lp_datetime']?></td>
 					<td><?=$row['lp_pay_datetime']?></td>
 					<td>
-						<?if($row[lp_status] == "주문"){?>
+						<?php if($row[lp_status] == "주문"){?>
 						<button type="button" class="btn btn-success" onClick="fnPayCredit('<?=$row[lp_id]?>')">입금확인</button>
-						<?}?>
+						<?php }?>
 					</td-->
 					<td>
 						<button type="button" class="btn btn-danger" onClick="fnProcDel('l_pay','lp_id','<?=$row[lp_id]?>')">삭제</button>
 					</td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="12">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -249,6 +249,6 @@ function fnPayCredit(lp_id){
 	}
 }
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

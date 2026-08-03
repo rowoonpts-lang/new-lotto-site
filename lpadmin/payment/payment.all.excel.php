@@ -1,12 +1,12 @@
-<?
+<?php
 include_once("./_common.php");
 if($_SESSION['ss_step2'] != $config['cf_10']){
 	die();
 }
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = paymentAll.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = paymentAll.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 // 관리자 이름 송출
 $sql_member = "select * from g5_member where 1=1 and mb_level >= 5";
@@ -14,10 +14,10 @@ $result_member = sql_query($sql_member);
 $member_info = array();
 for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	$member_info[$row_info[mb_id]] = $row_info[mb_name].$row_info[mb_team];
-}	
+}
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>회원코드</th>
@@ -34,7 +34,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<th>DB경로</th>
 	<th>담당자</th>
 </tr>
-<?
+<?php
 	$sql_common = " from l_pay a LEFT JOIN g5_member d ON (a.confirm_user = d.mb_id), g5_member b, g5_member_etc c ";
 	$sql_search = " where 1=1 and a.mb_id = c.mb_id and a.mb_id = b.mb_id and lp_status = '입금' ";
 	$sql_order = " order by lp_pay_datetime desc ";
@@ -91,7 +91,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	$result = sql_query($sql);
 
 	for($i=0; $row = sql_fetch_array($result); $i++){
-		
+
 ?>
 <tr>
 	<td><?=$total_count-($page-1)*$rows-$i?></td>
@@ -102,7 +102,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<td><?=$row['mb_type']?></td>
 	<td><?=$row['pay_method']?></td>
 	<td>
-		<?	if($row['pay_method'] == "무통장"){
+		<?php 	if($row['pay_method'] == "무통장"){
 				$mu_ary = explode(" ",$row['mu_num']);
 				echo "<br>".$mu_ary[0]." (".$row['mu_mb_name'].")";
 			}else{
@@ -112,7 +112,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	</td>
 	<td><?=round($row['lp_price']/11*10)?></td>
 	<td>
-		<?
+		<?php
 			if($row['lp_status'] == "입금"){
 				echo "완료";
 			}else if($row['lp_status'] == "주문"){
@@ -122,7 +122,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 			}
 		?>
 	</td>
-	<td><?
+	<td><?php
 		if($row['pay_company'] == "수기결제" || $row['pay_company'] == "페이업(수기)" || $row['pay_company'] == "코리아(수기)" || $row['pay_company'] == "세이프(수기)" || $row['pay_company'] == "다모아(수기)" || $row['pay_company'] == "루멘(수기)" || $row['pay_company'] == "온미르(수기)" || $row['pay_company'] == "참좋은(수기)" || $row['pay_company'] == "페이츠(수기)" || $row['pay_company'] == "쇼페이(수기)" || $row['pay_company'] == "웰페이(수기)" || $row['pay_company'] == "오후(수기)"){
 			echo $row['pay_company'];
 		}else{
@@ -141,14 +141,14 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<td><?=$row['mb_db']?></td>
 	<td style="mso-number-format:'\@';"><?=$member_info[$row['confirm_user']]?></td>
 	<td>
-		<?if($row[lp_status] == "취소"){?>
+		<?php if($row[lp_status] == "취소"){?>
 			<?=$row[lp_cancel_datetime]?>
-		<?}?>
+		<?php }?>
 	</td>
 </tr>
-<?}?>
+<?php }?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>

@@ -1,7 +1,7 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
-	
+
 
 	$sql_common = " from l_pay a LEFT JOIN g5_member d ON (a.confirm_user = d.mb_id), g5_member b, g5_member_etc c ";
 	$sql_search = " where 1=1 and a.mb_id = c.mb_id and a.mb_id = b.mb_id and lp_status = '입금' ";
@@ -69,13 +69,13 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
-				
+
 				<div class="col-md-1">
 					<div class="row">
 						<div class="col-md-12">
@@ -86,12 +86,12 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_type" aria-hidden="true">
 						<option selected="selected" value="">등급전체</option>
-						<?
+						<?php
 						$mb_type_ary = fnGetType();
 						for($i=0; $i < count($mb_type_ary); $i++){
 						?>
-						<option value="<?=$mb_type_ary[$i]?>" <?if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
-						<?
+						<option value="<?=$mb_type_ary[$i]?>" <?php if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
+						<?php
 						}
 						?>
 					</select>
@@ -99,40 +99,40 @@
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_team" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">팀전체</option>
-						<?
+						<?php
 							$teamList = getTeamList();
 							for($i=0; $i < count($teamList); $i++){
 						?>
-						<option value="<?=$teamList[$i]?>" <?if($mb_team == $teamList[$i]){echo "selected";}?>><?=$teamList[$i]?></option>
-						<?}?>
+						<option value="<?=$teamList[$i]?>" <?php if($mb_team == $teamList[$i]){echo "selected";}?>><?=$teamList[$i]?></option>
+						<?php }?>
 					</select>
 				</div>
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="pay_method" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">결제방식</option>
-						<option value="무통장" <?if($pay_method == "무통장"){echo "selected";}?>>무통장</option>
-						<option value="신용카드" <?if($pay_method == "신용카드"){echo "selected";}?>>신용카드</option>
-						<!--option value="웰컴페이먼츠" <?if($pay_method == "웰컴페이먼츠"){echo "selected";}?>>웰컴</option>
-						<option value="페이업" <?if($pay_method == "페이업"){echo "selected";}?>>페이업</option>
-						<option value="참좋은(수기)" <?if($pay_method == "참좋은(수기)"){echo "selected";}?>>참좋은(수기)</option>
-						<option value="온미르(수기)" <?if($pay_method == "온미르(수기)"){echo "selected";}?>>온미르(수기)</option>
-						<option value="루멘(수기)" <?if($pay_method == "루멘(수기)"){echo "selected";}?>>루멘(수기)</option>
-						<option value="페이츠(수기)" <?if($pay_method == "페이츠(수기)"){echo "selected";}?>>페이츠(수기)</option>
-						<option value="세이프(수기)" <?if($pay_method == "세이프(수기)"){echo "selected";}?>>세이프(수기)</option>						
-						<option value="페이업(수기)" <?if($pay_method == "페이업(수기)"){echo "selected";}?>>페이업(수기)</option>
-						<option value="다모아(수기)" <?if($pay_method == "다모아(수기)"){echo "selected";}?>>다모아(수기)</option>
-						<option value="코리아(수기)" <?if($pay_method == "코리아(수기)"){echo "selected";}?>>코리아(수기)</option>
-						<option value="원넷(수기)" <?if($pay_method == "원넷(수기)"){echo "selected";}?>>원넷(수기)</option>
-						<option value="웰페이(수기)" <?if($pay_method == "웰페이(수기)"){echo "selected";}?>>웰페이(수기)</option-->
-						<option value="케이비(수기)" <?if($pay_method == "케이비(수기)"){echo "selected";}?>>케이비(수기)</option>
-						<option value="캠핑라인(수기)" <?if($pay_method == "캠핑라인(수기)"){echo "selected";}?>>캠핑라인(수기)</option>
-						<option value="웨이업(수기)" <?if($pay_method == "웨이업(수기)"){echo "selected";}?>>웨이업(수기)</option>
-						<option value="오후(수기)" <?if($pay_method == "오후(수기)"){echo "selected";}?>>오후(수기)</option>
-						<!--option value="오앤유(수기)" <?if($pay_method == "오앤유(수기)"){echo "selected";}?>>오앤유(수기)</option>
-						<option value="쇼페이(수기)" <?if($pay_method == "쇼페이(수기)"){echo "selected";}?>>쇼페이(수기)</option>
-						<option value="엠터치(수기)" <?if($pay_method == "엠터치(수기)"){echo "selected";}?>>엠터치(수기)</option-->
-						
-						
+						<option value="무통장" <?php if($pay_method == "무통장"){echo "selected";}?>>무통장</option>
+						<option value="신용카드" <?php if($pay_method == "신용카드"){echo "selected";}?>>신용카드</option>
+						<!--option value="웰컴페이먼츠" <?php if($pay_method == "웰컴페이먼츠"){echo "selected";}?>>웰컴</option>
+						<option value="페이업" <?php if($pay_method == "페이업"){echo "selected";}?>>페이업</option>
+						<option value="참좋은(수기)" <?php if($pay_method == "참좋은(수기)"){echo "selected";}?>>참좋은(수기)</option>
+						<option value="온미르(수기)" <?php if($pay_method == "온미르(수기)"){echo "selected";}?>>온미르(수기)</option>
+						<option value="루멘(수기)" <?php if($pay_method == "루멘(수기)"){echo "selected";}?>>루멘(수기)</option>
+						<option value="페이츠(수기)" <?php if($pay_method == "페이츠(수기)"){echo "selected";}?>>페이츠(수기)</option>
+						<option value="세이프(수기)" <?php if($pay_method == "세이프(수기)"){echo "selected";}?>>세이프(수기)</option>
+						<option value="페이업(수기)" <?php if($pay_method == "페이업(수기)"){echo "selected";}?>>페이업(수기)</option>
+						<option value="다모아(수기)" <?php if($pay_method == "다모아(수기)"){echo "selected";}?>>다모아(수기)</option>
+						<option value="코리아(수기)" <?php if($pay_method == "코리아(수기)"){echo "selected";}?>>코리아(수기)</option>
+						<option value="원넷(수기)" <?php if($pay_method == "원넷(수기)"){echo "selected";}?>>원넷(수기)</option>
+						<option value="웰페이(수기)" <?php if($pay_method == "웰페이(수기)"){echo "selected";}?>>웰페이(수기)</option-->
+						<option value="케이비(수기)" <?php if($pay_method == "케이비(수기)"){echo "selected";}?>>케이비(수기)</option>
+						<option value="캠핑라인(수기)" <?php if($pay_method == "캠핑라인(수기)"){echo "selected";}?>>캠핑라인(수기)</option>
+						<option value="웨이업(수기)" <?php if($pay_method == "웨이업(수기)"){echo "selected";}?>>웨이업(수기)</option>
+						<option value="오후(수기)" <?php if($pay_method == "오후(수기)"){echo "selected";}?>>오후(수기)</option>
+						<!--option value="오앤유(수기)" <?php if($pay_method == "오앤유(수기)"){echo "selected";}?>>오앤유(수기)</option>
+						<option value="쇼페이(수기)" <?php if($pay_method == "쇼페이(수기)"){echo "selected";}?>>쇼페이(수기)</option>
+						<option value="엠터치(수기)" <?php if($pay_method == "엠터치(수기)"){echo "selected";}?>>엠터치(수기)</option-->
+
+
 					</select>
 				</div>
 				<div class="col-md-3">
@@ -174,11 +174,11 @@
 <div class="row">
 	<div class="col-12">
 		<div class="card">
-			<?if($start_date || $end_date){?>
+			<?php if($start_date || $end_date){?>
 			<div class="card-header">
 				<h3 class="card-title" style="font-size:19px;font-weight:600">총 매출액 : <?=number_format($tot_amt/11*10)?></h3>
 			</div>
-			<?}?>
+			<?php }?>
 			<!-- /.card-header -->
 			<div class="card-body table-responsive p-0">
 				<table class="table table-hover text-nowrap">
@@ -201,7 +201,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><a href="<?=G5_LADMIN_URL?>/member/member.all.php?sch_select=a.mb_code&sch_text=<?=$row['mb_code']?>"><?=$row['mb_code']?></td>
@@ -213,7 +213,7 @@
 					<td><?=$row['mb_type']?></td>
 					<td>
 						<?=$row['pay_method']?>
-						<?	if($row['pay_method'] == "무통장"){
+						<?php 	if($row['pay_method'] == "무통장"){
 								$mu_ary = explode(" ",$row['mu_num']);
 								echo "<br>".$mu_ary[0]." (".$row['mu_mb_name'].")";
 							}else{
@@ -227,7 +227,7 @@
 					</td>
 					<td><?=number_format($row['lp_price']/11*10)?></td>
 					<td>
-						<?
+						<?php
 							if($row['lp_status'] == "입금"){
 								echo "완료";
 							}else if($row['lp_status'] == "주문"){
@@ -237,7 +237,7 @@
 							}
 						?>
 					</td>
-					<td><?
+					<td><?php
 							if($row['pay_company'] == "수기결제" || $row['pay_company'] == "페이업(수기)" || $row['pay_company'] == "코리아(수기)" || $row['pay_company'] == "세이프(수기)" || $row['pay_company'] == "다모아(수기)" || $row['pay_company'] == "루멘(수기)" || $row['pay_company'] == "온미르(수기)" || $row['pay_company'] == "참좋은(수기)" || $row['pay_company'] == "페이츠(수기)" || $row['pay_company'] == "쇼페이(수기)" || $row['pay_company'] == "웰페이(수기)" || $row['pay_company'] == "케이비(수기)" || $row['pay_company'] == "캠핑라인(수기)" || $row['pay_company'] == "원넷(수기)" || $row['pay_company'] == "웨이업(수기)" || $row['pay_company'] == "오후(수기)"){
 								echo $row['pay_company'];
 							}else{
@@ -258,29 +258,29 @@
 						<?=$member_info[$row['confirm_user']]?>
 					</td>
 					<td>
-						<?if($row[lp_status] != "취소"){?>
+						<?php if($row[lp_status] != "취소"){?>
 						<button type="button" class="btn btn-danger" onClick="fnPayCancel('<?=$row[lp_id]?>')">취소</button>
-						<?}?>
-						
-						<?if($row[lp_status] == "취소"){?>
+						<?php }?>
+
+						<?php if($row[lp_status] == "취소"){?>
 							<?=$row[lp_cancel_datetime]?>
-						<?}?>
+						<?php }?>
 					</td>
 					<td>
 						<button type="button" class="btn btn-danger" onClick="fnProcDel('l_pay','lp_id','<?=$row[lp_id]?>')">삭제</button>
 					</td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="14">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}&pay_method={$pay_method}";
-					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
+					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 				?>
 			</div>
 			<!-- /.card-body -->
@@ -304,11 +304,11 @@ function fnPayCancel(lp_id){
 		location.href="<?=G5_LADMIN_URL?>/member/payment.cancel.php?lp_id="+lp_id
 
 	}
-	
+
 }
 
 
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>

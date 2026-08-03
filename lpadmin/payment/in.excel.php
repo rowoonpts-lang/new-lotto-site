@@ -1,10 +1,10 @@
-<?
+<?php
 include_once("./_common.php");
 
-header( "Content-type: application/vnd.ms-excel" );   
-header( "Content-type: application/vnd.ms-excel; charset=utf-8");  
-header( "Content-Disposition: attachment; filename = paymentAll.xls" );   
-header( "Content-Description: PHP4 Generated Data" );   
+header( "Content-type: application/vnd.ms-excel" );
+header( "Content-type: application/vnd.ms-excel; charset=utf-8");
+header( "Content-Disposition: attachment; filename = paymentAll.xls" );
+header( "Content-Description: PHP4 Generated Data" );
 
 // 관리자 이름 송출
 $sql_member = "select * from g5_member where 1=1 and mb_level > 5";
@@ -12,10 +12,10 @@ $result_member = sql_query($sql_member);
 $member_info = array();
 for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	$member_info[$row_info[mb_id]] = $row_info[mb_name].$row_info[mb_team];
-}	
+}
 
 ?>
-<table border='1'>  
+<table border='1'>
 <tr>
 	<th>NO</th>
 	<th>회원코드</th>
@@ -29,7 +29,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<th>DB경로</th>
 	<th>승인자</th>
 </tr>
-<?
+<?php
 	$sql_common = " from l_pay_in a, g5_member b, g5_member_etc c ";
 	$sql_search = " where 1=1 and a.mb_id = c.mb_id and a.mb_id = b.mb_id and lp_status = '입금' ";
 	$sql_order = " order by confirm_in_datetime desc ";
@@ -55,7 +55,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 		$sql_search .= " and substr(confirm_in_datetime,1,10) <= substr('{$end_date}',1,10) ";
 	}
 
-	
+
 
 	$sql = " select count(*) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 
@@ -79,7 +79,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	$result = sql_query($sql);
 
 	for($i=0; $row = sql_fetch_array($result); $i++){
-		
+
 ?>
 <tr>
 	<td><?=$total_count-($page-1)*$rows-$i?></td>
@@ -92,7 +92,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<td><?=$row['mb_type']?></td>
 	<td>
 		<?=$row['pay_method']?>
-		<?	if($row['pay_method'] == "무통장"){
+		<?php 	if($row['pay_method'] == "무통장"){
 				$mu_ary = explode(" ",$row['mu_num']);
 				echo "<br>".$mu_ary[0]." (".$row['mu_mb_name'].")";
 			}else{
@@ -105,7 +105,7 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 	<td><?=$row['confirm_in_datetime']?></td>
 	<td><?=$row['mb_db']?></td>
 	<td>
-		<?
+		<?php
 			if($row[in_type] == "1"){
 				echo $member_info[$row['in_mb_id']];
 			}
@@ -115,18 +115,18 @@ for($i=0; $row_info = sql_fetch_array($result_member); $i++){
 		?>
 	</td>
 	<td>
-		<?if($row[lp_status] != "취소"){?>
+		<?php if($row[lp_status] != "취소"){?>
 		<button type="button" class="btn btn-danger" onClick="fnPayInCancel('<?=$row[lp_id]?>')">취소</button>
-		<?}?>
-		
-		<?if($row[lp_status] == "취소"){?>
+		<?php }?>
+
+		<?php if($row[lp_status] == "취소"){?>
 			<?=$row[lp_cancel_datetime]?>
-		<?}?>
+		<?php }?>
 	</td>
 </tr>
-<?}?>
+<?php }?>
 </table>
-  
-<?echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
-//echo $EXCEL_STR;  
-?>  
+
+<?php echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";
+//echo $EXCEL_STR;
+?>

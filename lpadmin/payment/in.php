@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	
@@ -65,12 +65,12 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_type" aria-hidden="true">
 						<option selected="selected" value="">팀전체</option>
-						<?
+						<?php
 						$mb_type_ary = getTeamList3();
 						for($i=0; $i < count($mb_type_ary); $i++){
 						?>
-						<option value="<?=$mb_type_ary[$i]?>" <?if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
-						<?
+						<option value="<?=$mb_type_ary[$i]?>" <?php if($sch_mb_type == $mb_type_ary[$i]){echo "selected";}?>><?=$mb_type_ary[$i]?></option>
+						<?php
 						}
 						?>
 					</select>
@@ -78,11 +78,11 @@
 				<div class="col-md-2">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
 						<option selected="selected" value="">전체</option>
-						<option value="emp_mb_id" <?if($sch_select == "emp_mb_id"){echo "selected";}?>>승인자</option>
-						<option value="a.mb_code" <?if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
-						<option value="a.mb_name" <?if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
-						<option value="a.mb_hp" <?if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
-						<option value="a.mb_id" <?if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
+						<option value="emp_mb_id" <?php if($sch_select == "emp_mb_id"){echo "selected";}?>>승인자</option>
+						<option value="a.mb_code" <?php if($sch_select == "a.mb_code"){echo "selected";}?>>회원코드</option>
+						<option value="a.mb_name" <?php if($sch_select == "a.mb_name"){echo "selected";}?>>회원명</option>
+						<option value="a.mb_hp" <?php if($sch_select == "a.mb_hp"){echo "selected";}?>>연락처</option>
+						<option value="a.mb_id" <?php if($sch_select == "a.mb_id"){echo "selected";}?>>아이디</option>
 					</select>
 				</div>
 				<div class="col-md-2">
@@ -155,7 +155,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><a href="<?=G5_LADMIN_URL?>/member/member.all.php?sch_select=a.mb_code&sch_text=<?=$row['mb_code']?>"><?=$row['mb_code']?></td>
@@ -167,7 +167,7 @@
 					<td><?=$row['mb_type']?></td>
 					<td>
 						<?=$row['pay_method']?>
-						<?	if($row['pay_method'] == "무통장"){
+						<?php 	if($row['pay_method'] == "무통장"){
 								$mu_ary = explode(" ",$row['mu_num']);
 								echo "<br>".$mu_ary[0]." (".$row['mu_mb_name'].")";
 							}else{
@@ -180,7 +180,7 @@
 					<td><?=$row['confirm_in_datetime']?></td>
 					<td><?=$row['mb_db']?></td>
 					<td>
-						<?
+						<?php
 							if($row[in_type] == "0"){
 								echo $member_info[$row['in_mb_id']];
 							}
@@ -195,24 +195,24 @@
 						?>
 					</td>
 					<td>
-						<?if($row[lp_status] != "취소"){?>
+						<?php if($row[lp_status] != "취소"){?>
 						<button type="button" class="btn btn-danger" onClick="fnPayInCancel('<?=$row[lp_id]?>')">취소</button>
-						<?}?>
+						<?php }?>
 						
-						<?if($row[lp_status] == "취소"){?>
+						<?php if($row[lp_status] == "취소"){?>
 							<?=$row[lp_cancel_datetime]?>
-						<?}?>
+						<?php }?>
 					</td>
 				</tr>
-				<?}?>
-				<?if($total_count < 1){?>
+				<?php }?>
+				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="11">내역이 없습니다.</td>
 				</tr>
-				<?}?>
+				<?php }?>
 				</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -243,6 +243,6 @@ function fnPayCancel(lp_id){
 
 
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
