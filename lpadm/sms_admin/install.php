@@ -48,7 +48,23 @@ flush(); usleep(50000);
 
 // 테이블 생성 ------------------------------------
 $file = implode("", file(G5_ADMIN_PATH . "/sms_admin/sms5.sql"));
-eval("\$file = \"$file\";");
+$file = str_replace(
+    array(
+        "{$g5['sms5_book_table']}",
+        "{$g5['sms5_config_table']}",
+        "{$g5['sms5_form_table']}",
+        "{$g5['sms5_history_table']}",
+        "{$g5['sms5_write_table']}"
+    ),
+    array(
+        $g5['sms5_book_table'],
+        $g5['sms5_config_table'],
+        $g5['sms5_form_table'],
+        $g5['sms5_history_table'],
+        $g5['sms5_write_table']
+    ),
+    $file
+);
 
 $f = explode(";", $file);
 for ($i=0; $i<count($f); $i++) {
