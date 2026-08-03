@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("./_common.php");
 
 $idx = Decrypt($idx, 'able', 'able');
@@ -22,7 +22,7 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>IP</th>
 	<th>유입경로</th>
 </tr>
-<?
+<?php
 $sql_common = " from l_ad_list ";
 $sql_search = " where 1=1 and lu_type = '{$row['lu_type']}' and lu_code = '{$row['lu_code']}' ";
 $sql_order = " order by ll_datetime desc ";
@@ -51,11 +51,11 @@ for($i=0; $row = sql_fetch_array($result); $i++){
 	<td class="text-center-class"><?=$row['ip']?></td>
 	<td><?=$row['refer']?></td>
 </tr>
-<?
+<?php
 }
 ?>
 </table>
-<?
+<?php
 echo "<meta content=\"application/vnd.ms-excel; charset=UTF-8\" name=\"Content-type\"> ";  
 
 function add_hyphen($tel)

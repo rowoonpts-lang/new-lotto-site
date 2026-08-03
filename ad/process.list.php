@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	include_once(G5_PATH."/head.sub.php");
@@ -47,7 +47,7 @@
 		<th width="10%">IP</th>
 		<th>유입경로</th>
 	</tr>
-	<?
+	<?php
 		$sql_common = " from l_ad_list ";
 		$sql_search = " where 1=1 and lu_type = '{$row['lu_type']}' and lu_code = '{$row['lu_code']}' and del_yn = '0'";
 		$sql_order = " order by ll_datetime desc ";
@@ -80,20 +80,20 @@
 		<td class="text-center-class"><?=$row['ip']?></td>
 		<td><?=$row['refer']?></td>
 	</tr>
-	<?	}
+	<?php 	}
 		if($total_count < 1){
 		?>
 	<tr>
 		<td colspan="8" class="text-center-class">등록된 내역이 없습니다.</td>
 	</tr>
-	<?	}?>
+	<?php 	}?>
 	</table>
 	<div style="text-align:center;padding:20px 0px">
 	<?php echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); ?>
 	</div>
 </div>
 
-<?
+<?php
 /*function add_hyphen($tel)
 {
     $tel = preg_replace("/[^0-9]/", "", $tel);    // 숫자 이외 제거

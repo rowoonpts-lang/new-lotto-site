@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">'.PHP_EOL;
     echo '<meta name="HandheldFriendly" content="true">'.PHP_EOL;
@@ -39,11 +39,11 @@
 		</div>
 		<div class="yak_btn_div">
 			<button type="button" onClick="fnAgree()">약관동의</button>
-			<?//if($row2[mb_yak]){?>
+			<?php //if($row2[mb_yak]){?>
 			<!--button type="button" disabled class="yak_ok_btn">약관동의 완료</button-->
-			<?//}else{?>
+			<?php //}else{?>
 			<!--button type="button" onClick="fnAgree()">약관동의</button-->
-			<?//}?>
+			<?php //}?>
 		</div>
 	</form>
 </div>

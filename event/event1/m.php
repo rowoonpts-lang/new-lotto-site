@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	$gstrPartnerImgUrl = G5_URL."/event/event1";
 	include_once(G5_PATH.'/head.sub.php');
