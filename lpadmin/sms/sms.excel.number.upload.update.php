@@ -20,7 +20,6 @@ function only_number($n)
 
 
 $newTurn = getTurn();
-sql_query("alter table `g5_member` add column `free_sms_turn` varchar(50) NOT NULL");
 
 
 if($_FILES['excelfile']['tmp_name']) {
