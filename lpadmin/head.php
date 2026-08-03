@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("_common.php");
 $basename = basename($_SERVER["PHP_SELF"]);
 $sql = "select * from l_menu where lm_url like \"%{$basename}%\" ";
@@ -88,7 +88,7 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
         <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-legacy text-sm" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-  <?
+  <?php
 $menu1 = array();
 $menu2 = array();
 $sql_where = "";
@@ -116,41 +116,41 @@ $tmp = explode("?",$request_uri);
 $request_uri = $tmp[0];
 //print_r($menu2);
   ?>
-<?
+<?php
 for($i=0; $i < count($menu1); $i++){ 
 $menu1_active = false;
 if(strpos($menu1[$i]["active"], $request_uri) !== false) {  
 $menu1_active = true;
 }
 ?>
-<li class="nav-item has-treeview <?if($menu1_active){?>menu-open<?}?>">
-<a href="#" class="nav-link <?if($menu1_active){?>active<?}?>">
+<li class="nav-item has-treeview <?php if($menu1_active){?>menu-open<?php }?>">
+<a href="#" class="nav-link <?php if($menu1_active){?>active<?php }?>">
 <p>
 <?=$menu1[$i]["lm_name"]?>
 <i class="right fas fa-angle-left"></i>
 </p>
 </a>
-<?if(count($menu2[$i]) > 0) {?>
+<?php if(count($menu2[$i]) > 0) {?>
 <ul class="nav nav-treeview">
-<?for($j=0; $j < count($menu2[$i]); $j++){?>
+<?php for($j=0; $j < count($menu2[$i]); $j++){?>
 <li class="nav-item">
-<a href="<?=$menu2[$i][$j]["lm_url"]?>" class="nav-link <?if($request_uri == $menu2[$i][$j]["lm_url"]){?>active<?}?>">
+<a href="<?=$menu2[$i][$j]["lm_url"]?>" class="nav-link <?php if($request_uri == $menu2[$i][$j]["lm_url"]){?>active<?php }?>">
 <i class="far fa-circle nav-icon"></i>
 <p><?=$menu2[$i][$j]["lm_name"]?></p>
 </a>
 </li>
-<?}?>
+<?php }?>
 </ul>
-<?}?>
+<?php }?>
 </li>
-<?}?>
+<?php }?>
 </ul>
 </nav>
 <!-- /.sidebar-menu -->
 </div>
 <!-- /.sidebar -->
 </aside>
-<?if($basename != "index.php"){?>
+<?php if($basename != "index.php"){?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -166,4 +166,4 @@ $menu1_active = true;
     <!-- Main content -->
 <section class="content">
 <div class="container-fluid">
-<?}?>
+<?php }?>

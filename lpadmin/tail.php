@@ -1,7 +1,7 @@
-<?if($basename != "index.php"){?>
+<?php if($basename != "index.php"){?>
 	</section>
 </div>
-<?}?>
+<?php }?>
 
 <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -20,7 +20,7 @@
 </div>
 <!-- ./wrapper -->
 
-<?
+<?php
 	//$sql = "select * from l_memo where "
 ?>
 
@@ -32,7 +32,7 @@ function fnMemmberMemo(mb_id){
 	window.open(url, name, option);
 }
 </script>
-<?
+<?php
 	$add_query = "";
 	//if($member[mb_level] < 10){
 		$add_query .= " and from_mb_id = '{$member['mb_id']}' ";
@@ -65,33 +65,33 @@ $(function(){
 	},3000);
 });
 </script>
-<?if($cnt > 0){?>
+<?php if($cnt > 0){?>
 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right_2" id="alarm_pop_bt" style="background:#ffc800">
   <!--span class="dropdown-item dropdown-header">새로운 알람이 있습니다.</span-->
   <div class="dropdown-divider"></div>
-  <?if($alarmAry['유력'] > 0){?>
+  <?php if($alarmAry['유력'] > 0){?>
   <a href="<?=G5_LADMIN_URL?>/member/alarm.list.php" class="dropdown-item">
 	<i class="fas fa-envelope mr-2"></i> 유력
 	<span class="float-right text-muted text-sm"><?=$alarmAry['유력']?></span>
   </a>
-  <?}?>
-  <?if($alarmAry['단순'] > 0){?>
+  <?php }?>
+  <?php if($alarmAry['단순'] > 0){?>
   <div class="dropdown-divider"></div>
   <a href="<?=G5_LADMIN_URL?>/member/alarm.list.php" class="dropdown-item">
 	<i class="fas fa-users mr-2"></i> 단순
 	<span class="float-right text-muted text-sm"><?=$alarmAry['단순']?></span>
   </a>
-  <?}?>
-  <?if($alarmAry['미수'] > 0){?>
+  <?php }?>
+  <?php if($alarmAry['미수'] > 0){?>
   <div class="dropdown-divider"></div>
   <a href="<?=G5_LADMIN_URL?>/member/alarm.list.php" class="dropdown-item">
 	<i class="fas fa-file mr-2"></i> 미수
 	<span class="float-right text-muted text-sm"><?=$alarmAry['미수']?></span>
   </a>
-  <?}?>
+  <?php }?>
   <div class="dropdown-divider"></div>
 </div>
-<?}?>
+<?php }?>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<?
+	<?php
 		if(!$is_member){
 			goto_url(G5_LADMIN_URL);
 		}

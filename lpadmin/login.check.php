@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$mb = get_member($mb_id);

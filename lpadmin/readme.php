@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 /admin/member/pop.memo.php
 /admin/payment/payment.php

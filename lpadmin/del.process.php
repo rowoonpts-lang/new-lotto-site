@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	$sql = "delete from {$table} where 1=1 and {$key_name} = '{$key_value}'";
 	sql_query($sql);
