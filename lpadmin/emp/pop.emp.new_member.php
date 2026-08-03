@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
@@ -21,20 +21,20 @@
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" method="post" autocomplete="off" action="emp.save.php" onSubmit="return fnSubmit();">
 				<input type="hidden" id="mb_no" name="mb_no" value="<?=$row[mb_no]?>">
-				<input type="hidden" id="mb_hp_chk" value="<?if($mb_id){echo "1";}else{echo "0";}?>">
-				<input type="hidden" id="mb_id_chk" value="<?if($mb_id){echo "1";}else{echo "0";}?>">
+				<input type="hidden" id="mb_hp_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
+				<input type="hidden" id="mb_id_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
 					<div class="card-body">
 						<div class="form-group">
 							<label for="mb_hp">휴대폰번호</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="mb_hp" name="mb_hp" placeholder="" value=<?=$row[mb_hp]?> <?if($mb_id){?>readonly<?}?>>
+									<input type="text" class="form-control" id="mb_hp" name="mb_hp" placeholder="" value=<?=$row[mb_hp]?> <?php if($mb_id){?>readonly<?php }?>>
 								</div>
-								<?if(!$mb_id){?>
+								<?php if(!$mb_id){?>
 								<div class="col-4">
 									<button type="button" class="btn btn-block btn-primary" onClick="fnFindHP();">중복검사</button>
 								</div>
-								<?}?>
+								<?php }?>
 							</div>
 						</div>
 						<div class="form-group">
@@ -45,7 +45,7 @@
 							<label for="mb_id">아이디</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="mb_id" name="mb_id" placeholder="" value="<?=$row[mb_id]?>" <?if($mb_id){?>readonly<?}?>>
+									<input type="text" class="form-control" id="mb_id" name="mb_id" placeholder="" value="<?=$row[mb_id]?>" <?php if($mb_id){?>readonly<?php }?>>
 								</div>
 								<div class="col-4">
 									<button type="button" class="btn btn-block btn-primary" onClick="fnFindID()">중복검사</button>
@@ -65,12 +65,12 @@
 							<div class="row">
 								<div class="col-12">
 									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_team" aria-hidden="true" autocomplete="off">
-										<?
+										<?php
 											$list = getTeamList();	
 											for($i=0; $i < count($list); $i++){
 										?>
-										<option value="<?=$list[$i]?>" <?if($row[mb_team] ==$list[$i]){echo "selected";}?>><?=$list[$i]?></option>
-										<?}?>
+										<option value="<?=$list[$i]?>" <?php if($row[mb_team] ==$list[$i]){echo "selected";}?>><?=$list[$i]?></option>
+										<?php }?>
 									</select>
 								</div>
 							</div>
@@ -84,12 +84,12 @@
 							<div class="row">
 								<div class="col-12">
 									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_level" aria-hidden="true" autocomplete="off">
-										<?
+										<?php
 											$list = getLevelList();	
 											for($i=0; $i < count($list); $i++){
 										?>
-										<option value="<?=$i+5?>" <?if($row[mb_level] == ($i+5)){echo "selected";}?>><?=$list[$i]?></option>
-										<?}?>
+										<option value="<?=$i+5?>" <?php if($row[mb_level] == ($i+5)){echo "selected";}?>><?=$list[$i]?></option>
+										<?php }?>
 									</select>
 								</div>
 							</div>

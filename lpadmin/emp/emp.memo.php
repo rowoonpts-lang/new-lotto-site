@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 
@@ -28,16 +28,16 @@
 			<div class="row">
 				<div class="col-md-1">
 					<select name="sch_year" class="form-control select2 select2-hidden-accessible">
-						<?for($i=2019; $i< 2030; $i++){?>
-						<option value="<?=$i?>" <?if($i == $year){?>selected<?}?>><?=$i?></option>
-						<?}?>
+						<?php for($i=2019; $i< 2030; $i++){?>
+						<option value="<?=$i?>" <?php if($i == $year){?>selected<?php }?>><?=$i?></option>
+						<?php }?>
 					</select>
 				</div>
 				<div class="col-md-1">
 					<select name="sch_month" class="form-control select2 select2-hidden-accessible">
-						<?for($i=1; $i<= 12; $i++){?>
-						<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>" <?if(str_pad($i, 2, "0", STR_PAD_LEFT) == $month){?>selected<?}?>><?=$i?></option>
-						<?}?>
+						<?php for($i=1; $i<= 12; $i++){?>
+						<option value="<?=str_pad($i, 2, "0", STR_PAD_LEFT)?>" <?php if(str_pad($i, 2, "0", STR_PAD_LEFT) == $month){?>selected<?php }?>><?=$i?></option>
+						<?php }?>
 					</select>
 				</div>
 				<div class="col-md-3">
@@ -65,7 +65,7 @@
 				<thead>
 				<tr>
 					<th class="center"></th>
-					<?
+					<?php
 						
 						$startDate = $year."-".$month."-01";
 						$endDate = date("Y-m-d", mktime(0, 0, 0, $month+1 , 0, $year)); 
@@ -74,12 +74,12 @@
 						for($i=1; $i <= $endDayEpx[2]; $i++){
 					?>
 					<th class="center"><?=$i?></th>
-					<?}?>
+					<?php }?>
 					<th class="center">합계</th>
 				</tr>
 				</thead>
 				<tbody>
-						<?
+						<?php
 							$where = " and mb_level >=4 ";
 							$order = " order by mb_datetime desc ";
 
@@ -97,7 +97,7 @@
 						?>
 						<tr>
 							<td style="width:100px;"><?=$row[mb_name]?><?=$row[mb_team]?></td>
-							<?
+							<?php
 								for($j=1; $j <= $endDayEpx[2]; $j++){
 								$toDayTmp = str_pad($j, 2, "0", STR_PAD_LEFT);
 								$totmem[$row[mb_id]] += $memoAry[$year."-".$month."-".$toDayTmp][$row[mb_id]];
@@ -105,15 +105,15 @@
 							<td>
 								<?=$memoAry[$year."-".$month."-".$toDayTmp][$row[mb_id]]?>
 							</td>
-							<?	}?>
+							<?php 	}?>
 							<td>
 								<?=$totmem[$row[mb_id]]?>
 							</td>
 						</tr>
-						<?	}?>
+						<?php 	}?>
 						</tbody>
 				</table>
-				<?php 
+				<?php
 					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
@@ -124,6 +124,6 @@
 	</div>
 </div>
 
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
