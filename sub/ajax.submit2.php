@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	@mkdir(G5_DATA_PATH.'/res', G5_DIR_PERMISSION);

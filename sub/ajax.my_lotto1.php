@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if(!$endTurn){
 		$endTurn = getTurn()-1;
@@ -7,11 +7,11 @@
 <div class="select_box">
 	<div class="sel_rt">
 		<select name="" id="" class="w91" onChange="fnCngTurn1(this.value)">
-			<?
+			<?php
 				for($i=$endTurn; $i >= 700; $i--){
 			?>
-			<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?>회차</option>
-			<?	}?>
+			<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?>회차</option>
+			<?php	}?>
 		</select>
 	</div>
 </div>
@@ -26,7 +26,7 @@
 			<!--th>확률분석</th-->
 			<th>결과</th>
 		</tr>
-		<?
+		<?php
 			$sql = "select * from l_turn_{$turn} where 1=1 and mb_id = '{$member[mb_id]}'";
 
 			$result = sql_query($sql);
@@ -40,7 +40,7 @@
 			<td><?=$row[mb_type]?></td>
 			<td>
 				<ul class="lotto_ball">
-					<?
+					<?php
 						
 						$listText = $row['num1'].",".$row['num2'].",".$row['num3'].",".$row['num4'].",".$row['num5'].",".$row['num6'];
 						echo getBallStyle3($listText);
@@ -54,18 +54,18 @@
 				</ul>
 			</td>
 			<td>
-				<?if($row[mb_type] == "무료회원"){?>
+				<?php if($row[mb_type] == "무료회원"){?>
 				미발송
-				<?}else{?>
+				<?php }else{?>
 				발송
-				<?}?>
+				<?php }?>
 			</td>
 			<!--td>확률분석</td-->
 			<td><?=$row['result']?></td>
 		</tr>
-		<?	}?>
-		<?if($cnt < 1){?>
+		<?php	}?>
+		<?php if($cnt < 1){?>
 		<tr><td colspan="6">데이터가 없습니다.</td></tr>
-		<?}?>
+		<?php }?>
 	</table>
 </div>

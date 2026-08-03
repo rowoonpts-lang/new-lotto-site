@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 ?>
 <form name="" id="" action="">
@@ -17,7 +17,7 @@
 				<!--th>확률분석</th-->
 				<th>결과</th>
 			</tr>
-			<?
+			<?php
 				$sql_common = "";
 				if($type == "당첨"){
 					$sql_common .= " and result in ('1등','2등','3등','4등','5등') ";
@@ -38,7 +38,7 @@
 				<td><?=$row[mb_type]?></td>
 				<td>
 					<ul class="lotto_ball">
-						<?
+						<?php
 							
 							$listText = $row['num1'].",".$row['num2'].",".$row['num3'].",".$row['num4'].",".$row['num5'].",".$row['num6'];
 							echo getBallStyle3($listText);
@@ -53,19 +53,19 @@
 				</td>
 				<td>
 					<!--input type="checkbox" name="sms[]" id="sms_1" value="SMS 보내기"><label for="sms_1"><span class="msg_ic"></span> <span class="color_red">0</span></label>ㅣ-->
-					<?if($row[mb_type] == "무료회원"){?>
+					<?php if($row[mb_type] == "무료회원"){?>
 					미발송
-					<?}else{?>
+					<?php }else{?>
 					발송
-					<?}?>
+					<?php }?>
 				</td>
 				<!--td>확률분석</td-->
 				<td><?=$row['result']?></td>
 			</tr>
-			<?	}?>
-			<?if($cnt < 1){?>
+			<?php	}?>
+			<?php if($cnt < 1){?>
 			<tr><td colspan="6">데이터가 없습니다.</td></tr>
-			<?}?>
+			<?php }?>
 		</table>
 	</div>
 	<!--div class="lotto_frm_btn">

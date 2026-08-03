@@ -1,4 +1,4 @@
-<?
+<?php
 	switch($basename){
 		case "about.php":
 			$inner = "inner100";

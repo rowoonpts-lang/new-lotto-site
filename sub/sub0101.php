@@ -13,13 +13,13 @@
 	</article>
 	<article class="s11_2">
 		<div class="inner">
-			<?if(!G5_IS_MOBILE){?>
+			<?php if(!G5_IS_MOBILE){?>
 			<div class="s11_2tit">데이터의 양, 처리속도, 정확성만이 차별을 말할 수 있다.</div>
 			<div class="s11_2desc1">언제까지 방대한 자동 확률에 매주 만원씩 버리겠습니까?<br>로또 클릭 VRAS는 여러분들이 원하는 바를 이루어 드립니다!</div>
-			<?}else{?>
+			<?php }else{?>
 			<div class="s11_2tit">데이터의 양, 처리속도, 정확성만이<br>차별을 말할 수 있다.</div>
 			<div class="s11_2desc1">언제까지 방대한 자동 확률에 매주 만원씩 버리겠습니까?<br>로또 클릭 VRAS는 여러분들이 원하는 바를<br>이루어 드립니다!</div>
-			<?}?>
+			<?php }?>
 			<ul class="s11_2ul">
 				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
 					<div class="li_box">
@@ -82,11 +82,11 @@
 					</div>
 				</li>
 			</ul>
-			<?if(!G5_IS_MOBILE){?>
+			<?php if(!G5_IS_MOBILE){?>
 			<div class="s11_2desc2">그리고 체계적인 고객 관리시스템 구축으로 지속적인 당첨관리! </div>	
-			<?}else{?>
+			<?php }else{?>
 			<div class="s11_2desc2">그리고 체계적인 고객 관리시스템<br>구축으로 지속적인 당첨관리! </div>
-			<?}?>
+			<?php }?>
 		</div>
 	</article>
 </section>

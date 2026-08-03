@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 	include_once(G5_LIB_PATH.'/thumbnail.lib.php');
@@ -13,7 +13,7 @@
 
 <section class="acrylic">
 	<div class="inner">
-		<?
+		<?php
 			$sql = " select * from g5_write_prd_top where 1=1 and ca_name = '{$prd1}' order by wr_datetime desc limit 1 ";
 			$row = sql_fetch($sql);
 			$all_img = get_all_thumbnail('prd_top', 1, $row['wr_id'], 1115, 778);
@@ -34,48 +34,48 @@
 
 		<div class="inner_2">
 			
-			<?if($prd2){?>
+			<?php if($prd2){?>
 			<ul class="pro_tab">
-				<?if($prd1 == "보조제"){?>
-				<li <?if($prd2 == "아크릴보조제(수성)"){?>class="active"<?}?>>
+				<?php if($prd1 == "보조제"){?>
+				<li <?php if($prd2 == "아크릴보조제(수성)"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=아크릴보조제(수성)">
 						<p>아크릴보조제<span class="m_br"></span>(수성)</p>
 					</a>
 				</li>
-				<li <?if($prd2 == "유화보조제(유성)"){?>class="active"<?}?>>
+				<li <?php if($prd2 == "유화보조제(유성)"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=유화보조제(유성)">
 						<p>유화보조제<span class="m_br"></span>(유성)</p>
 					</a>
 				</li>
-				<li <?if($prd2 == "한국화보조제(수성)"){?>class="active"<?}?>>
+				<li <?php if($prd2 == "한국화보조제(수성)"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=한국화보조제(수성)">
 						<p>한국화보조제<span class="m_br"></span>(수성)</p>
 					</a>
 				</li>
-				<?}?>
-				<?if($prd1 == "마커"){?>
-				<li <?if($prd2 == "디자인마커"){?>class="active"<?}?>>
+				<?php }?>
+				<?php if($prd1 == "마커"){?>
+				<li <?php if($prd2 == "디자인마커"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=디자인마커">
 						<p>디자인마커</p>
 					</a>
 				</li>
-				<li <?if($prd2 == "브러쉬마커"){?>class="active"<?}?>>
+				<li <?php if($prd2 == "브러쉬마커"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=브러쉬마커">
 						<p>브러쉬마커</p>
 					</a>
 				</li>
-				<li <?if($prd2 == "마커악세사리"){?>class="active"<?}?>>
+				<li <?php if($prd2 == "마커악세사리"){?>class="active"<?php }?>>
 					<a href="<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=마커악세사리">
 						<p>마커악세사리</p>
 					</a>
 				</li>
-				<?}?>
+				<?php }?>
 			</ul>
-			<?}?>
+			<?php }?>
 
 			<div class="acrylic_pro">
 				<ul class="acrylic_pro_ul clearfix">
-					<?
+					<?php
 						$add = "";
 						if($prd2){
 							$add = " and wr_3 = '{$prd2}' ";
@@ -113,7 +113,7 @@
 							<!--li class="pro_desc_3">12색/24색</li-->
 						</ul>
 					</li>
-					<?}?>
+					<?php }?>
 					<!--li class="acrylic_pro_li">
 						<div class="thum">
 							<img src="<?=G5_THEME_IMG_URL?>/a_pro_2.jpg" alt="">
@@ -216,6 +216,6 @@
 	</div>   <!-- inner -->
 </section>	<!-- acrylic -->
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

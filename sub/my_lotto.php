@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if(!$is_member){
 		alert("로그인 후 이용바랍니다.", G5_BBS_URL."/login.php?url=".G5_URL."/sub/my_lotto.php");
@@ -70,12 +70,12 @@
 				</tr>
 				<tr>
 					<th>수신조합</th>
-					<td><?=$tot_num?>개 조합 <?if($week_text){?>(<?=$week_text?>)<?}?></td>
+					<td><?=$tot_num?>개 조합 <?php if($week_text){?>(<?=$week_text?>)<?php }?></td>
 				</tr>
 				<tr>
 					<th>서비스 종료일</th>
 					<td>
-						<?if($row[end_date] >= date('Y-m-d')){echo $row[end_date];}else{echo "없음";}?>
+						<?php if($row[end_date] >= date('Y-m-d')){echo $row[end_date];}else{echo "없음";}?>
 					</td>
 				</tr>
 			</table>
@@ -94,6 +94,6 @@ function check_all(f)
 }
 </script>
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

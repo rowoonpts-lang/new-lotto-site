@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if(!$is_member){
 		alert("로그인 후 이용바랍니다.", G5_BBS_URL."/login.php?url=".G5_URL."/sub/my_lotto.php");
@@ -25,13 +25,13 @@
 		<div class="select_box">
 			<div class="sel_lt">
 				<select name="" id="turn_2" class="w91">
-					<?
+					<?php
 						$endTurn = getTurn();
 						$turn = getTurn();
 						for($i=$endTurn; $i >= 700; $i--){
 					?>
-					<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?>회 보관함</option>
-					<?	}?>
+					<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?>회 보관함</option>
+					<?php	}?>
 				</select>
 			</div>
 			<div class="sel_rt">
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div id="my_lotto2">
-			<?
+			<?php
 				
 				include_once(G5_PATH."/sub/ajax.my_lotto2.php");
 			?>
@@ -89,6 +89,6 @@ function check_all(f)
 }
 </script>
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

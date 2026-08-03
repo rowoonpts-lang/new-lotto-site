@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/head.sub.php");
 
@@ -17,15 +17,15 @@
 	<!--div class="product_li1_1"><?=$turn?>회차&nbsp;<b>당첨번호</b><em>추첨일 : 2020-10-24</em></div-->
 	<div class="product_li1_2">
 		<select onChange="fnCngTurn(this.value, '<?=$ver?>')">
-			<?for($i=$endTurn; $i >= 700; $i--){?>
-			<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?>회차</option>
-			<?}?>
+			<?php for($i=$endTurn; $i >= 700; $i--){?>
+			<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?>회차</option>
+			<?php }?>
 		</select>
 	</div>
 </div>
 <div class="product_li1_3">
 	<ul>
-		<?
+		<?php
 			echo getBallStyle2($listText, $ver);
 		?>
 		<!--li class="bg_yellow">1</li>

@@ -1,4 +1,4 @@
-<?
+<?php
 	switch($basename){
 
 		/* sub0101 */

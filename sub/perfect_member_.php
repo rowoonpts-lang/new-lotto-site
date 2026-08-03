@@ -1,26 +1,26 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 
-	$turn = getTurn()-1; 
+	$turn = getTurn()-1;
 	if(!$endTurn){ $endTurn = getTurn()-1; }
 	if(!$ver){ $ver = '1'; }
 	$list = getLuckyNum($turn);
 ?>
 
-<?if(!G5_IS_MOBILE){?>
+<?php if(!G5_IS_MOBILE){?>
 <style>
 	#sub_div .sub_top{display: none;}
 	#sub_div .inner{padding: 0;}
 	#sub_div > .inner{width: 100%;}
 </style>
-<?}else{?>
+<?php }else{?>
 <style>
 	#sub_div .sub_top{display: none;}
 	#sub_div .inner{padding: 0;padding-left: 15px;padding-right: 15px;}
 	#sub_div > .inner{width: 100%;padding-left: 0;padding-right: 0;}
 </style>
-<?}?>
+<?php }?>
 
 
 <section id="npf">
@@ -52,13 +52,13 @@
 					</div>
 				</div>
 				<div class="mid01_box mid01_box2">
-					<?include_once(G5_PATH."/sub/main.lucky.php");?>					
+					<?php include_once(G5_PATH."/sub/main.lucky.php");?>
 				</div>
 			</div>
 
 
 			<div class="s3_tit">나의 로또 보관함</div>
-			<?
+			<?php
 				$sql = "select * from g5_member_etc where 1=1 and mb_id = '{$member[mb_id]}'";
 
 				$row = sql_fetch($sql);
@@ -78,13 +78,13 @@
 					<div class="select_box">
 						<div class="sel_lt">
 							<select name="" id="turn_2" class="w91">
-								<?
+								<?php
 									$endTurn = getTurn();
 									$turn = getTurn();
 									for($i=$endTurn; $i >= 700; $i--){
 								?>
-								<option value="<?=$i?>" <?if($turn == $i){echo "selected";}?>><?=$i?>회 보관함</option>
-								<?	}?>
+								<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?>회 보관함</option>
+								<?php	}?>
 							</select>
 						</div>
 						<div class="sel_rt">
@@ -103,8 +103,8 @@
 						</div>
 					</div>
 					<div id="my_lotto2">
-						<?
-							
+						<?php
+
 							include_once(G5_PATH."/sub/ajax.my_lotto2.php");
 						?>
 					</div>
@@ -115,7 +115,7 @@
 						$.ajax({
 							type: "POST",
 							url: "<?=G5_URL?>/sub/ajax.my_lotto2.php",
-							data: {turn : v, type : $("input:radio[name='sql_type_2']:checked").val()}, 
+							data: {turn : v, type : $("input:radio[name='sql_type_2']:checked").val()},
 							cache: false,
 							async: false,
 							contentType : "application/x-www-form-urlencoded; charset=UTF-8",
@@ -127,7 +127,7 @@
 					}
 					</script>
 
-					
+
 				</div>
 
 			</div>
@@ -137,7 +137,7 @@
 
 				<div class="my_lotto_bot my_cont my_cont2 active">
 					<div id="my_lotto1">
-						<?
+						<?php
 							$turn = getTurn()-1;
 							include_once(G5_PATH."/sub/ajax.my_lotto1.php");
 						?>
@@ -147,7 +147,7 @@
 						$.ajax({
 							type: "POST",
 							url: "<?=G5_URL?>/sub/ajax.my_lotto1.php",
-							data: {turn : v}, 
+							data: {turn : v},
 							cache: false,
 							async: false,
 							contentType : "application/x-www-form-urlencoded; charset=UTF-8",
@@ -175,6 +175,6 @@ function check_all(f)
         chk[i].checked = f.chkall.checked;
 }
 </script>
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

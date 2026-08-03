@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once(G5_LIB_PATH.'/icode.sms.lib.php'); 
 	$sms_content = '['.$wr_10.'] '.$wr_name.'님께서 상담 신청하셨습니다.'; 
 

@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if(!$is_admin){
 		alert("로그인 후 이용 가능합니다.");
@@ -37,11 +37,11 @@
 		<div class="deluxe_inner">
 			<p class="dux_cm_txt1 dux2_txt01">디럭스 그룹만의<br>독특하고 세밀한 분석 패턴</p>
 			<p class="dux_cm_txt2 dux2_txt02">
-				<?if(!G5_IS_MOBILE){?>
+				<?php if(!G5_IS_MOBILE){?>
 				체계적인 분석 스토리로 빠르고 정확한 결과를 창출해냅니다!
-				<?}else{?>
+				<?php }else{?>
 				체계적인 분석 스토리로<br>빠르고 정확한 결과를 창출해냅니다!
-				<?}?>
+				<?php }?>
 			</p>
 			<p class="dux_2_img"><img src="<?=G5_THEME_IMG_URL?>/deluxe_img3.png" alt=""></p>
 		</div>
@@ -51,11 +51,11 @@
 		<div class="deluxe_inner">
 			<p class="dux_cm_txt1 dux3_txt01">시대 흐름에 따른 빠른 성능 개선</p>
 			<p class="dux_cm_txt2 dux3_txt02">
-				<?if(!G5_IS_MOBILE){?>
+				<?php if(!G5_IS_MOBILE){?>
 				데이터 처리 속도 3배 가량 업그레이드 함으로써 당첨시기를 더욱 빨리 앞당겨드립니다!
-				<?}else{?>
+				<?php }else{?>
 				데이터 처리 속도 3배 가량 업그레이드 함으로써<br>당첨시기를 더욱 빨리 앞당겨드립니다!
-				<?}?>
+				<?php }?>
 			</p>
 			<p class="dux_3_img"><img src="<?=G5_THEME_IMG_URL?>/deluxe_img4.jpg" alt=""></p>
 		</div>
@@ -63,6 +63,6 @@
 
 </div>
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

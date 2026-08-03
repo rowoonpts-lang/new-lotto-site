@@ -54,7 +54,7 @@ $limit = 6; // provide the limit thats important because one page only give some
 $image_array= array(); // array to store images.
 ?>
 <ul class="insta_atc">
-<?
+<?php
 	for ($i=0; $i < $limit; $i++) { 
 
 		

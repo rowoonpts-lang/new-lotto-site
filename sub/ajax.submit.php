@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$write_table = "g5_write_".$bo_table;

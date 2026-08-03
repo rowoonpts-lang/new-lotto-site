@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	if(!$is_member){
 		alert("로그인 후 이용바랍니다.", G5_BBS_URL."/login.php?url=".G5_URL."/sub/my_lotto.php");
@@ -23,7 +23,7 @@
 
 	<div class="my_lotto_bot my_cont my_cont2 active">
 		<div id="my_lotto1">
-			<?
+			<?php
 				$turn = getTurn()-1;
 				include_once(G5_PATH."/sub/ajax.my_lotto1.php");
 			?>
@@ -58,6 +58,6 @@ function check_all(f)
 }
 </script>
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	// 사용자 입력값 필터링 및 이스케이프 처리

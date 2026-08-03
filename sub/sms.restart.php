@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("./_common.php");
 
 	$data1 = shell_exec("systemctl stop Oneshot2");

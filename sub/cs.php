@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 ?>
@@ -41,7 +41,7 @@
 									</p>
 								</li>
 								<li class="sol_li">
-									<?if(!G5_IS_MOBILE){?>
+									<?php if(!G5_IS_MOBILE){?>
 									<p class="mid04_chk">
 										<input type="checkbox" id="cs_agree">
 										<label for="cs_agree">
@@ -49,9 +49,9 @@
 											<a onClick="privacy();">개인정보처리방침 내용</a>을 확인하였으며, 동의 합니다.
 										</label>
 									</p>
-									<?}else{?>
+									<?php }else{?>
 
-									<?}?>
+									<?php }?>
 								</li>
 							</ul>
 							<div id="chart" class="chart_pc" >
@@ -81,14 +81,14 @@
 				</ul>
 
 				<div id="file_add">
-					<?for($i=0; $i< 100; $i++){?>
+					<?php for($i=0; $i< 100; $i++){?>
 					<input type="file" id="file_<?=$i?>" name="multi_file[]" onChange="fnAddFile_chg()">
-					<?}?>
+					<?php }?>
 				</div>
 				
-				<?if(!G5_IS_MOBILE){?>
+				<?php if(!G5_IS_MOBILE){?>
 									
-				<?}else{?>
+				<?php }else{?>
 						<p class="mid04_chk">
 							<input type="checkbox" id="cs_agree">
 							<label for="cs_agree">
@@ -96,7 +96,7 @@
 								<a onClick="privacy();">개인정보처리방침 내용</a>을 확인하였으며, 동의 합니다.
 							</label>
 						</p>		
-				<?}?>
+				<?php }?>
 				<div id="chart" class="chart_mb" >
 					<button class="def_btn bluest" type="button" onClick="fnSubmit()">문의하기</button>
 				</div>
@@ -244,6 +244,6 @@ $('.in_ipt').blur(function(){
 </script>
 
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

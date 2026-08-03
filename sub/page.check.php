@@ -1,4 +1,4 @@
-<?
+<?php
 	if (!isset($g5['title'])) {
 		
 		switch($request_uri){

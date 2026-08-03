@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 	include_once(G5_LIB_PATH.'/thumbnail.lib.php');
@@ -44,7 +44,7 @@
 </section>
 
 <script>
-<?if(!G5_IS_MOBILE){?>
+<?php if(!G5_IS_MOBILE){?>
 	$(window).scroll(function() {
 		var scroll = $(window).scrollTop();
 		var f_scroll = $('footer.footer').offset().top;
@@ -54,12 +54,12 @@
 			$(".detail").removeClass("abs");
 		}
 	});
-	<?}else{?>
+	<?php }else{?>
 
-<?}?>
+<?php }?>
 
 </script>
 
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>

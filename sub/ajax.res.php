@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 
 	$lr_name = sql_escape_string(trim($lr_name));

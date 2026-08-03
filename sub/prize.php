@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 ?>
@@ -7,7 +7,7 @@
 	<div class="s01_li2">당첨지역</div>
 		<ul class="product_ul2 prize_top">
 			<li id="view_turn_result">
-				<?
+				<?php
 					$turn = getTurn()-1;
 					include_once(G5_PATH."/sub/ajax.turn.list.view2.php"); 
 				?>
@@ -91,6 +91,6 @@
 		</div>
 	</div>
 </div>
-<?
+<?php
 	include_once(G5_PATH."/_tail.php");
 ?>
