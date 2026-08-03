@@ -47,7 +47,7 @@ if( isset($g5['sms5_config_table']) && sql_query(" DESCRIBE {$g5['sms5_config_ta
 flush(); usleep(50000);
 
 // 테이블 생성 ------------------------------------
-$file = implode("", file("./sms5.sql"));
+$file = implode("", file(G5_ADMIN_PATH . "/sms_admin/sms5.sql"));
 eval("\$file = \"$file\";");
 
 $f = explode(";", $file);
