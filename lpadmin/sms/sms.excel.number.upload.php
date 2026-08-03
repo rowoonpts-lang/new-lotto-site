@@ -1,4 +1,4 @@
-<?
+<?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 	
@@ -28,7 +28,7 @@
 
 				<tr>
 					<td>
-						<?
+						<?php
 							$sql = "select count(idx) cnt from msg_cust_log where 1=1 and etc = 'excel1' and substr(send_time,1,10) = substr(now(),1,10)";
 							$row = sql_fetch($sql);
 							echo $row[cnt];
@@ -58,6 +58,6 @@ function fnCheck(){
 	return false;
 }
 </script>
-<?
+<?php
 	include_once(G5_LADMIN_PATH."/tail.php");
 ?>
