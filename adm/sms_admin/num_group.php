@@ -4,6 +4,8 @@ include_once("./_common.php");
 
 auth_check_menu($auth, $sub_menu, "r");
 
+$token = get_token();
+
 $g5['title'] = "휴대폰번호 그룹";
 
 $res = sql_fetch("select count(*) as cnt from {$g5['sms5_book_group_table']}");
@@ -34,7 +36,7 @@ function move(bg_no, bg_name, sel) {
         msg += sel.options[sel.selectedIndex].text + "' 그룹으로 이동하시겠습니까?";
 
         if (confirm(msg))
-            location.href = 'num_group_move.php?bg_no=' + bg_no + '&move_no=' + sel.value;
+            location.href = 'num_group_move.php?bg_no=' + bg_no + '&move_no=' + sel.value + '&token=<?php echo $token; ?>';
         else
             sel.selectedIndex = 0;
     }
