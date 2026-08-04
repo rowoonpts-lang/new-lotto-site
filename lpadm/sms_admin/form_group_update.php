@@ -4,6 +4,8 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "w");
 
+check_admin_token();
+
 $post_chk = isset($_POST['chk']) && is_array($_POST['chk']) ? $_POST['chk'] : array();
 $fg_no = isset($_REQUEST['fg_no']) ? $_REQUEST['fg_no'] : 0;
 

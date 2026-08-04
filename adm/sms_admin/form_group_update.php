@@ -4,6 +4,8 @@ include_once("./_common.php");
 
 auth_check_menu($auth, $sub_menu, "w");
 
+check_admin_token();
+
 $post_cnk = (isset($_POST['chk']) && is_array($_POST['chk'])) ? $_POST['chk'] : array();
 
 if ($w == 'u') // 업데이트

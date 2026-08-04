@@ -6,6 +6,8 @@ $colspan = 5;
 
 auth_check($auth[$sub_menu], "r");
 
+$token = get_token();
+
 $g5['title'] = "이모티콘 그룹";
 
 $res = sql_fetch("select count(*) as cnt from {$g5['sms5_form_group_table']}");
@@ -36,7 +38,7 @@ function move(fg_no, fg_name, sel) {
 
 function empty(fg_no) {
     if (confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n그룹에 속한 데이터를 정말로 비우시겠습니까?"))
-        location.href = 'form_group_update.php?w='+ fg_no +'&fg_no=' + fg_no;
+        location.href = 'form_group_update.php?w='+ fg_no +'&fg_no=' + fg_no + '&token=<?php echo $token; ?>';
 }
 
 function grouplist_submit(f)
@@ -69,6 +71,7 @@ function grouplist_submit(f)
 
 <form name="group<?php echo $res['fg_no']?>" method="post" action="./form_group_update.php" class="local_sch03 local_sch">
 <input type="hidden" name="fg_no" value="<?php echo $res['fg_no']?>">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 <div>
     <label for="fg_name">그룹명<strong class="sound_only"> 필수</strong></label>
     <input type="text" id="fg_name" name="fg_name" required class="required frm_input">
@@ -85,6 +88,7 @@ function grouplist_submit(f)
 
 <form name="group<?php echo $group[$i]['fg_no']?>" method="post" action="./form_group_update.php" onsubmit="return grouplist_submit(this);">
 <input type="hidden" name="w" value="u">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 
 <div class="tbl_head01 tbl_wrap">
     <table>
