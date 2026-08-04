@@ -3,10 +3,19 @@ include_once('./_common.php');
 
 auth_check($auth[$sub_menu], "r");
 
-if(!count($_POST['chk_fg_no']))
+$post_chk_fg_no = isset($_POST['chk_fg_no']) && is_array($_POST['chk_fg_no'])
+    ? array_values(array_filter(array_map('intval', $_POST['chk_fg_no'])))
+    : array();
+
+if (!count($post_chk_fg_no))
     alert('이모티콘을 이동할 그룹을 한개 이상 선택해 주십시오.', $url);
 
-$fo_no_list = preg_replace('/[^a-zA-Z0-9\, ]/', '', $fo_no_list);
+$post_fo_no_list = isset($_POST['fo_no_list']) ? explode(',', $_POST['fo_no_list']) : array();
+$post_fo_no_list = array_values(array_filter(array_map('intval', $post_fo_no_list)));
+$fo_no_list = implode(',', $post_fo_no_list);
+
+if ($fo_no_list === '')
+    alert('이동할 이모티콘을 선택해 주십시오.', $url);
 
 $sql = "select * from {$g5['sms5_form_table']} where fo_no in ($fo_no_list) order by fo_no desc ";
 $result = sql_query($sql);
@@ -14,9 +23,9 @@ $save = array();
 for ($kk=0;$row = sql_fetch_array($result);$kk++)
 {
     $fo_no = $row['fo_no'];
-    for ($i=0; $i<count($_POST['chk_fg_no']); $i++)
+    for ($i=0; $i<count($post_chk_fg_no); $i++)
     {
-        $fg_no = $_POST['chk_fg_no'][$i];
+        $fg_no = (int) $post_chk_fg_no[$i];
         if( !$fg_no ) continue;
         $group = sql_fetch("select * from {$g5['sms5_form_group_table']} where fg_no = '$fg_no'");
         $sql = " insert into {$g5['sms5_form_table']}
