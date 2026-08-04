@@ -7,7 +7,7 @@ $colspan = 9;
 
 auth_check($auth[$sub_menu], "r");
 
-$token = get_token();
+$token = get_admin_token();
 
 $g5['title'] = "휴대폰번호 관리";
 

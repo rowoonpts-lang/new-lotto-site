@@ -1,7 +1,19 @@
 <?php
+$sub_menu = "900800";
 include_once('./_common.php');
 
-auth_check($auth[$sub_menu], "r");
+auth_check($auth[$sub_menu], "w");
+
+check_admin_token();
+
+$sw = isset($_POST['sw']) ? $_POST['sw'] : '';
+if (!in_array($sw, array('move', 'copy'), true)) {
+    alert('잘못된 작업 요청입니다.');
+}
+
+$act = ($sw === 'move') ? '이동' : '복사';
+$page = isset($_POST['page']) ? max(1, (int) $_POST['page']) : 1;
+$url = './num_book.php';
 
 $post_chk_bg_no = isset($_POST['chk_bg_no']) && is_array($_POST['chk_bg_no'])
     ? array_values(array_filter(array_map('intval', $_POST['chk_bg_no'])))
@@ -28,7 +40,12 @@ for ($kk=0;$row = sql_fetch_array($result);$kk++)
     for ($i=0; $i<count($post_chk_bg_no); $i++)
     {
         $bg_no = (int) $post_chk_bg_no[$i];
-        if( !$bg_no ) continue;
+        if ($bg_no < 1) continue;
+
+        $group = sql_fetch("select bg_no from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
+        if (!$group) {
+            alert('선택한 대상 그룹이 존재하지 않습니다.');
+        }
 
         $sql = " insert into {$g5['sms5_book_table']}
                     set bg_no='$bg_no',

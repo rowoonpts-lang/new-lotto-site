@@ -1,22 +1,32 @@
 <?php
-$sub_menu = "900600";
+$sub_menu = "900800";
 include_once('./_common.php');
 
-$inputbox_type="checkbox";
-if ($sw == 'move'){
-    $act = '이동';
-} else if ($sw == 'copy') {
-    $act = '복사';
-} else {
-    alert('sw 값이 제대로 넘어오지 않았습니다.');
+auth_check_menu($auth, $sub_menu, "w");
+
+check_admin_token();
+
+$sw = isset($_POST['sw']) ? $_POST['sw'] : '';
+if (!in_array($sw, array('move', 'copy'), true)) {
+    alert('잘못된 작업 요청입니다.');
 }
 
-auth_check_menu($auth, $sub_menu, "r");
+$act = ($sw === 'move') ? '이동' : '복사';
+$inputbox_type = "checkbox";
+$token = get_admin_token();
+$page = isset($_POST['page']) ? max(1, (int) $_POST['page']) : 1;
 
 $g5['title'] = '번호그룹 ' . $act;
 include_once(G5_PATH.'/head.sub.php');
 
-$bk_no_list = isset($_POST['bk_no']) ? implode(',', $_POST['bk_no']) : '';
+$post_bk_no = isset($_POST['bk_no']) && is_array($_POST['bk_no'])
+    ? array_values(array_filter(array_map('intval', $_POST['bk_no'])))
+    : array();
+$bk_no_list = implode(',', $post_bk_no);
+
+if ($bk_no_list === '') {
+    alert('이동하거나 복사할 번호를 선택해 주십시오.');
+}
 
 $sql = " select * from {$g5['sms5_book_group_table']} order by bg_no ";
 $result = sql_query($sql);
@@ -31,6 +41,8 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
 
     <form name="fboardmoveall" method="post" action="./number_move_update.php" onsubmit="return fboardmoveall_submit(this);">
     <input type="hidden" name="sw" value="<?php echo $sw ?>">
+    <input type="hidden" name="token" value="<?php echo $token; ?>">
+    <input type="hidden" name="page" value="<?php echo $page; ?>">
     <input type="hidden" name="bk_no_list" value="<?php echo get_sanitize_input($bk_no_list); ?>">
     <input type="hidden" name="act" value="<?php echo get_sanitize_input($act); ?>">
     <input type="hidden" name="url" value="<?php echo clean_xss_tags(strip_tags($_SERVER['HTTP_REFERER'])); ?>">
