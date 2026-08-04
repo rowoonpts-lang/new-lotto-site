@@ -14,6 +14,42 @@ if ($w == 'd') {
 
 check_admin_token();
 
+function validate_faq_image_upload($file)
+{
+    if (!isset($file['name']) || $file['name'] === '') {
+        return false;
+    }
+
+    $error = isset($file['error']) ? (int) $file['error'] : UPLOAD_ERR_NO_FILE;
+    $tmp_name = isset($file['tmp_name']) ? $file['tmp_name'] : '';
+    $file_size = isset($file['size']) ? (int) $file['size'] : 0;
+
+    if (
+        $error !== UPLOAD_ERR_OK
+        || !$tmp_name
+        || !is_uploaded_file($tmp_name)
+        || $file_size <= 0
+        || $file_size > 5 * 1024 * 1024
+    ) {
+        alert('FAQ 이미지는 5MB 이하의 정상적인 이미지 파일만 업로드할 수 있습니다.');
+    }
+
+    $image_info = @getimagesize($tmp_name);
+    $allowed_types = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
+
+    if (defined('IMAGETYPE_WEBP')) {
+        $allowed_types[] = IMAGETYPE_WEBP;
+    }
+
+    if (!$image_info || !in_array($image_info[2], $allowed_types, true)) {
+        alert('GIF, JPG, PNG, BMP, WebP 이미지 파일만 업로드할 수 있습니다.');
+    }
+
+    return true;
+}
+
+
+
 @mkdir(G5_DATA_PATH . "/faq", G5_DIR_PERMISSION);
 @chmod(G5_DATA_PATH . "/faq", G5_DIR_PERMISSION);
 
@@ -72,12 +108,12 @@ if ($w == "") {
 }
 
 if ($w == "" || $w == "u") {
-    if ($_FILES['fm_himg']['name']) {
+    if (validate_faq_image_upload($_FILES['fm_himg'])) {
         $dest_path = G5_DATA_PATH . "/faq/" . $fm_id . "_h";
         @move_uploaded_file($_FILES['fm_himg']['tmp_name'], $dest_path);
         @chmod($dest_path, G5_FILE_PERMISSION);
     }
-    if ($_FILES['fm_timg']['name']) {
+    if (validate_faq_image_upload($_FILES['fm_timg'])) {
         $dest_path = G5_DATA_PATH . "/faq/" . $fm_id . "_t";
         @move_uploaded_file($_FILES['fm_timg']['tmp_name'], $dest_path);
         @chmod($dest_path, G5_FILE_PERMISSION);
