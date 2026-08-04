@@ -3,6 +3,9 @@
 $sub_menu = "900500";
 include_once("./_common.php");
 
+$fg_no = isset($_REQUEST['fg_no']) ? (int) $_REQUEST['fg_no'] : 0;
+$move_no = isset($_REQUEST['move_no']) ? (int) $_REQUEST['move_no'] : 0;
+
 auth_check($auth[$sub_menu], "w");
 
 if ($fg_no) 
