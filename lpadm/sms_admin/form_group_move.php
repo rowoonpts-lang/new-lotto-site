@@ -5,6 +5,8 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "w");
 
+check_admin_token();
+
 $fg_no = isset($_REQUEST['fg_no']) ? (int) $_REQUEST['fg_no'] : 0;
 $move_no = isset($_REQUEST['move_no']) ? (int) $_REQUEST['move_no'] : 0;
 

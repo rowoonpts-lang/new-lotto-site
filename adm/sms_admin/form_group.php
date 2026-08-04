@@ -30,7 +30,7 @@ function move(fg_no, fg_name, sel) {
         msg += sel.options[sel.selectedIndex].text + "' 그룹으로 이동하시겠습니까?";
 
         if (confirm(msg))
-            location.href = 'form_group_move.php?fg_no=' + fg_no + '&move_no=' + sel.value;
+            location.href = 'form_group_move.php?fg_no=' + fg_no + '&move_no=' + sel.value + '&token=<?php echo $token; ?>';
         else
             sel.selectedIndex = 0;
     }
