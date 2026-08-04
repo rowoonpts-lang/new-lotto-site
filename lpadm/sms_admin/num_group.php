@@ -4,7 +4,7 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "r");
 
-$token = get_token();
+$token = get_admin_token();
 
 $g5['title'] = "휴대폰번호 그룹";
 
@@ -79,8 +79,9 @@ function num_group_submit(f)
     <span class="btn_ov01"><span class="ov_txt">건수</span><span class="ov_num"> <?php echo $total_count; ?>건 </span></span>
 </div>
 
-<form name="group<?php echo $res['bg_no']?>" method="get" action="./num_group_update.php" class="local_sch02 local_sch">
+<form name="group<?php echo $res['bg_no']?>" method="post" action="./num_group_update.php" class="local_sch02 local_sch">
 <input type="hidden" name="bg_no" value="<?php echo $res['bg_no']?>">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 
 <div>
     <label for="bg_name" class="sound_only">그룹추가<strong class="sound_only"> 필수</strong></label>
@@ -96,6 +97,7 @@ function num_group_submit(f)
 
 <form name="group_hp_form" id="group_hp_form" method="post" action="./num_group_update.php" onsubmit="return num_group_submit(this);">
 <input type="hidden" name="w" value="u">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 
 <div class="tbl_head01 tbl_wrap">
     <table>

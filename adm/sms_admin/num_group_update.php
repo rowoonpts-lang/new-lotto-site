@@ -2,9 +2,20 @@
 $sub_menu = "900700";
 include_once("./_common.php");
 
-$post_chk = (isset($_POST['chk']) && is_array($_POST['chk'])) ? $_POST['chk'] : array();
-
 auth_check_menu($auth, $sub_menu, "w");
+
+check_admin_token();
+
+$w = isset($_POST['w']) ? $_POST['w'] : '';
+if (!in_array($w, array('', 'u', 'de', 'em'), true)) {
+    alert('잘못된 작업 요청입니다.');
+}
+
+$post_chk = isset($_POST['chk']) && is_array($_POST['chk'])
+    ? array_values(array_unique(array_filter(array_map('intval', $_POST['chk']), function ($value) {
+        return $value >= 0;
+    })))
+    : array();
 
 if ($w == 'u') // 업데이트
 {
@@ -15,8 +26,8 @@ if ($w == 'u') // 업데이트
         $bg_no = isset($_POST['bg_no'][$k]) ? (int) $_POST['bg_no'][$k] : 0;
         $bg_name = isset($_POST['bg_name'][$k]) ? strip_tags(clean_xss_attributes(stripslashes($_POST['bg_name'][$k]))) : '';
 
-        if (!is_numeric($bg_no))
-            alert('그룹 고유번호가 없습니다.');
+        if ($bg_no < 2)
+            alert('기본 그룹은 수정할 수 없습니다.');
 
         $res = sql_fetch("select * from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
         if (!$res)
@@ -40,15 +51,22 @@ else if ($w == 'de') // 그룹삭제
         $k = $post_chk[$i];
         $bg_no = isset($_POST['bg_no'][$k]) ? (int) $_POST['bg_no'][$k] : 0;
 
-        if (!is_numeric($bg_no))
-            alert('그룹 고유번호가 없습니다.');
+        if ($bg_no < 2)
+            alert('기본 그룹은 삭제할 수 없습니다.');
 
         $res = sql_fetch("select * from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
         if (!$res)
             alert('존재하지 않는 그룹입니다.');
 
-        sql_query("delete from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
+        sql_query("update {$g5['sms5_book_group_table']}
+                    set bg_count = bg_count + '{$res['bg_count']}',
+                        bg_member = bg_member + '{$res['bg_member']}',
+                        bg_nomember = bg_nomember + '{$res['bg_nomember']}',
+                        bg_receipt = bg_receipt + '{$res['bg_receipt']}',
+                        bg_reject = bg_reject + '{$res['bg_reject']}'
+                  where bg_no = 1");
         sql_query("update {$g5['sms5_book_table']} set bg_no=1 where bg_no='$bg_no'");
+        sql_query("delete from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
     }
 }
 else if ($w == 'em') // 비우기
@@ -59,13 +77,20 @@ else if ($w == 'em') // 비우기
         $k = $post_chk[$i];
         $bg_no = isset($_POST['bg_no'][$k]) ? (int) $_POST['bg_no'][$k] : 0;
 
+        if ($bg_no < 2)
+            alert('기본 그룹은 비울 수 없습니다.');
+
+        $res = sql_fetch("select bg_no from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
+        if (!$res)
+            alert('존재하지 않는 그룹입니다.');
+
         sql_query("update {$g5['sms5_book_group_table']} set bg_count = 0, bg_member = 0, bg_nomember = 0, bg_receipt = 0, bg_reject = 0 where bg_no='$bg_no'");
         sql_query("delete from {$g5['sms5_book_table']} where bg_no='$bg_no'");
     }
 }
 else // 등록
 {
-    $bg_name = isset($_REQUEST['bg_name']) ? strip_tags(clean_xss_attributes(stripslashes($_REQUEST['bg_name']))) : '';
+    $bg_name = isset($_POST['bg_name']) ? strip_tags(clean_xss_attributes(stripslashes($_POST['bg_name']))) : '';
 
     if (!strlen(trim($bg_name)))
         alert('그룹명을 입력해주세요');
