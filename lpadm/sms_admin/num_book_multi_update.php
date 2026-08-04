@@ -6,9 +6,16 @@ auth_check($auth[$sub_menu], "w");
 
 $g5['title'] = "전화번호부";
 
-for ($i=0; $i<count($_POST['bk_no']); $i++) 
+$post_bk_no = isset($_POST['bk_no']) && is_array($_POST['bk_no']) ? $_POST['bk_no'] : array();
+$atype = isset($_POST['atype']) ? $_POST['atype'] : '';
+
+if (!in_array($atype, array('reject', 'receipt', 'del'), true)) {
+    alert('잘못된 작업 요청입니다.');
+}
+
+for ($i=0; $i<count($post_bk_no); $i++)
 {
-    $bk_no = $_POST['bk_no'][$i];
+    $bk_no = (int) $post_bk_no[$i];
     if (!trim($bk_no)) continue;
 
     $res = sql_fetch("select * from {$g5['sms5_book_table']} where bk_no='$bk_no'");
