@@ -7,7 +7,12 @@ auth_check($auth[$sub_menu], "w");
 check_admin_token();
 
 $post_chk = isset($_POST['chk']) && is_array($_POST['chk']) ? $_POST['chk'] : array();
+$w = isset($_REQUEST['w']) ? clean_xss_tags($_REQUEST['w'], 1, 1) : '';
 $fg_no = isset($_REQUEST['fg_no']) ? $_REQUEST['fg_no'] : 0;
+
+if (!in_array($w, array('', 'u', 'de', 'em', 'no'), true)) {
+    alert('잘못된 작업 요청입니다.');
+}
 
 if ($w == 'u') // 업데이트
 {
@@ -17,9 +22,9 @@ if ($w == 'u') // 업데이트
         $k = $post_chk[$i];
         $fg_no = isset($_POST['fg_no'][$k]) ? (int) $_POST['fg_no'][$k] : 0;
         $fg_name = isset($_POST['fg_name'][$k]) ? addslashes(strip_tags(clean_xss_attributes($_POST['fg_name'][$k]))) : '';
-        $fg_member = isset($_POST['fg_member'][$k]) ? addslashes(strip_tags($_POST['fg_member'][$k])) : '';
+        $fg_member = !empty($_POST['fg_member'][$k]) ? 1 : 0;
 
-        if (!is_numeric($fg_no))
+        if ($fg_no < 1)
             alert('그룹 고유번호가 없습니다.');
 
         $res = sql_fetch("select * from {$g5['sms5_form_group_table']} where fg_no='$fg_no'");
@@ -45,7 +50,7 @@ else if ($w == 'de') // 그룹삭제
         $k = $post_chk[$i];
         $fg_no = isset($_POST['fg_no'][$k]) ? (int) $_POST['fg_no'][$k] : 0;
 
-        if (!is_numeric($fg_no))
+        if ($fg_no < 1)
             alert('그룹 고유번호가 없습니다.');
 
         $res = sql_fetch("select * from {$g5['sms5_form_group_table']} where fg_no='$fg_no'");
