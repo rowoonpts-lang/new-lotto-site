@@ -4,8 +4,15 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "w");
 
-$fo_name = isset($fo_name) ? strip_tags($fo_name) : '';
-$fo_content = isset($fo_content) ? strip_tags($fo_content) : '';
+check_admin_token();
+
+$fo_no = isset($_REQUEST['fo_no']) ? (int) $_REQUEST['fo_no'] : 0;
+$fg_no = isset($_REQUEST['fg_no']) ? (int) $_REQUEST['fg_no'] : 0;
+$fo_name = isset($_REQUEST['fo_name']) ? addslashes(strip_tags(clean_xss_attributes(stripslashes($_REQUEST['fo_name'])))) : '';
+$fo_content = isset($_REQUEST['fo_content']) ? addslashes(strip_tags(clean_xss_attributes(stripslashes($_REQUEST['fo_content'])))) : '';
+$fo_receipt = !empty($_REQUEST['fo_receipt']) ? 1 : 0;
+$page = isset($_REQUEST['page']) ? max(0, (int) $_REQUEST['page']) : 0;
+$get_fg_no = '';
 
 $g5['title'] = "이모티콘 업데이트";
 
