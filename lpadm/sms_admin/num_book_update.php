@@ -15,10 +15,10 @@ $bg_no = isset($_REQUEST['bg_no']) ? (int) $_REQUEST['bg_no'] : 0;
 $bk_receipt = !empty($_REQUEST['bk_receipt']) ? 1 : 0;
 $page = isset($_REQUEST['page']) ? max(0, (int) $_REQUEST['page']) : 0;
 
-$bk_hp = get_hp($bk_hp);
+$bk_hp = isset($_REQUEST['bk_hp']) ? get_hp($_REQUEST['bk_hp']) : '';
 
-$bk_memo = strip_tags($bk_memo);
-$bk_name = strip_tags($bk_name);
+$bk_memo = isset($_REQUEST['bk_memo']) ? strip_tags($_REQUEST['bk_memo']) : '';
+$bk_name = isset($_REQUEST['bk_name']) ? strip_tags($_REQUEST['bk_name']) : '';
 
 if ($w=='u') // 업데이트
 {
@@ -59,7 +59,7 @@ if ($w=='u') // 업데이트
         // 휴대폰번호 중복체크
         $sql = " select mb_id from {$g5['member_table']} where mb_id <> '{$res['mb_id']}' and mb_hp = '{$bk_hp}' ";
         $mb_hp_exist = sql_fetch($sql);
-        if ($mb_hp_exist['mb_id']) { //중복된 회원 휴대폰번호가 있다면
+        if (isset($mb_hp_exist['mb_id']) && $mb_hp_exist['mb_id']) { //중복된 회원 휴대폰번호가 있다면
             $is_hp_exist = true;
         } else {
              sql_query("update {$g5['member_table']} set mb_name='".addslashes($bk_name)."', mb_hp='$bk_hp', mb_sms='$bk_receipt' where mb_id='{$res['mb_id']}'", false);
