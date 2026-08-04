@@ -17,7 +17,28 @@ function only_number($n)
     return preg_replace('/[^0-9]/', '', $n);
 }
 
-if($_FILES['excelfile']['tmp_name']) {
+$upload_error = isset($_FILES['excelfile']['error'])
+        ? (int) $_FILES['excelfile']['error']
+        : UPLOAD_ERR_NO_FILE;
+$upload_name = isset($_FILES['excelfile']['name'])
+        ? basename($_FILES['excelfile']['name'])
+        : '';
+$upload_tmp = isset($_FILES['excelfile']['tmp_name'])
+        ? $_FILES['excelfile']['tmp_name']
+        : '';
+$upload_size = isset($_FILES['excelfile']['size'])
+        ? (int) $_FILES['excelfile']['size']
+        : 0;
+$upload_extension = strtolower(pathinfo($upload_name, PATHINFO_EXTENSION));
+
+if (
+        $upload_error === UPLOAD_ERR_OK
+        && $upload_tmp
+        && is_uploaded_file($upload_tmp)
+        && $upload_extension === 'xls'
+        && $upload_size > 0
+        && $upload_size <= 10 * 1024 * 1024
+) {
     $file = $_FILES['excelfile']['tmp_name'];
 
     include_once(G5_LIB_PATH.'/Excel/reader.php');
