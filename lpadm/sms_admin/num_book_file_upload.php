@@ -9,14 +9,35 @@ if (!$upload_bg_no)
 
 $bg_no = $upload_bg_no;
 
-if (!$_FILES['csv']['size']) 
-    alert_after('파일을 선택해주세요.');
+$upload_error = isset($_FILES['csv']['error'])
+    ? (int) $_FILES['csv']['error']
+    : UPLOAD_ERR_NO_FILE;
+$file = isset($_FILES['csv']['tmp_name'])
+    ? $_FILES['csv']['tmp_name']
+    : '';
+$filename = isset($_FILES['csv']['name'])
+    ? basename($_FILES['csv']['name'])
+    : '';
+$upload_size = isset($_FILES['csv']['size'])
+    ? (int) $_FILES['csv']['size']
+    : 0;
 
-$file = $_FILES['csv']['tmp_name'];
-$filename = $_FILES['csv']['name'];
+if (
+    $upload_error !== UPLOAD_ERR_OK
+    || !$file
+    || !is_uploaded_file($file)
+    || $upload_size <= 0
+    || $upload_size > 10 * 1024 * 1024
+) {
+    alert_after('업로드 파일을 확인해주세요. 최대 용량은 10MB입니다.');
+}
 
 $pos = strrpos($filename, '.');
-$ext = strtolower(substr($filename, $pos, strlen($filename)));
+$ext = $pos !== false ? strtolower(substr($filename, $pos)) : '';
+
+if (!in_array($ext, array('.csv', '.xls'), true)) {
+    alert_after('허용되지 않은 파일 형식입니다.');
+}
 
 switch ($ext) {
     case '.csv' :
