@@ -10,11 +10,15 @@ $g5['sms5_demo'] = 0;
 
 $is_hp_exist = false;
 
+$bk_no = isset($_REQUEST['bk_no']) ? (int) $_REQUEST['bk_no'] : 0;
+$bg_no = isset($_REQUEST['bg_no']) ? (int) $_REQUEST['bg_no'] : 0;
+$bk_receipt = !empty($_REQUEST['bk_receipt']) ? 1 : 0;
+$page = isset($_REQUEST['page']) ? max(0, (int) $_REQUEST['page']) : 0;
+
 $bk_hp = isset($_REQUEST['bk_hp']) ? get_hp($_REQUEST['bk_hp']) : '';
 
 $bk_memo = isset($_REQUEST['bk_memo']) ? strip_tags($_REQUEST['bk_memo']) : '';
 $bk_name = isset($_REQUEST['bk_name']) ? strip_tags($_REQUEST['bk_name']) : '';
-$bg_no = isset($_REQUEST['bg_no']) ? (int) $_REQUEST['bg_no'] : 0;
 
 if ($w=='u') // 업데이트
 {
