@@ -11,12 +11,14 @@ $token = get_token();
 
 $g5['title'] = "휴대폰번호 관리";
 
-if ($page < 1) $page = 1;
+$page = isset($_REQUEST['page']) ? max(1, (int) $_REQUEST['page']) : 1;
+$bg_no = isset($_REQUEST['bg_no']) ? preg_replace('/[^0-9]/i', '', $_REQUEST['bg_no']) : '';
+$st = isset($_REQUEST['st']) ? preg_replace('/[^a-z0-9]/i', '', $_REQUEST['st']) : '';
+$sv = isset($_REQUEST['sv']) ? trim($_REQUEST['sv']) : '';
 
-$bg_no = isset($bg_no) ? (int) $bg_no : 0;
-$st = isset($st) ? preg_replace('/[^a-z0-9]/i', '', $st) : '';
+$sql_korean = $sql_group = $sql_search = $sql_no_hp = '';
 
-if (is_numeric($bg_no))
+if (is_numeric($bg_no) && $bg_no)
     $sql_group = " and bg_no='$bg_no' ";
 else
     $sql_group = "";
@@ -30,6 +32,9 @@ if ($st == 'all') {
 } else {
     $sql_search = '';
 }
+
+$ap = isset($_GET['ap']) ? (int) $_GET['ap'] : 0;
+$no_hp = isset($_GET['no_hp']) ? preg_replace('/[^0-9a-z_]/i', '', $_GET['no_hp']) : 0;
 
 if ($ap > 0)
     $sql_korean = korean_index('bk_name', $ap-1);
@@ -125,7 +130,7 @@ function no_hp_click(val)
 
 <form name="search_form" class="local_sch01 local_sch">
 <label for="bg_no" class="sound_only">그룹명</label>
-<select name="bg_no" id="bg_no" onchange="location.href='<?php echo $_SERVER['SCRIPT_NAME']?>?bg_no='+this.value;">
+<select name="bg_no" id="bg_no" onchange="location.href='<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME'])?>?bg_no='+this.value;">
     <option value=""<?php echo get_selected('', $bg_no); ?>> 전체 </option>
     <option value="<?php echo $no_group['bg_no']?>"<?php echo get_selected($bg_no, $no_group['bg_no']); ?>> <?php echo $no_group['bg_name']?> (<?php echo number_format($no_group['bg_count'])?> 명) </option>
     <?php for($i=0; $i<count($group); $i++) {?>
@@ -173,7 +178,7 @@ function no_hp_click(val)
     }
     $line = 0;
     $qry = sql_query("select * from {$g5['sms5_book_table']} where 1 $sql_group $sql_search $sql_korean $sql_no_hp order by bk_no desc limit $page_start, $page_size");
-    while($res = sql_fetch_array($qry))
+    for ($i=0; $res = sql_fetch_array($qry); $i++)
     {
         $bg = 'bg'.($line++%2);
 
