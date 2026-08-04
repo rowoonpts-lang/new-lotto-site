@@ -4,10 +4,15 @@ include_once("./_common.php");
 
 auth_check_menu($auth, $sub_menu, "w");
 
+check_admin_token();
+
 $g5['title'] = "전화번호부";
 
-$post_bk_no = isset($_POST['bk_no']) && is_array($_POST['bk_no']) ? $_POST['bk_no'] : array();
+$post_bk_no = isset($_POST['bk_no']) && is_array($_POST['bk_no'])
+    ? array_values(array_filter(array_map('intval', $_POST['bk_no'])))
+    : array();
 $atype = isset($_POST['atype']) ? $_POST['atype'] : '';
+$str_query = isset($_POST['str_query']) ? clean_query_string($_POST['str_query']) : '';
 
 if (!in_array($atype, array('reject', 'receipt', 'del'), true)) {
     alert('잘못된 작업 요청입니다.');
