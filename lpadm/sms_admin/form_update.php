@@ -44,8 +44,9 @@ if ($w == 'u') // 업데이트
     }
 
     $group = sql_fetch("select * from {$g5['sms5_form_group_table']} where fg_no = '$fg_no'");
+    $fg_member = isset($group['fg_member']) ? (int) $group['fg_member'] : 0;
 
-    sql_query("update {$g5['sms5_form_table']} set fg_no='$fg_no', fg_member='{$group['fg_member']}', fo_name='$fo_name', fo_content='$fo_content', fo_datetime='".G5_TIME_YMDHIS."' where fo_no='$fo_no'");
+    sql_query("update {$g5['sms5_form_table']} set fg_no='$fg_no', fg_member='$fg_member', fo_name='$fo_name', fo_content='$fo_content', fo_datetime='".G5_TIME_YMDHIS."' where fo_no='$fo_no'");
 }
 else if ($w == 'd') // 삭제
 {
@@ -76,8 +77,9 @@ else // 등록
         alert('같은 이모티콘이 존재합니다.');
 
     $group = sql_fetch("select * from {$g5['sms5_form_group_table']} where fg_no = '$fg_no'");
+    $fg_member = isset($group['fg_member']) ? (int) $group['fg_member'] : 0;
 
-    sql_query("insert into {$g5['sms5_form_table']} set fg_no='$fg_no', fg_member='{$group['fg_member']}', fo_name='$fo_name', fo_content='$fo_content', fo_datetime='".G5_TIME_YMDHIS."'");
+    sql_query("insert into {$g5['sms5_form_table']} set fg_no='$fg_no', fg_member='$fg_member', fo_name='$fo_name', fo_content='$fo_content', fo_datetime='".G5_TIME_YMDHIS."'");
     sql_query("update {$g5['sms5_form_group_table']} set fg_count = fg_count + 1 where fg_no = '$fg_no'");
 
     $get_fg_no = $fg_no;
