@@ -4,11 +4,20 @@ include_once("./_common.php");
 
 auth_check_menu($auth, $sub_menu, "w");
 
+check_admin_token();
+
 $g5['title'] = "휴대폰번호 업데이트";
 
 $g5['sms5_demo'] = 0;
 
 $is_hp_exist = false;
+
+$w = isset($_POST['w']) ? $_POST['w'] : '';
+$ap = isset($_POST['ap']) ? preg_replace('/[^a-z0-9_-]/i', '', $_POST['ap']) : '';
+
+if (!in_array($w, array('', 'u', 'd'), true)) {
+    alert('잘못된 작업 요청입니다.');
+}
 
 $bk_no = isset($_REQUEST['bk_no']) ? (int) $_REQUEST['bk_no'] : 0;
 $bg_no = isset($_REQUEST['bg_no']) ? (int) $_REQUEST['bg_no'] : 0;
@@ -22,7 +31,14 @@ $bk_name = isset($_REQUEST['bk_name']) ? strip_tags($_REQUEST['bk_name']) : '';
 
 if ($w=='u') // 업데이트
 {
-    if (!$bg_no) $bg_no = 0;
+    if ($bk_no < 1)
+        alert('고유번호가 없습니다.');
+    if ($bg_no < 1)
+        alert('그룹을 선택해주세요.');
+
+    $group = sql_fetch("select bg_no from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
+    if (!$group)
+        alert('존재하지 않는 그룹입니다.');
 
     if (!$bk_receipt) $bk_receipt = 0; else $bk_receipt = 1;
 
@@ -78,7 +94,7 @@ if ($w=='u') // 업데이트
 }
 else if ($w=='d') // 삭제
 {
-    if (!is_numeric($bk_no))
+    if ($bk_no < 1)
         alert('고유번호가 없습니다.');
 
     $res = sql_fetch("select * from {$g5['sms5_book_table']} where bk_no='$bk_no'");
@@ -115,7 +131,11 @@ else if ($w=='d') // 삭제
 }
 else // 등록
 {
-    if (!$bg_no) $bg_no = 1;
+    if ($bg_no < 1) $bg_no = 1;
+
+    $group = sql_fetch("select bg_no from {$g5['sms5_book_group_table']} where bg_no='$bg_no'");
+    if (!$group)
+        alert('존재하지 않는 그룹입니다.');
 
     if (!$bk_receipt) $bk_receipt = 0; else $bk_receipt = 1;
 

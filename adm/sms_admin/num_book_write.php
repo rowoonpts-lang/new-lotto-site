@@ -9,6 +9,8 @@ $ap = isset($_REQUEST['ap']) ? clean_xss_tags($_REQUEST['ap'], 1, 1) : '';
 
 auth_check_menu($auth, $sub_menu, "r");
 
+$token = get_admin_token();
+
 $g5['title'] = "휴대폰번호 ";
 
 $exist_hplist = array();
@@ -56,6 +58,7 @@ include_once(G5_ADMIN_PATH."/admin.head.php");
 
 <form name="book_form" id="book_form" method="post" action="./num_book_update.php">
 <input type="hidden" name="w" value="<?php echo get_sanitize_input($w); ?>">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 <input type="hidden" name="page" value="<?php echo get_sanitize_input($page); ?>">
 <input type="hidden" name="ap" value="<?php echo get_sanitize_input($ap); ?>">
 <input type="hidden" name="bk_no" value="<?php echo $write['bk_no']?>">
