@@ -4,12 +4,19 @@ include_once('./_common.php');
 
 auth_check_menu($auth, $sub_menu, "r");
 
-$post_chk_bg_no = isset($_POST['chk_bg_no']) ? $_POST['chk_bg_no'] : array();
+$post_chk_bg_no = isset($_POST['chk_bg_no']) && is_array($_POST['chk_bg_no'])
+    ? array_values(array_filter(array_map('intval', $_POST['chk_bg_no'])))
+    : array();
 
-if(!count($post_chk_bg_no))
+if (!count($post_chk_bg_no))
     alert('번호를 '.$act.'할 그룹을 한개 이상 선택해 주십시오.', $url);
 
-$bk_no_list = isset($_POST['bk_no_list']) ? preg_replace('/[^a-zA-Z0-9\, ]/', '', $_POST['bk_no_list']) : '';
+$post_bk_no_list = isset($_POST['bk_no_list']) ? explode(',', $_POST['bk_no_list']) : array();
+$post_bk_no_list = array_values(array_filter(array_map('intval', $post_bk_no_list)));
+$bk_no_list = implode(',', $post_bk_no_list);
+
+if ($bk_no_list === '')
+    alert('이동하거나 복사할 번호를 선택해 주십시오.', $url);
 
 $sql = "select * from {$g5['sms5_book_table']} where bk_no in ($bk_no_list) order by bk_no desc ";
 $result = sql_query($sql);
