@@ -1,37 +1,64 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
-	$sql_common = " from l_res a ";
-	$sql_search = " where 1=1  and lr_hp != ''  and lr_type !='결제시도'";
-	$sql_order = " order by a.lr_datetime desc ";
-	
-	if($start_date){
-		$sql_search .= " and substr(a.lr_datetime,1,10) >= substr('{$start_date}',1,10) ";
-	}
-	if($end_date){
-		$sql_search .= " and substr(a.lr_datetime,1,10) <= substr('{$end_date}',1,10) ";
-	}
-	
 
-	$sql = " select count(distinct a.lr_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
+	$sch_select = '';
+	$sch_mb_type = '';
+	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
+	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
+	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
-
-	$row = sql_fetch($sql);
-	$total_count = $row['cnt'];
-
+	$start_date_sql = sql_real_escape_string($start_date);
+	$end_date_sql = sql_real_escape_string($end_date);
 
 	$rows = 50;
-	$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
-	if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
-	$from_record = ($page - 1) * $rows; // 시작 열을 구함'
+	$total_count = 0;
+	$total_page = 0;
+	$result = false;
 
+	$table_result = sql_query("SHOW TABLES LIKE 'l_res'", false);
+	$table_exists = $table_result && sql_num_rows($table_result) > 0;
 
-	$limit = " limit {$from_record}, {$rows} ";
+	if ($table_exists) {
+		$sql_common = " from l_res a ";
+		$sql_search = " where a.lr_hp != '' and a.lr_type != '결제시도' ";
+		$sql_order = " order by a.lr_datetime desc ";
 
-	$sql = "select a.*, (select count(lr_id) from l_res where 1=1 and lr_hp = a.lr_hp and lr_datetime < a.lr_datetime)+1 cnt {$sql_common} {$sql_search} {$sql_order} {$limit}";
+		if ($start_date !== '') {
+			$sql_search .= " and substr(a.lr_datetime,1,10)
+				>= substr('{$start_date_sql}',1,10) ";
+		}
 
-	$result = sql_query($sql);
+		if ($end_date !== '') {
+			$sql_search .= " and substr(a.lr_datetime,1,10)
+				<= substr('{$end_date_sql}',1,10) ";
+		}
 
+		$sql = "select count(distinct a.lr_id) as cnt
+				{$sql_common} {$sql_search}";
+
+		$row = sql_fetch($sql, false);
+		$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
+		$total_page = (int) ceil($total_count / $rows);
+		$from_record = ($page - 1) * $rows;
+		$limit = " limit {$from_record}, {$rows} ";
+
+		$sql = "select a.*,
+					(select count(lr_id)
+					   from l_res
+					  where lr_hp = a.lr_hp
+						and lr_datetime < a.lr_datetime) + 1 as cnt
+				{$sql_common} {$sql_search} {$sql_order} {$limit}";
+
+		$result = sql_query($sql, false);
+	}
+
+	$qstr = http_build_query(array(
+		'sch_text' => $sch_text,
+		'start_date' => $start_date,
+		'end_date' => $end_date,
+	));
 ?>
 
 <div class="card card-default">
@@ -114,7 +141,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $result && ($row = sql_fetch_array($result)); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['lr_hp']?></td>
@@ -131,7 +158,7 @@
 						<?php }?>
 					</td>
 					<td>
-						<button type="button" class="btn btn-danger" onClick="fnProcDel('l_res','lr_id','<?=$row[lr_id]?>')">삭제</button>
+						<button type="button" class="btn btn-danger" onClick="fnProcDel('l_res','lr_id','<?=$row['lr_id']?>')">삭제</button>
 					</td>
 				</tr>
 				<?php }?>
@@ -143,7 +170,6 @@
 				</tbody>
 				</table>
 				<?php
-					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
 			</div>

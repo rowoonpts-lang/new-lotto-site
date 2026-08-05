@@ -315,3 +315,31 @@ function getLevelPage($mbLevel)
             break;
     }
 }
+
+/**
+ * 설정된 기준 회차와 기준일로 현재 로또 회차를 계산합니다.
+ */
+function getTurn()
+{
+    global $config;
+
+    $baseTurn = isset($config['cf_1']) ? (int) $config['cf_1'] : 0;
+    $baseDate = isset($config['cf_2']) ? trim((string) $config['cf_2']) : '';
+
+    if ($baseTurn < 1 || $baseDate === '' || strtotime($baseDate) === false) {
+        return 0;
+    }
+
+    $baseTimestamp = strtotime($baseDate);
+    $todayTimestamp = strtotime(date('Y-m-d'));
+
+    if ($todayTimestamp < $baseTimestamp) {
+        return $baseTurn;
+    }
+
+    $elapsedWeeks = (int) floor(
+        ($todayTimestamp - $baseTimestamp) / 604800
+    );
+
+    return $baseTurn + $elapsedWeeks;
+}

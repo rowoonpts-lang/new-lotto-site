@@ -1,36 +1,64 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
-	$sql_common = " from l_ad_user ";
-	$sql_search = " where 1=1 and del_yn = '0' ";
-	$sql_order = " order by idx desc ";
-	
 
-	if($sch_select){
-		$sql_search .= " and {$sch_select} like '%{$sch_text}%' ";
-	}else{
-		$sql_search .= " and (lu_id like '%{$sch_text}%' or lu_name like '%{$sch_text}%' or lu_code like '%{$sch_text}%' or lu_id like '%{$sch_text}%') ";
-	}	
+	$allowed_sch_select = array('lu_id', 'lu_name', 'lu_code', 'lu_type');
 
-	$sql = " select count(distinct idx) as cnt {$sql_common} {$sql_search} {$sql_order} ";
+	$sch_select = isset($_GET['sch_select'])
+		&& in_array($_GET['sch_select'], $allowed_sch_select, true)
+		? $_GET['sch_select']
+		: '';
 
-
-	$row = sql_fetch($sql);
-	$total_count = $row['cnt'];
-
+	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+	$sch_text_sql = sql_real_escape_string($sch_text);
 
 	$rows = 10;
-	$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
-	if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
-	$from_record = ($page - 1) * $rows; // 시작 열을 구함'
+	$total_count = 0;
+	$total_page = 0;
+	$result = false;
 
+	$table_result = sql_query("SHOW TABLES LIKE 'l_ad_user'", false);
+	$table_exists = $table_result && sql_num_rows($table_result) > 0;
 
-	$limit = " limit {$from_record}, {$rows} ";
+	if ($table_exists) {
+		$sql_common = " from l_ad_user ";
+		$sql_search = " where del_yn = '0' ";
+		$sql_order = " order by idx desc ";
 
-	$sql = "select * {$sql_common} {$sql_search} {$sql_order} {$limit}";
-	$result = sql_query($sql);
-	
+		if ($sch_text !== '') {
+			if ($sch_select !== '') {
+				$sql_search .= " and {$sch_select}
+					like '%{$sch_text_sql}%' ";
+			} else {
+				$sql_search .= " and (
+					lu_id like '%{$sch_text_sql}%'
+					or lu_name like '%{$sch_text_sql}%'
+					or lu_code like '%{$sch_text_sql}%'
+					or lu_type like '%{$sch_text_sql}%'
+				) ";
+			}
+		}
 
+		$sql = "select count(distinct idx) as cnt
+				{$sql_common} {$sql_search}";
+
+		$row = sql_fetch($sql, false);
+		$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
+		$total_page = (int) ceil($total_count / $rows);
+		$from_record = ($page - 1) * $rows;
+		$limit = " limit {$from_record}, {$rows} ";
+
+		$sql = "select *
+				{$sql_common} {$sql_search} {$sql_order} {$limit}";
+
+		$result = sql_query($sql, false);
+	}
+
+	$qstr = http_build_query(array(
+		'sch_select' => $sch_select,
+		'sch_text' => $sch_text,
+	));
 ?>
 
 <div class="card card-default">
@@ -91,7 +119,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php for($i=0; $result && ($row = sql_fetch_array($result)); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['lu_name']?></td>
@@ -107,8 +135,8 @@
 						접속중지
 						<?php }?>
 					</td>
-					<td><button type="button" class="btn btn-block btn-primary" onclick="fnModifyMemmber('<?=$row[idx]?>')">수정</button></td>
-					<td><button type="button" class="btn btn-block btn-danger" onclick="fnDelMemmber('<?=$row[idx]?>')">삭제</button></td>
+					<td><button type="button" class="btn btn-block btn-primary" onclick="fnModifyMemmber('<?=$row['idx']?>')">수정</button></td>
+					<td><button type="button" class="btn btn-block btn-danger" onclick="fnDelMemmber('<?=$row['idx']?>')">삭제</button></td>
 					<td><a href="<?=G5_URL?>/ad/doc.v1.php?idx=<?=Encrypt($row['idx'], 'able','able')?>" target="_blank" class="btn btn-block btn-success" >링크열기</a></td>
 					<!--td><button type="button" class="btn btn-block btn-danger" onClick="fnMemmberInfo('<?=base64_encode($row[mb_id])?>')">정보수정</button></td-->
 				</tr>
@@ -121,7 +149,6 @@
 				</tbody>
 				</table>
 				<?php
-					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}";
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
 			</div>

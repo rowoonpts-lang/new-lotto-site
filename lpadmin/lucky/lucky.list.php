@@ -1,62 +1,130 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
-	if(!$turn){
-		$turn = getTurn();
-	}
 
-	$table = "l_turn_".$turn;
+	$allowed_sch_select = array(
+		'b.mb_code',
+		'b.mb_name',
+		'a.mb_hp',
+		'a.mb_id',
+	);
 
+	$current_turn = getTurn();
+	$turn = isset($_GET['turn']) ? max(0, (int) $_GET['turn']) : $current_turn;
 
-	$sql = "select * from {$table} where 1=1 and result not in ('','낙첨') ";
+	$sch_select = isset($_GET['sch_select'])
+		&& in_array($_GET['sch_select'], $allowed_sch_select, true)
+		? $_GET['sch_select']
+		: '';
 
-	$result = sql_query($sql);
-	$aryMu = array();
-	for($i=0; $row= sql_fetch_array($result); $i++){
-		if($row[mb_type] == "무료회원"){
-			$aryMu['무료'][$row[result]] = $aryMu['무료'][$row[result]]+1;
-		}else{
-			$aryMu['유료'][$row[result]] = $aryMu['유료'][$row[result]]+1;
-		}
-	}
-	
+	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
+	$sch_mb_type = isset($_GET['sch_mb_type']) ? trim((string) $_GET['sch_mb_type']) : '';
+	$lucky_result = isset($_GET['lucky_result']) ? trim((string) $_GET['lucky_result']) : '';
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
-
-
-	$sql_common = " from {$table} a, g5_member b ";
-	$sql_search = " where 1=1 and a.mb_id = b.mb_id and result not in ('','낙첨') ";
-	$sql_order = " order by mb_code desc ";
-
-	if($sch_select){
-		$sql_search .= " and {$sch_select} like '%{$sch_text}%' ";
-	}else{
-		$sql_search .= " and (b.mb_code like '%{$sch_text}%' or b.mb_name like '%{$sch_text}%' or a.mb_hp like '%{$sch_text}%' or a.mb_id like '%{$sch_text}%') ";
-	}
-
-	if($sch_mb_type){
-		$sql_search .= " and a.mb_type = '{$sch_mb_type}' ";
-	}
-
-	if($lucky_result && $lucky_result != '전체'){
-		$sql_search .= " and result = '{$lucky_result}' ";
-	}
-
-	$sql = " select count(distinct a.lt_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
-
-	$row = sql_fetch($sql);
-	$total_count = $row['cnt'];
-
+	$sch_text_sql = sql_real_escape_string($sch_text);
+	$sch_mb_type_sql = sql_real_escape_string($sch_mb_type);
+	$lucky_result_sql = sql_real_escape_string($lucky_result);
 
 	$rows = 50;
-	$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
-	if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
-	$from_record = ($page - 1) * $rows; // 시작 열을 구함'
+	$total_count = 0;
+	$total_page = 0;
+	$result = false;
 
+	$aryMu = array(
+		'무료' => array('1등' => 0, '2등' => 0, '3등' => 0, '4등' => 0, '5등' => 0),
+		'유료' => array('1등' => 0, '2등' => 0, '3등' => 0, '4등' => 0, '5등' => 0),
+	);
 
-	$limit = " limit {$from_record}, {$rows} ";
+	$table = $turn > 0 ? 'l_turn_'.$turn : '';
+	$table_exists = false;
 
-	$sql = "select *, a.mb_type as lucky_type, (select lp_pay_datetime from l_pay where 1=1 and mb_id = a.mb_id and lp_status = '입금' order by lp_pay_datetime desc limit 1) lp_pay_datetime {$sql_common} {$sql_search} {$sql_order} {$limit}";
-	$result = sql_query($sql);
+	if ($table !== '') {
+		$table_sql = sql_real_escape_string($table);
+		$table_result = sql_query("SHOW TABLES LIKE '{$table_sql}'", false);
+		$table_exists = $table_result && sql_num_rows($table_result) > 0;
+	}
+
+	if ($table_exists) {
+		$sql = "select mb_type, result
+				  from `{$table}`
+				 where result not in ('', '낙첨')";
+
+		$summary_result = sql_query($sql, false);
+
+		while ($summary_result && ($summary_row = sql_fetch_array($summary_result))) {
+			$group = $summary_row['mb_type'] === '무료회원' ? '무료' : '유료';
+			$result_name = $summary_row['result'];
+
+			if (isset($aryMu[$group][$result_name])) {
+				$aryMu[$group][$result_name]++;
+			}
+		}
+
+		$sql_common = " from `{$table}` a, g5_member b ";
+		$sql_search = " where a.mb_id = b.mb_id
+			and a.result not in ('', '낙첨') ";
+		$sql_order = " order by b.mb_code desc ";
+
+		if ($sch_text !== '') {
+			if ($sch_select !== '') {
+				$sql_search .= " and {$sch_select}
+					like '%{$sch_text_sql}%' ";
+			} else {
+				$sql_search .= " and (
+					b.mb_code like '%{$sch_text_sql}%'
+					or b.mb_name like '%{$sch_text_sql}%'
+					or a.mb_hp like '%{$sch_text_sql}%'
+					or a.mb_id like '%{$sch_text_sql}%'
+				) ";
+			}
+		}
+
+		if ($sch_mb_type !== '') {
+			$sql_search .= " and a.mb_type = '{$sch_mb_type_sql}' ";
+		}
+
+		if ($lucky_result !== '' && $lucky_result !== '전체') {
+			$sql_search .= " and a.result = '{$lucky_result_sql}' ";
+		}
+
+		$sql = "select count(distinct a.lt_id) as cnt
+				{$sql_common} {$sql_search}";
+
+		$row = sql_fetch($sql, false);
+		$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
+		$total_page = (int) ceil($total_count / $rows);
+		$from_record = ($page - 1) * $rows;
+		$limit = " limit {$from_record}, {$rows} ";
+
+		$pay_result = sql_query("SHOW TABLES LIKE 'l_pay'", false);
+		$pay_exists = $pay_result && sql_num_rows($pay_result) > 0;
+
+		$pay_column = $pay_exists
+			? "(select lp_pay_datetime
+				  from l_pay
+				 where mb_id = a.mb_id
+				   and lp_status = '입금'
+				 order by lp_pay_datetime desc
+				 limit 1) as lp_pay_datetime"
+			: "NULL as lp_pay_datetime";
+
+		$sql = "select a.*, b.mb_code, b.mb_name,
+					a.mb_type as lucky_type,
+					{$pay_column}
+				{$sql_common} {$sql_search}
+				{$sql_order} {$limit}";
+
+		$result = sql_query($sql, false);
+	}
+
+	$qstr = http_build_query(array(
+		'sch_select' => $sch_select,
+		'sch_text' => $sch_text,
+		'sch_mb_type' => $sch_mb_type,
+		'lucky_result' => $lucky_result,
+		'turn' => $turn,
+	));
 ?>
 
 <div class="card card-default">
@@ -64,11 +132,11 @@
 		<div class="col-12">
 		<form id="" name="" autocomplete="off">
 			<div class="row">
-				
+
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="turn" aria-hidden="true">
 						<?php
-							for($i=getTurn(); $i >= $config[cf_1]; $i--){
+							for($i=$current_turn; $i > 0 && $i >= (int)($config['cf_1'] ?? 0); $i--){
 						?>
 						<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?></option>
 						<?php 	}?>
@@ -112,12 +180,12 @@
 						for($i=0; $i < count($resultAry); $i++){
 					?>
 					<div class="icheck-primary d-inline">
-						
+
 						<input type="radio" id="radioPrimary<?=$i?>" name="lucky_result" <?php if(($i==0 && !$lucky_result) || $resultAry[$i] == $lucky_result){?>checked=""<?php }?> value="<?=$resultAry[$i]?>">
 						<label for="radioPrimary<?=$i?>">
 							<?=$resultAry[$i]?>
 						</label>
-						
+
 					</div>
 					<?php 	}?>
 				</div>
@@ -159,9 +227,9 @@
 				</thead>
 				<tbody>
 				<?php
-					for($i=0; $row = sql_fetch_array($result); $i++){
+					for($i=0; $result && ($row = sql_fetch_array($result)); $i++){
 						$ball_text = "";
-						$ball_text = $row[num1].",".$row[num2].",".$row[num3].",".$row[num4].",".$row[num5].",".$row[num6];				
+						$ball_text = $row['num1'].",".$row['num2'].",".$row['num3'].",".$row['num4'].",".$row['num5'].",".$row['num6'];
 				?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
@@ -171,7 +239,7 @@
 						<?=$row['mb_name']?><br>
 						<?=$row['mb_hp']?>
 					</td>
-					
+
 					<td><?=$row['lucky_type']?></td>
 					<td>
 						<?=getBall($ball_text)?>
@@ -179,8 +247,8 @@
 					<td>
 						<?php if($row['result']){echo $row['result'];}else{echo "-";}?>
 					</td>
-					<td><?=$row[lp_pay_datetime]?></td>
-					<td><?=$row[lt_datetime]?></td>
+					<td><?=$row['lp_pay_datetime']?></td>
+					<td><?=$row['lt_datetime']?></td>
 					<td><?=$row['direct_yn']?></td>
 				</tr>
 				<?php }?>
@@ -193,8 +261,7 @@
 				</table>
 
 				<?php
-					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&lucky_result={$lucky_result}&turn={$turn}";
-					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
+					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 				?>
 			</div>
 			<!-- /.card-body -->
