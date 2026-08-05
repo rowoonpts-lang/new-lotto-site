@@ -1,6 +1,29 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
+
+	$allowed_sch_select = array(
+		"a.mb_code",
+		"a.mb_name",
+		"a.mb_hp",
+		"a.mb_id"
+	);
+
+	$sch_select = isset($_GET['sch_select']) && in_array($_GET['sch_select'], $allowed_sch_select, true)
+		? $_GET['sch_select']
+		: '';
+	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
+	$sch_mb_type = isset($_GET['sch_mb_type']) ? trim((string) $_GET['sch_mb_type']) : '';
+	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
+	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+	$total_count = 0;
+	$rows = 30;
+	$total_page = 0;
+	$result = false;
+	$qstr = isset($qstr) ? (string) $qstr : '';
+
 	
 
 	/*$sql_common = " from msg_cust_log a left join g5_member b on (replace(a.phone_no,'-','') = replace(b.mb_hp,'-','')) ";
@@ -117,7 +140,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
+				<?php if ($result) { for($i=0; $row = sql_fetch_array($result); $i++){?>
 				<tr>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td>
@@ -142,7 +165,7 @@
 					</td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnSmsReSend('<?=$row[idx]?>')">재전송</button></td>
 				</tr>
-				<?php }?>
+				<?php }}?>
 				<?php if($total_count < 1){?>
 				<tr>
 					<td colspan="10">내역이 없습니다.</td>
