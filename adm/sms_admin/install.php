@@ -6,29 +6,37 @@ auth_check_menu($auth, $sub_menu, 'r');
 
 $g5['title'] = "SMS5 솔루션 설치";
 
-$setup = (isset($_POST['setup']) && $_POST['setup']) ? 1 : 0;
+$setup = isset($_POST['setup']) ? (int) $_POST['setup'] : 0;
+$token = '';
+
+if ($setup) {
+    check_admin_token();
+} else {
+    $token = get_admin_token();
+}
 
 include_once(G5_ADMIN_PATH.'/admin.head.php');
 ?>
 <form name="hidden_form" method="post" action="<?php echo $_SERVER['SCRIPT_NAME']?>">
-<input type="hidden" name="setup">
+<input type="hidden" name="setup" value="1">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 </form>
 <?php
-//SMS 설정 정보 테이블이 있는지 검사한다.
-if( isset($g5['sms5_config_table']) && sql_query(" DESCRIBE {$g5['sms5_config_table']} ", false)) {
-    if(!$setup){
-        echo '<script>
-            var answer = confirm("이미 SMS5가 설치되어 있습니다.새로 설치 할 경우 DB 자료가 망실됩니다. 새로 설치하시겠습니까?");
-            if (answer){
-                document.hidden_form.setup.value = "1";
-                document.hidden_form.submit();
-            } else {
-                history.back();
-            }
-            </script>
-        ';
-        exit;
-    }
+$is_installed = isset($g5['sms5_config_table']) && sql_query(" DESCRIBE {$g5['sms5_config_table']} ", false);
+
+if (!$setup) {
+    $confirm_message = $is_installed
+        ? '이미 SMS5가 설치되어 있습니다. 새로 설치할 경우 DB 자료가 망실됩니다. 새로 설치하시겠습니까?'
+        : 'SMS5를 설치하시겠습니까?';
+
+    echo '<script>
+        if (confirm(' . json_encode($confirm_message) . ')) {
+            document.hidden_form.submit();
+        } else {
+            history.back();
+        }
+    </script>';
+    exit;
 }
 ?>
 
