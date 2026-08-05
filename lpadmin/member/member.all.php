@@ -1,6 +1,32 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
+
+	$allowed_sch_select = array(
+		'a.mb_code',
+		'a.mb_name',
+		'a.mb_hp',
+		'a.mb_id'
+	);
+
+	$sch_select = isset($_GET['sch_select']) && in_array($_GET['sch_select'], $allowed_sch_select, true)
+		? $_GET['sch_select']
+		: '';
+	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
+	$sch_mb_type = isset($_GET['sch_mb_type']) ? trim((string) $_GET['sch_mb_type']) : '';
+	$sch_mb_db = isset($_GET['sch_mb_db']) ? trim((string) $_GET['sch_mb_db']) : '';
+	$sch_mb_status = isset($_GET['sch_mb_status']) ? trim((string) $_GET['sch_mb_status']) : '';
+	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
+	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+	$qstr = isset($qstr) ? (string) $qstr : '';
+
+	$sch_text_sql = sql_real_escape_string($sch_text);
+	$sch_mb_type_sql = sql_real_escape_string($sch_mb_type);
+	$sch_mb_db_sql = sql_real_escape_string($sch_mb_db);
+	$sch_mb_status_sql = sql_real_escape_string($sch_mb_status);
+	$start_date_sql = sql_real_escape_string($start_date);
+	$end_date_sql = sql_real_escape_string($end_date);
 	
 	$spamList = fnGetSpan();
 	$sql_common = " from g5_member a, g5_member_etc b ";
@@ -9,38 +35,38 @@
 
 	if($sch_select){
 		if($sch_select == "a.mb_code"){
-			$sql_search .= " and {$sch_select} = '{$sch_text}' ";
+			$sql_search .= " and {$sch_select} = '{$sch_text_sql}' ";
 		}else{
-			$sql_search .= " and {$sch_select} like '%{$sch_text}%' ";
+			$sql_search .= " and {$sch_select} like '%{$sch_text_sql}%' ";
 		}
 	}else{
-		$sql_search .= " and (a.mb_code like '%{$sch_text}%' or a.mb_name like '%{$sch_text}%' or a.mb_hp like '%{$sch_text}%' or a.mb_id like '%{$sch_text}%') ";
+		$sql_search .= " and (a.mb_code like '%{$sch_text_sql}%' or a.mb_name like '%{$sch_text_sql}%' or a.mb_hp like '%{$sch_text_sql}%' or a.mb_id like '%{$sch_text_sql}%') ";
 	}
 
 	if($sch_mb_type){
 		if($sch_mb_type != "종료등급"){
 			if($sch_mb_type == "일시정지"){
-				$sql_search .= " and left_day > 0 ";
+				$sql_search .= " and b.left_day > 0 ";
 			}else{
-				$sql_search .= " and mb_type = '{$sch_mb_type}' and left_day < 1 ";				
+				$sql_search .= " and a.mb_type = '{$sch_mb_type_sql}' and b.left_day < 1 ";
 			}
 		}else if($sch_mb_type == "종료등급"){
-			$sql_search .= " and free_pre_type != '' ";
+			$sql_search .= " and a.free_pre_type != '' ";
 		}
 	}
 
 	if($sch_mb_db){
-		$sql_search .= " and mb_db = '{$sch_mb_db}' ";
+		$sql_search .= " and b.mb_db = '{$sch_mb_db_sql}' ";
 	}
 
 	if($start_date){
-		$sql_search .= " and substr(mb_datetime,1,10) >= substr('{$start_date}',1,10) ";
+		$sql_search .= " and substr(a.mb_datetime,1,10) >= substr('{$start_date_sql}',1,10) ";
 	}
 	if($end_date){
-		$sql_search .= " and substr(mb_datetime,1,10) <= substr('{$end_date}',1,10) ";
+		$sql_search .= " and substr(a.mb_datetime,1,10) <= substr('{$end_date_sql}',1,10) ";
 	}
 	if($sch_mb_status){
-		$sql_search .= " and recent_select = '{$sch_mb_status}' ";
+		$sql_search .= " and b.recent_select = '{$sch_mb_status_sql}' ";
 	}
 
 	
@@ -48,7 +74,7 @@
 	$sql = " select count(distinct a.mb_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 
 	$row = sql_fetch($sql);
-	$total_count = $row['cnt'];
+	$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
 
 
 	$rows = 30;
@@ -225,8 +251,8 @@
 					<td>
 						<?php
 							if($row['left_day'] < 1){
-								if(intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400) > 0){
-									echo intval((strtotime($row[end_date]) - strtotime(date("Y-m-d"))) / 86400);
+								if(intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400) > 0){
+									echo intval((strtotime($row['end_date']) - strtotime(date("Y-m-d"))) / 86400);
 								}else{
 									echo "0";
 								}
@@ -250,27 +276,27 @@
 							}
 							
 						?>
-						남은조합 : <?=($tot_num-$row[use_num])?><br>
+						남은조합 : <?=($tot_num-$row['use_num'])?><br>
 						<?=$tot_text?>
 					</td>
-					<td><?=$row[mb_datetime]?><br><?=$row[mb_today_login]?></td>
+					<td><?=$row['mb_datetime']?><br><?=$row['mb_today_login']?></td>
 					<td>
 						<?php
-							if(!$row[mb_yak]){
+							if(!$row['mb_yak']){
 								echo "N";
 							}else{
 								echo "<span style='color:blue'>".$row['mb_yak']."</span>";
 							}
 						?>
 					</td>
-					<td><?=str_replace("homepage","home",$row[mb_db])?></td>
+					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-						<?php if($row[recent_select]){?>
-							<?=$row[recent_select]?>
+						<?php if($row['recent_select']){?>
+							<?=$row['recent_select']?>
 						<?php }?>
 					</td>
-					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row[mb_id])?>')">상세상담</button></td>
-					<td><button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row[mb_id])?>')">삭제</button></td>
+					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">상세상담</button></td>
+					<td><button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row['mb_id'])?>')">삭제</button></td>
 				</tr>
 				<?php }?>
 				<?php if($total_count < 1){?>
