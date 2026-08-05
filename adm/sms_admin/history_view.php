@@ -23,6 +23,8 @@ if( $sst && !in_array($sst, array('mb_id', 'bk_no', 'hs_name', 'hs_hp', 'hs_date
 
 auth_check_menu($auth, $sub_menu, "r");
 
+$token = get_admin_token();
+
 $g5['title'] = "문자전송 상세내역";
 
 if (!is_numeric($wr_no))
@@ -68,7 +70,7 @@ function re_send()
     //act = window.open('sms_ing.php', 'act', 'width=300, height=200');
     //act.focus();
 
-    location.href = './history_send.php?w=f&page=<?php echo $page?>&st=<?php echo  $st?>&sv=<?php echo $sv?>&wr_no=<?php echo $wr_no?>&wr_renum=<?php echo $wr_renum?>';
+    document.getElementById('history_resend_form').submit();
     <?php } ?>
 }
 function all_send()
@@ -78,6 +80,13 @@ function all_send()
     location.href = './sms_write.php?wr_no=<?php echo $wr_no?>';
 }
 </script>
+
+<form id="history_resend_form" method="post" action="./history_send.php">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
+<input type="hidden" name="w" value="f">
+<input type="hidden" name="wr_no" value="<?php echo get_sanitize_input($wr_no); ?>">
+<input type="hidden" name="wr_renum" value="<?php echo get_sanitize_input($wr_renum); ?>">
+</form>
 
 <form name="search_form" method="get" action="<?php echo $_SERVER['SCRIPT_NAME']?>" class="local_sch01 local_sch">
 <input type="hidden" name="wr_no" value="<?php echo get_sanitize_input($wr_no); ?>">

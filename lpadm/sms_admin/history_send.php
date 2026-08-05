@@ -4,6 +4,13 @@ include_once("./_common.php");
 
 auth_check($auth[$sub_menu], "w");
 
+check_admin_token();
+
+$w = isset($_POST['w']) ? clean_xss_tags($_POST['w'], 1, 1) : '';
+$wr_no = isset($_POST['wr_no']) ? (int) $_POST['wr_no'] : 0;
+$wr_renum = isset($_POST['wr_renum']) ? (int) $_POST['wr_renum'] : 0;
+$booking = isset($_POST['booking']) ? clean_xss_tags($_POST['booking'], 1, 1) : '';
+
 $g5['title'] = "문자전송중";
 
 $list = array();
