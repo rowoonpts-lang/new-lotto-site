@@ -2,8 +2,18 @@
 	include_once("_common.php");
 	include_once(G5_PATH."/head.sub.php");
 
-	error_reporting(E_ALL);
-	ini_set("display_errors", 1);
+	if (!$is_member || !isset($member['mb_level']) || (int) $member['mb_level'] < 5) {
+		goto_url(G5_LADMIN_URL."/login.php");
+	}
+
+	$step2_code = isset($config['cf_10']) ? trim((string) $config['cf_10']) : '';
+	if ($step2_code === '') {
+		alert("2차 인증 코드가 설정되지 않았습니다. 최고관리자에게 문의해주세요.");
+	}
+
+	if ((string) get_session('ss_step2') === $step2_code) {
+		goto_url(G5_LADMIN_URL);
+	}
 ?>
 
 <link rel="stylesheet" href="<?=G5_URL?>/ad/style.css">

@@ -1,5 +1,6 @@
 <?php
 include_once("_common.php");
+$if_connect = '';
 $basename = basename($_SERVER["PHP_SELF"]);
 $sql = "select * from l_menu where lm_url like \"%{$basename}%\" ";
 $row = sql_fetch($sql);

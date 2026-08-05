@@ -2,18 +2,24 @@
 <html>
 <head>
 	<?php
-		if(!$is_member){
+		if (!$is_member || !isset($member['mb_level']) || (int) $member['mb_level'] < 5) {
 			goto_url(G5_LADMIN_URL."/login.php");
 		}
-		if($_SESSION['ss_step2'] != $config['cf_10']){
-			goto_url(G5_LADMIN_URL."/login.step2.php");			
+
+		$step2_code = isset($config['cf_10']) ? trim((string) $config['cf_10']) : '';
+		if ($step2_code === '') {
+			alert("2차 인증 코드가 설정되지 않았습니다. 최고관리자에게 문의해주세요.");
+		}
+
+		if ((string) get_session('ss_step2') !== $step2_code) {
+			goto_url(G5_LADMIN_URL."/login.step2.php");
 		}
 
 		$basename=basename($_SERVER["PHP_SELF"]); 
 
 		$sql = "select * from l_menu where 1=1 and lm_php_name = '{$basename}'";
 		$row = sql_fetch($sql);
-		$title_meta = $row[lm_name];
+		$title_meta = isset($row['lm_name']) ? $row['lm_name'] : '';
 
 		switch($basename){
 			case "pop.memo.php": $title_meta = '상세상담'; break;
@@ -28,9 +34,14 @@
 		$sql_member = "select * from g5_member where 1=1 and mb_level >= 5";
 		$result_member = sql_query($sql_member);
 		$member_info = array();
-		for($i=0; $row_info = sql_fetch_array($result_member); $i++){
-			$member_info[$row_info['mb_id']] = $row_info['mb_name'].$row_info['mb_team'];
-		}	
+		for ($i = 0; $row_info = sql_fetch_array($result_member); $i++) {
+			$member_id = isset($row_info['mb_id']) ? $row_info['mb_id'] : '';
+			$member_name = isset($row_info['mb_name']) ? $row_info['mb_name'] : '';
+			$member_team = isset($row_info['mb_team']) ? $row_info['mb_team'] : '';
+			if ($member_id !== '') {
+				$member_info[$member_id] = $member_name.$member_team;
+			}
+		}
 	?>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">

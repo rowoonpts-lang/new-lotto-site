@@ -2,8 +2,6 @@
 	include_once("_common.php");
 	include_once(G5_PATH."/head.sub.php");
 
-	error_reporting(E_ALL);
-	ini_set("display_errors", 1);
 ?>
 
 <link rel="stylesheet" href="<?=G5_URL?>/ad/style.css">

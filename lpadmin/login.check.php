@@ -15,8 +15,8 @@
 
 	$row = $mb;
 
-	if($row['mb_level'] < 5){
-		alert($config[cf_title]." 직원만 접속이 가능합니다.");
+	if ($row['mb_level'] < 5) {
+		alert($config['cf_title']." 직원만 접속이 가능합니다.");
 	}
 	if($row['mb_leave_date']){
 		alert("탈퇴한 아이디 입니다.");
@@ -25,7 +25,11 @@
 	
 
 	set_session('ss_mb_id', $mb['mb_id']);
-	set_session('ss_mb_key', md5($mb['mb_datetime'] . get_real_client_ip() . $_SERVER['HTTP_USER_AGENT']));
+	generate_mb_key($mb);
+	if (function_exists('update_auth_session_token')) {
+		update_auth_session_token($mb['mb_datetime']);
+	}
+	set_session('ss_step2', '');
 
 	/*$sql = "update g5_member set login_datetime = now() where lu_id = '{$lu_id}'";
 	sql_query($sql);*/
