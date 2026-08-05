@@ -8,7 +8,11 @@
 		<ul class="product_ul2 prize_top">
 			<li id="view_turn_result">
 				<?php
-					$turn = getTurn()-1;
+					$currentTurn = getTurn();
+					$turn = isset($_GET['turn'])
+					        ? max(1, (int) $_GET['turn'])
+					        : ($currentTurn > 1 ? $currentTurn - 1 : 0);
+
 					include_once(G5_PATH."/sub/ajax.turn.list.view2.php"); 
 				?>
 				

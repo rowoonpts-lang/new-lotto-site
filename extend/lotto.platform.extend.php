@@ -316,6 +316,141 @@ function getLevelPage($mbLevel)
     }
 }
 
+
+/**
+ * 로또 번호를 번호 구간별 공 색상 태그로 변환합니다.
+ */
+function getBallStyle2($number, $ver = 1)
+{
+    $values = is_array($number)
+        ? $number
+        : explode(',', str_replace(' ', '', (string) $number));
+
+    $tags = array();
+    $validNumbers = array();
+
+    foreach ($values as $value) {
+        if ($value === '') {
+            continue;
+        }
+
+        $numberValue = (int) $value;
+
+        if ($numberValue < 1 || $numberValue > 45) {
+            continue;
+        }
+
+        $validNumbers[] = $numberValue;
+    }
+
+    foreach ($validNumbers as $index => $numberValue) {
+        if ($numberValue <= 10) {
+            $classes = 'yellow bg_yellow bgc_y';
+        } elseif ($numberValue <= 20) {
+            $classes = 'blue bg_sky bgc_s';
+        } elseif ($numberValue <= 30) {
+            $classes = 'red bg_red bgc_r';
+        } elseif ($numberValue <= 40) {
+            $classes = 'gray bg_gray bgc_gr';
+        } else {
+            $classes = 'green bg_green bgc_g';
+        }
+
+        $tags[] = "<p class=\"l_ball {$classes}\">{$numberValue}</p>";
+
+        if ($index === 5 && (string) $ver === '2' && count($validNumbers) > 6) {
+            $tags[] = '<p class="l_ball l_plus">+</p>';
+        }
+    }
+
+    return implode('', $tags);
+}
+
+/**
+ * 관리자에 등록된 회차별 당첨번호를 반환합니다.
+ *
+ * 외부 서비스에 의존하지 않고 l_lucky_custom 테이블만 조회합니다.
+ */
+function getLuckyNum($turn)
+{
+    $turn = (int) $turn;
+
+    $emptyResult = array(
+        'returnValue' => 'fail',
+        'drwtNo1' => 0,
+        'drwtNo2' => 0,
+        'drwtNo3' => 0,
+        'drwtNo4' => 0,
+        'drwtNo5' => 0,
+        'drwtNo6' => 0,
+        'bnusNo' => 0,
+        'drwNoDate' => '',
+    );
+
+    if ($turn < 1) {
+        return $emptyResult;
+    }
+
+    $tableCheck = sql_fetch(
+        "SHOW TABLES LIKE 'l_lucky_custom'",
+        false
+    );
+
+    if (!is_array($tableCheck) || count($tableCheck) < 1) {
+        return $emptyResult;
+    }
+
+    $row = sql_fetch(
+        "select turn,
+                num1,
+                num2,
+                num3,
+                num4,
+                num5,
+                num6,
+                num7,
+                lc_datetime
+           from l_lucky_custom
+          where turn = '{$turn}'
+          order by lc_datetime desc, lc_id desc
+          limit 1",
+        false
+    );
+
+    if (!is_array($row) || empty($row['turn'])) {
+        return $emptyResult;
+    }
+
+    $numbers = array();
+
+    for ($index = 1; $index <= 7; $index++) {
+        $numberValue = isset($row['num'.$index])
+            ? (int) $row['num'.$index]
+            : 0;
+
+        if ($numberValue < 1 || $numberValue > 45) {
+            return $emptyResult;
+        }
+
+        $numbers[$index] = $numberValue;
+    }
+
+    return array(
+        'returnValue' => 'success',
+        'drwtNo1' => $numbers[1],
+        'drwtNo2' => $numbers[2],
+        'drwtNo3' => $numbers[3],
+        'drwtNo4' => $numbers[4],
+        'drwtNo5' => $numbers[5],
+        'drwtNo6' => $numbers[6],
+        'bnusNo' => $numbers[7],
+        'drwNoDate' => date(
+            'Y-m-d',
+            strtotime((string) $row['lc_datetime'])
+        ),
+    );
+}
+
 /**
  * 설정된 기준 회차와 기준일로 현재 로또 회차를 계산합니다.
  */
