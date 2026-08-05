@@ -8,6 +8,10 @@ if ($sw != 'move'){
 
 auth_check($auth[$sub_menu], "r");
 
+check_admin_token();
+
+$token = get_admin_token();
+
 $g5['title'] = '이모티콘그룹 이동';
 include_once(G5_PATH.'/head.sub.php');
 
@@ -27,6 +31,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
 
     <form name="fboardmoveall" method="post" action="./emoticon_move_update.php" onsubmit="return fboardmoveall_submit(this);">
     <input type="hidden" name="sw" value="<?php echo $sw ?>">
+    <input type="hidden" name="token" value="<?php echo $token; ?>">
     <input type="hidden" name="fo_no_list" value="<?php echo $fo_no_list ?>">
     <input type="hidden" name="url" value="<?php echo clean_xss_tags(strip_tags($_SERVER['HTTP_REFERER'])); ?>">
 

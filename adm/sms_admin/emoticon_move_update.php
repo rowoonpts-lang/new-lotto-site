@@ -4,6 +4,8 @@ include_once('./_common.php');
 
 auth_check_menu($auth, $sub_menu, "r");
 
+check_admin_token();
+
 $sw = isset($_POST['sw']) ? $_POST['sw'] : '';
 $page = isset($_POST['page']) ? max(0, (int) $_POST['page']) : 0;
 $url = isset($_POST['url']) ? clean_xss_tags($_POST['url'], 1, 1) : '';
