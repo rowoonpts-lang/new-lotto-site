@@ -3,7 +3,7 @@
 <head>
 	<?php
 		if(!$is_member){
-			goto_url(G5_LADMIN_URL);
+			goto_url(G5_LADMIN_URL."/login.php");
 		}
 		if($_SESSION['ss_step2'] != $config['cf_10']){
 			goto_url(G5_LADMIN_URL."/login.step2.php");			

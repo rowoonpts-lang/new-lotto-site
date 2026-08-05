@@ -50,6 +50,7 @@ define('G5_COOKIE_DOMAIN',  '');
 define('G5_DBCONFIG_FILE',  'dbconfig.php');
 
 define('G5_ADMIN_DIR',      'adm');
+define('G5_LADMIN_DIR',     'lpadmin');
 define('G5_BBS_DIR',        'bbs');
 define('G5_CSS_DIR',        'css');
 define('G5_DATA_DIR',       'data');
@@ -94,6 +95,7 @@ if (isset($g5_path['path'])) {
 }
 
 define('G5_ADMIN_URL',      G5_URL.'/'.G5_ADMIN_DIR);
+define('G5_LADMIN_URL',     G5_URL.'/'.G5_LADMIN_DIR);
 define('G5_BBS_URL',        G5_URL.'/'.G5_BBS_DIR);
 define('G5_CSS_URL',        G5_URL.'/'.G5_CSS_DIR);
 define('G5_DATA_URL',       G5_URL.'/'.G5_DATA_DIR);
@@ -113,6 +115,7 @@ define('G5_MOBILE_URL',     G5_URL.'/'.G5_MOBILE_DIR);
 
 // PATH 는 서버상에서의 절대경로
 define('G5_ADMIN_PATH',     G5_PATH.'/'.G5_ADMIN_DIR);
+define('G5_LADMIN_PATH',    G5_PATH.'/'.G5_LADMIN_DIR);
 define('G5_BBS_PATH',       G5_PATH.'/'.G5_BBS_DIR);
 define('G5_DATA_PATH',      G5_PATH.'/'.G5_DATA_DIR);
 define('G5_EXTEND_PATH',    G5_PATH.'/'.G5_EXTEND_DIR);
