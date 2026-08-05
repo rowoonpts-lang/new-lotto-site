@@ -228,3 +228,90 @@ function fnGetSpan()
 
     return $list;
 }
+
+/**
+ * 관리자 팀 목록을 반환합니다.
+ */
+function getTeamList()
+{
+    return [
+        'TM1',
+        'TM2',
+        'TM3',
+        'TM4',
+        '1차',
+        'CS',
+    ];
+}
+
+/**
+ * 결제 담당 팀 목록을 반환합니다.
+ */
+function getTeamList2()
+{
+    return [
+        'SU',
+    ];
+}
+
+/**
+ * 추가 팀 목록을 반환합니다.
+ */
+function getTeamList3()
+{
+    return [
+        'SU',
+    ];
+}
+
+/**
+ * 관리자 권한 목록을 반환합니다.
+ */
+function getLevelList()
+{
+    return [
+        'LEVEL 1 : 검색전용/알람리스트',
+        'LEVEL 2 : 검색전용/알람리스트/무통장신청/무통장입금/카드승인/컨택통계',
+        'LEVEL 3 : 전체회원/검색전용/알람리스트/결제리스트/무통장신청/무통장입금/카드승인/상담요청/결제시도/문자디비/광고디비리스트/직원등록/컨택통계/당첨리스트/당첨배출현황',
+    ];
+}
+
+/**
+ * 관리자 권한 이름을 출력합니다.
+ */
+function getLevelText($mbLevel)
+{
+    switch ((string) $mbLevel) {
+        case '5':
+            echo 'LEVEL 1';
+            break;
+
+        case '6':
+            echo 'LEVEL 2';
+            break;
+
+        case '7':
+            echo 'LEVEL 3';
+            break;
+    }
+}
+
+/**
+ * 관리자 권한별 접근 메뉴 설명을 출력합니다.
+ */
+function getLevelPage($mbLevel)
+{
+    switch ((string) $mbLevel) {
+        case '5':
+            echo '검색전용/알람리스트';
+            break;
+
+        case '6':
+            echo '검색전용/알람리스트/무통장신청/무통장입금/카드승인/컨택통계';
+            break;
+
+        case '7':
+            echo '전체회원/검색전용/알람리스트/결제리스트/무통장신청/무통장입금/카드승인/상담요청/결제시도/문자디비/광고디비리스트/직원등록/컨택통계/당첨리스트/당첨배출현황';
+            break;
+    }
+}

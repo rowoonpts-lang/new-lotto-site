@@ -2,36 +2,52 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 
+	$allowed_sch_select = array("a.mb_code", "a.mb_name", "a.mb_hp", "a.mb_id");
+	$sch_select = isset($_GET["sch_select"]) && in_array($_GET["sch_select"], $allowed_sch_select, true) ? $_GET["sch_select"] : "";
+	$sch_text = isset($_GET["sch_text"]) ? trim((string) $_GET["sch_text"]) : "";
+	$sch_mb_type = isset($_GET["sch_mb_type"]) ? trim((string) $_GET["sch_mb_type"]) : "";
+	$start_date = isset($_GET["start_date"]) ? trim((string) $_GET["start_date"]) : "";
+	$end_date = isset($_GET["end_date"]) ? trim((string) $_GET["end_date"]) : "";
+	$mb_team = isset($_GET["mb_team"]) ? trim((string) $_GET["mb_team"]) : "";
+	$pay_method = isset($_GET["pay_method"]) ? trim((string) $_GET["pay_method"]) : "";
+	$page = isset($_GET["page"]) ? max(1, (int) $_GET["page"]) : 1;
+
+	$sch_text_sql = sql_real_escape_string($sch_text);
+	$sch_mb_type_sql = sql_real_escape_string($sch_mb_type);
+	$start_date_sql = sql_real_escape_string($start_date);
+	$end_date_sql = sql_real_escape_string($end_date);
+	$mb_team_sql = sql_real_escape_string($mb_team);
+	$pay_method_sql = sql_real_escape_string($pay_method);
 
 	$sql_common = " from l_pay a LEFT JOIN g5_member d ON (a.confirm_user = d.mb_id), g5_member b, g5_member_etc c ";
 	$sql_search = " where 1=1 and a.mb_id = c.mb_id and a.mb_id = b.mb_id and lp_status = '입금' ";
 	$sql_order = " order by lp_pay_datetime desc ";
 
 	if($sch_select){
-		$sql_search .= " and {$sch_select} like '%{$sch_text}%' ";
+		$sql_search .= " and {$sch_select} like '%{$sch_text_sql}%' ";
 	}else{
-		$sql_search .= " and (b.mb_code like '%{$sch_text}%' or b.mb_name like '%{$sch_text}%' or a.mb_hp like '%{$sch_text}%' or a.mb_id like '%{$sch_text}%') ";
+		$sql_search .= " and (b.mb_code like '%{$sch_text_sql}%' or b.mb_name like '%{$sch_text_sql}%' or a.mb_hp like '%{$sch_text_sql}%' or a.mb_id like '%{$sch_text_sql}%') ";
 	}
 
 	if($sch_mb_type){
-		$sql_search .= " and b.mb_type = '{$sch_mb_type}' ";
+		$sql_search .= " and b.mb_type = '{$sch_mb_type_sql}' ";
 	}
 
 	if($start_date){
-		$sql_search .= " and substr(lp_pay_datetime,1,10) >= substr('{$start_date}',1,10) ";
+		$sql_search .= " and substr(lp_pay_datetime,1,10) >= substr('{$start_date_sql}',1,10) ";
 	}
 	if($end_date){
-		$sql_search .= " and substr(lp_pay_datetime,1,10) <= substr('{$end_date}',1,10) ";
+		$sql_search .= " and substr(lp_pay_datetime,1,10) <= substr('{$end_date_sql}',1,10) ";
 	}
 
 	if($mb_team){
-		$sql_search .= " and d.mb_team = '{$mb_team}' ";
+		$sql_search .= " and d.mb_team = '{$mb_team_sql}' ";
 	}
 	if($pay_method){
 		if($pay_method == "무통장" || $pay_method == "신용카드"){
-			$sql_search .= " and a.pay_method = '{$pay_method}' ";
+			$sql_search .= " and a.pay_method = '{$pay_method_sql}' ";
 		}else{
-			$sql_search .= " and a.pay_company = '{$pay_method}' ";
+			$sql_search .= " and a.pay_company = '{$pay_method_sql}' ";
 		}
 	}
 
@@ -39,7 +55,7 @@
 	$sql = " select count(distinct a.lp_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 
 	$row = sql_fetch($sql);
-	$total_count = $row['cnt'];
+	$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
 
 
 	$rows = 30;
@@ -49,7 +65,7 @@
 
 	$sql = " select sum(lp_price) sum {$sql_common} {$sql_search} and lp_status = '입금' {$sql_order} ";
 	$row = sql_fetch($sql);
-	$tot_amt = $row[sum];
+	$tot_amt = isset($row['sum']) ? $row['sum'] : 0;
 
 
 	$limit = " limit {$from_record}, {$rows} ";
