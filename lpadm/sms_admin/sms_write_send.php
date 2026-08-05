@@ -94,12 +94,12 @@ while ($row = array_shift($send_list))
                 $hp = get_hp($item[$i][1], 0);
                 $name = $item[$i][0];
 
-                if(!$hp) continue;
+                if(!$hp) continue 2;
 
                 if ($wr_overlap && array_overlap($hps, $hp)) {
                     $overlap++;
                     array_push( $duplicate_data['hp'], $row['bk_hp'] );
-                    continue;
+                    continue 2;
                 }
 
                 array_push($list, array('bk_hp' => $hp, 'bk_name' => $name));
@@ -111,12 +111,12 @@ while ($row = array_shift($send_list))
                 $row = sql_fetch("select * from {$g5['sms5_book_table']} where bk_no='$item[$i]'");
                 $row['bk_hp'] = get_hp($row['bk_hp'], 0);
 
-                if(!$row['bk_hp']) continue;
+                if(!$row['bk_hp']) continue 2;
 
                 if ($wr_overlap && array_overlap($hps, $row['bk_hp'])) {
                     $overlap++;
                     array_push( $duplicate_data['hp'], $row['bk_hp'] );
-                    continue;
+                    continue 2;
                 }
                 array_push($list, $row);
                 array_push($hps, $row['bk_hp']);

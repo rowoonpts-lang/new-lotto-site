@@ -42,7 +42,7 @@ while ($row = array_shift($send_list))
                 $name = $item[$i][0];
                 if (array_overlap($hps, $hp)) {
                     $overlap ++;
-                    continue;
+                    continue 2;
                 }
                 array_push($list, array('bk_hp' => $hp, 'bk_name' => $name));
                 array_push($hps, $hp);
@@ -53,7 +53,7 @@ while ($row = array_shift($send_list))
                 $res['bk_hp'] = get_hp($res['bk_hp'], 0);
                 if (array_overlap($hps, $res['bk_hp'])) {
                     $overlap ++;
-                    continue;
+                    continue 2;
                 }
                 array_push($list, $res);
                 array_push($hps, $res['bk_hp']);
