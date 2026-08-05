@@ -4,6 +4,8 @@ include_once("./_common.php");
 
 auth_check_menu($auth, $sub_menu, "r");
 
+$token = get_admin_token();
+
 $g5['title'] = "휴대폰번호 파일";
 
 $no_group = sql_fetch("select * from {$g5['sms5_book_group_table']} where bg_no = 1");
@@ -37,6 +39,7 @@ include_once(G5_ADMIN_PATH.'/admin.head.php');
 </div>
 
 <form name="upload_form" method="post" enctype="multipart/form-data" id="sms5_fileup_frm">
+<input type="hidden" name="token" value="<?php echo $token; ?>">
 <div>
     <label for="upload_bg_no">그룹선택</label>
     <select name="upload_bg_no" id="upload_bg_no">
