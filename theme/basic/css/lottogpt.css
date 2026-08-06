@@ -1249,3 +1249,193 @@
         font-size: 14px;
     }
 }
+
+
+/* LottoGPT footer v2 */
+.lottogpt-page .lg-footer {
+    position: relative;
+    padding: 64px 0 28px;
+    border-top: 1px solid rgba(229, 184, 76, .18);
+    background:
+        radial-gradient(circle at 15% 0%, rgba(30, 199, 190, .07), transparent 32%),
+        radial-gradient(circle at 85% 10%, rgba(229, 184, 76, .08), transparent 30%),
+        #04070b;
+    color: #8995a2;
+}
+
+.lg-footer-shell {
+    width: min(1320px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.lg-footer-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.25fr;
+    gap: 48px;
+    padding-bottom: 42px;
+}
+
+.lg-footer-logo {
+    display: inline-block;
+    color: #fff;
+    font: 800 28px Montserrat, sans-serif;
+    letter-spacing: -.04em;
+}
+
+.lg-footer-logo span {
+    color: var(--lg-gold-light);
+}
+
+.lg-footer-brand p {
+    max-width: 420px;
+    margin-top: 18px;
+    color: #7e8a97;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.lg-footer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: var(--lg-teal);
+    font: 700 10px Montserrat, sans-serif;
+    letter-spacing: .12em;
+}
+
+.lg-footer-status span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--lg-teal);
+    box-shadow: 0 0 10px rgba(30, 199, 190, .75);
+}
+
+.lg-footer-links,
+.lg-footer-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 11px;
+}
+
+.lg-footer-links strong,
+.lg-footer-contact strong {
+    margin-bottom: 7px;
+    color: var(--lg-gold-light);
+    font: 700 12px Montserrat, sans-serif;
+    letter-spacing: .1em;
+}
+
+.lg-footer-links a,
+.lg-footer-contact p,
+.lg-footer-contact a {
+    margin: 0;
+    color: #7f8a96;
+    font-size: 13px;
+    line-height: 1.55;
+    transition: color .2s ease;
+}
+
+.lg-footer-links a:hover,
+.lg-footer-contact a:hover {
+    color: #fff;
+}
+
+.lg-footer-company {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 22px 0;
+    border-top: 1px solid rgba(255, 255, 255, .06);
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.lg-footer-company strong {
+    width: 100%;
+    color: #d7dde4;
+    font-size: 13px;
+}
+
+.lg-footer-notice {
+    margin-top: 22px;
+    padding: 17px 20px;
+    border: 1px solid rgba(229, 184, 76, .13);
+    border-radius: 10px;
+    background: rgba(229, 184, 76, .035);
+    color: #6f7a86;
+    font-size: 11px;
+    line-height: 1.75;
+}
+
+.lg-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+    color: #58636e;
+    font: 500 10px Montserrat, sans-serif;
+    letter-spacing: .04em;
+}
+
+.lottogpt-page #top_btn {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(229, 184, 76, .25);
+    border-radius: 50%;
+    background: rgba(7, 12, 18, .92);
+    color: var(--lg-gold-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+    z-index: 100;
+}
+
+@media (max-width: 900px) {
+    .lg-footer-main {
+        grid-template-columns: 1.5fr 1fr 1fr;
+    }
+
+    .lg-footer-contact {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 620px) {
+    .lottogpt-page .lg-footer {
+        padding-top: 46px;
+    }
+
+    .lg-footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 34px 24px;
+    }
+
+    .lg-footer-brand,
+    .lg-footer-contact {
+        grid-column: 1 / -1;
+    }
+
+    .lg-footer-company {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .lg-footer-bottom {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .lottogpt-page #top_btn {
+        right: 18px;
+        bottom: 18px;
+        width: 42px;
+        height: 42px;
+    }
+}

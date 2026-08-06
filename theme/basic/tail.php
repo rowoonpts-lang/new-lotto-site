@@ -16,49 +16,76 @@ if($basename != "index.php") {
 
 
 
-<footer class="footer">
-		<div class="footer_top">
-			<div class="inner_2">
-				<ul>
-					<li><a href="<?=G5_URL?>/sub/sub0101.php">HOME</a></li>
-					<li><a href="<?=G5_URL?>/sub/sub0102.php">회사소개</a></li>
-					<li><a href="<?=G5_BBS_URL?>/content.php?co_id=provision">이용약관</a></li>
-					<li><a href="<?=G5_BBS_URL?>/content.php?co_id=privacy">개인정보처리방침</a></li>
-				</ul>
-			</div>
-		</div><!-- footer_top 끝 -->
-		<div class="inner_2">
-			<div class="footer_bottom">
-				 <ul class="f_l">
-					<li><b>지오인터내셔널</b></li>
-					<li><span>대표이사 김민지</span><span>사업자등록번호 350-04-01576</span><span>통신판매업신고번호 2020-인천남동구-1821</span></li>
-					<li><span>고객센터 인천광역시 남동구 남동대로 777번길 43, 5층 (구월동, 유진빌딩)</span></li>
-					<li><span>개인정보책임자 김민지</span><span>이메일 lottojoongsim@gmail.com</span></li>
-					<li><a href="<?=G5_URL?>"><img src="<?=G5_THEME_IMG_URL?>/logo_f.png" alt=""></a>&nbsp;&nbsp;&nbsp;&nbsp;Copyright (c) 2020 GIO INTERNATIONAL COLORS CO, LTD. All right reserved.</li>
-				 </ul>
-				 <ul class="f_r">
-					<li><b>CONTACT US</b></li>
-					<li>평일·토요일 10:00 ~ 18:00</li>
-					<li>일요일 및 공휴일 휴무</li>
-				 </ul>
-				 <div class="f_r_abs">당사의 분석시스템은 전체 로또번호 조합 중 등급별 압축 필터링한 조합 정보제공만을 목적으로 하며,<br>당첨 확정 서비스가 아니므로 서비스 이용 과정에서 기대이익을 얻지 못하거나<br>발생한 손해 등에 대한 최종책임은 서비스 이용자 본인에게 있습니다
-				 </div>
+<footer class="footer lg-footer">
+    <div class="lg-footer-shell">
+        <div class="lg-footer-main">
+            <div class="lg-footer-brand">
+                <a href="<?=G5_URL?>" class="lg-footer-logo">Lotto<span>GPT</span></a>
+                <p>
+                    누적 로또 데이터와 통계 정보를 사용자가 쉽게 확인할 수 있도록
+                    정리하는 AI 기반 로또 분석 플랫폼입니다.
+                </p>
+                <div class="lg-footer-status">
+                    <span></span>
+                    LOTTOGPT SYSTEM ONLINE
+                </div>
+            </div>
 
-			</div><!-- footer_bottom 끝 -->
-		</div>
+            <div class="lg-footer-links">
+                <strong>서비스</strong>
+                <a href="<?=G5_URL?>">홈</a>
+                <a href="<?=G5_URL?>/sub/sub0102.php">회사소개</a>
+                <a href="<?=G5_URL?>/sub/stats.php">데이터랩</a>
+                <a href="<?=G5_BBS_URL?>/board.php?bo_table=notice">공지사항</a>
+            </div>
 
+            <div class="lg-footer-links">
+                <strong>정책</strong>
+                <a href="<?=G5_BBS_URL?>/content.php?co_id=provision">이용약관</a>
+                <a href="<?=G5_BBS_URL?>/content.php?co_id=privacy">개인정보처리방침</a>
+            </div>
 
-		<button type="button" id="top_btn"></button>
-        <script>
+            <div class="lg-footer-contact">
+                <strong>CONTACT</strong>
+                <p>평일·토요일 10:00 ~ 18:00</p>
+                <p>일요일 및 공휴일 휴무</p>
+                <a href="mailto:lottojoongsim@gmail.com">lottojoongsim@gmail.com</a>
+            </div>
+        </div>
 
-        $(function() {
-            $("#top_btn").on("click", function() {
-                $("html, body").animate({scrollTop:0}, '500');
-                return false;
-            });
+        <div class="lg-footer-company">
+            <strong>지오인터내셔널</strong>
+            <span>대표이사 김민지</span>
+            <span>사업자등록번호 350-04-01576</span>
+            <span>통신판매업신고번호 2020-인천남동구-1821</span>
+            <span>개인정보책임자 김민지</span>
+            <span>인천광역시 남동구 남동대로 777번길 43, 5층</span>
+        </div>
+
+        <div class="lg-footer-notice">
+            LottoGPT의 분석 정보는 로또 번호 조합과 통계 정보를 제공하기 위한 참고 자료이며,
+            당첨을 보장하거나 확정하는 서비스가 아닙니다. 서비스 이용에 따른 최종 판단과 책임은
+            이용자 본인에게 있습니다.
+        </div>
+
+        <div class="lg-footer-bottom">
+            <span>Copyright © <?=date('Y')?> GIO INTERNATIONAL. All rights reserved.</span>
+            <span>LOTTOGPT · DATA DRIVEN LOTTO PLATFORM</span>
+        </div>
+    </div>
+
+    <button type="button" id="top_btn" aria-label="페이지 맨 위로 이동">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+    $(function() {
+        $("#top_btn").on("click", function() {
+            $("html, body").animate({scrollTop: 0}, 500);
+            return false;
         });
-        </script>
-
+    });
+    </script>
 </footer>
 
 <script>
