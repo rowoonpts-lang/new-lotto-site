@@ -8,7 +8,7 @@ if (G5_IS_MOBILE) {
     return;
 }
 
-if($basename != "index.php") {
+if ($basename != "index.php" && empty($lottogpt_full_width_page)) {
 ?>
 	</div>
 </div>

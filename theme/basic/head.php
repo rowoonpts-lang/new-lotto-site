@@ -231,7 +231,11 @@ function fnSubmit(v){
 </script>
 
 
-<?php if($basename != "index.php") {?>
+<?php
+$is_lottogpt_full_width_page = !empty($lottogpt_full_width_page);
+?>
+
+<?php if ($basename != "index.php" && !$is_lottogpt_full_width_page) {?>
 <div id="sub_div">
 	<?php if($basename != "sub0101.php" && $basename != "sub0102.php" && $basename != "sub0201.php" && $basename != "prize.php" && $basename != "sub0301.php" && $basename != "deluxe.php") {?>
 	<div class="sub_top <?=$sub_top_bg?>">

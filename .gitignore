@@ -14,3 +14,7 @@ data/import/*.xlsx
 data/import/*.xls
 data/import/*.csv
 data/import/*.sql
+
+# Python cache
+__pycache__/
+*.py[cod]

@@ -207,7 +207,7 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
                     <strong>조합 만들기 <i class="fas fa-arrow-right"></i></strong>
                 </a>
 
-                <a class="lg-service-card" href="<?=G5_URL?>/sub/stats.php">
+                <a class="lg-service-card" href="<?=G5_URL?>/sub/lotto_results.php">
                     <span class="lg-service-number">04</span>
                     <i class="fas fa-search"></i>
                     <h3>당첨결과 비교</h3>
