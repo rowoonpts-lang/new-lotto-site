@@ -1,6 +1,11 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+// 기존 기본 사이트명이 남아 있을 때 프런트 브랜드명을 LottoGPT로 표시합니다.
+if (($config['cf_title'] ?? '') === '그누보드5') {
+    $config['cf_title'] = 'LottoGPT';
+}
+
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/head.php');
@@ -53,7 +58,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 				<?php }  ?>
 				<?php } else {  ?>
 				<div><a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a></div>
-				<div><a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a></div>
+				<div class="lottogpt-hidden-signup"><a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a></div>
 				<?php }  ?>
 				<!-- <div class="eng"><a class="pop_res_open" onClick="fnShowpop()">1등당첨번호 상담요청</a></div> -->
 				<div><a href="<?=G5_URL?>/sub/sub0301.php">문자가 오지 않을 때</a></div>
@@ -94,7 +99,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 					<li>
 						<a href="<?=G5_URL?>/sub/my_lotto.php">마이페이지</a>
 					</li>
-					<li>
+					<li class="lottogpt-hidden-menu">
 						<a href="<?=G5_URL?>/sub/deluxe.php">디럭스 그룹</a>
 					</li>
 				</ul>

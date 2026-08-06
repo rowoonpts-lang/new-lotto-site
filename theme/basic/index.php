@@ -1,6 +1,6 @@
 <?php
 if (!defined('_INDEX_')) define('_INDEX_', true);
-if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit;
 
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/index.php');
@@ -8,280 +8,152 @@ if (G5_IS_MOBILE) {
 }
 
 include_once(G5_THEME_PATH.'/head.php');
+
+$turn = max(1, (int) getTurn() - 1);
+$notice_rows = array();
+$notice_result = sql_query("select wr_id, wr_subject, wr_datetime from g5_write_notice order by wr_datetime desc limit 3", false);
+if ($notice_result) {
+    while ($notice_row = sql_fetch_array($notice_result)) {
+        $notice_rows[] = $notice_row;
+    }
+}
+
+$analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
+    + (int) ($config['cf_lucky_2'] ?? 0)
+    + (int) ($config['cf_lucky_3'] ?? 0);
 ?>
+<link rel="stylesheet" href="<?=G5_THEME_CSS_URL?>/lottogpt.css?ver=20260806">
+<script>document.body.classList.add('lottogpt-page');</script>
 
+<main class="lg-home">
+    <section class="lg-hero">
+        <div class="lg-shell lg-hero-grid">
+            <div class="lg-hero-copy">
+                <div class="lg-live-badge"><span></span> LOTTOGPT AI ENGINE ACTIVE</div>
+                <p class="lg-eyebrow">PREMIUM AI LOTTO DATA PLATFORM</p>
+                <h1>AI가 분석한 데이터,<br><strong>가능성의 새로운 기준</strong></h1>
+                <p class="lg-lead">누적 회차와 통계 데이터를 기반으로 번호 흐름을 분석하고, 사용자가 더 쉽게 판단할 수 있도록 핵심 정보를 정리합니다.</p>
+                <div class="lg-actions">
+                    <a class="lg-btn lg-btn-primary" href="<?=G5_URL?>/sub/my_lotto.php">AI 번호 분석 시작</a>
+                    <a class="lg-btn lg-btn-secondary" href="<?=G5_URL?>/sub/stats.php">지난 회차 분석 보기</a>
+                </div>
+                <ul class="lg-trust-list">
+                    <li><span>AI</span> 데이터 기반 분석</li>
+                    <li><span>23Y</span> 누적 회차 데이터</li>
+                    <li><span>SAFE</span> 통계 정보 중심</li>
+                </ul>
+            </div>
 
-<section class="section_1">
-	<div class="inner">
-		<!--스위퍼 시작-->
-		<div id="visual">
-			<div class="swiper-container visual_swiper">
-				<ul class="swiper-wrapper">
-					<li class="swiper-slide">
-                                            <a href="<?=G5_URL?>/sub/sub0101.php">
-                                                    <img src="<?=G5_THEME_IMG_URL?>/banner1.jpg" alt="로또 분석프로그램 안내">
-                                            </a>
-                                    </li>
-                                    <li class="swiper-slide">
-                                            <a href="<?=G5_URL?>/sub/sub0201.php">
-                                                    <img src="<?=G5_THEME_IMG_URL?>/banner2.jpg" alt="로또 등급 안내">
-                                            </a>
-                                    </li>
-				</ul>
-			</div>
-			<div class="swiper-pagination"></div>
-		</div>
+            <div class="lg-analysis-card">
+                <div class="lg-card-head">
+                    <div><span class="lg-status-dot"></span>AI 분석 현황</div>
+                    <span>실시간 분석 중</span>
+                </div>
+                <div class="lg-analysis-main">
+                    <div class="lg-gauge" aria-label="분석 진행률 94퍼센트">
+                        <div><strong>94%</strong><span>분석 완료</span></div>
+                    </div>
+                    <div class="lg-orbit" aria-hidden="true">
+                        <div class="lg-orbit-core">AI</div>
+                        <span class="lg-orbit-ring lg-orbit-ring-1"></span>
+                        <span class="lg-orbit-ring lg-orbit-ring-2"></span>
+                        <span class="lg-orbit-node lg-orbit-node-1"></span>
+                        <span class="lg-orbit-node lg-orbit-node-2"></span>
+                        <span class="lg-orbit-node lg-orbit-node-3"></span>
+                        <span class="lg-orbit-node lg-orbit-node-4"></span>
+                    </div>
+                </div>
+                <div class="lg-progress"><span></span></div>
+                <div class="lg-number-title">
+                    <strong>추천 번호 UI</strong>
+                    <small>기능 연결 전 디자인 샘플</small>
+                </div>
+                <ul class="lg-balls">
+                    <li>03</li><li>08</li><li>14</li><li>27</li><li>38</li><li>42</li>
+                </ul>
+                <div class="lg-card-stats">
+                    <div><span>분석 회차</span><strong><?=number_format($turn)?>회</strong></div>
+                    <div><span>배출 조합</span><strong><?=number_format($analysis_total)?>개</strong></div>
+                    <div><span>분석 상태</span><strong>READY</strong></div>
+                    <div><span>업데이트</span><strong>WEEKLY</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="lg-metrics">
+        <div class="lg-shell lg-metric-grid">
+            <article><span>현재 분석 회차</span><strong><?=number_format($turn)?>회</strong><small>최신 회차 기준</small></article>
+            <article><span>1등 배출 조합</span><strong><?=number_format((int)($config['cf_lucky_1'] ?? 0))?>개</strong><small>관리 데이터 기준</small></article>
+            <article><span>2등 배출 조합</span><strong><?=number_format((int)($config['cf_lucky_2'] ?? 0))?>개</strong><small>관리 데이터 기준</small></article>
+            <article><span>3등 배출 조합</span><strong><?=number_format((int)($config['cf_lucky_3'] ?? 0))?>개</strong><small>관리 데이터 기준</small></article>
+            <article><span>서비스 상태</span><strong class="lg-teal">ONLINE</strong><small>정상 운영 중</small></article>
+        </div>
+    </section>
 
-		<script>
-		var swiper = new Swiper('.visual_swiper', {
-			pagination: {
-				mode: 'horizontal',
-				el: '.swiper-pagination',
-				clickable: true,
-			},
-			autoplay: {
-				delay: 5000,
-				disableOnInteraction: false,
-			},
-			loop: true,
-			navigation: {
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',
-			},
-		});
-		</script>
-		<!--스위퍼 끝-->
-	</div><!-- inner 끝 -->
-</section><!-- section_1 끝 -->
+    <section class="lg-section">
+        <div class="lg-shell">
+            <div class="lg-section-title">
+                <p>LOTTOGPT ANALYSIS PROCESS</p>
+                <h2>데이터가 분석 결과로 이어지는 과정</h2>
+            </div>
+            <div class="lg-process-grid">
+                <article><b>01</b><i class="fas fa-database"></i><h3>데이터 수집</h3><p>누적 회차와 공개 통계 데이터를 정리합니다.</p></article>
+                <article><b>02</b><i class="fas fa-brain"></i><h3>패턴 분석</h3><p>구간, 홀짝, 빈도 등 여러 기준으로 비교합니다.</p></article>
+                <article><b>03</b><i class="fas fa-bullseye"></i><h3>조합 구성</h3><p>조건에 맞는 번호 조합을 단계적으로 구성합니다.</p></article>
+                <article><b>04</b><i class="fas fa-chart-line"></i><h3>결과 제공</h3><p>사용자가 이해하기 쉬운 데이터 화면으로 제공합니다.</p></article>
+            </div>
+        </div>
+    </section>
 
-<section class="section_15">
-	<div class="inner_2">
-		<ul class="product_ul2">
-			<li id="view_turn_result">
-				<?php  $turn = getTurn()-1; ?>
-				<?php include_once(G5_PATH."/sub/ajax.turn.list.view.php");?>
-			</li>
-			<li class="product_li2">
-				<h4>동행복권 <?=$turn?>회차</h4>
-				<h2>당첨현황</h2>
-				<ul class="product_li3_ul">
-					<li>
-						<div class="tit">1등</div>
-						<div class="cont1"><?=($config['cf_etc_1'] ?? '')?>명</div>
-						<div class="cont2"><?=($config['cf_etc_1_1'] ?? '')?>원</div>
-					</li>
-					<li>
-						<div class="tit">2등</div>
-						<div class="cont1"><?=($config['cf_etc_2'] ?? '')?>명</div>
-						<div class="cont2"><?=($config['cf_etc_2_1'] ?? '')?>원</div>
-					</li>
-					<li>
-						<div class="tit">3등</div>
-						<div class="cont1"><?=($config['cf_etc_3'] ?? '')?>명</div>
-						<div class="cont2"><?=($config['cf_etc_3_1'] ?? '')?>원</div>
-					</li>
-				</ul>
-			</li>
-			<li class="product_li2">
-				<h4>로또중심 <?=$turn?>회차</h4>
-				<h2>당첨조합 배출 현황</h2>
-				<ul class="product_li2_ul">
-					<li>
-						<div class="tit">1등배출</div>
-						<div class="cont"><span><?=number_format(($config['cf_lucky_1'] ?? 0))?></span>조합</div>
-					</li>
-					<li>
-						<div class="tit">2등배출</div>
-						<div class="cont"><span><?=number_format(($config['cf_lucky_2'] ?? 0))?></span>조합</div>
-					</li>
-					<li>
-						<div class="tit">3등배출</div>
-						<div class="cont"><span><?=number_format(($config['cf_lucky_3'] ?? 0))?></span>조합</div>
-					</li>
-				</ul>
-			</li>
-		</ul>
-		<form id="frm_2" name="frm_2" method="post">
-		<input class="input_tp input_tp1" type="hidden" name="lr_type" id="lr_type_2" value="상담요청">
-		<ul class="product_ul_res flex_space">
-			<li class="tit">로또 1등 번호<br><b>상담요청하기</b></li>
-			<li class="cont">
-				<div class="cont_top flex_space">
-					<input class="input_tp input_tp1" type="text" name="lr_name" id="lr_name_2" placeholder="이름을 입력해주세요.">
-					<input class="input_tp input_tp2" type="text" name="lr_hp1" id="lr_hp1_2" maxlength="3" value="010" readonly>
-					<span>-</span>
-					<input class="input_tp input_tp2" type="text" name="lr_hp2" id="lr_hp2_2" maxlength="4">
-					<span>-</span>
-					<input class="input_tp input_tp2" type="text" name="lr_hp3" id="lr_hp3_2" maxlength="4">
-				</div>
-				<div class="cont_btm">
-					<input type="checkbox" name="chk" id="chk_2" checked>
-					<label for="chk_1">이용약관 동의</label>
-					<input type="checkbox" name="chk2" id="chk2_2" checked>
-					<label for="chk2_1">개인정보 처리방침 동의</label>
-				</div>
-			</li>
-			<li class="s_btn"><button type="button" onclick="fnSubmit('_2')">상담요청</button></li>
-		</ul>
-		</form>
-	</div>
-</section>
+    <section class="lg-section lg-section-dark">
+        <div class="lg-shell lg-content-grid">
+            <article class="lg-panel lg-insight-panel">
+                <div class="lg-panel-head"><h2>AI 인사이트</h2><a href="<?=G5_URL?>/sub/stats.php">데이터랩 보기</a></div>
+                <div class="lg-insight-grid">
+                    <div><span>HOT NUMBER</span><strong>14 · 27 · 38</strong><small>화면 구성용 샘플</small></div>
+                    <div><span>STRONG RANGE</span><strong>21 ~ 30</strong><small>화면 구성용 샘플</small></div>
+                    <div><span>ODD : EVEN</span><strong>3 : 3</strong><small>균형 조합 예시</small></div>
+                </div>
+            </article>
 
-<section class="section_2">
-	<div class="inner_2">
-		<h2><span class="light">로또중심</span>&nbsp;PRODUCT</h2>
-		<ul class="a_product clearfix">
-			<li>
-				<a href="<?=G5_URL?>/sub/sub0201.php"><img src="<?=G5_THEME_IMG_URL?>/lo_main_obj1.jpg" alt="">
-					<ul class="hover_show">
-						<li>SILVER</li>
-						<li>실버(연회원)</li>
-						<li><img src="<?=G5_THEME_IMG_URL?>/add.png" alt=""></li>
-						<li class="li_bg"></li>
-					</ul>
-				</a>
-			</li>
-			<li>
-				<a href="<?=G5_URL?>/sub/sub0201.php"><img src="<?=G5_THEME_IMG_URL?>/lo_main_obj2.jpg" alt="">
-					<ul class="hover_show">
-						<li>GOLD</li>
-						<li>골드(VIP)</li>
-						<li><img src="<?=G5_THEME_IMG_URL?>/add.png" alt=""></li>
-						<li class="li_bg"></li>
-					</ul>
-				</a>
-			</li>
-			<li>
-				<a href="<?=G5_URL?>/sub/sub0201.php"><img src="<?=G5_THEME_IMG_URL?>/lo_main_obj3.jpg" alt="">
-					<ul class="hover_show">
-						<li>PLATINUM</li>
-						<li>플래티넘(VVIP)</li>
-						<li><img src="<?=G5_THEME_IMG_URL?>/add.png" alt=""></li>
-						<li class="li_bg"></li>
-					</ul>
-				</a>
-			</li>
-		</ul>
+            <article class="lg-panel lg-report-panel">
+                <div class="lg-panel-head"><h2>최근 공지사항</h2><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice">전체보기</a></div>
+                <ul class="lg-notice-list">
+                    <?php if ($notice_rows) { ?>
+                        <?php foreach ($notice_rows as $notice) { ?>
+                            <li>
+                                <a href="<?=G5_BBS_URL?>/board.php?bo_table=notice&amp;wr_id=<?=(int)$notice['wr_id']?>"><?=get_text($notice['wr_subject'])?></a>
+                                <time><?=substr((string)$notice['wr_datetime'], 0, 10)?></time>
+                            </li>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <li class="lg-empty">등록된 공지사항이 없습니다.</li>
+                    <?php } ?>
+                </ul>
+            </article>
 
-		<div class="main_you">
-			<h2><span class="light">로또중심</span>&nbsp;YOUTUBE</h2>
-			<ul class="product_ul3">
-				<li>
-					<a target="_blank" href="https://www.youtube.com/watch?v=25uT52s4XxY&t=52s">
-						<div class="thum" style="background: url('<?=G5_THEME_IMG_URL?>/youtube1.jpg') no-repeat 50% 50%; background-size: cover;"></div>
-						<div class="desc">로또 조작설! 이월되지 않는 이유! 시원하게 밝혀 드려요!</div>
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://www.youtube.com/watch?v=3ojKMhFZQZs">
-						<div class="thum" style="background: url('<?=G5_THEME_IMG_URL?>/youtube2.jpg') no-repeat 50% 50%; background-size: cover;"></div>
-						<div class="desc">이 꿈을 꿨다면 무조건 로또를 사야합니다 !! 무턱대고 나의 촉만 믿지 말아요</div>
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://www.youtube.com/watch?v=x-9ajQ2FT68">
-						<div class="thum" style="background: url('<?=G5_THEME_IMG_URL?>/youtube3.jpg') no-repeat 50% 50%; background-size: cover;"></div>
-						<div class="desc">로또당첨꿈 로또 1등 당첨자들이 꾼 꿈 Best7 로또꿈 로또 꿈해몽 총정리</div>
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://www.youtube.com/watch?v=ctszFUUomyA">
-						<div class="thum" style="background: url('<?=G5_THEME_IMG_URL?>/youtube4.jpg') no-repeat 50% 50%; background-size: cover;"></div>
-						<div class="desc">14번 복권에 당첨된 남자가 그의 비법을 세상에 밝히다</div>
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://www.youtube.com/watch?v=RR6iUBSSz2I">
-						<div class="thum" style="background: url('<?=G5_THEME_IMG_URL?>/youtube5.jpg') no-repeat 50% 50%; background-size: cover;"></div>
-						<div class="desc">로또당첨비법 로또당첨확률 올리는 10가지 방법</div>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</section><!-- section_2 끝 -->
+            <article class="lg-panel lg-premium-panel">
+                <span class="lg-premium-label">PREMIUM AI</span>
+                <h2>더 깊이 있는 분석을 경험하세요</h2>
+                <ul><li>등급별 서비스 안내</li><li>회원 전용 페이지 연결</li><li>기존 결제·회원 기능 유지</li></ul>
+                <a class="lg-btn lg-btn-primary" href="<?=G5_URL?>/sub/sub0201.php">멤버십 자세히 보기</a>
+            </article>
+        </div>
+    </section>
 
-<section class="section_3">
-	<div class="inner_2">
-		<div class="a_news">
-			<h3>
-				<p>로또중심&nbsp;<span>NEWS</span></p>
-				<p class="news_more_btn"><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice"><img src="<?=G5_THEME_IMG_URL?>/plus.png" alt=""></a></p>
-			</h3>
-			<div class="news_top">
-				<?php
-					$sql = " select * from g5_write_notice where 1=1 order by wr_datetime desc limit 1 ";
-					$row = sql_fetch($sql, false);
+    <section class="lg-quote">
+        <div class="lg-shell">데이터는 과거를 말하고, AI는 가능성을 분석합니다.</div>
+    </section>
+</main>
 
-                                    if (!is_array($row)) {
-                                            $row = array(
-                                                    'wr_id' => 0,
-                                                    'wr_subject' => '등록된 공지사항이 없습니다.',
-                                                    'wr_content' => '',
-                                                    'wr_datetime' => '',
-                                            );
-                                    }
-				?>
-				<a href="<?=G5_BBS_URL?>/board.php?bo_table=notice&wr_id=<?=$row['wr_id']?>">
-					<div class="thum">
-						<img src="<?=G5_THEME_IMG_URL?>/lo_main_obj6.jpg" alt="">
-					</div>
-					<ul>
-						<li class="news_title"><?=$row['wr_subject']?></li>
-						<li class="news_content"><?php echo conv_subject(strip_tags($row['wr_content']),35,'...')?></li>
-						<li class="news_date"><?=substr($row['wr_datetime'],0,10)?></li>
-					</ul>
-				</a>
-			</div>
-			<div class="news_bottom">
-				<ul>
-					<?php
-						$sql = " select * from g5_write_notice where 1=1 order by wr_datetime desc limit 1, 3 ";
-						$result = sql_query($sql);
-						for($i=0; $row=sql_fetch_array($result); $i++){
-					?>
-					<li>
-						<a href="<?=G5_BBS_URL?>/board.php?bo_table=notice&wr_id=<?=$row['wr_id']?>" class="news_title"><?=$row['wr_subject']?></a>
-						<span class="news_date"><?=substr($row['wr_datetime'],0,10)?></span>
-					</li>
-					<?php }?>
-				</ul>
-			</div>
-		</div><!-- a_news 끝 -->
-		<ul class="a_menu">
-			<li>
-				<a>
-					<div class="a_icon"><img src="<?=G5_THEME_IMG_URL?>/lo_main_icon1.png" alt=""></div>
-					<div class="a_title">무통장 입금정보</div>
-					<div class="red_hr"></div>
-					<div class="a_text1">302-1390-5552-31</div>
-					<div class="a_text2">농협 / 김민지(지오인터내셔널)</div>
-				</a>
-			</li>
-			<li>
-				<a href="<?=G5_URL?>/bbs/board.php?bo_table=notice">
-					<div class="a_icon"><img src="<?=G5_THEME_IMG_URL?>/lo_main_icon2.png" alt=""></div>
-					<div class="a_title">고객센터</div>
-					<div class="red_hr"></div>
-					<div class="a_text1">1522-8302</div>
-					<div class="a_text2">Daily 10:00 ~ 18:00</div>
-				</a>
-			</li>
-			<li>
-				<a href="<?=G5_URL?>/bbs/qalist.php">
-					<div class="a_icon"><img src="<?=G5_THEME_IMG_URL?>/lo_main_ico3.png" alt=""></div>
-					<div class="a_title">1:1 문의</div>
-					<div class="red_hr"></div>
-					<div class="a_text2">여러분의 소중한 의견을 모아</div>
-					<div class="a_text2">더욱 좋은 모습으로 보답하겠습니다.</div>
-				</a>
-			</li>
-		</ul>
-	</div><!-- inner_2 끝 -->
-</section><!-- section_3 끝 -->
+<script>
+$(function () {
+    var menuNames = ['AI 소개', '멤버십', '데이터랩', '고객지원', 'MY GPT', 'Premium AI'];
+    $('.header .menu > li > a').each(function (index) {
+        if (menuNames[index]) $(this).text(menuNames[index]);
+    });
+    $('.header .logo img').attr('alt', 'LottoGPT');
+});
+</script>
 
-
-
-<?php
-include_once(G5_THEME_PATH.'/tail.php');
-?>
+<?php include_once(G5_THEME_PATH.'/tail.php'); ?>
