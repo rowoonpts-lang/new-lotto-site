@@ -1,76 +1,101 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+$top_h2 = isset($top_h2) ? (string) $top_h2 : '';
+
 if (G5_IS_MOBILE) {
     include_once(G5_THEME_MOBILE_PATH.'/tail.php');
     return;
 }
 
-if(G5_COMMUNITY_USE === false) {
-    include_once(G5_THEME_SHOP_PATH.'/shop.tail.php');
-    return;
-}
+if($basename != "index.php") {
 ?>
-
-    </div>
-    <div id="aside">
-        <?php echo outlogin('theme/basic'); // 외부 로그인, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
-        <?php echo poll('theme/basic'); // 설문조사, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
-    </div>
+	</div>
 </div>
+<?php } ?>
 
-</div>
-<!-- } 콘텐츠 끝 -->
 
-<hr>
 
-<!-- 하단 시작 { -->
-<div id="ft">
+<footer class="footer">
+		<div class="footer_top">
+			<div class="inner_2">
+				<ul>
+					<li><a href="<?=G5_URL?>/sub/sub0101.php">HOME</a></li>
+					<li><a href="<?=G5_URL?>/sub/sub0102.php">회사소개</a></li>
+					<li><a href="<?=G5_BBS_URL?>/content.php?co_id=provision">이용약관</a></li>
+					<li><a href="<?=G5_BBS_URL?>/content.php?co_id=privacy">개인정보처리방침</a></li>
+				</ul>
+			</div>
+		</div><!-- footer_top 끝 -->
+		<div class="inner_2">
+			<div class="footer_bottom">
+				 <ul class="f_l">
+					<li><b>지오인터내셔널</b></li>
+					<li><span>대표이사 김민지</span><span>사업자등록번호 350-04-01576</span><span>통신판매업신고번호 2020-인천남동구-1821</span></li>
+					<li><span>고객센터 인천광역시 남동구 남동대로 777번길 43, 5층 (구월동, 유진빌딩)</span></li>
+					<li><span>개인정보책임자 김민지</span><span>이메일 lottojoongsim@gmail.com</span></li>
+					<li><a href="<?=G5_URL?>"><img src="<?=G5_THEME_IMG_URL?>/logo_f.png" alt=""></a>&nbsp;&nbsp;&nbsp;&nbsp;Copyright (c) 2020 GIO INTERNATIONAL COLORS CO, LTD. All right reserved.</li>
+				 </ul>
+				 <ul class="f_r">
+					<li><b>CONTACT US</b></li>
+					<li>평일·토요일 10:00 ~ 18:00</li>
+					<li>일요일 및 공휴일 휴무</li>
+				 </ul>
+				 <div class="f_r_abs">당사의 분석시스템은 전체 로또번호 조합 중 등급별 압축 필터링한 조합 정보제공만을 목적으로 하며,<br>당첨 확정 서비스가 아니므로 서비스 이용 과정에서 기대이익을 얻지 못하거나<br>발생한 손해 등에 대한 최종책임은 서비스 이용자 본인에게 있습니다
+				 </div>
 
-    <div id="ft_wr">
-        <div id="ft_link" class="ft_cnt">
-            <a href="<?php echo get_pretty_url('content', 'company'); ?>">회사소개</a>
-            <a href="<?php echo get_pretty_url('content', 'privacy'); ?>">개인정보처리방침</a>
-            <a href="<?php echo get_pretty_url('content', 'provision'); ?>">서비스이용약관</a>
-            <a href="<?php echo get_device_change_url(); ?>">모바일버전</a>
-        </div>
-        <div id="ft_company" class="ft_cnt">
-        	<h2>사이트 정보</h2>
-	        <p class="ft_info">
-	        	회사명 : 회사명 / 대표 : 대표자명<br>
-				주소  : OO도 OO시 OO구 OO동 123-45<br>
-				사업자 등록번호  : 123-45-67890<br>
-				전화 :  02-123-4567  팩스  : 02-123-4568<br>
-				통신판매업신고번호 :  제 OO구 - 123호<br>
-				개인정보관리책임자 :  정보책임자명<br>
-			</p>
-	    </div>
-        <?php
-        //공지사항
-        // 이 함수가 바로 최신글을 추출하는 역할을 합니다.
-        // 사용방법 : latest(스킨, 게시판아이디, 출력라인, 글자수);
-        // 테마의 스킨을 사용하려면 theme/basic 과 같이 지정
-        echo latest('theme/notice', 'notice', 4, 13);
-        ?>
-        
-		<?php echo visit('theme/basic'); // 접속자집계, 테마의 스킨을 사용하려면 스킨을 theme/basic 과 같이 지정 ?>
-	</div>      
-        <!-- <div id="ft_catch"><img src="<?php echo G5_IMG_URL; ?>/ft_logo.png" alt="<?php echo G5_VERSION ?>"></div> -->
-        <div id="ft_copy">Copyright &copy; <b>소유하신 도메인.</b> All rights reserved.</div>
-    
-    
-    <button type="button" id="top_btn">
-    	<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only">상단으로</span>
-    </button>
-    <script>
-    $(function() {
-        $("#top_btn").on("click", function() {
-            $("html, body").animate({scrollTop:0}, '500');
-            return false;
+			</div><!-- footer_bottom 끝 -->
+		</div>
+
+
+		<button type="button" id="top_btn"></button>
+        <script>
+
+        $(function() {
+            $("#top_btn").on("click", function() {
+                $("html, body").animate({scrollTop:0}, '500');
+                return false;
+            });
         });
-    });
-    </script>
-</div>
+        </script>
+
+</footer>
+
+<script>
+function fnCngTurn(v, ver){
+	$.ajax({
+		type: "POST",
+		url: "<?=G5_URL?>/sub/ajax.turn.list.view.php",
+		data: {turn : v, ver : ver},
+		cache: false,
+		async: false,
+		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+		success: function(data) {
+			$("#view_turn_result").html(data);
+		}
+	});
+	return false;
+}
+</script>
+
+<script>
+function fnCngTurn2(v, ver){
+	$.ajax({
+		type: "POST",
+		url: "<?=G5_URL?>/sub/ajax.turn.list.view2.php",
+		data: {turn : v, ver : ver},
+		cache: false,
+		async: false,
+		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+		success: function(data) {
+			$("#view_turn_result").html(data);
+		}
+	});
+	return false;
+}
+</script>
+
+
 
 <?php
 if(G5_DEVICE_BUTTON_DISPLAY && !G5_IS_MOBILE) { ?>
@@ -83,7 +108,12 @@ if ($config['cf_analytics']) {
 ?>
 
 <!-- } 하단 끝 -->
-
+<script src="<?=G5_JS_URL?>/aos.js"></script>
+<script>
+  AOS.init({
+	easing: 'ease'
+  });
+</script>
 <script>
 $(function() {
     // 폰트 리사이즈 쿠키있으면 실행
@@ -91,5 +121,23 @@ $(function() {
 });
 </script>
 
+<script>
+$(function(){
+	$(window).scroll(function(event){
+		var scr_top = $(document).scrollTop();
+		if('<?=$top_h2?>' == "Our History"){
+			var history_tab = $('.history_tab').offset().top;
+			if(scr_top >= history_tab-115){
+				$('.history_tab_wrap').addClass('on');
+			}else{
+				$('.history_tab_wrap').removeClass('on');
+			}
+		}
+	});
+});
+</script>
+
+
 <?php
 include_once(G5_THEME_PATH."/tail.sub.php");
+?>

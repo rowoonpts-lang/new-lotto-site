@@ -79,13 +79,24 @@ define('G5_GROUP_DIR',      'group');
 define('G5_CONTENT_DIR',    'content');
 
 // URL 은 브라우저상에서의 경로 (도메인으로 부터)
-if (G5_DOMAIN) {
+if (
+    getenv('CODESPACES') === 'true'
+    && getenv('CODESPACE_NAME')
+    && getenv('GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN')
+) {
+    define(
+        'G5_URL',
+        'https://'
+        .getenv('CODESPACE_NAME')
+        .'-8000.'
+        .getenv('GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN')
+    );
+} elseif (G5_DOMAIN) {
     define('G5_URL', G5_DOMAIN);
+} elseif (isset($g5_path['url'])) {
+    define('G5_URL', $g5_path['url']);
 } else {
-    if (isset($g5_path['url']))
-        define('G5_URL', $g5_path['url']);
-    else
-        define('G5_URL', 'https://humble-space-spork-5gwx9vw57gv9hv7g5-8080.app.github.dev');
+    define('G5_URL', '');
 }
 
 if (isset($g5_path['path'])) {
