@@ -520,6 +520,22 @@ function admin_referer_check($return = false)
     $p = @parse_url($referer);
 
     $host = preg_replace('/:[0-9]+$/', '', $_SERVER['HTTP_HOST']);
+
+    // GitHub Codespaces는 외부 공개 주소와 내부 PHP 서버 호스트가 다릅니다.
+    // 내부 서버가 localhost일 때만 신뢰할 수 있는 Codespaces 전달 호스트를 사용합니다.
+    $forwarded_host = isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+        ? trim(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])[0])
+        : '';
+    $forwarded_host = preg_replace('/:[0-9]+$/', '', $forwarded_host);
+
+    if (
+        in_array($host, array('localhost', '127.0.0.1'), true)
+        && $forwarded_host
+        && preg_match('/\.app\.github\.dev$/i', $forwarded_host)
+    ) {
+        $host = $forwarded_host;
+    }
+
     $msg = '';
 
     if ($host != $p['host']) {

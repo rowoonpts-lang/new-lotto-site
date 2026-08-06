@@ -23,7 +23,7 @@ $mb_marketing_agree         = isset($_POST['mb_marketing_agree']) ? addslashes(c
 $mb_thirdparty_agree         = isset($_POST['mb_thirdparty_agree']) ? addslashes(clean_xss_tags(stripslashes($_POST['mb_thirdparty_agree']), 1, 1)) : '0';
 
 // 관리자가 자동등록방지를 사용해야 할 경우 ( 회원의 비밀번호 변경시 캡챠를 체크한다 )
-if ($mb_password) {
+if ($w === 'u' && $mb_password) {
     include_once(G5_CAPTCHA_PATH . '/captcha.lib.php');
 
     if (!chk_captcha()) {
@@ -54,6 +54,11 @@ $mb_zip2 = substr($mb_zip, 3);
 
 $mb_email = isset($_POST['mb_email']) ? get_email_address(trim($_POST['mb_email'])) : '';
 $mb_nick = isset($_POST['mb_nick']) ? trim(strip_tags($_POST['mb_nick'])) : '';
+
+if ($w === '') {
+    $mb_nick = $mb_id;
+    $mb_email = '';
+}
 
 if ($msg = valid_mb_nick($mb_nick)) {
     alert($msg, "", true, true);
@@ -145,11 +150,13 @@ if ($w == '') {
         alert('이미 존재하는 닉네임입니다.\\nＩＤ : ' . $row['mb_id'] . '\\n이름 : ' . $row['mb_name'] . '\\n닉네임 : ' . $row['mb_nick'] . '\\n메일 : ' . $row['mb_email']);
     }
 
-    // 이메일중복체크
-    $sql = " select mb_id, mb_name, mb_nick, mb_email from {$g5['member_table']} where mb_email = '{$mb_email}' ";
-    $row = sql_fetch($sql);
-    if (isset($row['mb_id']) && $row['mb_id']) {
-        alert('이미 존재하는 이메일입니다.\\nＩＤ : ' . $row['mb_id'] . '\\n이름 : ' . $row['mb_name'] . '\\n닉네임 : ' . $row['mb_nick'] . '\\n메일 : ' . $row['mb_email']);
+    // 이메일이 입력된 경우에만 중복체크
+    if ($mb_email !== '') {
+        $sql = " select mb_id, mb_name, mb_nick, mb_email from {$g5['member_table']} where mb_email = '{$mb_email}' ";
+        $row = sql_fetch($sql);
+        if (isset($row['mb_id']) && $row['mb_id']) {
+            alert('이미 존재하는 이메일입니다.\\nＩＤ : ' . $row['mb_id'] . '\\n이름 : ' . $row['mb_name'] . '\\n닉네임 : ' . $row['mb_nick'] . '\\n메일 : ' . $row['mb_email']);
+        }
     }
 
     $agree_items = array();
@@ -393,5 +400,9 @@ if (function_exists('get_admin_captcha_by')) {
 }
 
 run_event('admin_member_form_update', $w, $mb_id);
+
+if ($w === '') {
+    goto_url('./member_list.php?' . $qstr, false);
+}
 
 goto_url('./member_form.php?' . $qstr . '&amp;w=u&amp;mb_id=' . $mb_id, false);

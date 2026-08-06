@@ -39,6 +39,8 @@ $mb = array(
     'mb_10' => null,
 );
 
+$simple_member_create = ($w === '');
+
 $sound_only = '';
 $required_mb_id = '';
 $required_mb_id_class = '';
@@ -226,6 +228,11 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
 ?>
 
 <form name="fmember" id="fmember" action="./member_form_update.php" onsubmit="return fmember_submit(this);" method="post" enctype="multipart/form-data">
+    <?php if ($simple_member_create) { ?>
+    <div class="local_desc01 local_desc">
+        <p>신규 회원은 아이디, 비밀번호, 이름, 휴대폰번호만 입력합니다. 닉네임은 아이디로 자동 생성됩니다.</p>
+    </div>
+    <?php } ?>
     <input type="hidden" name="w" value="<?php echo $w ?>">
     <input type="hidden" name="sfl" value="<?php echo $sfl ?>">
     <input type="hidden" name="stx" value="<?php echo $stx ?>">
@@ -244,6 +251,29 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                 <col>
             </colgroup>
             <tbody>
+                <!-- SIMPLE_MEMBER_CREATE_FORM -->
+                <?php if ($simple_member_create) { ?>
+                <tr>
+                    <th scope="row"><label for="mb_id">아이디<?php echo $sound_only ?></label></th>
+                    <td>
+                        <input type="text" name="mb_id" value="<?php echo $mb['mb_id'] ?>" id="mb_id" <?php echo $required_mb_id ?> class="frm_input <?php echo $required_mb_id_class ?>" size="20" maxlength="20">
+                    </td>
+                    <th scope="row"><label for="mb_password">비밀번호<?php echo $sound_only ?></label></th>
+                    <td>
+                        <input type="password" name="mb_password" id="mb_password" <?php echo $required_mb_password ?> class="frm_input <?php echo $required_mb_password ?>" size="20" maxlength="20">
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="mb_name">이름<strong class="sound_only">필수</strong></label></th>
+                    <td>
+                        <input type="text" name="mb_name" value="<?php echo $mb['mb_name'] ?>" id="mb_name" required class="required frm_input" size="20" maxlength="20">
+                    </td>
+                    <th scope="row"><label for="mb_hp">휴대폰번호</label></th>
+                    <td>
+                        <input type="text" name="mb_hp" value="<?php echo $mb['mb_hp'] ?>" id="mb_hp" class="frm_input" size="20" maxlength="20">
+                    </td>
+                </tr>
+                <?php } else { ?>
                 <tr>
                     <th scope="row"><label for="mb_id">아이디<?php echo $sound_only ?></label></th>
                     <td>
@@ -629,6 +659,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                     </tr>
                 <?php } ?>
 
+
+                <?php } ?>
             </tbody>
         </table>
     </div>
@@ -651,9 +683,11 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
             return false;
         }
 
-        if( jQuery("#mb_password").val() ){
+        <?php if (!$simple_member_create) { ?>
+        if (jQuery("#mb_password").val()) {
             <?php echo $captcha_js; // 캡챠 사용시 자바스크립트에서 입력된 캡챠를 검사함 ?>
         }
+        <?php } ?>
 
         return true;
     }
@@ -661,6 +695,8 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
     jQuery(function($){
         $("#captcha_key").prop('required', false).removeAttr("required").removeClass("required");
 
+
+        <?php if (!$simple_member_create) { ?>
         $("#mb_password").on("keyup", function(e) {
             var $warp = $("#mb_password_captcha_wrap"),
                 tooptipid = "mp_captcha_tooltip",
@@ -679,6 +715,7 @@ add_javascript(G5_POSTCODE_JS, 0);    //다음 주소 js
                 if($("#"+tooptipid).length && ! is_invisible_recaptcha){ $parent.find("#"+tooptipid).remove(); }
             }
         });
+        <?php } ?>
     });
 </script>
 <?php
