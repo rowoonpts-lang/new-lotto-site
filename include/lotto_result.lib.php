@@ -15,7 +15,32 @@ function lotto_result_log($message)
     @file_put_contents($log_dir . '/lotto_result_sync.log', $line, FILE_APPEND | LOCK_EX);
 }
 
-function lotto_result_request($url, $cookie_file, $referer = '')
+function lotto_result_request($url, $cookie_file, $referer = '', $max_attempts = 3)
+{
+    $max_attempts = max(1, (int) $max_attempts);
+
+    for ($attempt = 1; $attempt <= $max_attempts; $attempt++) {
+        try {
+            return lotto_result_request_once($url, $cookie_file, $referer);
+        } catch (RuntimeException $e) {
+            if ($attempt >= $max_attempts) {
+                throw $e;
+            }
+
+            lotto_result_log(
+                '동행복권 요청 재시도 '
+                . $attempt . '/' . $max_attempts
+                . ': ' . $e->getMessage()
+            );
+
+            sleep(3);
+        }
+    }
+
+    throw new RuntimeException('동행복권 요청 재시도에 실패했습니다.');
+}
+
+function lotto_result_request_once($url, $cookie_file, $referer = '')
 {
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
@@ -57,6 +82,81 @@ function lotto_result_request($url, $cookie_file, $referer = '')
         }
 
         return $body;
+    }
+
+    // 웹 PHP에 cURL 확장이 없어도 시스템 curl 명령을 사용할 수 있습니다.
+    $curl_binary = '/usr/bin/curl';
+
+    if (function_exists('proc_open') && is_executable($curl_binary)) {
+        $command = array(
+            $curl_binary,
+            '--silent',
+            '--show-error',
+            '--location',
+            '--connect-timeout', '5',
+            '--max-time', '15',
+            '--user-agent', 'Mozilla/5.0 (compatible; LottoGPT Result Sync/1.0)',
+            '--header', 'Accept: text/html,application/json;q=0.9,*/*;q=0.8',
+            '--header', 'Accept-Language: ko-KR,ko;q=0.9,en;q=0.7',
+            '--cookie', $cookie_file,
+            '--cookie-jar', $cookie_file,
+            '--write-out', "\n%{http_code}",
+        );
+
+        if ($referer !== '') {
+            $command[] = '--referer';
+            $command[] = $referer;
+        }
+
+        $command[] = $url;
+
+        $descriptors = array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'w'),
+        );
+
+        $process = proc_open($command, $descriptors, $pipes);
+
+        if (is_resource($process)) {
+            fclose($pipes[0]);
+
+            $output = stream_get_contents($pipes[1]);
+            $error = stream_get_contents($pipes[2]);
+
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $exit_code = proc_close($process);
+
+            $output = (string) $output;
+            $last_newline = strrpos($output, "\n");
+
+            $body = $last_newline === false
+                ? ''
+                : substr($output, 0, $last_newline);
+
+            $status = $last_newline === false
+                ? 0
+                : (int) trim(substr($output, $last_newline + 1));
+
+            if ($exit_code !== 0) {
+                throw new RuntimeException(
+                    '동행복권 연결 실패: '
+                    . ($error !== '' ? trim($error) : 'curl 종료 코드 ' . $exit_code)
+                );
+            }
+
+            if ($status !== 200) {
+                throw new RuntimeException('동행복권 HTTP 응답 오류: ' . $status);
+            }
+
+            if ($body === '') {
+                throw new RuntimeException('동행복권 응답 내용이 비어 있습니다.');
+            }
+
+            return $body;
+        }
     }
 
     if (!filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
