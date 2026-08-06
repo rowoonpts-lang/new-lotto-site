@@ -8,8 +8,39 @@ if (G5_IS_MOBILE) {
 }
 
 include_once(G5_THEME_PATH.'/head.php');
+include_once G5_PATH . '/include/lotto_result.lib.php';
 
-$turn = max(1, (int) getTurn() - 1);
+$latest_lotto_result = lotto_result_get_latest_saved();
+$has_lotto_result = isset($latest_lotto_result['draw_no'])
+    && (int) $latest_lotto_result['draw_no'] > 0;
+
+$turn = $has_lotto_result
+    ? (int) $latest_lotto_result['draw_no']
+    : max(1, (int) getTurn() - 1);
+
+function lottogpt_ball_class($number)
+{
+    $number = (int) $number;
+
+    if ($number <= 10) {
+        return 'lg-ball-yellow';
+    }
+
+    if ($number <= 20) {
+        return 'lg-ball-blue';
+    }
+
+    if ($number <= 30) {
+        return 'lg-ball-red';
+    }
+
+    if ($number <= 40) {
+        return 'lg-ball-gray';
+    }
+
+    return 'lg-ball-green';
+}
+
 $notice_rows = array();
 $notice_result = sql_query("select wr_id, wr_subject, wr_datetime from g5_write_notice order by wr_datetime desc limit 3", false);
 if ($notice_result) {
@@ -44,40 +75,95 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
                 </ul>
             </div>
 
-            <div class="lg-analysis-card">
-                <div class="lg-card-head">
-                    <div><span class="lg-status-dot"></span>AI 분석 현황</div>
-                    <span>실시간 분석 중</span>
-                </div>
-                <div class="lg-analysis-main">
-                    <div class="lg-gauge" aria-label="분석 진행률 94퍼센트">
-                        <div><strong>94%</strong><span>분석 완료</span></div>
+            <article class="lg-lotto-result-card">
+                <header class="lg-result-head">
+                    <div>
+                        <p>LATEST LOTTO RESULT</p>
+                        <h2>최근 회차 당첨결과</h2>
                     </div>
-                    <div class="lg-orbit" aria-hidden="true">
-                        <div class="lg-orbit-core">AI</div>
-                        <span class="lg-orbit-ring lg-orbit-ring-1"></span>
-                        <span class="lg-orbit-ring lg-orbit-ring-2"></span>
-                        <span class="lg-orbit-node lg-orbit-node-1"></span>
-                        <span class="lg-orbit-node lg-orbit-node-2"></span>
-                        <span class="lg-orbit-node lg-orbit-node-3"></span>
-                        <span class="lg-orbit-node lg-orbit-node-4"></span>
+                    <span class="lg-result-source">동행복권</span>
+                </header>
+
+                <div class="lg-result-empty">
+                    <div class="lg-result-round">
+                        <?php if ($has_lotto_result) { ?>
+                            <strong>제 <?=number_format((int) $latest_lotto_result['draw_no'])?>회</strong>
+                            <span><?=get_text($latest_lotto_result['draw_date'])?> 추첨</span>
+                        <?php } else { ?>
+                            <strong>당첨결과 준비 중</strong>
+                            <span>토요일 21시부터 1시간 간격으로 확인합니다.</span>
+                        <?php } ?>
+                    </div>
+
+                    <div class="lg-winning-balls" aria-label="당첨번호 표시 영역">
+                        <?php if ($has_lotto_result) { ?>
+                            <?php for ($number_index = 1; $number_index <= 6; $number_index++) {
+                                $winning_number = (int) $latest_lotto_result['num_' . $number_index];
+                            ?>
+                                <span class="lg-lotto-ball <?=lottogpt_ball_class($winning_number)?>">
+                                    <?=$winning_number?>
+                                </span>
+                            <?php } ?>
+
+                            <b class="lg-bonus-plus">+</b>
+
+                            <?php $bonus_number = (int) $latest_lotto_result['bonus_num']; ?>
+                            <span class="lg-lotto-ball <?=lottogpt_ball_class($bonus_number)?>">
+                                <?=$bonus_number?>
+                            </span>
+                        <?php } else { ?>
+                            <?php foreach (array(
+                                'lg-ball-yellow',
+                                'lg-ball-blue',
+                                'lg-ball-red',
+                                'lg-ball-gray',
+                                'lg-ball-gray',
+                                'lg-ball-green'
+                            ) as $empty_ball_class) { ?>
+                                <span class="lg-lotto-ball <?=$empty_ball_class?>">?</span>
+                            <?php } ?>
+                            <b class="lg-bonus-plus">+</b>
+                            <span class="lg-lotto-ball lg-ball-bonus">?</span>
+                        <?php } ?>
                     </div>
                 </div>
-                <div class="lg-progress"><span></span></div>
-                <div class="lg-number-title">
-                    <strong>추천 번호 UI</strong>
-                    <small>기능 연결 전 디자인 샘플</small>
+
+                <div class="lg-prize-table">
+                    <div class="lg-prize-row lg-prize-head">
+                        <span>등수</span>
+                        <span>당첨자 수</span>
+                        <span>1게임당 당첨금</span>
+                    </div>
+
+                    <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+                    <div class="lg-prize-row">
+                        <strong><?=$rank?>등</strong>
+                        <span>
+                            <?=$has_lotto_result
+                                ? number_format((int) $latest_lotto_result['rank' . $rank . '_winners']) . '명'
+                                : '-'?>
+                        </span>
+                        <span>
+                            <?=$has_lotto_result
+                                ? number_format((int) $latest_lotto_result['rank' . $rank . '_amount']) . '원'
+                                : '-'?>
+                        </span>
+                    </div>
+                    <?php } ?>
                 </div>
-                <ul class="lg-balls">
-                    <li>03</li><li>08</li><li>14</li><li>27</li><li>38</li><li>42</li>
-                </ul>
-                <div class="lg-card-stats">
-                    <div><span>분석 회차</span><strong><?=number_format($turn)?>회</strong></div>
-                    <div><span>배출 조합</span><strong><?=number_format($analysis_total)?>개</strong></div>
-                    <div><span>분석 상태</span><strong>READY</strong></div>
-                    <div><span>업데이트</span><strong>WEEKLY</strong></div>
-                </div>
-            </div>
+
+                <footer class="lg-result-footer">
+                    <span>
+                        마지막 업데이트:
+                        <?=$has_lotto_result
+                            ? get_text($latest_lotto_result['fetched_at'])
+                            : '데이터 없음'?>
+                    </span>
+                    <a href="https://www.dhlottery.co.kr/lt645/result"
+                       target="_blank"
+                       rel="noopener noreferrer">공식 결과 보기</a>
+                </footer>
+            </article>
         </div>
     </section>
     <section class="lg-metrics">

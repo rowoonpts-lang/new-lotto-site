@@ -1020,3 +1020,232 @@
 .lottogpt-hidden-menu {
     display: none !important;
 }
+
+
+/* LottoGPT latest result card */
+.lg-lotto-result-card {
+    padding: 26px;
+    border: 1px solid rgba(229,184,76,.34);
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 90% 5%, rgba(229,184,76,.12), transparent 30%),
+        linear-gradient(145deg, rgba(14,22,32,.98), rgba(6,11,17,.98));
+    box-shadow: inset 0 1px rgba(255,255,255,.03), 0 18px 60px rgba(0,0,0,.26);
+}
+
+.lg-result-head,
+.lg-result-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.lg-result-head p {
+    margin-bottom: 7px;
+    color: var(--lg-teal);
+    font: 700 11px Montserrat, sans-serif;
+    letter-spacing: .14em;
+}
+
+.lg-result-head h2 {
+    color: #fff;
+    font-size: 21px;
+}
+
+.lg-result-source {
+    padding: 7px 10px;
+    border: 1px solid rgba(229,184,76,.3);
+    border-radius: 999px;
+    color: var(--lg-gold-light);
+    font-size: 11px;
+}
+
+.lg-result-empty {
+    margin: 24px 0 20px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 14px;
+    background: rgba(255,255,255,.02);
+}
+
+.lg-result-round {
+    text-align: center;
+}
+
+.lg-result-round strong,
+.lg-result-round span {
+    display: block;
+}
+
+.lg-result-round strong {
+    color: #fff;
+    font-size: 18px;
+}
+
+.lg-result-round span {
+    margin-top: 7px;
+    color: #778596;
+    font-size: 12px;
+}
+
+.lg-winning-balls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.lg-lotto-ball {
+    width: 48px;
+    height: 48px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    font: 800 17px Montserrat, sans-serif;
+    text-shadow: 0 1px 2px rgba(0,0,0,.45);
+    box-shadow:
+        inset 7px 7px 12px rgba(255,255,255,.18),
+        inset -7px -7px 13px rgba(0,0,0,.25),
+        0 8px 18px rgba(0,0,0,.25);
+}
+
+.lg-ball-yellow {
+    background: #d8a72e;
+}
+
+.lg-ball-blue {
+    background: #3b83c5;
+}
+
+.lg-ball-red {
+    background: #d9534f;
+}
+
+.lg-ball-gray {
+    background: #68727d;
+}
+
+.lg-ball-green {
+    background: #45a76c;
+}
+
+.lg-ball-bonus {
+    background: linear-gradient(145deg, #8a641c, #e5b84c);
+}
+
+.lg-bonus-plus {
+    margin: 0 2px;
+    color: var(--lg-gold-light);
+    font-size: 22px;
+}
+
+.lg-prize-table {
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 12px;
+}
+
+.lg-prize-row {
+    min-height: 42px;
+    display: grid;
+    grid-template-columns: 70px 1fr 1.5fr;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1px solid rgba(255,255,255,.055);
+    color: #aeb8c3;
+    font-size: 12px;
+}
+
+.lg-prize-row:last-child {
+    border-bottom: 0;
+}
+
+.lg-prize-row strong {
+    color: var(--lg-gold-light);
+}
+
+.lg-prize-head {
+    min-height: 38px;
+    background: rgba(255,255,255,.035);
+    color: #738191;
+    font-size: 10px;
+}
+
+.lg-result-footer {
+    margin-top: 16px;
+    color: #667382;
+    font-size: 11px;
+}
+
+.lg-result-footer a {
+    color: var(--lg-teal);
+}
+
+@media (max-width: 760px) {
+    .lg-lotto-result-card {
+        padding: 20px;
+    }
+
+    .lg-lotto-ball {
+        width: 42px;
+        height: 42px;
+        font-size: 15px;
+    }
+
+    .lg-prize-row {
+        grid-template-columns: 52px 1fr 1.4fr;
+        padding: 0 10px;
+    }
+
+    .lg-result-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+/* Latest result readability */
+.lg-result-round strong {
+    font-size: 22px;
+}
+
+.lg-result-round span {
+    font-size: 14px;
+}
+
+.lg-prize-row {
+    font-size: 14px;
+}
+
+.lg-prize-head {
+    font-size: 12px;
+}
+
+.lg-prize-row strong {
+    font-size: 15px;
+}
+
+@media (max-width: 760px) {
+    .lg-result-round strong {
+        font-size: 20px;
+    }
+
+    .lg-result-round span {
+        font-size: 13px;
+    }
+
+    .lg-prize-row {
+        font-size: 13px;
+    }
+
+    .lg-prize-head {
+        font-size: 11px;
+    }
+
+    .lg-prize-row strong {
+        font-size: 14px;
+    }
+}
