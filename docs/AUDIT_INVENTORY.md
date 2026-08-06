@@ -1,0 +1,3652 @@
+# Lotto Platform 전체 조사 목록
+
+> 자동 생성 문서입니다. 삭제 여부를 확정하는 문서가 아니라 점검 대상을 찾기 위한 기초 자료입니다.
+
+## 1. 전체 현황
+
+- 검사한 PHP 파일: **2147개**
+- 발견한 폼 action: **150종류**
+- 발견한 PHP 링크: **371종류**
+- 발견한 SQL 테이블 표현: **430종류**
+
+## 2. 최상위 구조
+
+- `.gitignore`
+- `LICENSE.txt`
+- `Oneshot2/`
+- `Oneshot_temp1/`
+- `Oneshot_temp2/`
+- `README.md`
+- `SECURITY.md`
+- `_common.php`
+- `_head.php`
+- `_tail.php`
+- `ad/`
+- `adm/`
+- `ajax/`
+- `auto/`
+- `bbs/`
+- `cloudflare.check.php`
+- `common.php`
+- `config.php`
+- `css/`
+- `data/`
+- `docs/`
+- `event/`
+- `extend/`
+- `head.php`
+- `head.sub.php`
+- `img/`
+- `index.html_`
+- `index.php`
+- `install/`
+- `js/`
+- `landing/`
+- `lib/`
+- `lpadm/`
+- `lpadmin/`
+- `mobile/`
+- `naver02bdc7dfed3b6079421d9659cb8cb51d.html`
+- `pax_global_header`
+- `perms.sh`
+- `plugin/`
+- `proc/`
+- `robots.txt`
+- `shop.config.php`
+- `shop/`
+- `skin/`
+- `sub/`
+- `tail.php`
+- `tail.sub.php`
+- `theme/`
+- `version.php`
+
+## 3. 영역별 PHP 파일
+
+### adm (255개)
+
+- `adm/_common.php`
+- `adm/_rewrite_config_form.php`
+- `adm/admin.head.php`
+- `adm/admin.index.php`
+- `adm/admin.lib.php`
+- `adm/admin.menu100.php`
+- `adm/admin.menu200.php`
+- `adm/admin.menu300.php`
+- `adm/admin.menu400.shop_1of2.php`
+- `adm/admin.menu500.shop_2of2.php`
+- `adm/admin.menu900.php`
+- `adm/admin.tail.php`
+- `adm/ajax.token.php`
+- `adm/ajax.use_captcha.php`
+- `adm/auth_list.php`
+- `adm/auth_list_delete.php`
+- `adm/auth_update.php`
+- `adm/board_copy.php`
+- `adm/board_copy_update.php`
+- `adm/board_delete.inc.php`
+- `adm/board_form.php`
+- `adm/board_form_update.php`
+- `adm/board_list.php`
+- `adm/board_list_update.php`
+- `adm/board_thumbnail_delete.php`
+- `adm/boardgroup_form.php`
+- `adm/boardgroup_form_update.php`
+- `adm/boardgroup_list.php`
+- `adm/boardgroup_list_update.php`
+- `adm/boardgroupmember_form.php`
+- `adm/boardgroupmember_list.php`
+- `adm/boardgroupmember_update.php`
+- `adm/browscap.php`
+- `adm/browscap_convert.php`
+- `adm/browscap_converter.php`
+- `adm/browscap_update.php`
+- `adm/cache_file_delete.php`
+- `adm/captcha_file_delete.php`
+- `adm/config_form.php`
+- `adm/config_form_update.php`
+- `adm/contentform.php`
+- `adm/contentformupdate.php`
+- `adm/contentlist.php`
+- `adm/dbupgrade.php`
+- `adm/faqform.php`
+- `adm/faqformupdate.php`
+- `adm/faqlist.php`
+- `adm/faqmasterform.php`
+- `adm/faqmasterformupdate.php`
+- `adm/faqmasterlist.php`
+- `adm/index.php`
+- `adm/mail_delete.php`
+- `adm/mail_form.php`
+- `adm/mail_list.php`
+- `adm/mail_preview.php`
+- `adm/mail_select_form.php`
+- `adm/mail_select_list.php`
+- `adm/mail_select_update.php`
+- `adm/mail_test.php`
+- `adm/mail_update.php`
+- `adm/member_delete.php`
+- `adm/member_form.php`
+- `adm/member_form_update.php`
+- `adm/member_list.php`
+- `adm/member_list_delete.php`
+- `adm/member_list_exel.lib.php`
+- `adm/member_list_exel.php`
+- `adm/member_list_exel_export.php`
+- `adm/member_list_file_delete.php`
+- `adm/member_list_update.php`
+- `adm/menu_form.php`
+- `adm/menu_form_search.php`
+- `adm/menu_list.php`
+- `adm/menu_list_update.php`
+- `adm/newwinform.php`
+- `adm/newwinformupdate.php`
+- `adm/newwinlist.php`
+- `adm/phpinfo.php`
+- `adm/point_list.php`
+- `adm/point_list_delete.php`
+- `adm/point_update.php`
+- `adm/poll_delete.php`
+- `adm/poll_form.php`
+- `adm/poll_form_update.php`
+- `adm/poll_list.php`
+- `adm/popular_list.php`
+- `adm/popular_rank.php`
+- `adm/qa_config.php`
+- `adm/qa_config_update.php`
+- `adm/safe_check.php`
+- `adm/sendmail_test.php`
+- `adm/service.php`
+- `adm/session_file_delete.php`
+- `adm/shop_admin/_common.php`
+- `adm/shop_admin/admin.shop.lib.php`
+- `adm/shop_admin/ajax.ca_id.php`
+- `adm/shop_admin/ajax.it_id.php`
+- `adm/shop_admin/ajax.orderitem.php`
+- `adm/shop_admin/ajax.skinfile.php`
+- `adm/shop_admin/bannerform.php`
+- `adm/shop_admin/bannerformupdate.php`
+- `adm/shop_admin/bannerlist.php`
+- `adm/shop_admin/categoryform.php`
+- `adm/shop_admin/categoryformupdate.php`
+- `adm/shop_admin/categorylist.php`
+- `adm/shop_admin/categorylistupdate.php`
+- `adm/shop_admin/configform.php`
+- `adm/shop_admin/configformupdate.php`
+- `adm/shop_admin/couponform.php`
+- `adm/shop_admin/couponformupdate.php`
+- `adm/shop_admin/couponlist.php`
+- `adm/shop_admin/couponlist_delete.php`
+- `adm/shop_admin/couponmember.php`
+- `adm/shop_admin/coupontarget.php`
+- `adm/shop_admin/couponzoneform.php`
+- `adm/shop_admin/couponzoneformupdate.php`
+- `adm/shop_admin/couponzonelist.php`
+- `adm/shop_admin/couponzonelist_delete.php`
+- `adm/shop_admin/index.php`
+- `adm/shop_admin/inorderform.php`
+- `adm/shop_admin/inorderformupdate.php`
+- `adm/shop_admin/inorderlist.php`
+- `adm/shop_admin/inorderlistdelete.php`
+- `adm/shop_admin/itemcopy.php`
+- `adm/shop_admin/itemcopyupdate.php`
+- `adm/shop_admin/itemdelete.inc.php`
+- `adm/shop_admin/itemevent.php`
+- `adm/shop_admin/itemeventform.php`
+- `adm/shop_admin/itemeventformupdate.php`
+- `adm/shop_admin/itemeventlist.php`
+- `adm/shop_admin/itemeventlistupdate.php`
+- `adm/shop_admin/itemeventsearch.php`
+- `adm/shop_admin/itemeventwin.php`
+- `adm/shop_admin/itemeventwindel.php`
+- `adm/shop_admin/itemexcel.php`
+- `adm/shop_admin/itemexcelupdate.php`
+- `adm/shop_admin/itemform.php`
+- `adm/shop_admin/itemformrelation.php`
+- `adm/shop_admin/itemformupdate.php`
+- `adm/shop_admin/iteminfo.php`
+- `adm/shop_admin/itemlist.php`
+- `adm/shop_admin/itemlistupdate.php`
+- `adm/shop_admin/itemoption.php`
+- `adm/shop_admin/itemqaform.php`
+- `adm/shop_admin/itemqaformupdate.php`
+- `adm/shop_admin/itemqalist.php`
+- `adm/shop_admin/itemqalistupdate.php`
+- `adm/shop_admin/itemsellrank.php`
+- `adm/shop_admin/itemstocklist.php`
+- `adm/shop_admin/itemstocklistupdate.php`
+- `adm/shop_admin/itemstocksms.php`
+- `adm/shop_admin/itemstocksmsupdate.php`
+- `adm/shop_admin/itemsupply.php`
+- `adm/shop_admin/itemtypelist.php`
+- `adm/shop_admin/itemtypelistupdate.php`
+- `adm/shop_admin/itemuseform.php`
+- `adm/shop_admin/itemuseformupdate.php`
+- `adm/shop_admin/itemuselist.php`
+- `adm/shop_admin/itemuselistupdate.php`
+- `adm/shop_admin/optionstocklist.php`
+- `adm/shop_admin/optionstocklistupdate.php`
+- `adm/shop_admin/orderdelivery.php`
+- `adm/shop_admin/orderdeliveryexcel.php`
+- `adm/shop_admin/orderdeliveryupdate.php`
+- `adm/shop_admin/orderform.php`
+- `adm/shop_admin/orderformcartupdate.php`
+- `adm/shop_admin/orderformreceiptupdate.php`
+- `adm/shop_admin/orderformupdate.php`
+- `adm/shop_admin/orderlist.php`
+- `adm/shop_admin/orderlistdelete.php`
+- `adm/shop_admin/orderlistupdate.php`
+- `adm/shop_admin/ordermail.inc.php`
+- `adm/shop_admin/orderpartcancel.php`
+- `adm/shop_admin/orderpartcancelupdate.php`
+- `adm/shop_admin/orderprint.php`
+- `adm/shop_admin/orderprintresult.php`
+- `adm/shop_admin/ordersms.inc.php`
+- `adm/shop_admin/personalpaycopy.php`
+- `adm/shop_admin/personalpaycopyupdate.php`
+- `adm/shop_admin/personalpayform.php`
+- `adm/shop_admin/personalpayformupdate.php`
+- `adm/shop_admin/personalpaylist.php`
+- `adm/shop_admin/personalpaylistdelete.php`
+- `adm/shop_admin/price.php`
+- `adm/shop_admin/sale1.php`
+- `adm/shop_admin/sale1date.php`
+- `adm/shop_admin/sale1month.php`
+- `adm/shop_admin/sale1today.php`
+- `adm/shop_admin/sale1year.php`
+- `adm/shop_admin/sendcostlist.php`
+- `adm/shop_admin/sendcostupdate.php`
+- `adm/shop_admin/wishlist.php`
+- `adm/sms_admin/_common.php`
+- `adm/sms_admin/ajax.hp_chk.php`
+- `adm/sms_admin/ajax.sms_write_form.php`
+- `adm/sms_admin/ajax.sms_write_group.php`
+- `adm/sms_admin/ajax.sms_write_level.php`
+- `adm/sms_admin/ajax.sms_write_person.php`
+- `adm/sms_admin/config.php`
+- `adm/sms_admin/config_update.php`
+- `adm/sms_admin/emoticon_move.php`
+- `adm/sms_admin/emoticon_move_update.php`
+- `adm/sms_admin/form_group.php`
+- `adm/sms_admin/form_group_move.php`
+- `adm/sms_admin/form_group_update.php`
+- `adm/sms_admin/form_list.php`
+- `adm/sms_admin/form_multi_update.php`
+- `adm/sms_admin/form_update.php`
+- `adm/sms_admin/form_write.php`
+- `adm/sms_admin/history_list.php`
+- `adm/sms_admin/history_num.php`
+- `adm/sms_admin/history_send.php`
+- `adm/sms_admin/history_view.php`
+- `adm/sms_admin/install.php`
+- `adm/sms_admin/member_update.php`
+- `adm/sms_admin/member_update_run.php`
+- `adm/sms_admin/num_book.php`
+- `adm/sms_admin/num_book_file.php`
+- `adm/sms_admin/num_book_file_download.php`
+- `adm/sms_admin/num_book_file_upload.php`
+- `adm/sms_admin/num_book_move.php`
+- `adm/sms_admin/num_book_multi_update.php`
+- `adm/sms_admin/num_book_update.php`
+- `adm/sms_admin/num_book_write.php`
+- `adm/sms_admin/num_group.php`
+- `adm/sms_admin/num_group_move.php`
+- `adm/sms_admin/num_group_update.php`
+- `adm/sms_admin/number_move_update.php`
+- `adm/sms_admin/sms_ing.php`
+- `adm/sms_admin/sms_write.php`
+- `adm/sms_admin/sms_write_form.php`
+- `adm/sms_admin/sms_write_overlap_check.php`
+- `adm/sms_admin/sms_write_send.php`
+- `adm/theme.php`
+- `adm/theme_config_load.php`
+- `adm/theme_detail.php`
+- `adm/theme_preview.php`
+- `adm/theme_update.php`
+- `adm/thumbnail_file_delete.php`
+- `adm/view.php`
+- `adm/visit.sub.php`
+- `adm/visit_browser.php`
+- `adm/visit_date.php`
+- `adm/visit_delete.php`
+- `adm/visit_delete_update.php`
+- `adm/visit_device.php`
+- `adm/visit_domain.php`
+- `adm/visit_hour.php`
+- `adm/visit_list.php`
+- `adm/visit_month.php`
+- `adm/visit_os.php`
+- `adm/visit_search.php`
+- `adm/visit_week.php`
+- `adm/visit_year.php`
+- `adm/write_count.php`
+
+### bbs (106개)
+
+- `bbs/_common.php`
+- `bbs/_head.php`
+- `bbs/_head.sub.php`
+- `bbs/_tail.php`
+- `bbs/_tail.sub.php`
+- `bbs/ajax.autosave.php`
+- `bbs/ajax.autosavedel.php`
+- `bbs/ajax.autosavelist.php`
+- `bbs/ajax.autosaveload.php`
+- `bbs/ajax.comment_token.php`
+- `bbs/ajax.filter.php`
+- `bbs/ajax.mb_email.php`
+- `bbs/ajax.mb_hp.php`
+- `bbs/ajax.mb_id.php`
+- `bbs/ajax.mb_nick.php`
+- `bbs/ajax.mb_recommend.php`
+- `bbs/ajax.write.token.php`
+- `bbs/alert.php`
+- `bbs/alert2.php`
+- `bbs/alert_close.php`
+- `bbs/board.php`
+- `bbs/board_head.php`
+- `bbs/board_list_update.php`
+- `bbs/board_tail.php`
+- `bbs/confirm.php`
+- `bbs/content.php`
+- `bbs/current_connect.php`
+- `bbs/db_table.optimize.php`
+- `bbs/delete.php`
+- `bbs/delete_all.php`
+- `bbs/delete_comment.php`
+- `bbs/download.php`
+- `bbs/email_certify.php`
+- `bbs/email_stop.php`
+- `bbs/faq.php`
+- `bbs/formmail.php`
+- `bbs/formmail_send.php`
+- `bbs/good.php`
+- `bbs/group.php`
+- `bbs/link.php`
+- `bbs/list.php`
+- `bbs/login.php`
+- `bbs/login_check.php`
+- `bbs/logout.php`
+- `bbs/member_cert_refresh.php`
+- `bbs/member_cert_refresh_update.php`
+- `bbs/member_confirm.php`
+- `bbs/member_leave.php`
+- `bbs/memo.php`
+- `bbs/memo_delete.php`
+- `bbs/memo_form.php`
+- `bbs/memo_form_update.php`
+- `bbs/memo_view.php`
+- `bbs/move.php`
+- `bbs/move_update.php`
+- `bbs/new.php`
+- `bbs/new_delete.php`
+- `bbs/newwin.inc.php`
+- `bbs/password.php`
+- `bbs/password_check.php`
+- `bbs/password_lost.php`
+- `bbs/password_lost2.php`
+- `bbs/password_lost_certify.php`
+- `bbs/password_reset.php`
+- `bbs/password_reset_update.php`
+- `bbs/point.php`
+- `bbs/poll_etc_update.php`
+- `bbs/poll_etc_update_mail.php`
+- `bbs/poll_result.php`
+- `bbs/poll_update.php`
+- `bbs/profile.php`
+- `bbs/qadelete.php`
+- `bbs/qadownload.php`
+- `bbs/qahead.php`
+- `bbs/qalist.php`
+- `bbs/qatail.php`
+- `bbs/qaview.php`
+- `bbs/qawrite.php`
+- `bbs/qawrite_update.php`
+- `bbs/register.php`
+- `bbs/register_email.php`
+- `bbs/register_email_update.php`
+- `bbs/register_form.php`
+- `bbs/register_form_update.php`
+- `bbs/register_form_update_mail1.php`
+- `bbs/register_form_update_mail2.php`
+- `bbs/register_form_update_mail3.php`
+- `bbs/register_result.php`
+- `bbs/rss.php`
+- `bbs/scrap.php`
+- `bbs/scrap_delete.php`
+- `bbs/scrap_popin.php`
+- `bbs/scrap_popin_update.php`
+- `bbs/search.php`
+- `bbs/sns_send.php`
+- `bbs/view.php`
+- `bbs/view_comment.php`
+- `bbs/view_image.php`
+- `bbs/visit_browscap.inc.php`
+- `bbs/visit_insert.inc.php`
+- `bbs/write.php`
+- `bbs/write_comment_update.php`
+- `bbs/write_comment_update.sns.php`
+- `bbs/write_token.php`
+- `bbs/write_update.php`
+- `bbs/write_update_mail.php`
+
+### extend (10개)
+
+- `extend/debugbar.extend.php`
+- `extend/default.config.php`
+- `extend/g5_54version_update.extend.php`
+- `extend/lotto.platform.extend.php`
+- `extend/shop.extend.php`
+- `extend/smarteditor_upload_extend.php`
+- `extend/sms5.extend.php`
+- `extend/social_login.extend.php`
+- `extend/user.config.php`
+- `extend/version.extend.php`
+
+### lpadmin (122개)
+
+- `lpadmin/_common.php`
+- `lpadmin/ad/_common.php`
+- `lpadmin/ad/ad.data.list.del.php`
+- `lpadmin/ad/ad.data.list.excel.php`
+- `lpadmin/ad/ad.data.list.php`
+- `lpadmin/ad/ad.list.php`
+- `lpadmin/ad/ajax.find.code.php`
+- `lpadmin/ad/ajax.find.id.php`
+- `lpadmin/ad/pop.new_ad.del.php`
+- `lpadmin/ad/pop.new_ad.php`
+- `lpadmin/ad/pop.new_ad.update.php`
+- `lpadmin/bbs/_common.php`
+- `lpadmin/bbs/bbs.res.action.del.php`
+- `lpadmin/bbs/bbs.res.action.excel.php`
+- `lpadmin/bbs/bbs.res.action.php`
+- `lpadmin/bbs/bbs.res.db.del.php`
+- `lpadmin/bbs/bbs.res.db.excel.php`
+- `lpadmin/bbs/bbs.res.db.php`
+- `lpadmin/bbs/bbs.res.list.del.php`
+- `lpadmin/bbs/bbs.res.list.excel.php`
+- `lpadmin/bbs/bbs.res.list.php`
+- `lpadmin/check_sms_log_v3.php`
+- `lpadmin/del.process.php`
+- `lpadmin/emp/_common.php`
+- `lpadmin/emp/ajax.saveIp.php`
+- `lpadmin/emp/emp.add.php`
+- `lpadmin/emp/emp.memo.php`
+- `lpadmin/emp/emp.save.php`
+- `lpadmin/emp/pop.emp.new_member.php`
+- `lpadmin/head.php`
+- `lpadmin/head.sub.php`
+- `lpadmin/index.php`
+- `lpadmin/login.check.php`
+- `lpadmin/login.php`
+- `lpadmin/login.step2.check.php`
+- `lpadmin/login.step2.php`
+- `lpadmin/logout.php`
+- `lpadmin/lucky/_common.php`
+- `lpadmin/lucky/filter.php`
+- `lpadmin/lucky/filter.update.php`
+- `lpadmin/lucky/lucky.custom.php`
+- `lpadmin/lucky/lucky.custom.save.php`
+- `lpadmin/lucky/lucky.list.excel.php`
+- `lpadmin/lucky/lucky.list.php`
+- `lpadmin/lucky/lucky.view.php`
+- `lpadmin/lucky/lucky.view.update.php`
+- `lpadmin/lucky/make.3th.php`
+- `lpadmin/lucky/make.4th.php`
+- `lpadmin/lucky/test.del.php`
+- `lpadmin/lucky/test.php`
+- `lpadmin/member/_common.php`
+- `lpadmin/member/ajax.calc.leftday.php`
+- `lpadmin/member/ajax.checkAlarm.php`
+- `lpadmin/member/ajax.create.number.php`
+- `lpadmin/member/ajax.find.db.php`
+- `lpadmin/member/ajax.getPrice.php`
+- `lpadmin/member/ajax.mu.save.php`
+- `lpadmin/member/ajax.pop.memo.hk.php`
+- `lpadmin/member/ajax.proc.view.php`
+- `lpadmin/member/ajax.sms.id.send.php`
+- `lpadmin/member/ajax.sms.id.send2.php`
+- `lpadmin/member/ajax.smsReSend.php`
+- `lpadmin/member/alarm.list.php`
+- `lpadmin/member/inc.alarmList.php`
+- `lpadmin/member/inc.calendar.php`
+- `lpadmin/member/member.all.excel.php`
+- `lpadmin/member/member.all.php`
+- `lpadmin/member/member.alldel.php`
+- `lpadmin/member/member.del.php`
+- `lpadmin/member/member.head.php`
+- `lpadmin/member/member.save.php`
+- `lpadmin/member/member.search.php`
+- `lpadmin/member/payment.cancel.php`
+- `lpadmin/member/payment.mu.pay.php`
+- `lpadmin/member/pop.member_info.php`
+- `lpadmin/member/pop.member_info.stop.php`
+- `lpadmin/member/pop.member_info.update.php`
+- `lpadmin/member/pop.memo.php`
+- `lpadmin/member/pop.memo.update.php`
+- `lpadmin/member/pop.new_member.php`
+- `lpadmin/member/pop.payment.cancel.php`
+- `lpadmin/member/pop.payment.in.cancel.php`
+- `lpadmin/member/pop.payment.in.update.php`
+- `lpadmin/member/pop.payment.php`
+- `lpadmin/member/pop.payment.update.php`
+- `lpadmin/member/pop.sms.php`
+- `lpadmin/member/pop.success.php`
+- `lpadmin/member/pop.success.update.php`
+- `lpadmin/member/proc.mbin.php`
+- `lpadmin/member/sms.udpate.php`
+- `lpadmin/payment/_common.php`
+- `lpadmin/payment/in.excel.php`
+- `lpadmin/payment/in.php`
+- `lpadmin/payment/payment.all.excel.php`
+- `lpadmin/payment/payment.all.php`
+- `lpadmin/payment/payment.cancel.php`
+- `lpadmin/payment/payment.credit.pay.php`
+- `lpadmin/payment/payment.credit.php`
+- `lpadmin/payment/payment.mu.befor.php`
+- `lpadmin/payment/payment.mu.before.excel.php`
+- `lpadmin/payment/payment.mu.excel.php`
+- `lpadmin/payment/payment.mu.php`
+- `lpadmin/payment/payment.php`
+- `lpadmin/payment/payment2.php`
+- `lpadmin/payment/sample.php`
+- `lpadmin/payment/sample2.php`
+- `lpadmin/program/_common.php`
+- `lpadmin/program/lotto.number.php`
+- `lpadmin/readme.php`
+- `lpadmin/sms/_common.php`
+- `lpadmin/sms/sms.excel.number.upload.php`
+- `lpadmin/sms/sms.excel.number.upload.update.php`
+- `lpadmin/sms/sms.excel1.upload.php`
+- `lpadmin/sms/sms.excel1.upload.update.php`
+- `lpadmin/sms/sms.excel2.upload.php`
+- `lpadmin/sms/sms.list.php`
+- `lpadmin/sms/sms.spam.del.php`
+- `lpadmin/sms/sms.spam.php`
+- `lpadmin/statistics/_common.php`
+- `lpadmin/statistics/st.list.php`
+- `lpadmin/table_stadard.php`
+- `lpadmin/tail.php`
+
+### mobile (187개)
+
+- `mobile/_head.php`
+- `mobile/_tail.php`
+- `mobile/content.php`
+- `mobile/group.php`
+- `mobile/head.php`
+- `mobile/index.php`
+- `mobile/newwin.inc.php`
+- `mobile/shop/_common.php`
+- `mobile/shop/_head.php`
+- `mobile/shop/_tail.php`
+- `mobile/shop/cart.php`
+- `mobile/shop/category.php`
+- `mobile/shop/coupon.php`
+- `mobile/shop/event.php`
+- `mobile/shop/index.php`
+- `mobile/shop/inicis/_common.php`
+- `mobile/shop/inicis/orderform.1.php`
+- `mobile/shop/inicis/orderform.2.php`
+- `mobile/shop/inicis/orderform.3.php`
+- `mobile/shop/inicis/pay_approval.php`
+- `mobile/shop/inicis/pay_result.php`
+- `mobile/shop/inicis/pay_return.php`
+- `mobile/shop/inicis/settle_common.php`
+- `mobile/shop/item.php`
+- `mobile/shop/iteminfo.php`
+- `mobile/shop/itemqa.php`
+- `mobile/shop/itemqaform.php`
+- `mobile/shop/itemqalist.php`
+- `mobile/shop/itemrecommend.php`
+- `mobile/shop/itemuse.php`
+- `mobile/shop/itemuseform.php`
+- `mobile/shop/itemuselist.php`
+- `mobile/shop/kcp/KCPComLibrary.php`
+- `mobile/shop/kcp/_common.php`
+- `mobile/shop/kcp/easypay_form.1.php`
+- `mobile/shop/kcp/easypay_form.2.php`
+- `mobile/shop/kcp/global_m_nhn_kcp.php`
+- `mobile/shop/kcp/m_order.script.php`
+- `mobile/shop/kcp/order_approval.php`
+- `mobile/shop/kcp/order_approval_form.php`
+- `mobile/shop/kcp/orderform.1.php`
+- `mobile/shop/kcp/orderform.2.php`
+- `mobile/shop/kcp/orderform.3.php`
+- `mobile/shop/kcp/pp_ax_hub.php`
+- `mobile/shop/kcp/pp_ax_hub_cancel.php`
+- `mobile/shop/kcp/pp_ax_hub_lib.php`
+- `mobile/shop/largeimage.php`
+- `mobile/shop/lg/_common.php`
+- `mobile/shop/lg/cancel_url.php`
+- `mobile/shop/lg/mispwapurl.php`
+- `mobile/shop/lg/note_url.php`
+- `mobile/shop/lg/orderform.1.php`
+- `mobile/shop/lg/orderform.2.php`
+- `mobile/shop/lg/orderform.3.php`
+- `mobile/shop/lg/returnurl.php`
+- `mobile/shop/lg/xpay_approval.php`
+- `mobile/shop/list.php`
+- `mobile/shop/listtype.php`
+- `mobile/shop/mypage.php`
+- `mobile/shop/nicepay/_common.php`
+- `mobile/shop/nicepay/index.php`
+- `mobile/shop/nicepay/nicepay_result.php`
+- `mobile/shop/nicepay/orderform.1.php`
+- `mobile/shop/nicepay/orderform.2.php`
+- `mobile/shop/nicepay/orderform.3.php`
+- `mobile/shop/nicepay/return_url_result.php`
+- `mobile/shop/orderaddress.php`
+- `mobile/shop/orderform.sub.php`
+- `mobile/shop/orderformupdate.php`
+- `mobile/shop/orderinquiry.php`
+- `mobile/shop/orderinquiry.sub.php`
+- `mobile/shop/orderinquiryview.php`
+- `mobile/shop/personalpay.php`
+- `mobile/shop/personalpayform.sub.php`
+- `mobile/shop/personalpayformupdate.php`
+- `mobile/shop/personalpayresult.php`
+- `mobile/shop/samsungpay/_common.php`
+- `mobile/shop/samsungpay/incSamsungpayCommon.php`
+- `mobile/shop/samsungpay/order.script.php`
+- `mobile/shop/samsungpay/orderform.1.php`
+- `mobile/shop/samsungpay/orderform.2.php`
+- `mobile/shop/samsungpay/orderform.3.php`
+- `mobile/shop/search.php`
+- `mobile/shop/settle_inicis.inc.php`
+- `mobile/shop/settle_kcp.inc.php`
+- `mobile/shop/settle_lg.inc.php`
+- `mobile/shop/settle_nicepay.inc.php`
+- `mobile/shop/settle_toss.inc.php`
+- `mobile/shop/shop.head.php`
+- `mobile/shop/shop.tail.php`
+- `mobile/shop/toss/_common.php`
+- `mobile/shop/toss/orderform.1.php`
+- `mobile/shop/toss/orderform.2.php`
+- `mobile/shop/toss/orderform.3.php`
+- `mobile/shop/toss/returnurl.php`
+- `mobile/shop/toss/toss_approval.php`
+- `mobile/shop/wishlist.php`
+- `mobile/skin/board/basic/list.skin.php`
+- `mobile/skin/board/basic/view.skin.php`
+- `mobile/skin/board/basic/view_comment.skin.php`
+- `mobile/skin/board/basic/write.skin.php`
+- `mobile/skin/board/gallery/list.skin.php`
+- `mobile/skin/board/gallery/view.skin.php`
+- `mobile/skin/board/gallery/view_comment.skin.php`
+- `mobile/skin/board/gallery/write.skin.php`
+- `mobile/skin/connect/basic/connect.skin.php`
+- `mobile/skin/connect/basic/current_connect.skin.php`
+- `mobile/skin/content/basic/content.skin.php`
+- `mobile/skin/faq/basic/list.skin.php`
+- `mobile/skin/latest/basic/latest.skin.php`
+- `mobile/skin/latest/comment/latest.skin.php`
+- `mobile/skin/latest/notice/latest.skin.php`
+- `mobile/skin/latest/shop_basic/latest.skin.php`
+- `mobile/skin/member/basic/consent_modal.inc.php`
+- `mobile/skin/member/basic/formmail.skin.php`
+- `mobile/skin/member/basic/login.skin.php`
+- `mobile/skin/member/basic/login_check.skin.php`
+- `mobile/skin/member/basic/member_cert_refresh.skin.php`
+- `mobile/skin/member/basic/member_confirm.skin.php`
+- `mobile/skin/member/basic/memo.skin.php`
+- `mobile/skin/member/basic/memo_form.skin.php`
+- `mobile/skin/member/basic/memo_view.skin.php`
+- `mobile/skin/member/basic/password.skin.php`
+- `mobile/skin/member/basic/password_lost.skin.php`
+- `mobile/skin/member/basic/password_reset.skin.php`
+- `mobile/skin/member/basic/point.skin.php`
+- `mobile/skin/member/basic/profile.skin.php`
+- `mobile/skin/member/basic/register.skin.php`
+- `mobile/skin/member/basic/register_form.skin.php`
+- `mobile/skin/member/basic/register_form_update.tail.skin.php`
+- `mobile/skin/member/basic/register_result.skin.php`
+- `mobile/skin/member/basic/scrap.skin.php`
+- `mobile/skin/member/basic/scrap_popin.skin.php`
+- `mobile/skin/new/basic/new.skin.php`
+- `mobile/skin/outlogin/basic/outlogin.skin.1.php`
+- `mobile/skin/outlogin/basic/outlogin.skin.2.php`
+- `mobile/skin/outlogin/shop_basic/outlogin.skin.1.php`
+- `mobile/skin/outlogin/shop_basic/outlogin.skin.2.php`
+- `mobile/skin/poll/basic/poll.skin.php`
+- `mobile/skin/poll/basic/poll_result.skin.php`
+- `mobile/skin/popular/basic/popular.skin.php`
+- `mobile/skin/qa/basic/list.skin.php`
+- `mobile/skin/qa/basic/view.answer.skin.php`
+- `mobile/skin/qa/basic/view.answerform.skin.php`
+- `mobile/skin/qa/basic/view.skin.php`
+- `mobile/skin/qa/basic/write.skin.php`
+- `mobile/skin/search/basic/search.skin.php`
+- `mobile/skin/shop/basic/boxbanner.skin.php`
+- `mobile/skin/shop/basic/boxtodayview.skin.php`
+- `mobile/skin/shop/basic/couponzone.10.skin.php`
+- `mobile/skin/shop/basic/item.form.skin.php`
+- `mobile/skin/shop/basic/iteminfo.change.skin.php`
+- `mobile/skin/shop/basic/iteminfo.delivery.skin.php`
+- `mobile/skin/shop/basic/iteminfo.info.skin.php`
+- `mobile/skin/shop/basic/iteminfo.itemqa.skin.php`
+- `mobile/skin/shop/basic/iteminfo.itemuse.skin.php`
+- `mobile/skin/shop/basic/iteminfo.relation.skin.php`
+- `mobile/skin/shop/basic/itemqa.skin.php`
+- `mobile/skin/shop/basic/itemqaform.skin.php`
+- `mobile/skin/shop/basic/itemqalist.skin.php`
+- `mobile/skin/shop/basic/itemuse.skin.php`
+- `mobile/skin/shop/basic/itemuseform.skin.php`
+- `mobile/skin/shop/basic/itemuselist.skin.php`
+- `mobile/skin/shop/basic/largeimage.skin.php`
+- `mobile/skin/shop/basic/list.10.skin.php`
+- `mobile/skin/shop/basic/list.best.10.skin.php`
+- `mobile/skin/shop/basic/list.sort.skin.php`
+- `mobile/skin/shop/basic/list.sub.skin.php`
+- `mobile/skin/shop/basic/listcategory.skin.php`
+- `mobile/skin/shop/basic/main.10.skin.php`
+- `mobile/skin/shop/basic/main.20.skin.php`
+- `mobile/skin/shop/basic/main.30.skin.php`
+- `mobile/skin/shop/basic/main.event.skin.php`
+- `mobile/skin/shop/basic/mainbanner.10.skin.php`
+- `mobile/skin/shop/basic/navigation.skin.php`
+- `mobile/skin/shop/basic/personalpay.skin.php`
+- `mobile/skin/shop/basic/relation.10.skin.php`
+- `mobile/skin/shop/basic/search.skin.php`
+- `mobile/skin/social/consent_modal.inc.php`
+- `mobile/skin/social/index.php`
+- `mobile/skin/social/social_login.skin.php`
+- `mobile/skin/social/social_outlogin.skin.1.php`
+- `mobile/skin/social/social_register.skin.php`
+- `mobile/skin/social/social_register_member.skin.php`
+- `mobile/skin/social/social_u_register_form.skin.php`
+- `mobile/skin/visit/basic/visit.skin.php`
+- `mobile/tail.php`
+
+### root (1467개)
+
+- `_common.php`
+- `_head.php`
+- `_tail.php`
+- `ad/_common.php`
+- `ad/doc.v1.php`
+- `ad/json_sample_php.php`
+- `ad/process.excel.php`
+- `ad/process.list.php`
+- `ad/process.login.check.php`
+- `ad/process.login.php`
+- `ad/process.logout.php`
+- `ad/process.php`
+- `ajax/_common.php`
+- `ajax/ajax.find.mb_hp.php`
+- `ajax/ajax.find.mb_id.php`
+- `auto/_common.php`
+- `auto/ajax.process01.switch.php`
+- `auto/ajax.timecheck01.php`
+- `auto/ajax.timecheck02.php`
+- `auto/ajax.timecheck03.php`
+- `auto/ajax.timecheck04.php`
+- `auto/ajax.timecheck05.php`
+- `auto/ajax.timecheck06.php`
+- `auto/auto.php`
+- `auto/debug_sms_v2.php`
+- `auto/manual_mass_send.php`
+- `auto/manual_mass_send_ajax.php`
+- `auto/manual_send_wed.php`
+- `auto/one_create.list.php`
+- `auto/one_create.proc.php`
+- `auto/one_update.proc.php`
+- `auto/process.01.php`
+- `auto/process.02.php`
+- `auto/process.03.php`
+- `auto/process.04.php`
+- `auto/process.04__.php`
+- `auto/process.05.php`
+- `auto/process.06.php`
+- `cloudflare.check.php`
+- `common.php`
+- `config.php`
+- `data/dbconfig.php`
+- `data/file/faq/index.php`
+- `data/file/notice/index.php`
+- `data/file/review/index.php`
+- `data/res/17810403960.php`
+- `data/res/17810404020.php`
+- `event/event1/_common.php`
+- `event/event1/index.php`
+- `event/event1/m.php`
+- `event/event1/order_update.php`
+- `event/event1/pc.php`
+- `event/event2/_common.php`
+- `event/event2/index.php`
+- `event/event2/m.php`
+- `event/event2/order_update.php`
+- `event/event2/pc.php`
+- `head.php`
+- `head.sub.php`
+- `index.php`
+- `install/ajax.install.check.php`
+- `install/index.php`
+- `install/install.function.php`
+- `install/install.inc.php`
+- `install/install.inc2.php`
+- `install/install_common.php`
+- `install/install_config.php`
+- `install/install_db.php`
+- `install/library.check.php`
+- `landing/2ns1/_common.php`
+- `landing/2ns1/index.php`
+- `landing/2ns1/order_update.php`
+- `landing/2rl1/_common.php`
+- `landing/2rl1/index.php`
+- `landing/2rl1/order_update.php`
+- `landing/2robot1/_common.php`
+- `landing/2robot1/index.php`
+- `landing/2robot1/order_update.php`
+- `landing/cre/_common.php`
+- `landing/cre/index.php`
+- `landing/cre/order_update.php`
+- `landing/ns1/_common.php`
+- `landing/ns1/index.200831.php`
+- `landing/ns1/index.php`
+- `landing/ns1/order_update.php`
+- `lib/Cache/FileCache.class.php`
+- `lib/Cache/obj.class.php`
+- `lib/Excel/oleread.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_biffwriter.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_format.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_olewriter.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbookbig.inc.php`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php`
+- `lib/Excel/reader.php`
+- `lib/Hook/hook.class.php`
+- `lib/Hook/hook.extends.class.php`
+- `lib/PHPExcel/Autoloader.php`
+- `lib/PHPExcel/CachedObjectStorage/APC.php`
+- `lib/PHPExcel/CachedObjectStorage/CacheBase.php`
+- `lib/PHPExcel/CachedObjectStorage/DiscISAM.php`
+- `lib/PHPExcel/CachedObjectStorage/ICache.php`
+- `lib/PHPExcel/CachedObjectStorage/Igbinary.php`
+- `lib/PHPExcel/CachedObjectStorage/Memcache.php`
+- `lib/PHPExcel/CachedObjectStorage/Memory.php`
+- `lib/PHPExcel/CachedObjectStorage/MemoryGZip.php`
+- `lib/PHPExcel/CachedObjectStorage/MemorySerialized.php`
+- `lib/PHPExcel/CachedObjectStorage/PHPTemp.php`
+- `lib/PHPExcel/CachedObjectStorage/SQLite.php`
+- `lib/PHPExcel/CachedObjectStorage/SQLite3.php`
+- `lib/PHPExcel/CachedObjectStorage/Wincache.php`
+- `lib/PHPExcel/CachedObjectStorageFactory.php`
+- `lib/PHPExcel/CalcEngine/CyclicReferenceStack.php`
+- `lib/PHPExcel/CalcEngine/Logger.php`
+- `lib/PHPExcel/Calculation/Database.php`
+- `lib/PHPExcel/Calculation/DateTime.php`
+- `lib/PHPExcel/Calculation/Engineering.php`
+- `lib/PHPExcel/Calculation/Exception.php`
+- `lib/PHPExcel/Calculation/ExceptionHandler.php`
+- `lib/PHPExcel/Calculation/Financial.php`
+- `lib/PHPExcel/Calculation/FormulaParser.php`
+- `lib/PHPExcel/Calculation/FormulaToken.php`
+- `lib/PHPExcel/Calculation/Function.php`
+- `lib/PHPExcel/Calculation/Functions.php`
+- `lib/PHPExcel/Calculation/Logical.php`
+- `lib/PHPExcel/Calculation/LookupRef.php`
+- `lib/PHPExcel/Calculation/MathTrig.php`
+- `lib/PHPExcel/Calculation/Statistical.php`
+- `lib/PHPExcel/Calculation/TextData.php`
+- `lib/PHPExcel/Calculation/Token/Stack.php`
+- `lib/PHPExcel/Calculation.php`
+- `lib/PHPExcel/Cell/AdvancedValueBinder.php`
+- `lib/PHPExcel/Cell/DataType.php`
+- `lib/PHPExcel/Cell/DataValidation.php`
+- `lib/PHPExcel/Cell/DefaultValueBinder.php`
+- `lib/PHPExcel/Cell/Hyperlink.php`
+- `lib/PHPExcel/Cell/IValueBinder.php`
+- `lib/PHPExcel/Cell.php`
+- `lib/PHPExcel/Chart/Axis.php`
+- `lib/PHPExcel/Chart/DataSeries.php`
+- `lib/PHPExcel/Chart/DataSeriesValues.php`
+- `lib/PHPExcel/Chart/Exception.php`
+- `lib/PHPExcel/Chart/GridLines.php`
+- `lib/PHPExcel/Chart/Layout.php`
+- `lib/PHPExcel/Chart/Legend.php`
+- `lib/PHPExcel/Chart/PlotArea.php`
+- `lib/PHPExcel/Chart/Properties.php`
+- `lib/PHPExcel/Chart/Renderer/jpgraph.php`
+- `lib/PHPExcel/Chart/Title.php`
+- `lib/PHPExcel/Chart.php`
+- `lib/PHPExcel/Comment.php`
+- `lib/PHPExcel/DocumentProperties.php`
+- `lib/PHPExcel/DocumentSecurity.php`
+- `lib/PHPExcel/Exception.php`
+- `lib/PHPExcel/HashTable.php`
+- `lib/PHPExcel/Helper/HTML.php`
+- `lib/PHPExcel/IComparable.php`
+- `lib/PHPExcel/IOFactory.php`
+- `lib/PHPExcel/NamedRange.php`
+- `lib/PHPExcel/Reader/Abstract.php`
+- `lib/PHPExcel/Reader/CSV.php`
+- `lib/PHPExcel/Reader/DefaultReadFilter.php`
+- `lib/PHPExcel/Reader/Excel2003XML.php`
+- `lib/PHPExcel/Reader/Excel2007/Chart.php`
+- `lib/PHPExcel/Reader/Excel2007/Theme.php`
+- `lib/PHPExcel/Reader/Excel2007.php`
+- `lib/PHPExcel/Reader/Excel5/Color/BIFF5.php`
+- `lib/PHPExcel/Reader/Excel5/Color/BIFF8.php`
+- `lib/PHPExcel/Reader/Excel5/Color/BuiltIn.php`
+- `lib/PHPExcel/Reader/Excel5/Color.php`
+- `lib/PHPExcel/Reader/Excel5/ErrorCode.php`
+- `lib/PHPExcel/Reader/Excel5/Escher.php`
+- `lib/PHPExcel/Reader/Excel5/MD5.php`
+- `lib/PHPExcel/Reader/Excel5/RC4.php`
+- `lib/PHPExcel/Reader/Excel5/Style/Border.php`
+- `lib/PHPExcel/Reader/Excel5/Style/FillPattern.php`
+- `lib/PHPExcel/Reader/Excel5.php`
+- `lib/PHPExcel/Reader/Exception.php`
+- `lib/PHPExcel/Reader/Gnumeric.php`
+- `lib/PHPExcel/Reader/HTML.php`
+- `lib/PHPExcel/Reader/IReadFilter.php`
+- `lib/PHPExcel/Reader/IReader.php`
+- `lib/PHPExcel/Reader/OOCalc.php`
+- `lib/PHPExcel/Reader/SYLK.php`
+- `lib/PHPExcel/ReferenceHelper.php`
+- `lib/PHPExcel/RichText/ITextElement.php`
+- `lib/PHPExcel/RichText/Run.php`
+- `lib/PHPExcel/RichText/TextElement.php`
+- `lib/PHPExcel/RichText.php`
+- `lib/PHPExcel/Settings.php`
+- `lib/PHPExcel/Shared/CodePage.php`
+- `lib/PHPExcel/Shared/Date.php`
+- `lib/PHPExcel/Shared/Drawing.php`
+- `lib/PHPExcel/Shared/Escher/DgContainer/SpgrContainer/SpContainer.php`
+- `lib/PHPExcel/Shared/Escher/DgContainer/SpgrContainer.php`
+- `lib/PHPExcel/Shared/Escher/DgContainer.php`
+- `lib/PHPExcel/Shared/Escher/DggContainer/BstoreContainer/BSE/Blip.php`
+- `lib/PHPExcel/Shared/Escher/DggContainer/BstoreContainer/BSE.php`
+- `lib/PHPExcel/Shared/Escher/DggContainer/BstoreContainer.php`
+- `lib/PHPExcel/Shared/Escher/DggContainer.php`
+- `lib/PHPExcel/Shared/Escher.php`
+- `lib/PHPExcel/Shared/Excel5.php`
+- `lib/PHPExcel/Shared/File.php`
+- `lib/PHPExcel/Shared/Font.php`
+- `lib/PHPExcel/Shared/JAMA/CholeskyDecomposition.php`
+- `lib/PHPExcel/Shared/JAMA/EigenvalueDecomposition.php`
+- `lib/PHPExcel/Shared/JAMA/LUDecomposition.php`
+- `lib/PHPExcel/Shared/JAMA/Matrix.php`
+- `lib/PHPExcel/Shared/JAMA/QRDecomposition.php`
+- `lib/PHPExcel/Shared/JAMA/SingularValueDecomposition.php`
+- `lib/PHPExcel/Shared/JAMA/utils/Error.php`
+- `lib/PHPExcel/Shared/JAMA/utils/Maths.php`
+- `lib/PHPExcel/Shared/OLE/ChainedBlockStream.php`
+- `lib/PHPExcel/Shared/OLE/PPS/File.php`
+- `lib/PHPExcel/Shared/OLE/PPS/Root.php`
+- `lib/PHPExcel/Shared/OLE/PPS.php`
+- `lib/PHPExcel/Shared/OLE.php`
+- `lib/PHPExcel/Shared/OLERead.php`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php`
+- `lib/PHPExcel/Shared/PasswordHasher.php`
+- `lib/PHPExcel/Shared/String.php`
+- `lib/PHPExcel/Shared/TimeZone.php`
+- `lib/PHPExcel/Shared/XMLWriter.php`
+- `lib/PHPExcel/Shared/ZipArchive.php`
+- `lib/PHPExcel/Shared/ZipStreamWrapper.php`
+- `lib/PHPExcel/Shared/trend/bestFitClass.php`
+- `lib/PHPExcel/Shared/trend/exponentialBestFitClass.php`
+- `lib/PHPExcel/Shared/trend/linearBestFitClass.php`
+- `lib/PHPExcel/Shared/trend/logarithmicBestFitClass.php`
+- `lib/PHPExcel/Shared/trend/polynomialBestFitClass.php`
+- `lib/PHPExcel/Shared/trend/powerBestFitClass.php`
+- `lib/PHPExcel/Shared/trend/trendClass.php`
+- `lib/PHPExcel/Style/Alignment.php`
+- `lib/PHPExcel/Style/Border.php`
+- `lib/PHPExcel/Style/Borders.php`
+- `lib/PHPExcel/Style/Color.php`
+- `lib/PHPExcel/Style/Conditional.php`
+- `lib/PHPExcel/Style/Fill.php`
+- `lib/PHPExcel/Style/Font.php`
+- `lib/PHPExcel/Style/NumberFormat.php`
+- `lib/PHPExcel/Style/Protection.php`
+- `lib/PHPExcel/Style/Supervisor.php`
+- `lib/PHPExcel/Style.php`
+- `lib/PHPExcel/Worksheet/AutoFilter/Column/Rule.php`
+- `lib/PHPExcel/Worksheet/AutoFilter/Column.php`
+- `lib/PHPExcel/Worksheet/AutoFilter.php`
+- `lib/PHPExcel/Worksheet/BaseDrawing.php`
+- `lib/PHPExcel/Worksheet/CellIterator.php`
+- `lib/PHPExcel/Worksheet/Column.php`
+- `lib/PHPExcel/Worksheet/ColumnCellIterator.php`
+- `lib/PHPExcel/Worksheet/ColumnDimension.php`
+- `lib/PHPExcel/Worksheet/ColumnIterator.php`
+- `lib/PHPExcel/Worksheet/Dimension.php`
+- `lib/PHPExcel/Worksheet/Drawing/Shadow.php`
+- `lib/PHPExcel/Worksheet/Drawing.php`
+- `lib/PHPExcel/Worksheet/HeaderFooter.php`
+- `lib/PHPExcel/Worksheet/HeaderFooterDrawing.php`
+- `lib/PHPExcel/Worksheet/MemoryDrawing.php`
+- `lib/PHPExcel/Worksheet/PageMargins.php`
+- `lib/PHPExcel/Worksheet/PageSetup.php`
+- `lib/PHPExcel/Worksheet/Protection.php`
+- `lib/PHPExcel/Worksheet/Row.php`
+- `lib/PHPExcel/Worksheet/RowCellIterator.php`
+- `lib/PHPExcel/Worksheet/RowDimension.php`
+- `lib/PHPExcel/Worksheet/RowIterator.php`
+- `lib/PHPExcel/Worksheet/SheetView.php`
+- `lib/PHPExcel/Worksheet.php`
+- `lib/PHPExcel/WorksheetIterator.php`
+- `lib/PHPExcel/Writer/Abstract.php`
+- `lib/PHPExcel/Writer/CSV.php`
+- `lib/PHPExcel/Writer/Excel2007/Chart.php`
+- `lib/PHPExcel/Writer/Excel2007/Comments.php`
+- `lib/PHPExcel/Writer/Excel2007/ContentTypes.php`
+- `lib/PHPExcel/Writer/Excel2007/DocProps.php`
+- `lib/PHPExcel/Writer/Excel2007/Drawing.php`
+- `lib/PHPExcel/Writer/Excel2007/Rels.php`
+- `lib/PHPExcel/Writer/Excel2007/RelsRibbon.php`
+- `lib/PHPExcel/Writer/Excel2007/RelsVBA.php`
+- `lib/PHPExcel/Writer/Excel2007/StringTable.php`
+- `lib/PHPExcel/Writer/Excel2007/Style.php`
+- `lib/PHPExcel/Writer/Excel2007/Theme.php`
+- `lib/PHPExcel/Writer/Excel2007/Workbook.php`
+- `lib/PHPExcel/Writer/Excel2007/Worksheet.php`
+- `lib/PHPExcel/Writer/Excel2007/WriterPart.php`
+- `lib/PHPExcel/Writer/Excel2007.php`
+- `lib/PHPExcel/Writer/Excel5/BIFFwriter.php`
+- `lib/PHPExcel/Writer/Excel5/Escher.php`
+- `lib/PHPExcel/Writer/Excel5/Font.php`
+- `lib/PHPExcel/Writer/Excel5/Parser.php`
+- `lib/PHPExcel/Writer/Excel5/Workbook.php`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php`
+- `lib/PHPExcel/Writer/Excel5/Xf.php`
+- `lib/PHPExcel/Writer/Excel5.php`
+- `lib/PHPExcel/Writer/Exception.php`
+- `lib/PHPExcel/Writer/HTML.php`
+- `lib/PHPExcel/Writer/IWriter.php`
+- `lib/PHPExcel/Writer/OpenDocument/Cell/Comment.php`
+- `lib/PHPExcel/Writer/OpenDocument/Content.php`
+- `lib/PHPExcel/Writer/OpenDocument/Meta.php`
+- `lib/PHPExcel/Writer/OpenDocument/MetaInf.php`
+- `lib/PHPExcel/Writer/OpenDocument/Mimetype.php`
+- `lib/PHPExcel/Writer/OpenDocument/Settings.php`
+- `lib/PHPExcel/Writer/OpenDocument/Styles.php`
+- `lib/PHPExcel/Writer/OpenDocument/Thumbnails.php`
+- `lib/PHPExcel/Writer/OpenDocument/WriterPart.php`
+- `lib/PHPExcel/Writer/OpenDocument.php`
+- `lib/PHPExcel/Writer/PDF/Core.php`
+- `lib/PHPExcel/Writer/PDF/DomPDF.php`
+- `lib/PHPExcel/Writer/PDF/mPDF.php`
+- `lib/PHPExcel/Writer/PDF/tcPDF.php`
+- `lib/PHPExcel/Writer/PDF.php`
+- `lib/PHPExcel.php`
+- `lib/URI/uri.class.php`
+- `lib/ajax/_common.php`
+- `lib/ajax/ajax.find.mb_hp.php`
+- `lib/ajax/ajax.find.mb_id.php`
+- `lib/cache.lib.php`
+- `lib/common.lib.php`
+- `lib/connect.lib.php`
+- `lib/editor.lib.php`
+- `lib/etc.lib.php`
+- `lib/get_data.lib.php`
+- `lib/hook.lib.php`
+- `lib/icode.lms.lib.php`
+- `lib/icode.sms.lib.php`
+- `lib/iteminfo.lib.php`
+- `lib/json.lib.php`
+- `lib/latest.lib.php`
+- `lib/mailer.lib.php`
+- `lib/naver_syndi.lib.php`
+- `lib/naverpay.lib.php`
+- `lib/outlogin.lib.php`
+- `lib/pbkdf2.compat.php`
+- `lib/poll.lib.php`
+- `lib/popular.lib.php`
+- `lib/register.lib.php`
+- `lib/shop.data.lib.php`
+- `lib/shop.lib.php`
+- `lib/shop.uri.lib.php`
+- `lib/thumbnail.lib.php`
+- `lib/uri.lib.php`
+- `lib/visit.lib.php`
+- `lpadm/_common.php`
+- `lpadm/admin.head.php`
+- `lpadm/admin.lib.php`
+- `lpadm/admin.menu100.php`
+- `lpadm/admin.menu200.php`
+- `lpadm/admin.menu300.php`
+- `lpadm/admin.menu900.php`
+- `lpadm/admin.tail.php`
+- `lpadm/ajax.token.php`
+- `lpadm/ajax.use_captcha.php`
+- `lpadm/auth_list.php`
+- `lpadm/auth_list_delete.php`
+- `lpadm/auth_update.php`
+- `lpadm/board_copy.php`
+- `lpadm/board_copy_update.php`
+- `lpadm/board_delete.inc.php`
+- `lpadm/board_form.php`
+- `lpadm/board_form_update.php`
+- `lpadm/board_list.php`
+- `lpadm/board_list_update.php`
+- `lpadm/board_thumbnail_delete.php`
+- `lpadm/boardgroup_form.php`
+- `lpadm/boardgroup_form_update.php`
+- `lpadm/boardgroup_list.php`
+- `lpadm/boardgroup_list_update.php`
+- `lpadm/boardgroupmember_form.php`
+- `lpadm/boardgroupmember_list.php`
+- `lpadm/boardgroupmember_update.php`
+- `lpadm/browscap.php`
+- `lpadm/browscap_convert.php`
+- `lpadm/browscap_converter.php`
+- `lpadm/browscap_update.php`
+- `lpadm/cache_file_delete.php`
+- `lpadm/captcha_file_delete.php`
+- `lpadm/config_form.php`
+- `lpadm/config_form_update.php`
+- `lpadm/contentform.php`
+- `lpadm/contentformupdate.php`
+- `lpadm/contentlist.php`
+- `lpadm/dbupgrade.php`
+- `lpadm/faqform.php`
+- `lpadm/faqformupdate.php`
+- `lpadm/faqlist.php`
+- `lpadm/faqmasterform.php`
+- `lpadm/faqmasterformupdate.php`
+- `lpadm/faqmasterlist.php`
+- `lpadm/index.php`
+- `lpadm/mail_delete.php`
+- `lpadm/mail_form.php`
+- `lpadm/mail_list.php`
+- `lpadm/mail_preview.php`
+- `lpadm/mail_select_form.php`
+- `lpadm/mail_select_list.php`
+- `lpadm/mail_select_update.php`
+- `lpadm/mail_test.php`
+- `lpadm/mail_update.php`
+- `lpadm/member_delete.php`
+- `lpadm/member_form.php`
+- `lpadm/member_form_update.php`
+- `lpadm/member_list.php`
+- `lpadm/member_list_delete.php`
+- `lpadm/member_list_update.php`
+- `lpadm/menu_form.php`
+- `lpadm/menu_form_search.php`
+- `lpadm/menu_list.php`
+- `lpadm/menu_list_update.php`
+- `lpadm/newwinform.php`
+- `lpadm/newwinformupdate.php`
+- `lpadm/newwinlist.php`
+- `lpadm/phpinfo.php`
+- `lpadm/point_list.php`
+- `lpadm/point_list_delete.php`
+- `lpadm/point_update.php`
+- `lpadm/poll_delete.php`
+- `lpadm/poll_form.php`
+- `lpadm/poll_form_update.php`
+- `lpadm/poll_list.php`
+- `lpadm/popular_list.php`
+- `lpadm/popular_rank.php`
+- `lpadm/qa_config.php`
+- `lpadm/qa_config_update.php`
+- `lpadm/safe_check.php`
+- `lpadm/sendmail_test.php`
+- `lpadm/service.php`
+- `lpadm/session_file_delete.php`
+- `lpadm/sms_admin/_common.php`
+- `lpadm/sms_admin/ajax.hp_chk.php`
+- `lpadm/sms_admin/ajax.sms_write_form.php`
+- `lpadm/sms_admin/ajax.sms_write_group.php`
+- `lpadm/sms_admin/ajax.sms_write_level.php`
+- `lpadm/sms_admin/ajax.sms_write_person.php`
+- `lpadm/sms_admin/config.php`
+- `lpadm/sms_admin/config_update.php`
+- `lpadm/sms_admin/emoticon_move.php`
+- `lpadm/sms_admin/emoticon_move_update.php`
+- `lpadm/sms_admin/form_group.php`
+- `lpadm/sms_admin/form_group_move.php`
+- `lpadm/sms_admin/form_group_update.php`
+- `lpadm/sms_admin/form_list.php`
+- `lpadm/sms_admin/form_multi_update.php`
+- `lpadm/sms_admin/form_update.php`
+- `lpadm/sms_admin/form_write.php`
+- `lpadm/sms_admin/history_list.php`
+- `lpadm/sms_admin/history_num.php`
+- `lpadm/sms_admin/history_send.php`
+- `lpadm/sms_admin/history_view.php`
+- `lpadm/sms_admin/install.php`
+- `lpadm/sms_admin/member_update.php`
+- `lpadm/sms_admin/member_update_run.php`
+- `lpadm/sms_admin/num_book.php`
+- `lpadm/sms_admin/num_book_file.php`
+- `lpadm/sms_admin/num_book_file_download.php`
+- `lpadm/sms_admin/num_book_file_upload.php`
+- `lpadm/sms_admin/num_book_move.php`
+- `lpadm/sms_admin/num_book_multi_update.php`
+- `lpadm/sms_admin/num_book_update.php`
+- `lpadm/sms_admin/num_book_write.php`
+- `lpadm/sms_admin/num_group.php`
+- `lpadm/sms_admin/num_group_move.php`
+- `lpadm/sms_admin/num_group_update.php`
+- `lpadm/sms_admin/number_move_update.php`
+- `lpadm/sms_admin/sms_ing.php`
+- `lpadm/sms_admin/sms_write.php`
+- `lpadm/sms_admin/sms_write_form.php`
+- `lpadm/sms_admin/sms_write_overlap_check.php`
+- `lpadm/sms_admin/sms_write_send.php`
+- `lpadm/theme.php`
+- `lpadm/theme_config_load.php`
+- `lpadm/theme_detail.php`
+- `lpadm/theme_preview.php`
+- `lpadm/theme_update.php`
+- `lpadm/thumbnail_file_delete.php`
+- `lpadm/visit.sub.php`
+- `lpadm/visit_browser.php`
+- `lpadm/visit_date.php`
+- `lpadm/visit_delete.php`
+- `lpadm/visit_delete_update.php`
+- `lpadm/visit_device.php`
+- `lpadm/visit_domain.php`
+- `lpadm/visit_hour.php`
+- `lpadm/visit_list.php`
+- `lpadm/visit_month.php`
+- `lpadm/visit_os.php`
+- `lpadm/visit_search.php`
+- `lpadm/visit_week.php`
+- `lpadm/visit_year.php`
+- `lpadm/write_count.php`
+- `plugin/PHPMailer/PHPMailerAutoload.php`
+- `plugin/PHPMailer/class.phpmailer.php`
+- `plugin/PHPMailer/class.phpmaileroauth.php`
+- `plugin/PHPMailer/class.phpmaileroauthgoogle.php`
+- `plugin/PHPMailer/class.pop3.php`
+- `plugin/PHPMailer/class.smtp.php`
+- `plugin/PHPMailer/extras/EasyPeasyICS.php`
+- `plugin/PHPMailer/extras/htmlfilter.php`
+- `plugin/PHPMailer/extras/ntlm_sasl_client.php`
+- `plugin/PHPMailer/get_oauth_token.php`
+- `plugin/PHPMailer/language/phpmailer.lang-am.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ar.php`
+- `plugin/PHPMailer/language/phpmailer.lang-az.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ba.php`
+- `plugin/PHPMailer/language/phpmailer.lang-be.php`
+- `plugin/PHPMailer/language/phpmailer.lang-bg.php`
+- `plugin/PHPMailer/language/phpmailer.lang-br.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ca.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ch.php`
+- `plugin/PHPMailer/language/phpmailer.lang-cs.php`
+- `plugin/PHPMailer/language/phpmailer.lang-cz.php`
+- `plugin/PHPMailer/language/phpmailer.lang-da.php`
+- `plugin/PHPMailer/language/phpmailer.lang-de.php`
+- `plugin/PHPMailer/language/phpmailer.lang-dk.php`
+- `plugin/PHPMailer/language/phpmailer.lang-el.php`
+- `plugin/PHPMailer/language/phpmailer.lang-eo.php`
+- `plugin/PHPMailer/language/phpmailer.lang-es.php`
+- `plugin/PHPMailer/language/phpmailer.lang-et.php`
+- `plugin/PHPMailer/language/phpmailer.lang-fa.php`
+- `plugin/PHPMailer/language/phpmailer.lang-fi.php`
+- `plugin/PHPMailer/language/phpmailer.lang-fo.php`
+- `plugin/PHPMailer/language/phpmailer.lang-fr.php`
+- `plugin/PHPMailer/language/phpmailer.lang-gl.php`
+- `plugin/PHPMailer/language/phpmailer.lang-he.php`
+- `plugin/PHPMailer/language/phpmailer.lang-hr.php`
+- `plugin/PHPMailer/language/phpmailer.lang-hu.php`
+- `plugin/PHPMailer/language/phpmailer.lang-id.php`
+- `plugin/PHPMailer/language/phpmailer.lang-it.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ja.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ka.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ko.php`
+- `plugin/PHPMailer/language/phpmailer.lang-lt.php`
+- `plugin/PHPMailer/language/phpmailer.lang-lv.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ms.php`
+- `plugin/PHPMailer/language/phpmailer.lang-nb.php`
+- `plugin/PHPMailer/language/phpmailer.lang-nl.php`
+- `plugin/PHPMailer/language/phpmailer.lang-no.php`
+- `plugin/PHPMailer/language/phpmailer.lang-pl.php`
+- `plugin/PHPMailer/language/phpmailer.lang-pt.php`
+- `plugin/PHPMailer/language/phpmailer.lang-pt_br.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ro.php`
+- `plugin/PHPMailer/language/phpmailer.lang-rs.php`
+- `plugin/PHPMailer/language/phpmailer.lang-ru.php`
+- `plugin/PHPMailer/language/phpmailer.lang-se.php`
+- `plugin/PHPMailer/language/phpmailer.lang-sk.php`
+- `plugin/PHPMailer/language/phpmailer.lang-sl.php`
+- `plugin/PHPMailer/language/phpmailer.lang-sr.php`
+- `plugin/PHPMailer/language/phpmailer.lang-sv.php`
+- `plugin/PHPMailer/language/phpmailer.lang-tr.php`
+- `plugin/PHPMailer/language/phpmailer.lang-uk.php`
+- `plugin/PHPMailer/language/phpmailer.lang-vi.php`
+- `plugin/PHPMailer/language/phpmailer.lang-zh.php`
+- `plugin/PHPMailer/language/phpmailer.lang-zh_cn.php`
+- `plugin/browscap/Browscap.php`
+- `plugin/debugbar/debugbar.php`
+- `plugin/debugbar/index.php`
+- `plugin/editor/cheditor5/editor.lib.php`
+- `plugin/editor/cheditor5/imageUpload/_common.php`
+- `plugin/editor/cheditor5/imageUpload/config.php`
+- `plugin/editor/cheditor5/imageUpload/delete.php`
+- `plugin/editor/cheditor5/imageUpload/upload.php`
+- `plugin/editor/smarteditor2/editor.lib.php`
+- `plugin/editor/smarteditor2/photo_uploader/popup/_common.php`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/JSON.php`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/UploadHandler.php`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/_common.php`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/index.php`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php`
+- `plugin/htmlpurifier/extend.video.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Builder/ConfigSchema.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Builder/Xml.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Exception.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Interchange/Directive.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Interchange/Id.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Interchange.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/InterchangeBuilder.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/Validator.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/ConfigSchema/ValidatorAtom.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Filter/ExtractStyleBlocks.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Filter/YouTube.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Language/classes/en-x-test.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Language/messages/en-x-test.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Language/messages/en-x-testmini.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Language/messages/en.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Lexer/PH5P.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/CSSDefinition.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/ConfigForm.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/HTMLDefinition.php`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer.php`
+- `plugin/inicert/_common.php`
+- `plugin/inicert/ini_find_result.php`
+- `plugin/inicert/ini_request.php`
+- `plugin/inicert/ini_result.php`
+- `plugin/inicert/libs/INILib.php`
+- `plugin/inicert/libs/KISA_SEED_CBC.php`
+- `plugin/jquery-ui/datepicker.php`
+- `plugin/kcaptcha/_common.php`
+- `plugin/kcaptcha/captcha.lib.php`
+- `plugin/kcaptcha/kcaptcha.lib.php`
+- `plugin/kcaptcha/kcaptcha_config.php`
+- `plugin/kcaptcha/kcaptcha_image.php`
+- `plugin/kcaptcha/kcaptcha_mp3.php`
+- `plugin/kcaptcha/kcaptcha_result.php`
+- `plugin/kcaptcha/kcaptcha_session.php`
+- `plugin/kcpcert/_common.php`
+- `plugin/kcpcert/find_kcpcert_result.php`
+- `plugin/kcpcert/kcpcert_config.php`
+- `plugin/kcpcert/kcpcert_form.php`
+- `plugin/kcpcert/kcpcert_result.php`
+- `plugin/kcpcert/lib/ct_cli_lib.php`
+- `plugin/kcpcert_v2/_common.php`
+- `plugin/kcpcert_v2/find_kcpcert_result.php`
+- `plugin/kcpcert_v2/kcpcert_config.php`
+- `plugin/kcpcert_v2/kcpcert_form.php`
+- `plugin/kcpcert_v2/kcpcert_result.php`
+- `plugin/kcpcert_v2/lib/Crypto.php`
+- `plugin/kcpcert_v2/lib/kcp_api.php`
+- `plugin/lgxpay/AuthOnlyReq.php`
+- `plugin/lgxpay/AuthOnlyRes.php`
+- `plugin/lgxpay/_common.php`
+- `plugin/lgxpay/find_AuthOnlyRes.php`
+- `plugin/lgxpay/lgdacom/JSON.php`
+- `plugin/lgxpay/lgdacom/XPayClient.php`
+- `plugin/lgxpay/lgdacom/XPayClient4DB.php`
+- `plugin/lgxpay/lgdacom/patch.php`
+- `plugin/lgxpay/lgdacom/ping.php`
+- `plugin/lgxpay/returnurl.php`
+- `plugin/okname/_common.php`
+- `plugin/okname/find_hpcert2.php`
+- `plugin/okname/find_ipin2.php`
+- `plugin/okname/hpcert.config.php`
+- `plugin/okname/hpcert1.php`
+- `plugin/okname/hpcert2.php`
+- `plugin/okname/index.php`
+- `plugin/okname/ipin.config.php`
+- `plugin/okname/ipin1.php`
+- `plugin/okname/ipin2.php`
+- `plugin/okname/key_dir_check.php`
+- `plugin/recaptcha/_common.php`
+- `plugin/recaptcha/captcha.lib.php`
+- `plugin/recaptcha/recaptcha.class.php`
+- `plugin/recaptcha/recaptcha.user.lib.php`
+- `plugin/recaptcha_inv/_common.php`
+- `plugin/recaptcha_inv/captcha.lib.php`
+- `plugin/recaptcha_inv/recaptcha.class.php`
+- `plugin/recaptcha_inv/recaptcha.user.lib.php`
+- `plugin/sms5/JSON.php`
+- `plugin/sms5/_common.php`
+- `plugin/sms5/ajax.sms_emoticon.php`
+- `plugin/sms5/index.php`
+- `plugin/sms5/sms5.lib.php`
+- `plugin/sns/_common.php`
+- `plugin/sns/facebook/_common.php`
+- `plugin/sns/facebook/callback.php`
+- `plugin/sns/facebook/src/base_facebook.php`
+- `plugin/sns/facebook/src/facebook.php`
+- `plugin/sns/facebook/tests/bootstrap.php`
+- `plugin/sns/facebook/tests/tests.php`
+- `plugin/sns/twitter/_common.php`
+- `plugin/sns/twitter/callback-sample.php`
+- `plugin/sns/twitter/callback.php`
+- `plugin/sns/twitter/clearsessions.php`
+- `plugin/sns/twitter/config-sample.php`
+- `plugin/sns/twitter/connect.php`
+- `plugin/sns/twitter/index.php`
+- `plugin/sns/twitter/redirect.php`
+- `plugin/sns/twitter/twitterconfig.php`
+- `plugin/sns/twitter/twitteroauth/OAuth.php`
+- `plugin/sns/twitter/twitteroauth/twitteroauth.php`
+- `plugin/sns/view.sns.skin.php`
+- `plugin/sns/view_comment_list.sns.skin.php`
+- `plugin/sns/view_comment_write.sns.skin.php`
+- `plugin/social/Hybrid/Auth.php`
+- `plugin/social/Hybrid/Endpoint.php`
+- `plugin/social/Hybrid/Error.php`
+- `plugin/social/Hybrid/Exception.php`
+- `plugin/social/Hybrid/Logger.php`
+- `plugin/social/Hybrid/Provider_Adapter.php`
+- `plugin/social/Hybrid/Provider_Model.php`
+- `plugin/social/Hybrid/Provider_Model_OAuth1.php`
+- `plugin/social/Hybrid/Provider_Model_OAuth2.php`
+- `plugin/social/Hybrid/Provider_Model_OpenID.php`
+- `plugin/social/Hybrid/Providers/Facebook.php`
+- `plugin/social/Hybrid/Providers/Google.php`
+- `plugin/social/Hybrid/Providers/Kakao.php`
+- `plugin/social/Hybrid/Providers/Naver.php`
+- `plugin/social/Hybrid/Providers/Payco.php`
+- `plugin/social/Hybrid/Providers/Twitter.php`
+- `plugin/social/Hybrid/Storage.php`
+- `plugin/social/Hybrid/StorageInterface.php`
+- `plugin/social/Hybrid/User.php`
+- `plugin/social/Hybrid/User_Activity.php`
+- `plugin/social/Hybrid/User_Contact.php`
+- `plugin/social/Hybrid/User_Profile.php`
+- `plugin/social/Hybrid/thirdparty/OAuth/OAuth.php`
+- `plugin/social/Hybrid/thirdparty/OAuth/OAuth1Client.php`
+- `plugin/social/Hybrid/thirdparty/OAuth/OAuth2Client.php`
+- `plugin/social/Hybrid/thirdparty/OpenID/LightOpenID.php`
+- `plugin/social/_common.php`
+- `plugin/social/config.php`
+- `plugin/social/error.php`
+- `plugin/social/includes/functions.php`
+- `plugin/social/includes/g5_endpoint.php`
+- `plugin/social/includes/g5_endpoint_class.php`
+- `plugin/social/includes/index.php`
+- `plugin/social/includes/loading.php`
+- `plugin/social/includes/providers.php`
+- `plugin/social/index.php`
+- `plugin/social/popup.php`
+- `plugin/social/register_member.php`
+- `plugin/social/register_member_update.php`
+- `plugin/social/unlink.php`
+- `plugin/syndi/_common.php`
+- `plugin/syndi/ping.php`
+- `proc/_common.php`
+- `proc/view.php`
+- `proc/view.update.php`
+- `shop/_common.php`
+- `shop/_head.php`
+- `shop/_tail.php`
+- `shop/ajax.action.php`
+- `shop/ajax.coupondownload.php`
+- `shop/ajax.list.php`
+- `shop/ajax.orderdatasave.php`
+- `shop/ajax.orderstock.php`
+- `shop/bannerhit.php`
+- `shop/cancel_pg.inc.php`
+- `shop/cart.php`
+- `shop/cartoption.php`
+- `shop/cartupdate.php`
+- `shop/category.php`
+- `shop/coupon.php`
+- `shop/couponzone.php`
+- `shop/event.php`
+- `shop/index.php`
+- `shop/inicis/_common.php`
+- `shop/inicis/close.php`
+- `shop/inicis/escrow.register.php`
+- `shop/inicis/inipay_cancel.php`
+- `shop/inicis/inistdpay_result.php`
+- `shop/inicis/inistdpay_return.php`
+- `shop/inicis/libs/CreateIdModule.php`
+- `shop/inicis/libs/HttpClient.php`
+- `shop/inicis/libs/INIStdPayUtil.php`
+- `shop/inicis/libs/INIpayStdMakeSignature.php`
+- `shop/inicis/libs/JSON.php`
+- `shop/inicis/libs/inicis_youngcart_fn.php`
+- `shop/inicis/libs/json_lib.php`
+- `shop/inicis/libs/properties.php`
+- `shop/inicis/libs/sha256.inc.php`
+- `shop/inicis/lpay_common.php`
+- `shop/inicis/lpay_form.1.php`
+- `shop/inicis/lpay_order.script.php`
+- `shop/inicis/makesignature.php`
+- `shop/inicis/orderform.1.php`
+- `shop/inicis/orderform.2.php`
+- `shop/inicis/orderform.3.php`
+- `shop/inicis/orderform.4.php`
+- `shop/inicis/orderpartcancel.inc.php`
+- `shop/inicis/popup.php`
+- `shop/inicis/taxsave_form.php`
+- `shop/inicis/taxsave_result.php`
+- `shop/item.php`
+- `shop/iteminfo.php`
+- `shop/itemoption.php`
+- `shop/itemqa.php`
+- `shop/itemqaform.php`
+- `shop/itemqaformupdate.php`
+- `shop/itemqalist.php`
+- `shop/itemrecommend.php`
+- `shop/itemrecommendmail.php`
+- `shop/itemstocksms.php`
+- `shop/itemstocksmsupdate.php`
+- `shop/itemuse.php`
+- `shop/itemuseform.php`
+- `shop/itemuseformupdate.php`
+- `shop/itemuselist.php`
+- `shop/kakaopay/_common.php`
+- `shop/kakaopay/incKakaopayCommon.php`
+- `shop/kakaopay/inicis_kk_return.php`
+- `shop/kakaopay/kakaopay_cancel.php`
+- `shop/kakaopay/kakaopay_result.php`
+- `shop/kakaopay/makesignature.php`
+- `shop/kakaopay/mobile_orderform.1.php`
+- `shop/kakaopay/mobile_pay_approval.php`
+- `shop/kakaopay/mobile_pay_result.php`
+- `shop/kakaopay/mobile_pay_return.php`
+- `shop/kakaopay/mobile_settle_common.php`
+- `shop/kakaopay/orderform.1.php`
+- `shop/kakaopay/orderform.2.php`
+- `shop/kakaopay/orderform.3.php`
+- `shop/kakaopay/orderpartcancel.inc.php`
+- `shop/kakaopay/pc_pay_result.php`
+- `shop/kcp/_common.php`
+- `shop/kcp/escrow.register.php`
+- `shop/kcp/global_nhn_kcp.php`
+- `shop/kcp/global_nhn_kcp_form.1.php`
+- `shop/kcp/global_nhn_kcp_order.script.php`
+- `shop/kcp/orderform.1.php`
+- `shop/kcp/orderform.2.php`
+- `shop/kcp/orderform.3.php`
+- `shop/kcp/orderform.4.php`
+- `shop/kcp/orderpartcancel.inc.php`
+- `shop/kcp/pp_ax_hub.php`
+- `shop/kcp/pp_ax_hub_cancel.php`
+- `shop/kcp/pp_ax_hub_lib.php`
+- `shop/kcp/pp_cli_hub.php`
+- `shop/kcp/pp_cli_hub_lib.php`
+- `shop/kcp/pp_cli_result.php`
+- `shop/kcp/taxsave_form.php`
+- `shop/largeimage.php`
+- `shop/lg/_common.php`
+- `shop/lg/escrow.register.php`
+- `shop/lg/orderform.1.php`
+- `shop/lg/orderform.2.php`
+- `shop/lg/orderform.3.php`
+- `shop/lg/orderform.4.php`
+- `shop/lg/orderpartcancel.inc.php`
+- `shop/lg/returnurl.php`
+- `shop/lg/taxsave_form.php`
+- `shop/lg/taxsave_result.php`
+- `shop/lg/xpay_cancel.php`
+- `shop/lg/xpay_request.php`
+- `shop/lg/xpay_result.php`
+- `shop/list.php`
+- `shop/listtype.php`
+- `shop/mail/couponmail.mail.php`
+- `shop/mail/itemrecommend.mail.php`
+- `shop/mail/ordermail.mail.php`
+- `shop/mail/orderupdate1.mail.php`
+- `shop/mail/orderupdate2.mail.php`
+- `shop/mail/orderupdate3.mail.php`
+- `shop/mypage.php`
+- `shop/naverpay/_common.php`
+- `shop/naverpay/naverpay_item.php`
+- `shop/naverpay/naverpay_order.php`
+- `shop/naverpay/naverpay_wish.php`
+- `shop/nicepay/_common.php`
+- `shop/nicepay/cancel_process.php`
+- `shop/nicepay/createsigndata.php`
+- `shop/nicepay/escrow.register.php`
+- `shop/nicepay/index.php`
+- `shop/nicepay/nicepay_result.php`
+- `shop/nicepay/orderform.1.php`
+- `shop/nicepay/orderform.2.php`
+- `shop/nicepay/orderform.3.php`
+- `shop/nicepay/orderform.4.php`
+- `shop/nicepay/orderpartcancel.inc.php`
+- `shop/nicepay/taxsave_form.php`
+- `shop/nicepay/taxsave_result.php`
+- `shop/orderaddress.php`
+- `shop/orderaddressupdate.php`
+- `shop/ordercoupon.php`
+- `shop/ordererrormail.php`
+- `shop/orderform.php`
+- `shop/orderform.sub.php`
+- `shop/orderformupdate.php`
+- `shop/orderinquiry.php`
+- `shop/orderinquiry.sub.php`
+- `shop/orderinquirycancel.php`
+- `shop/orderinquiryview.php`
+- `shop/orderitemcoupon.php`
+- `shop/ordermail1.inc.php`
+- `shop/ordermail2.inc.php`
+- `shop/ordersendcost.php`
+- `shop/ordersendcostcoupon.php`
+- `shop/personalpay.php`
+- `shop/personalpayform.php`
+- `shop/personalpayform.sub.php`
+- `shop/personalpayformupdate.php`
+- `shop/personalpayresult.php`
+- `shop/price/_common.php`
+- `shop/price/daum.php`
+- `shop/price/daum_summary.php`
+- `shop/price/google_feed.php`
+- `shop/price/naver.php`
+- `shop/price/naver_summary.php`
+- `shop/search.php`
+- `shop/settle_inicis.inc.php`
+- `shop/settle_inicis_common.php`
+- `shop/settle_kakaopay.inc.php`
+- `shop/settle_kcp.inc.php`
+- `shop/settle_kcp_common.php`
+- `shop/settle_lg.inc.php`
+- `shop/settle_lg_common.php`
+- `shop/settle_naverpay.inc.php`
+- `shop/settle_nicepay.inc.php`
+- `shop/settle_nicepay_common.php`
+- `shop/settle_toss.inc.php`
+- `shop/settle_toss_common.php`
+- `shop/shop.head.php`
+- `shop/shop.tail.php`
+- `shop/taxsave.php`
+- `shop/toss/_common.php`
+- `shop/toss/orderform.1.php`
+- `shop/toss/orderform.2.php`
+- `shop/toss/orderform.3.php`
+- `shop/toss/orderform.4.php`
+- `shop/toss/orderpartcancel.inc.php`
+- `shop/toss/returnurl.php`
+- `shop/toss/taxsave_form.php`
+- `shop/toss/taxsave_result.php`
+- `shop/toss/toss.inc.php`
+- `shop/toss/toss_approval.php`
+- `shop/toss/toss_cancel.php`
+- `shop/toss/toss_result.php`
+- `shop/wishlist.php`
+- `shop/wishupdate.php`
+- `shop.config.php`
+- `skin/board/basic/list.skin.php`
+- `skin/board/basic/view.skin.php`
+- `skin/board/basic/view_comment.skin.php`
+- `skin/board/basic/write.skin.php`
+- `skin/board/gallery/list.skin.php`
+- `skin/board/gallery/view.skin.php`
+- `skin/board/gallery/view_comment.skin.php`
+- `skin/board/gallery/write.skin.php`
+- `skin/connect/basic/connect.skin.php`
+- `skin/connect/basic/current_connect.skin.php`
+- `skin/content/basic/content.skin.php`
+- `skin/faq/basic/list.skin.php`
+- `skin/latest/basic/latest.skin.php`
+- `skin/latest/notice/latest.skin.php`
+- `skin/latest/pic_basic/latest.skin.php`
+- `skin/latest/pic_block/latest.skin.php`
+- `skin/latest/pic_list/latest.skin.php`
+- `skin/latest/shop_basic/latest.skin.php`
+- `skin/member/basic/consent_modal.inc.php`
+- `skin/member/basic/formmail.skin.php`
+- `skin/member/basic/login.skin.php`
+- `skin/member/basic/login_check.skin.php`
+- `skin/member/basic/member_cert_refresh.skin.php`
+- `skin/member/basic/member_confirm.skin.php`
+- `skin/member/basic/memo.skin.php`
+- `skin/member/basic/memo_form.skin.php`
+- `skin/member/basic/memo_view.skin.php`
+- `skin/member/basic/password.skin.php`
+- `skin/member/basic/password_lost.skin.php`
+- `skin/member/basic/password_reset.skin.php`
+- `skin/member/basic/point.skin.php`
+- `skin/member/basic/profile.skin.php`
+- `skin/member/basic/register.skin.php`
+- `skin/member/basic/register_form.skin.php`
+- `skin/member/basic/register_form_update.tail.skin.php`
+- `skin/member/basic/register_result.skin.php`
+- `skin/member/basic/scrap.skin.php`
+- `skin/member/basic/scrap_popin.skin.php`
+- `skin/new/basic/new.skin.php`
+- `skin/outlogin/basic/outlogin.skin.1.php`
+- `skin/outlogin/basic/outlogin.skin.2.php`
+- `skin/outlogin/shop_basic/outlogin.skin.1.php`
+- `skin/outlogin/shop_basic/outlogin.skin.2.php`
+- `skin/outlogin/shop_side/outlogin.skin.1.php`
+- `skin/outlogin/shop_side/outlogin.skin.2.php`
+- `skin/poll/basic/poll.skin.php`
+- `skin/poll/basic/poll_result.skin.php`
+- `skin/poll/shop_basic/poll.skin.php`
+- `skin/poll/shop_basic/poll_result.skin.php`
+- `skin/popular/basic/popular.skin.php`
+- `skin/qa/basic/list.skin.php`
+- `skin/qa/basic/view.answer.skin.php`
+- `skin/qa/basic/view.answerform.skin.php`
+- `skin/qa/basic/view.skin.php`
+- `skin/qa/basic/write.skin.php`
+- `skin/search/basic/search.skin.php`
+- `skin/shop/basic/boxbanner.skin.php`
+- `skin/shop/basic/boxcart.skin.php`
+- `skin/shop/basic/boxcategory.skin.php`
+- `skin/shop/basic/boxcommunity.skin.php`
+- `skin/shop/basic/boxevent.skin.php`
+- `skin/shop/basic/boxtodayview.skin.php`
+- `skin/shop/basic/boxwish.skin.php`
+- `skin/shop/basic/couponzone.10.skin.php`
+- `skin/shop/basic/item.form.skin.php`
+- `skin/shop/basic/item.info.skin.php`
+- `skin/shop/basic/itemqa.skin.php`
+- `skin/shop/basic/itemqaform.skin.php`
+- `skin/shop/basic/itemqalist.skin.php`
+- `skin/shop/basic/itemuse.skin.php`
+- `skin/shop/basic/itemuseform.skin.php`
+- `skin/shop/basic/itemuselist.skin.php`
+- `skin/shop/basic/largeimage.skin.php`
+- `skin/shop/basic/list.10.skin.php`
+- `skin/shop/basic/list.20.skin.php`
+- `skin/shop/basic/list.30.skin.php`
+- `skin/shop/basic/list.40.skin.php`
+- `skin/shop/basic/list.sort.skin.php`
+- `skin/shop/basic/list.sub.skin.php`
+- `skin/shop/basic/listcategory.skin.php`
+- `skin/shop/basic/listcategory2.skin.php`
+- `skin/shop/basic/listcategory3.skin.php`
+- `skin/shop/basic/main.10.skin.php`
+- `skin/shop/basic/main.20.skin.php`
+- `skin/shop/basic/main.30.skin.php`
+- `skin/shop/basic/main.40.skin.php`
+- `skin/shop/basic/main.50.skin.php`
+- `skin/shop/basic/mainbanner.10.skin.php`
+- `skin/shop/basic/navigation.skin.php`
+- `skin/shop/basic/personalpay.skin.php`
+- `skin/shop/basic/relation.10.skin.php`
+- `skin/shop/basic/search.skin.php`
+- `skin/social/consent_modal.inc.php`
+- `skin/social/index.php`
+- `skin/social/social_login.skin.php`
+- `skin/social/social_outlogin.skin.1.php`
+- `skin/social/social_register.skin.php`
+- `skin/social/social_register_member.skin.php`
+- `skin/social/social_u_register_form.skin.php`
+- `skin/visit/basic/visit.skin.php`
+- `skin/visit/shop_basic/visit.skin.php`
+- `sub/_common.php`
+- `sub/about.php`
+- `sub/acrylic.php`
+- `sub/ajax.find.id.php`
+- `sub/ajax.fnOpenPopAjax.php`
+- `sub/ajax.hp.check.php`
+- `sub/ajax.mob.turn.list.view.php`
+- `sub/ajax.my_lotto1.php`
+- `sub/ajax.my_lotto2.php`
+- `sub/ajax.res.php`
+- `sub/ajax.res2.php`
+- `sub/ajax.smsMu.php`
+- `sub/ajax.submit.php`
+- `sub/ajax.submit2.php`
+- `sub/ajax.turn.list.view.php`
+- `sub/ajax.turn.list.view2.php`
+- `sub/ci.php`
+- `sub/cs.php`
+- `sub/data01.php`
+- `sub/data02.php`
+- `sub/data03.php`
+- `sub/deluxe.php`
+- `sub/detail.php`
+- `sub/head.tit.php`
+- `sub/head.tit_.php`
+- `sub/instagram.php`
+- `sub/main.lucky.php`
+- `sub/map.php`
+- `sub/membership.php`
+- `sub/my_info.php`
+- `sub/my_info.update.php`
+- `sub/my_lotto.php`
+- `sub/my_lotto02.php`
+- `sub/my_lotto03.php`
+- `sub/notmessage.php`
+- `sub/page.check.php`
+- `sub/perfect_member.php`
+- `sub/perfect_member_.php`
+- `sub/perfect_member__.php`
+- `sub/post.php`
+- `sub/prize.php`
+- `sub/res.php`
+- `sub/sms.php`
+- `sub/stats.php`
+- `sub/stats2.php`
+- `sub/stats3.php`
+- `sub/sub0101.php`
+- `sub/sub0101_.php`
+- `sub/sub0102_.php`
+- `sub/sub0201_.php`
+- `sub/sub0301.php`
+- `sub/sub0301_.php`
+- `sub/sub0302.php`
+- `sub/sub0303.php`
+- `sub/sub0501.php`
+- `sub/sub_tab.php`
+- `sub/system.php`
+- `sub/test.php`
+- `sub/test2.php`
+- `sub/want_thumnail.php`
+- `tail.php`
+- `tail.sub.php`
+- `theme/basic/_common.php`
+- `theme/basic/group.php`
+- `theme/basic/head.php`
+- `theme/basic/head.sub.php`
+- `theme/basic/head.sub__.php`
+- `theme/basic/head_.php`
+- `theme/basic/index.php`
+- `theme/basic/index_.php`
+- `theme/basic/index_2.php`
+- `theme/basic/mobile/_common.php`
+- `theme/basic/mobile/group.php`
+- `theme/basic/mobile/head.php`
+- `theme/basic/mobile/head_.php`
+- `theme/basic/mobile/index.php`
+- `theme/basic/mobile/index_.php`
+- `theme/basic/mobile/shop/_common.php`
+- `theme/basic/mobile/shop/category.php`
+- `theme/basic/mobile/shop/index.php`
+- `theme/basic/mobile/shop/shop.head.php`
+- `theme/basic/mobile/shop/shop.tail.php`
+- `theme/basic/mobile/skin/board/basic/list.skin.php`
+- `theme/basic/mobile/skin/board/basic/view.skin.php`
+- `theme/basic/mobile/skin/board/basic/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/basic/write.skin.php`
+- `theme/basic/mobile/skin/board/branches_on/branches.map.php`
+- `theme/basic/mobile/skin/board/branches_on/list.skin.php`
+- `theme/basic/mobile/skin/board/branches_on/view.skin.php`
+- `theme/basic/mobile/skin/board/branches_on/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/branches_on/write.skin.php`
+- `theme/basic/mobile/skin/board/faq_/list.skin.php`
+- `theme/basic/mobile/skin/board/faq_/view.skin.php`
+- `theme/basic/mobile/skin/board/faq_/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/faq_/write.skin.php`
+- `theme/basic/mobile/skin/board/gallery/list.skin.php`
+- `theme/basic/mobile/skin/board/gallery/view.skin.php`
+- `theme/basic/mobile/skin/board/gallery/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/gallery/write.skin.php`
+- `theme/basic/mobile/skin/board/main/list.skin.php`
+- `theme/basic/mobile/skin/board/main/view.skin.php`
+- `theme/basic/mobile/skin/board/main/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/main/write.skin.php`
+- `theme/basic/mobile/skin/board/msds/list.skin.php`
+- `theme/basic/mobile/skin/board/msds/view.skin.php`
+- `theme/basic/mobile/skin/board/msds/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/msds/write.skin.php`
+- `theme/basic/mobile/skin/board/news/list.skin.php`
+- `theme/basic/mobile/skin/board/news/view.skin.php`
+- `theme/basic/mobile/skin/board/news/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/news/write.skin.php`
+- `theme/basic/mobile/skin/board/notice/list.skin.php`
+- `theme/basic/mobile/skin/board/notice/view.skin.php`
+- `theme/basic/mobile/skin/board/notice/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/notice/write.skin.php`
+- `theme/basic/mobile/skin/board/qna/list.skin.php`
+- `theme/basic/mobile/skin/board/qna/view.skin.php`
+- `theme/basic/mobile/skin/board/qna/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/qna/write.skin.php`
+- `theme/basic/mobile/skin/board/res/list.skin.php`
+- `theme/basic/mobile/skin/board/res/view.skin.php`
+- `theme/basic/mobile/skin/board/res/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/res/write.skin.php`
+- `theme/basic/mobile/skin/board/res2/list.skin.php`
+- `theme/basic/mobile/skin/board/res2/view.skin.php`
+- `theme/basic/mobile/skin/board/res2/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/res2/write.skin.php`
+- `theme/basic/mobile/skin/board/youtube/list.skin.php`
+- `theme/basic/mobile/skin/board/youtube/view.skin.php`
+- `theme/basic/mobile/skin/board/youtube/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/youtube/write.skin.php`
+- `theme/basic/mobile/skin/board/youtube_new_m/list.skin.php`
+- `theme/basic/mobile/skin/board/youtube_new_m/view.skin.php`
+- `theme/basic/mobile/skin/board/youtube_new_m/view_comment.skin.php`
+- `theme/basic/mobile/skin/board/youtube_new_m/write.skin.php`
+- `theme/basic/mobile/skin/connect/basic/connect.skin.php`
+- `theme/basic/mobile/skin/connect/basic/current_connect.skin.php`
+- `theme/basic/mobile/skin/content/basic/content.skin.php`
+- `theme/basic/mobile/skin/faq/basic/list.skin.php`
+- `theme/basic/mobile/skin/faq_/basic/list.skin.php`
+- `theme/basic/mobile/skin/latest/basic/latest.skin.php`
+- `theme/basic/mobile/skin/latest/comment/latest.skin.php`
+- `theme/basic/mobile/skin/latest/notice/latest.skin.php`
+- `theme/basic/mobile/skin/latest/shop_basic/latest.skin.php`
+- `theme/basic/mobile/skin/member/basic/consent_modal.inc.php`
+- `theme/basic/mobile/skin/member/basic/formmail.skin.php`
+- `theme/basic/mobile/skin/member/basic/login.myshop.skin.php`
+- `theme/basic/mobile/skin/member/basic/login.skin.php`
+- `theme/basic/mobile/skin/member/basic/login_check.skin.php`
+- `theme/basic/mobile/skin/member/basic/member_cert_refresh.skin.php`
+- `theme/basic/mobile/skin/member/basic/member_confirm.skin.php`
+- `theme/basic/mobile/skin/member/basic/memo.skin.php`
+- `theme/basic/mobile/skin/member/basic/memo_form.skin.php`
+- `theme/basic/mobile/skin/member/basic/memo_view.skin.php`
+- `theme/basic/mobile/skin/member/basic/myinfo.skin.php`
+- `theme/basic/mobile/skin/member/basic/password.skin.php`
+- `theme/basic/mobile/skin/member/basic/password_lost.skin.php`
+- `theme/basic/mobile/skin/member/basic/password_reset.skin.php`
+- `theme/basic/mobile/skin/member/basic/point.attendance.skin.php`
+- `theme/basic/mobile/skin/member/basic/point.reseller.skin.php`
+- `theme/basic/mobile/skin/member/basic/point.shop.skin.php`
+- `theme/basic/mobile/skin/member/basic/point.skin.php`
+- `theme/basic/mobile/skin/member/basic/profile.skin.php`
+- `theme/basic/mobile/skin/member/basic/register.skin.php`
+- `theme/basic/mobile/skin/member/basic/register_form.skin.php`
+- `theme/basic/mobile/skin/member/basic/register_form2.skin.php`
+- `theme/basic/mobile/skin/member/basic/register_form_update.tail.skin.php`
+- `theme/basic/mobile/skin/member/basic/register_result.skin.php`
+- `theme/basic/mobile/skin/member/basic/scrap.skin.php`
+- `theme/basic/mobile/skin/member/basic/scrap_popin.skin.php`
+- `theme/basic/mobile/skin/member_/basic/formmail.skin.php`
+- `theme/basic/mobile/skin/member_/basic/login.skin.php`
+- `theme/basic/mobile/skin/member_/basic/login_check.skin.php`
+- `theme/basic/mobile/skin/member_/basic/member_confirm.skin.php`
+- `theme/basic/mobile/skin/member_/basic/memo.skin.php`
+- `theme/basic/mobile/skin/member_/basic/memo_form.skin.php`
+- `theme/basic/mobile/skin/member_/basic/memo_view.skin.php`
+- `theme/basic/mobile/skin/member_/basic/password.skin.php`
+- `theme/basic/mobile/skin/member_/basic/password_lost.skin.php`
+- `theme/basic/mobile/skin/member_/basic/point.skin.php`
+- `theme/basic/mobile/skin/member_/basic/profile.skin.php`
+- `theme/basic/mobile/skin/member_/basic/register.skin.php`
+- `theme/basic/mobile/skin/member_/basic/register_form.skin.php`
+- `theme/basic/mobile/skin/member_/basic/register_result.skin.php`
+- `theme/basic/mobile/skin/member_/basic/scrap.skin.php`
+- `theme/basic/mobile/skin/member_/basic/scrap_popin.skin.php`
+- `theme/basic/mobile/skin/new/basic/new.skin.php`
+- `theme/basic/mobile/skin/outlogin/basic/outlogin.skin.1.php`
+- `theme/basic/mobile/skin/outlogin/basic/outlogin.skin.2.php`
+- `theme/basic/mobile/skin/outlogin/shop_basic/outlogin.skin.1.php`
+- `theme/basic/mobile/skin/outlogin/shop_basic/outlogin.skin.2.php`
+- `theme/basic/mobile/skin/poll/basic/poll.skin.php`
+- `theme/basic/mobile/skin/poll/basic/poll_result.skin.php`
+- `theme/basic/mobile/skin/popular/basic/popular.skin.php`
+- `theme/basic/mobile/skin/qa/basic/list.skin.php`
+- `theme/basic/mobile/skin/qa/basic/view.answer.skin.php`
+- `theme/basic/mobile/skin/qa/basic/view.answerform.skin.php`
+- `theme/basic/mobile/skin/qa/basic/view.skin.php`
+- `theme/basic/mobile/skin/qa/basic/write.skin.php`
+- `theme/basic/mobile/skin/qa_/basic/list.skin.php`
+- `theme/basic/mobile/skin/qa_/basic/view.answer.skin.php`
+- `theme/basic/mobile/skin/qa_/basic/view.answerform.skin.php`
+- `theme/basic/mobile/skin/qa_/basic/view.skin.php`
+- `theme/basic/mobile/skin/qa_/basic/write.skin.php`
+- `theme/basic/mobile/skin/qalist/list.query.php`
+- `theme/basic/mobile/skin/qalist/list.skin.php`
+- `theme/basic/mobile/skin/qalist/view.skin.php`
+- `theme/basic/mobile/skin/qalist/view_comment.skin.php`
+- `theme/basic/mobile/skin/qalist/write.skin.php`
+- `theme/basic/mobile/skin/qalist/write_update.skin.php`
+- `theme/basic/mobile/skin/search/basic/search.skin.php`
+- `theme/basic/mobile/skin/shop/basic/boxbanner.skin.php`
+- `theme/basic/mobile/skin/shop/basic/boxtodayview.skin.php`
+- `theme/basic/mobile/skin/shop/basic/couponzone.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/item.form.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.change.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.delivery.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.info.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.itemqa.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.itemuse.skin.php`
+- `theme/basic/mobile/skin/shop/basic/iteminfo.relation.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemqa.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemqaform.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemqalist.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemuse.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemuseform.skin.php`
+- `theme/basic/mobile/skin/shop/basic/itemuselist.skin.php`
+- `theme/basic/mobile/skin/shop/basic/largeimage.skin.php`
+- `theme/basic/mobile/skin/shop/basic/list.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/list.best.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/list.sort.skin.php`
+- `theme/basic/mobile/skin/shop/basic/list.sub.skin.php`
+- `theme/basic/mobile/skin/shop/basic/listcategory.skin.php`
+- `theme/basic/mobile/skin/shop/basic/main.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/main.20.skin.php`
+- `theme/basic/mobile/skin/shop/basic/main.30.skin.php`
+- `theme/basic/mobile/skin/shop/basic/main.event.skin.php`
+- `theme/basic/mobile/skin/shop/basic/mainbanner.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/navigation.skin.php`
+- `theme/basic/mobile/skin/shop/basic/personalpay.skin.php`
+- `theme/basic/mobile/skin/shop/basic/relation.10.skin.php`
+- `theme/basic/mobile/skin/shop/basic/search.skin.php`
+- `theme/basic/mobile/skin/visit/basic/visit.skin.php`
+- `theme/basic/mobile/tail.php`
+- `theme/basic/mobile/tail_.php`
+- `theme/basic/shop/_common.php`
+- `theme/basic/shop/ajax.action.php`
+- `theme/basic/shop/category.php`
+- `theme/basic/shop/index.php`
+- `theme/basic/shop/mypage.php`
+- `theme/basic/shop/orderinquiryview.php`
+- `theme/basic/shop/shop.head.php`
+- `theme/basic/shop/shop.tail.php`
+- `theme/basic/skin/board/basic/list.skin.php`
+- `theme/basic/skin/board/basic/view.skin.php`
+- `theme/basic/skin/board/basic/view_comment.skin.php`
+- `theme/basic/skin/board/basic/write.skin.php`
+- `theme/basic/skin/board/basic_new/list.skin.php`
+- `theme/basic/skin/board/basic_new/view.skin.php`
+- `theme/basic/skin/board/basic_new/view_comment.skin.php`
+- `theme/basic/skin/board/basic_new/write.skin.php`
+- `theme/basic/skin/board/basic_old/list.query.php`
+- `theme/basic/skin/board/basic_old/list.skin.php`
+- `theme/basic/skin/board/basic_old/view.skin.php`
+- `theme/basic/skin/board/basic_old/view_comment.skin.php`
+- `theme/basic/skin/board/basic_old/write.skin.php`
+- `theme/basic/skin/board/basic_old/write_update.skin.php`
+- `theme/basic/skin/board/branches_on/branches.map.php`
+- `theme/basic/skin/board/branches_on/list.skin.php`
+- `theme/basic/skin/board/branches_on/view.skin.php`
+- `theme/basic/skin/board/branches_on/view_comment.skin.php`
+- `theme/basic/skin/board/branches_on/write.skin.php`
+- `theme/basic/skin/board/calender/list.skin.php`
+- `theme/basic/skin/board/calender/view.skin.php`
+- `theme/basic/skin/board/calender/view_comment.skin.php`
+- `theme/basic/skin/board/calender/write.skin.php`
+- `theme/basic/skin/board/faq/list.skin.php`
+- `theme/basic/skin/board/faq/view.skin.php`
+- `theme/basic/skin/board/faq/view_comment.skin.php`
+- `theme/basic/skin/board/faq/write.skin.php`
+- `theme/basic/skin/board/faq_/list.skin.php`
+- `theme/basic/skin/board/faq_/view.skin.php`
+- `theme/basic/skin/board/faq_/view_comment.skin.php`
+- `theme/basic/skin/board/faq_/write.skin.php`
+- `theme/basic/skin/board/gallery/list.skin.php`
+- `theme/basic/skin/board/gallery/view.skin.php`
+- `theme/basic/skin/board/gallery/view_comment.skin.php`
+- `theme/basic/skin/board/gallery/write.skin.php`
+- `theme/basic/skin/board/gallery_new/list.skin.php`
+- `theme/basic/skin/board/gallery_new/view.skin.php`
+- `theme/basic/skin/board/gallery_new/view_comment.skin.php`
+- `theme/basic/skin/board/gallery_new/write.skin.php`
+- `theme/basic/skin/board/main/list.skin.php`
+- `theme/basic/skin/board/main/view.skin.php`
+- `theme/basic/skin/board/main/view_comment.skin.php`
+- `theme/basic/skin/board/main/write.skin.php`
+- `theme/basic/skin/board/msds/list.skin.php`
+- `theme/basic/skin/board/msds/view.skin.php`
+- `theme/basic/skin/board/msds/view_comment.skin.php`
+- `theme/basic/skin/board/msds/write.skin.php`
+- `theme/basic/skin/board/news/list.skin.php`
+- `theme/basic/skin/board/news/view.skin.php`
+- `theme/basic/skin/board/news/view_comment.skin.php`
+- `theme/basic/skin/board/news/write.skin.php`
+- `theme/basic/skin/board/notice/list.skin.php`
+- `theme/basic/skin/board/notice/view.skin.php`
+- `theme/basic/skin/board/notice/view_comment.skin.php`
+- `theme/basic/skin/board/notice/write.skin.php`
+- `theme/basic/skin/board/photo/list.skin.php`
+- `theme/basic/skin/board/photo/view.skin.php`
+- `theme/basic/skin/board/photo/view_comment.skin.php`
+- `theme/basic/skin/board/photo/write.skin.php`
+- `theme/basic/skin/board/product/list.skin.php`
+- `theme/basic/skin/board/product/view.skin.php`
+- `theme/basic/skin/board/product/view_comment.skin.php`
+- `theme/basic/skin/board/product/write.skin.php`
+- `theme/basic/skin/board/product_top/list.skin.php`
+- `theme/basic/skin/board/product_top/view.skin.php`
+- `theme/basic/skin/board/product_top/view_comment.skin.php`
+- `theme/basic/skin/board/product_top/write.skin.php`
+- `theme/basic/skin/board/qalist/list.query.php`
+- `theme/basic/skin/board/qalist/list.skin.php`
+- `theme/basic/skin/board/qalist/view.skin.php`
+- `theme/basic/skin/board/qalist/view_comment.skin.php`
+- `theme/basic/skin/board/qalist/write.skin.php`
+- `theme/basic/skin/board/qalist/write_update.skin.php`
+- `theme/basic/skin/board/qna/list.skin.php`
+- `theme/basic/skin/board/qna/view.skin.php`
+- `theme/basic/skin/board/qna/view_comment.skin.php`
+- `theme/basic/skin/board/qna/write.skin.php`
+- `theme/basic/skin/board/res/list.skin.php`
+- `theme/basic/skin/board/res/view.skin.php`
+- `theme/basic/skin/board/res/view_comment.skin.php`
+- `theme/basic/skin/board/res/write.skin.php`
+- `theme/basic/skin/board/res2/list.skin.php`
+- `theme/basic/skin/board/res2/view.skin.php`
+- `theme/basic/skin/board/res2/view_comment.skin.php`
+- `theme/basic/skin/board/res2/write.skin.php`
+- `theme/basic/skin/board/youtube_new/list.skin.php`
+- `theme/basic/skin/board/youtube_new/view.skin.php`
+- `theme/basic/skin/board/youtube_new/view_comment.skin.php`
+- `theme/basic/skin/board/youtube_new/write.skin.php`
+- `theme/basic/skin/connect/basic/connect.skin.php`
+- `theme/basic/skin/connect/basic/current_connect.skin.php`
+- `theme/basic/skin/content/basic/content.skin.php`
+- `theme/basic/skin/faq/basic/list.skin.php`
+- `theme/basic/skin/faq_/basic/list.skin.php`
+- `theme/basic/skin/latest/basic/latest.skin.php`
+- `theme/basic/skin/latest/notice/latest.skin.php`
+- `theme/basic/skin/latest/pic_basic/latest.skin.php`
+- `theme/basic/skin/latest/pic_block/latest.skin.php`
+- `theme/basic/skin/latest/pic_list/latest.skin.php`
+- `theme/basic/skin/latest/popular/latest.skin.php`
+- `theme/basic/skin/latest/shop_basic/latest.skin.php`
+- `theme/basic/skin/member/basic/consent_modal.inc.php`
+- `theme/basic/skin/member/basic/formmail.skin.php`
+- `theme/basic/skin/member/basic/login.myshop.skin.php`
+- `theme/basic/skin/member/basic/login.skin.php`
+- `theme/basic/skin/member/basic/login_check.skin.php`
+- `theme/basic/skin/member/basic/member_cert_refresh.skin.php`
+- `theme/basic/skin/member/basic/member_confirm.skin.php`
+- `theme/basic/skin/member/basic/memo.skin.php`
+- `theme/basic/skin/member/basic/memo_form.skin.php`
+- `theme/basic/skin/member/basic/memo_view.skin.php`
+- `theme/basic/skin/member/basic/myinfo.skin.php`
+- `theme/basic/skin/member/basic/password.skin.php`
+- `theme/basic/skin/member/basic/password_lost.skin.php`
+- `theme/basic/skin/member/basic/password_reset.skin.php`
+- `theme/basic/skin/member/basic/point.attendance.skin.php`
+- `theme/basic/skin/member/basic/point.reseller.skin.php`
+- `theme/basic/skin/member/basic/point.shop.skin.php`
+- `theme/basic/skin/member/basic/point.skin.php`
+- `theme/basic/skin/member/basic/profile.skin.php`
+- `theme/basic/skin/member/basic/register.skin.php`
+- `theme/basic/skin/member/basic/register_form.skin.php`
+- `theme/basic/skin/member/basic/register_form2.skin.php`
+- `theme/basic/skin/member/basic/register_form_update.tail.skin.php`
+- `theme/basic/skin/member/basic/register_result.skin.php`
+- `theme/basic/skin/member/basic/scrap.skin.php`
+- `theme/basic/skin/member/basic/scrap_popin.skin.php`
+- `theme/basic/skin/member_order/basic/formmail.skin.php`
+- `theme/basic/skin/member_order/basic/login.skin.php`
+- `theme/basic/skin/member_order/basic/login_check.skin.php`
+- `theme/basic/skin/member_order/basic/member_confirm.skin.php`
+- `theme/basic/skin/member_order/basic/memo.skin.php`
+- `theme/basic/skin/member_order/basic/memo_form.skin.php`
+- `theme/basic/skin/member_order/basic/memo_view.skin.php`
+- `theme/basic/skin/member_order/basic/password.skin.php`
+- `theme/basic/skin/member_order/basic/password_lost.skin.php`
+- `theme/basic/skin/member_order/basic/point.skin.php`
+- `theme/basic/skin/member_order/basic/profile.skin.php`
+- `theme/basic/skin/member_order/basic/register.skin.php`
+- `theme/basic/skin/member_order/basic/register_form.skin.php`
+- `theme/basic/skin/member_order/basic/register_result.skin.php`
+- `theme/basic/skin/member_order/basic/scrap.skin.php`
+- `theme/basic/skin/member_order/basic/scrap_popin.skin.php`
+- `theme/basic/skin/new/basic/new.skin.php`
+- `theme/basic/skin/outlogin/basic/outlogin.skin.1.php`
+- `theme/basic/skin/outlogin/basic/outlogin.skin.2.php`
+- `theme/basic/skin/outlogin/shop_basic/outlogin.skin.1.php`
+- `theme/basic/skin/outlogin/shop_basic/outlogin.skin.2.php`
+- `theme/basic/skin/outlogin/shop_side/outlogin.skin.1.php`
+- `theme/basic/skin/outlogin/shop_side/outlogin.skin.2.php`
+- `theme/basic/skin/poll/basic/poll.skin.php`
+- `theme/basic/skin/poll/basic/poll_result.skin.php`
+- `theme/basic/skin/poll/shop_basic/poll.skin.php`
+- `theme/basic/skin/poll/shop_basic/poll_result.skin.php`
+- `theme/basic/skin/popular/basic/popular.skin.php`
+- `theme/basic/skin/qa/basic/list.skin.php`
+- `theme/basic/skin/qa/basic/view.answer.skin.php`
+- `theme/basic/skin/qa/basic/view.answerform.skin.php`
+- `theme/basic/skin/qa/basic/view.skin.php`
+- `theme/basic/skin/qa/basic/write.skin.php`
+- `theme/basic/skin/search/basic/search.skin.php`
+- `theme/basic/skin/shop/basic/boxbanner.skin.php`
+- `theme/basic/skin/shop/basic/boxcart.skin.php`
+- `theme/basic/skin/shop/basic/boxcategory.skin.php`
+- `theme/basic/skin/shop/basic/boxcommunity.skin.php`
+- `theme/basic/skin/shop/basic/boxevent.skin.php`
+- `theme/basic/skin/shop/basic/boxtodayview.skin.php`
+- `theme/basic/skin/shop/basic/boxwish.skin.php`
+- `theme/basic/skin/shop/basic/couponzone.10.skin.php`
+- `theme/basic/skin/shop/basic/item.form.skin.php`
+- `theme/basic/skin/shop/basic/item.info.skin.php`
+- `theme/basic/skin/shop/basic/itemqa.skin.php`
+- `theme/basic/skin/shop/basic/itemqaform.skin.php`
+- `theme/basic/skin/shop/basic/itemqalist.skin.php`
+- `theme/basic/skin/shop/basic/itemuse.skin.php`
+- `theme/basic/skin/shop/basic/itemuseform.skin.php`
+- `theme/basic/skin/shop/basic/itemuselist.skin.php`
+- `theme/basic/skin/shop/basic/largeimage.skin.php`
+- `theme/basic/skin/shop/basic/list.10.skin.php`
+- `theme/basic/skin/shop/basic/list.20.skin.php`
+- `theme/basic/skin/shop/basic/list.30.skin.php`
+- `theme/basic/skin/shop/basic/list.40.skin.php`
+- `theme/basic/skin/shop/basic/list.sort.skin.php`
+- `theme/basic/skin/shop/basic/list.sub.skin.php`
+- `theme/basic/skin/shop/basic/listcategory.skin.php`
+- `theme/basic/skin/shop/basic/listcategory2.skin.php`
+- `theme/basic/skin/shop/basic/listcategory3.skin.php`
+- `theme/basic/skin/shop/basic/main.10.skin.php`
+- `theme/basic/skin/shop/basic/main.20.skin.php`
+- `theme/basic/skin/shop/basic/main.30.skin.php`
+- `theme/basic/skin/shop/basic/main.40.skin.php`
+- `theme/basic/skin/shop/basic/main.50.skin.php`
+- `theme/basic/skin/shop/basic/mainbanner.10.skin.php`
+- `theme/basic/skin/shop/basic/navigation.skin.php`
+- `theme/basic/skin/shop/basic/personalpay.skin.php`
+- `theme/basic/skin/shop/basic/relation.10.skin.php`
+- `theme/basic/skin/shop/basic/search.skin.php`
+- `theme/basic/skin/visit/basic/visit.skin.php`
+- `theme/basic/skin/visit/shop_basic/visit.skin.php`
+- `theme/basic/tail.php`
+- `theme/basic/tail.sub.php`
+- `theme/basic/tail_.php`
+- `theme/basic/theme.config.php`
+- `version.php`
+
+## 4. 폼 전송 대상
+
+- `<?php echo $action_url ?>` — 54회
+- `<?php echo $comment_action_url; ?>` — 36회
+- `./board_list_update.php` — 28회
+- `<?php echo $_SERVER[` — 22회
+- `(현재 페이지)` — 16회
+- `<?php echo $register_action_url ?>` — 14회
+- `<?php echo G5_BBS_URL; ?>/board_list_update.php` — 13회
+- `./order_update.php` — 12회
+- `<?php echo $login_action_url ?>` — 10회
+- `<?php echo $action_url; ?>` — 10회
+- `<?php echo $url ?>` — 8회
+- `<?php echo $order_action_url; ?>` — 7회
+- `./boardgroupmember_update.php` — 6회
+- `./formmail_send.php` — 6회
+- `./scrap_popin_update.php` — 6회
+- `<?php echo G5_BBS_URL ?>/poll_update.php` — 6회
+- `./poll_etc_update.php` — 6회
+- `<?php echo $outlogin_action_url ?>` — 6회
+- `<?php echo $memo_action_url; ?>` — 5회
+- `./qadelete.php` — 5회
+- `./qawrite_update.php` — 5회
+- `<?php echo G5_BBS_URL ?>/search.php` — 4회
+- `<?php echo G5_SHOP_URL; ?>/search.php` — 4회
+- `<?php echo urldecode($url); ?>` — 4회
+- `<?php echo G5_SHOP_URL;?>/itemqaformupdate.php` — 4회
+- `<?php echo G5_SHOP_URL;?>/itemuseformupdate.php` — 4회
+- `http://devadmin.kcp.co.kr/Modules/Noti/TEST_Vcnt_Noti_Proc.jsp` — 3회
+- `./cartupdate.php` — 3회
+- `<?php echo $action; ?>` — 3회
+- `<?php echo $action;  ?>` — 3회
+- `./write_comment_update.php` — 3회
+- `./auth_list_delete.php` — 2회
+- `./auth_update.php` — 2회
+- `./board_copy_update.php` — 2회
+- `./board_form_update.php` — 2회
+- `./boardgroup_form_update.php` — 2회
+- `./boardgroup_list_update.php` — 2회
+- `./contentformupdate.php` — 2회
+- `./faqformupdate.php` — 2회
+- `./faqmasterformupdate.php` — 2회
+- `./mail_update.php` — 2회
+- `./mail_delete.php` — 2회
+- `./mail_select_list.php` — 2회
+- `./mail_select_update.php` — 2회
+- `./member_form_update.php` — 2회
+- `./member_list_update.php` — 2회
+- `./menu_list_update.php` — 2회
+- `./newwinformupdate.php` — 2회
+- `./point_list_delete.php` — 2회
+- `./point_update.php` — 2회
+- `./poll_form_update.php` — 2회
+- `./poll_delete.php` — 2회
+- `./orderformupdate.php` — 2회
+- `./orderprintresult.php` — 2회
+- `./sendcostupdate.php` — 2회
+- `./config_update.php` — 2회
+- `./emoticon_move_update.php` — 2회
+- `./form_multi_update.php` — 2회
+- `form_update.php` — 2회
+- `./history_send.php` — 2회
+- `./member_update_run.php` — 2회
+- `./num_book_multi_update.php` — 2회
+- `./number_move_update.php` — 2회
+- `./num_book_update.php` — 2회
+- `./num_group_update.php` — 2회
+- `sms_write_send.php` — 2회
+- `./visit_delete_update.php` — 2회
+- `<?php echo G5_BBS_URL ?>/order_update.php` — 2회
+- `member.save.php` — 2회
+- `<?php echo $cart_action_url; ?>` — 2회
+- `./itemrecommendmail.php` — 2회
+- `<?php echo G5_MSHOP_URL; ?>/kcp/order_approval_form.php` — 2회
+- `<?php echo $register_action_url; ?>` — 2회
+- `./orderinquirycancel.php` — 2회
+- `https://testadmin.kcp.co.kr/Modules/Noti/TEST_Vcnt_Noti.jsp` — 2회
+- `#` — 2회
+- `<?php echo G5_SHOP_URL.` — 2회
+- `<?php echo urldecode($url); ?>?id=<?=$mb_ids;?>` — 2회
+- `process.login.check.php` — 1회
+- `./bannerformupdate.php` — 1회
+- `./categoryformupdate.php` — 1회
+- `./categorylistupdate.php` — 1회
+- `./configformupdate.php` — 1회
+- `./couponformupdate.php` — 1회
+- `./couponlist_delete.php` — 1회
+- `./couponzoneformupdate.php` — 1회
+- `./couponzonelist_delete.php` — 1회
+- `./inorderformupdate.php` — 1회
+- `./inorderlistdelete.php` — 1회
+- `./itemeventformupdate.php` — 1회
+- `./itemeventlistupdate.php` — 1회
+- `./itemexcelupdate.php` — 1회
+- `./itemformupdate.php` — 1회
+- `./itemlistupdate.php` — 1회
+- `./itemqaformupdate.php` — 1회
+- `./itemqalistupdate.php` — 1회
+- `./itemstocklistupdate.php` — 1회
+- `./itemstocksmsupdate.php` — 1회
+- `./itemtypelistupdate.php` — 1회
+- `./itemuseformupdate.php` — 1회
+- `./itemuselistupdate.php` — 1회
+- `./optionstocklistupdate.php` — 1회
+- `./orderdeliveryupdate.php` — 1회
+- `./orderformcartupdate.php` — 1회
+- `./orderformreceiptupdate.php` — 1회
+- `./orderpartcancelupdate.php` — 1회
+- `./personalpaycopyupdate.php` — 1회
+- `./personalpayformupdate.php` — 1회
+- `./personalpaylistdelete.php` — 1회
+- `./sale1today.php` — 1회
+- `./sale1date.php` — 1회
+- `./sale1month.php` — 1회
+- `./sale1year.php` — 1회
+- `./move_update.php` — 1회
+- `<?php echo G5_HTTPS_BBS_URL.` — 1회
+- `./install_config.php` — 1회
+- `./install_db.php` — 1회
+- `pop.new_ad.update.php` — 1회
+- `emp.save.php` — 1회
+- `login.check.php` — 1회
+- `login.step2.check.php` — 1회
+- `lucky.custom.save.php` — 1회
+- `lucky.view.update.php` — 1회
+- `pop.member_info.update.php` — 1회
+- `pop.memo.update.php` — 1회
+- `sms.udpate.php` — 1회
+- `./sms.excel.number.upload.update.php` — 1회
+- `./sms.excel1.upload.update.php` — 1회
+- `http://admin.kcp.co.kr/Modules/escrow/kcp_pop.jsp` — 1회
+- `<?php echo G5_MSHOP_URL; ?>/lg/xpay_approval.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/orderinquirycancel.php` — 1회
+- `<?php echo G5_MSHOP_URL; ?>/toss/toss_approval.php` — 1회
+- `<?php echo $cert_url ?>` — 1회
+- `<?php echo htmlspecialchars($reg[` — 1회
+- `<?php echo G5_LGXPAY_URL.$resultPage; ?>` — 1회
+- `<?php echo $kcbForm_action; ?>` — 1회
+- `<?php echo $login_action_url; ?>` — 1회
+- `view.update.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/cartupdate.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/inicis/taxsave_result.php` — 1회
+- `<?php echo G5_HTTPS_SHOP_URL; ?>/itemstocksmsupdate.php` — 1회
+- `./pp_cli_result.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/kcp/pp_cli_hub.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/lg/taxsave_result.php` — 1회
+- `<?php echo $wishUrl; ?>` — 1회
+- `<?php echo G5_SHOP_URL; ?>/nicepay/taxsave_result.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/toss/taxsave_result.php` — 1회
+- `<?=G5_URL?>/sub/my_info.update.php` — 1회
+- `./memo_form_update.php` — 1회
+- `<?php echo G5_BBS_URL;?>/board.php` — 1회
+
+## 5. PHP 페이지 연결
+
+- `./board.php?bo_table=<?php echo $bo_table ?>` — 30회
+- `./memo.php?kind=recv` — 18회
+- `./memo.php?kind=send` — 18회
+- `./memo_form.php` — 18회
+- `<?php echo G5_BBS_URL ?>/logout.php` — 17회
+- `<?php echo G5_BBS_URL ?>/register.php` — 17회
+- `<?php echo G5_BBS_URL ?>/password_lost.php` — 14회
+- `<?php echo G5_BBS_URL ?>/member_confirm.php?url=register_form.php` — 13회
+- `<?=G5_URL?>/sub/sub0201.php` — 12회
+- `<?php echo G5_BBS_URL ?>/memo.php` — 11회
+- `<?php echo G5_BBS_URL ?>/point.php` — 11회
+- `<?php echo G5_BBS_URL ?>/member_confirm.php?url=member_leave.php` — 11회
+- `./boardgroupmember_form.php?mb_id=` — 10회
+- `<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>` — 10회
+- `<?php echo G5_BBS_URL ?>/faq.php` — 8회
+- `<?php echo G5_BBS_URL ?>/qalist.php` — 8회
+- `<?=G5_BBS_URL;?>/attendance_point.php` — 8회
+- `<?=G5_BBS_URL;?>/reseller_point.php` — 8회
+- `<?=G5_BBS_URL;?>/shop_point.php` — 8회
+- `http://icodekorea.com/res/join_company_fix_a.php?sellid=sir2` — 7회
+- `<?php echo G5_BBS_URL ?>/login.php` — 7회
+- `<?php echo G5_BBS_URL ?>/scrap.php` — 7회
+- `<?php echo G5_SHOP_URL ?>/coupon.php` — 7회
+- `<?=G5_URL?>/bbs/board.php?bo_table=notice_` — 7회
+- `<?php echo G5_BBS_URL ?>/new.php` — 6회
+- `./itemform.php?w=u&amp;it_id=<?php echo $row[` — 6회
+- `<?=G5_BBS_URL?>/content.php?co_id=privacy` — 6회
+- `<?php echo G5_ADMIN_URL; ?>/menu_list.php` — 6회
+- `<?=G5_LADMIN_URL?>/member/member.all.php?sch_select=a.mb_code&sch_text=<?=$row[` — 6회
+- `<?php echo G5_SHOP_URL; ?>/mypage.php` — 6회
+- `<?php echo G5_SHOP_URL; ?>/cart.php` — 6회
+- `./memo_form.php?me_recv_mb_id=<?php echo $mb[` — 6회
+- `<?php echo G5_ADMIN_URL ?>/poll_form.php?w=u&amp;po_id=<?php echo $po_id ?>` — 6회
+- `./poll_result.php?po_id=<?php echo $list3[$i][` — 6회
+- `<?php echo G5_ADMIN_URL ?>/visit_list.php` — 6회
+- `<?=G5_URL?>/sub/sub0102.php` — 6회
+- `<?php echo G5_BBS_URL; ?>/qalist.php` — 5회
+- `./scrap.php` — 5회
+- `<?php echo G5_SHOP_URL; ?>/couponzone.php` — 5회
+- `<?=G5_URL?>/sub/sub0301.php` — 5회
+- `<?=G5_URL?>/sub/sub0101.php` — 5회
+- `<?=G5_BBS_URL?>/board.php?bo_table=notice_&wr_id=<?=$row[` — 5회
+- `./register.php` — 5회
+- `http://sir.kr/main/service/p_cert.php` — 4회
+- `<?php echo G5_BBS_URL; ?>/faq.php?fm_id=<?php echo $fm_id; ?>` — 4회
+- `./faqlist.php?fm_id=<?php echo $fm_id; ?>` — 4회
+- `./faqmasterlist.php` — 4회
+- `./point_list.php?sfl=mb_id&amp;stx=<?php echo $row[` — 4회
+- `http://www.icodekorea.com/smsbiz/credit_card_amt.php?icode_id=<?php echo $config[` — 4회
+- `./num_book_write.php?w=u&amp;bk_no=<?php echo $res[` — 4회
+- `./history_num.php?wr_id=<?php echo $res[` — 4회
+- `<?php echo G5_BBS_URL ?>/current_connect.php` — 4회
+- `<?=G5_LADMIN_URL?>/member/payment.cancel.php?lp_id=` — 4회
+- `<?php echo G5_SHOP_URL; ?>/orderinquiry.php` — 4회
+- `<?php echo G5_BBS_URL ?>/login.php?url=<?php echo $urlencode; ?>` — 4회
+- `<?php echo G5_BBS_URL ?>/search.php?sfl=wr_subject&amp;sop=and&amp;stx=<?php echo urlencode($list[$i][` — 4회
+- `<?php echo G5_SHOP_URL; ?>/largeimage.php?it_id=<?php echo $it[` — 4회
+- `<?php echo G5_BBS_URL; ?>/login.php?url=<?php echo urlencode(shop_item_url($it_id)); ?>` — 4회
+- `<?php echo G5_SHOP_URL ?>/personalpay.php` — 4회
+- `<?php echo G5_SHOP_URL ?>/itemuselist.php` — 4회
+- `<?php echo G5_SHOP_URL ?>/itemqalist.php` — 4회
+- `<?=G5_URL?>/sub/my_lotto.php` — 4회
+- `<?=G5_URL?>/sub/stats.php` — 4회
+- `<?=G5_URL?>/bbs/qalist.php` — 4회
+- `<?=G5_SHOP_URL;?>/attendance.php?it_id=1565925456` — 4회
+- `<?=G5_BBS_URL;?>/write.php?bo_table=profit` — 4회
+- `<?=G5_BBS_URL;?>/write.php?bo_table=profit2` — 4회
+- `<?=G5_BBS_URL;?>/write.php?bo_table=profit3` — 4회
+- `./itemstocklist.php` — 3회
+- `<?php echo G5_SHOP_URL; ?>/orderinquiryview.php?od_id=<?php echo $row[` — 3회
+- `<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php` — 3회
+- `<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $row[` — 3회
+- `./member.all.excel.php?1=1<?=$qstr?>` — 3회
+- `./member.del.php?mb_id=` — 3회
+- `<?=G5_LADMIN_URL?>/member/alarm.list.php` — 3회
+- `<?php echo G5_BBS_URL; ?>/member_confirm.php?url=member_leave.php` — 3회
+- `/bbs/board.php?bo_table=notice_` — 3회
+- `/bbs/board.php?bo_table=faq` — 3회
+- `/bbs/qalist.php` — 3회
+- `/sub/stats.php` — 3회
+- `/sub/stats2.php` — 3회
+- `/sub/stats3.php` — 3회
+- `<?=G5_URL?>/sub/sub0302.php` — 3회
+- `<?=G5_URL?>/sub/sub0303.php` — 3회
+- `<?=G5_URL?>/ad/doc.v1.php?idx=<?=Encrypt($row[` — 2회
+- `<?php echo G5_ADMIN_URL ?>/service.php` — 2회
+- `<?php echo G5_ADMIN_URL ?>/member_form.php?w=u&amp;mb_id=<?php echo $member[` — 2회
+- `./board_list.php?<?php echo $qstr;?>` — 2회
+- `./board_list.php?sfl=a.gr_id&stx=` — 2회
+- `./board_copy.php?bo_table=<?php echo $board[` — 2회
+- `./board_thumbnail_delete.php?bo_table=<?php echo $board[` — 2회
+- `./board_form.php?w=u&amp;bo_table=` — 2회
+- `./board_copy.php?bo_table=` — 2회
+- `./board_form.php` — 2회
+- `./board_form.php?w=u&amp;bo_table=<?php echo $bo_table; ?>&amp;<?php echo $qstr; ?>` — 2회
+- `./board_form.php?gr_id=` — 2회
+- `./boardgroupmember_list.php?gr_id=` — 2회
+- `./boardgroup_list.php?<?php echo $qstr ?>` — 2회
+- `./boardgroup_form.php?` — 2회
+- `<?php echo G5_BBS_URL ?>/group.php?gr_id=<?php echo $row[` — 2회
+- `./board_list.php?sfl=a.gr_id&amp;stx=<?php echo $row[` — 2회
+- `./boardgroupmember_list.php?gr_id=<?php echo $row[` — 2회
+- `./boardgroup_form.php` — 2회
+- `<?php echo G5_BBS_URL; ?>/group.php?gr_id=<?php echo $row[` — 2회
+- `./contentlist.php` — 2회
+- `./contentform.php` — 2회
+- `./contentform.php?w=u&amp;co_id=<?php echo $row[` — 2회
+- `./contentformupdate.php?w=d&amp;co_id=<?php echo $row[` — 2회
+- `./faqform.php?fm_id=<?php echo $fm[` — 2회
+- `./faqform.php?w=u&amp;fm_id=<?php echo $row[` — 2회
+- `./faqformupdate.php?w=d&amp;fm_id=<?php echo $row[` — 2회
+- `./faqmasterform.php` — 2회
+- `./faqlist.php?fm_id=<?php echo $row[` — 2회
+- `./faqmasterform.php?w=u&amp;fm_id=<?php echo $row[` — 2회
+- `<?php echo G5_BBS_URL; ?>/faq.php?fm_id=<?php echo $row[` — 2회
+- `./faqmasterformupdate.php?w=d&amp;fm_id=<?php echo $row[` — 2회
+- `./member_form.php?$qstr&amp;w=u&amp;mb_id=` — 2회
+- `./member_delete.php?` — 2회
+- `./member_list.php` — 2회
+- `<?php echo G5_BBS_URL ?>/new.php?gr_id=<?php echo $row[` — 2회
+- `./point_list.php` — 2회
+- `./mail_preview.php?ma_id=` — 2회
+- `./mail_form.php?w=u&amp;ma_id=<?php echo $row[` — 2회
+- `./mail_test.php?ma_id=<?php echo $row[` — 2회
+- `./mail_select_form.php?ma_id=<?php echo $row[` — 2회
+- `./mail_form.php` — 2회
+- `./mail_list.php` — 2회
+- `./mail_select_form.php?ma_id=<?php echo $ma_id ?>` — 2회
+- `./boardgroupmember_form.php?mb_id=<?php echo $mb[` — 2회
+- `./point_list.php?sfl=mb_id&amp;stx=<?php echo $mb[` — 2회
+- `./member_list.php?<?php echo $qstr ?>` — 2회
+- `./member_form.php?` — 2회
+- `point_list.php?sfl=mb_id&amp;stx=<?php echo $row[` — 2회
+- `./member_form.php` — 2회
+- `./newwinlist.php` — 2회
+- `./newwinform.php` — 2회
+- `./newwinform.php?w=u&amp;nw_id=<?php echo $row[` — 2회
+- `./newwinformupdate.php?w=d&amp;nw_id=<?php echo $row[` — 2회
+- `./poll_list.php?<?php echo $qstr ?>` — 2회
+- `./poll_form.php?` — 2회
+- `./poll_form.php` — 2회
+- `http://sir.kr/main/service/p_pg.php` — 2회
+- `http://sir.kr/main/service/lg_pg.php` — 2회
+- `http://sir.kr/main/service/inicis_pg.php` — 2회
+- `./orderform.php?od_id=` — 2회
+- `./optionstocklist.php` — 2회
+- `./itemqaform.php?w=u&amp;iq_id=<?php echo $row[` — 2회
+- `./itemuseform.php?w=u&amp;is_id=<?php echo $row[` — 2회
+- `./itemsellrank.php` — 2회
+- `./orderlist.php?<?php echo $qstr; ?>` — 2회
+- `./orderform.php?od_id=<?php echo $row[` — 2회
+- `form_group_move.php?fg_no=` — 2회
+- `form_group_update.php?w=` — 2회
+- `./form_list.php?fg_no=0` — 2회
+- `./form_list.php?fg_no=<?php echo $group[$i][` — 2회
+- `./form_update.php?w=d&fo_no=` — 2회
+- `./form_multi_update.php?w=` — 2회
+- `./form_write.php?w=u&amp;fo_no=<?php echo $res[` — 2회
+- `./sms_write.php?fo_no=<?php echo $res[` — 2회
+- `./form_write.php?page=<?php echo $page?>&amp;fg_no=<?php echo $fg_no?>` — 2회
+- `./form_list.php?<?php echo clean_query_string($_SERVER[` — 2회
+- `./history_view.php?page=<?php echo $page;?>&amp;st=<?php echo $st;?>&amp;sv=<?php echo $sv;?>&amp;wr_no=<?php echo $res[` — 2회
+- `./history_del.php?page=<?php echo $page;?>&amp;st=<?php echo $st;?>&amp;sv=<?php echo $sv;?>&amp;wr_no=<?php echo $res[` — 2회
+- `./history_view.php?page=<?php echo $page; ?>&amp;st=<?php echo $st; ?>&amp;sv=<?php echo $sv; ?>&amp;wr_no=<?php echo $res[` — 2회
+- `history_view.php?wr_no=<?php echo $wr_no?>&wr_renum=<?php echo $new_wr_renum?>` — 2회
+- `./sms_write.php?wr_no=<?php echo $wr_no?>` — 2회
+- `./history_view.php?page=<?php echo $page?>&amp;st=<?php echo $st?>&amp;sv=<?php echo $sv?>&amp;wr_no=<?php echo $res[` — 2회
+- `./history_list.php?page=<?php echo $page?>&amp;st=<?php echo $st?>&amp;sv=<?php echo $sv?>` — 2회
+- `./history_view.php?page=<?php echo $page?>&amp;st=<?php echo $st?>&amp;sv=<?php echo $sv?>&amp;wr_no=<?php echo $wr_no?>` — 2회
+- `config.php` — 2회
+- `./sms_write.php?bk_no=<?php echo $res[` — 2회
+- `./history_num.php?st=hs_hp&amp;sv=<?php echo $res[` — 2회
+- `./num_book_write.php?page=<?php echo $page?>&amp;bg_no=<?php echo $bg_no?>` — 2회
+- `<?php echo G5_SMS5_ADMIN_URL; ?>/member_update.php` — 2회
+- `./num_book_file_download.php` — 2회
+- `./num_book.php?<?php echo clean_query_string($_SERVER[` — 2회
+- `<?php echo G5_ADMIN_URL ?>/member_form.php?w=u&mb_id=` — 2회
+- `num_group_update.php?mw=d&bg_no=` — 2회
+- `num_group_move.php?bg_no=` — 2회
+- `num_group_update.php?mw=empty&bg_no=` — 2회
+- `./num_book.php?bg_no=1` — 2회
+- `./num_book.php?bg_no=<?php echo $group[$i][` — 2회
+- `history_view.php?wr_no=<?php echo $wr_no?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme[$i]; ?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme; ?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_index; ?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_list; ?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_view; ?>` — 2회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_device; ?>` — 2회
+- `./visit_list.php?fr_date=<?php echo $key ?>&amp;to_date=<?php echo $key ?>` — 2회
+- `./visit_list.php?` — 2회
+- `./visit_date.php?fr_date=<?php echo $key ?>-01&amp;to_date=<?php echo $key ?>-31` — 2회
+- `./visit_month.php?fr_date=<?php echo $key ?>-01-01&amp;to_date=<?php echo $key ?>-12-31` — 2회
+- `./login.php?` — 2회
+- `http://www.lottoclick.co.kr/sub/sub0201.php` — 2회
+- `<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $board[` — 2회
+- `http://sir.kr/main/service/b_ipin.php` — 2회
+- `http://sir.kr/main/service/b_cert.php` — 2회
+- `http://sir.kr/main/service/lg_cert.php` — 2회
+- `./bbs.res.list.excel.php?1=1<?=$qstr?>` — 2회
+- `./bbs.res.list.del.php?lr_id=` — 2회
+- `./lucky.list.excel.php?1=1<?=$qstr?>` — 2회
+- `./pop.member_info.stop.php?mb_id=` — 2회
+- `./payment.all.excel.php?1=1<?=$qstr?>` — 2회
+- `./payment.mu.excel.php?1=1<?=$qstr?>` — 2회
+- `<?php echo G5_SHOP_URL; ?>/itemuselist.php` — 2회
+- `<?php echo G5_BBS_URL; ?>/faq.php` — 2회
+- `<?php echo G5_SHOP_URL; ?>/personalpay.php` — 2회
+- `<?php echo G5_BBS_URL; ?>/member_confirm.php?url=register_form.php` — 2회
+- `<?php echo G5_SHOP_URL; ?>/coupon.php` — 2회
+- `<?php echo G5_BBS_URL; ?>/point.php` — 2회
+- `<?php echo G5_SHOP_URL; ?>/wishlist.php` — 2회
+- `./orderinquiry.php` — 2회
+- `./wishlist.php` — 2회
+- `./wishupdate.php?w=d&amp;wi_id=<?php echo $row[` — 2회
+- `./new.php?gr_id=<?php echo $list[$i][` — 2회
+- `/bbs/login.php` — 2회
+- `/bbs/register.php` — 2회
+- `/bbs/content.php?co_id=privacy` — 2회
+- `/bbs/content.php?co_id=provision` — 2회
+- `<?=G5_URL?>/sub/stats2.php` — 2회
+- `<?=G5_URL?>/sub/stats3.php` — 2회
+- `<?=G5_URL?>/bbs/board.php?bo_table=faq` — 2회
+- `<?=G5_URL?>/sub/deluxe.php` — 2회
+- `<?=G5_BBS_URL?>/board.php?bo_table=notice_` — 2회
+- `./board.php?bo_table=<?=$bo_table?>&sca=` — 2회
+- `<?=G5_URL;?>/shopping_profit.php` — 2회
+- `/bbs/reseller_point.php` — 2회
+- `<?=G5_SHOP_URL;?>/reseller.php?it_id=1562921863` — 2회
+- `<?=G5_BBS_URL?>/content.php?co_id=provision` — 2회
+- `<?=G5_BBS_URL?>/board.php?bo_table=<?=$bo_table?>&wr_id=<?=$row2[wr_id]?>` — 2회
+- `<?=G5_URL?>/ad/process.excel.php?idx=<?=Encrypt($row[` — 1회
+- `<?=G5_URL?>/ad/process.logout.php` — 1회
+- `http://sir.kr/main/service/inicis_cert_form.php` — 1회
+- `http://www.icodekorea.com/smsbiz/credit_card_amt.php?icode_id=<?php echo get_text($config[` — 1회
+- `<?php echo G5_ADMIN_URL;?>/member_list_file_delete.php` — 1회
+- `<?php echo G5_ADMIN_URL;?>/member_list.php` — 1회
+- `http://sir.kr/main/service/inicis_cert.php` — 1회
+- `./bannerlist.php` — 1회
+- `./bannerform.php` — 1회
+- `./bannerform.php?w=u&amp;bn_id=<?php echo $row[` — 1회
+- `./bannerformupdate.php?w=d&amp;bn_id=<?php echo $row[` — 1회
+- `./categoryform.php?ca_id=<?php echo $ca_id; ?>&amp;<?php echo $qstr; ?>` — 1회
+- `./itemlist.php?sca=<?php echo $ca[` — 1회
+- `./categorylist.php?<?php echo $qstr; ?>` — 1회
+- `./categoryform.php?ca_id=` — 1회
+- `./categoryform.php?w=u&amp;ca_id=` — 1회
+- `./categoryformupdate.php?w=d&amp;ca_id=` — 1회
+- `./itemlist.php?sca=<?php echo $row[` — 1회
+- `./categoryform.php` — 1회
+- `http://sir.kr/main/service/samsungpay.php` — 1회
+- `http://sir.kr/main/service/kakaopay.php?kk=yc5` — 1회
+- `http://sir.kr/main/service/nicepayments_pg.php` — 1회
+- `http://sir.kr/main/service/naverpay.php` — 1회
+- `./couponlist.php` — 1회
+- `./couponform.php?w=u&amp;cp_id=<?php echo $row[` — 1회
+- `./couponform.php` — 1회
+- `./couponzonelist.php?<?php echo $qstr; ?>` — 1회
+- `./couponzoneform.php?w=u&amp;cz_id=<?php echo $row[` — 1회
+- `./couponzoneform.php` — 1회
+- `<?php echo G5_BBS_URL; ?>/qaview.php?qa_id=<?php echo $row[` — 1회
+- `./itemqalist.php?sort1=iq_answer&amp;sort2=asc` — 1회
+- `./itemuselist.php?sort1=is_confirm&amp;sort2=asc` — 1회
+- `./inorderform.php?od_id=<?php echo $row[` — 1회
+- `./inorderformupdate.php?w=d&amp;od_id=<?php echo $row[` — 1회
+- `./itemeventform.php` — 1회
+- `./itemeventform.php?w=u&amp;ev_id=<?php echo $row[` — 1회
+- `<?php echo G5_SHOP_URL; ?>/event.php?ev_id=<?php echo $row[` — 1회
+- `./itemeventformupdate.php?w=d&amp;ev_id=<?php echo $row[` — 1회
+- `<?php echo G5_SHOP_URL; ?>/event.php?ev_id=<?php echo $ev[` — 1회
+- `./itemevent.php` — 1회
+- `<?php echo G5_ADMIN_URL; ?>/shop_admin/itemuselist.php?sfl=a.it_id&amp;stx=<?php echo $it_id; ?>` — 1회
+- `<?php echo G5_ADMIN_URL; ?>/shop_admin/itemqalist.php?sfl=a.it_id&amp;stx=<?php echo $it_id; ?>` — 1회
+- `./itemlist.php?<?php echo $qstr; ?>` — 1회
+- `./itemcopy.php?it_id=<?php echo $row[` — 1회
+- `./itemform.php` — 1회
+- `./itemexcel.php` — 1회
+- `./itemqalist.php?<?php echo $qstr; ?>` — 1회
+- `./itemlist.php` — 1회
+- `./itemuselist.php?<?php echo $qstr; ?>` — 1회
+- `<?php echo G5_ADMIN_URL; ?>/shop_admin/orderdeliveryexcel.php` — 1회
+- `./personalpayform.php?popup=yes&amp;od_id=<?php echo $od_id; ?>` — 1회
+- `./orderpartcancel.php?od_id=<?php echo $od_id; ?>` — 1회
+- `./orderdelivery.php` — 1회
+- `./orderlist.php` — 1회
+- `./personalpaylist.php?<?php echo $qstr; ?>` — 1회
+- `./personalpayformupdate.php?w=d&amp;pp_id=<?php echo $pp[` — 1회
+- `./personalpayform.php?w=u&amp;pp_id=<?php echo $row[` — 1회
+- `./personalpaycopy.php?pp_id=<?php echo $row[` — 1회
+- `./personalpayform.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/price/naver.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/price/naver_summary.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/price/google_feed.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/price/daum.php` — 1회
+- `<?php echo G5_SHOP_URL; ?>/price/daum_summary.php` — 1회
+- `./sale1today.php?date=<?php echo $date; ?>` — 1회
+- `./sale1date.php?fr_date=<?php echo $date; ?>01&amp;to_date=<?php echo $date; ?>31` — 1회
+- `./orderlist.php?sel_field=od_name&amp;search=` — 1회
+- `./orderlist.php?sel_field=mb_id&amp;search=` — 1회
+- `./sale1month.php?fr_month=<?php echo $save[` — 1회
+- `./history_del.php?page=<?php echo $page?>&amp;st=<?php echo $st?>&amp;sv=<?php echo $sv?>&amp;wr_no=<?php echo $res[` — 1회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_shop; ?>` — 1회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_ca_list; ?>` — 1회
+- `./theme_preview.php?theme=<?php echo $theme.$qstr_item; ?>` — 1회
+- `<?php echo G5_ADMIN_URL ?>/member_form.php?w=u&amp;mb_id=<?php echo $mb_id ?>` — 1회
+- `./install_config.php` — 1회
+- `../index.php` — 1회
+- `https://www.facebook.com/sharer/sharer.php?u=` — 1회
+- `<?php echo G5_BBS_URL; ?>/content.php?co_id=<?php echo $co_id; ?>` — 1회
+- `<?php echo G5_BBS_URL; ?>/content.php?co_id=<?php echo $row[` — 1회
+- `./history_del.php?page=<?php echo $page?>&amp;st=<?php echo $st?>&amp;sv=<?php echo $sv?>&amp;wr_no=<?php echo $res[wr_no]?>&amp;wr_renum=<?php echo $res[wr_renum]?>` — 1회
+- `./ad.data.list.excel.php?1=1<?=$qstr?>` — 1회
+- `./ad.data.list.del.php?idx=` — 1회
+- `./pop.new_ad.del.php?idx=` — 1회
+- `./bbs.res.db.excel.php?1=1<?=$qstr?>` — 1회
+- `./bbs.res.db.del.php?idx=` — 1회
+- `<?=G5_LADMIN_URL?>/member/member.del.php?mb_id=` — 1회
+- `<?=G5_LADMIN_URL?>/logout.php` — 1회
+- `<?=G5_LADMIN_URL?>/del.process.php?table=` — 1회
+- `<?=G5_LADMIN_URL?>/lucky/test.php?f_type=` — 1회
+- `<?=G5_LADMIN_URL?>/lucky/test.del.php?f_type=` — 1회
+- `./pop.memo.php?mb_id=<?=$mb_id2?>` — 1회
+- `./pop.member_info.php?mb_id=<?=$mb_id2?>` — 1회
+- `./pop.success.php?mb_id=<?=$mb_id2?>` — 1회
+- `./pop.payment.php?mb_id=<?=$mb_id2?>` — 1회
+- `./pop.sms.php?mb_id=<?=$mb_id2?>` — 1회
+- `<?=G5_LADMIN_URL?>/member/pop.member_info.php?mb_id=<?=base64_encode($mb_id)?>` — 1회
+- `./proc.mbin.php?type=` — 1회
+- `pop.payment.cancel.php?lp_id=` — 1회
+- `pop.payment.in.cancel.php?lp_id=` — 1회
+- `./payment.cancel.php?lp_id=` — 1회
+- `./payment.mu.pay.php?lp_id=` — 1회
+- `<?=G5_LADMIN_URL?>/payment/payment.credit.pay.php?lp_id=` — 1회
+- `./payment.mu.before.excel.php?1=1<?=$qstr?>` — 1회
+- `<?=G5_LADMIN_URL?>/member/payment.mu.pay.php?lp_id=` — 1회
+- `./sms.spam.del.php?pn=` — 1회
+- `<?php echo G5_SHOP_URL; ?>/listtype.php?type=1` — 1회
+- `<?php echo G5_SHOP_URL; ?>/listtype.php?type=2` — 1회
+- `<?php echo G5_SHOP_URL; ?>/listtype.php?type=3` — 1회
+- `<?php echo G5_SHOP_URL; ?>/listtype.php?type=4` — 1회
+- `<?php echo G5_SHOP_URL; ?>/listtype.php?type=5` — 1회
+- `<?php echo G5_SHOP_URL; ?>/wishupdate.php?w=d&amp;wi_id=<?php echo $row[` — 1회
+- `./redirect.php` — 1회
+- `https://www.facebook.com/profile.php?id=<?php echo $list[$i][` — 1회
+- `<?php echo G5_BBS_URL; ?>/memo.php` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=아크릴보조제(수성)` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=유화보조제(유성)` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=보조제&prd2=한국화보조제(수성)` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=디자인마커` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=브러쉬마커` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=마커&prd2=마커악세사리` — 1회
+- `<?=G5_URL?>/sub/detail.php?wr_id=<?=$row[` — 1회
+- `<?=G5_URL?>/sub/acrylic.php?prd1=<?=$prd1?><?=$link?>` — 1회
+- `<?=G5_URL?>/sub/my_info.php` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=1` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=2` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=3` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=4` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=5` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=6` — 1회
+- `<?=G5_URL?>/sub/prize.php?type=7` — 1회
+- `<?=G5_URL?>/sub/data01.php` — 1회
+- `<?=G5_URL?>/sub/data02.php` — 1회
+- `<?=G5_URL?>/sub/data03.php` — 1회
+- `<?=G5_BBS_URL?>/board.php?bo_table=notice` — 1회
+- `<?=G5_BBS_URL?>/qalist.php` — 1회
+- `<?=G5_URL?>/sub/my_lotto02.php` — 1회
+- `<?=G5_URL?>/sub/my_lotto03.php` — 1회
+- `<?=G5_URL?>/sub/prize.php` — 1회
+- `<?=G5_URL?>/sub/sub0501.php` — 1회
+- `<?=G5_URL?>/bbs/content.php?co_id=privacy` — 1회
+
+## 6. SQL 테이블 사용 표현
+
+- `the` — 289회
+- `{$g5['member_table']}` — 156회
+- `{$g5['g5_shop_cart_table']}` — 144회
+- `{$g5['g5_shop_order_table']}` — 140회
+- `{$g5['g5_shop_item_table']}` — 127회
+- `{$g5['sms5_book_group_table']}` — 108회
+- `{$g5['g5_shop_category_table']}` — 103회
+- `a` — 102회
+- `{$g5['sms5_book_table']}` — 94회
+- `{$g5['board_table']}` — 85회
+- `$write_table` — 82회
+- `{$g5['sms5_form_group_table']}` — 68회
+- `g5_member_etc` — 64회
+- `g5_member` — 62회
+- `{$g5['sms5_form_table']}` — 59회
+- `{$g5['g5_shop_personalpay_table']}` — 56회
+- `{$write_table}` — 52회
+- `{$g5['g5_shop_coupon_table']}` — 45회
+- `{$g5['g5_shop_item_option_table']}` — 39회
+- `{$g5['sms5_write_table']}` — 38회
+- `{$g5['group_table']}` — 34회
+- `{$g5['content_table']}` — 34회
+- `{$g5['point_table']}` — 33회
+- `{$g5['g5_shop_order_data_table']}` — 33회
+- `{$g5['board_file_table']}` — 30회
+- `{$g5['group_member_table']}` — 30회
+- `{$g5['visit_table']}` — 30회
+- `{$g5['board_new_table']}` — 29회
+- `{$g5['config_table']}` — 29회
+- `g5_config` — 27회
+- `{$g5['g5_shop_item_use_table']}` — 26회
+- `l_pay` — 25회
+- `{$g5['sms5_history_table']}` — 24회
+- `l_ad_user` — 23회
+- `{$g5['memo_table']}` — 23회
+- `{$g5['poll_table']}` — 23회
+- `an` — 23회
+- `{$g5['qa_content_table']}` — 22회
+- `{$g5['g5_shop_item_qa_table']}` — 22회
+- `{$g5['g5_shop_event_item_table']}` — 22회
+- `file` — 22회
+- `this` — 22회
+- `{$g5['mail_table']}` — 21회
+- `JSON` — 20회
+- `{$g5['write_prefix']}{$bo_table}` — 19회
+- `{$g5['auth_table']}` — 18회
+- `{$g5['g5_shop_coupon_log_table']}` — 18회
+- `{$g5['g5_shop_inicis_log_table']}` — 18회
+- `one` — 18회
+- `{$g5['faq_master_table']}` — 17회
+- `{$g5['g5_shop_order_address_table']}` — 17회
+- `l_ad_list` — 16회
+- `{$g5['faq_table']}` — 16회
+- `{$g5['g5_shop_item_relation_table']}` — 16회
+- `{$g5['g5_shop_event_table']}` — 16회
+- `our` — 16회
+- `$sql` — 15회
+- `{$g5['social_profile_table']}` — 14회
+- `{$g5['scrap_table']}` — 13회
+- `{$g5['g5_shop_wish_table']}` — 13회
+- `{$g5['visit_sum_table']}` — 13회
+- `l_memo` — 13회
+- `which` — 13회
+- `worksheet` — 13회
+- `{$tmp_write_table}` — 12회
+- `{$g5['menu_table']}` — 12회
+- `{$table}` — 12회
+- `kvp_` — 12회
+- `l_res` — 12회
+- `{$g5['g5_shop_banner_table']}` — 11회
+- `array` — 11회
+- `1` — 11회
+- `its` — 11회
+- `{$g5['new_win_table']}` — 10회
+- `{$g5['g5_shop_coupon_zone_table']}` — 10회
+- `cell` — 10회
+- `{$g5['popular_table']}` — 9회
+- `0` — 9회
+- `subcomponents` — 9회
+- `{$g5['qa_config_table']}` — 8회
+- `{$g5['poll_etc_table']}` — 8회
+- `l_turn_{$recent_turn}` — 8회
+- `provider` — 8회
+- `{$g5['login_table']}` — 7회
+- `{$g5['g5_shop_item_stocksms_table']}` — 7회
+- `{$g5['autosave_table']}` — 7회
+- `l_ad_list_in` — 7회
+- `here` — 7회
+- `10` — 7회
+- `$table` — 7회
+- `{$g5['board_good_table']}` — 6회
+- `{$g5['g5_shop_sendcost_table']}` — 6회
+- `l_turn_{$turn}` — 6회
+- `all` — 6회
+- `account` — 6회
+- `PHPExcel` — 6회
+- `l_filter_temp` — 6회
+- `user` — 6회
+- `{$g5['write_prefix']}$bo_table` — 5회
+- `{$g5['member_auto_login_table']}` — 5회
+- `being` — 5회
+- `left` — 5회
+- `{$db_table}` — 5회
+- `msg_cust_log` — 5회
+- `url` — 5회
+- `session` — 5회
+- `Twitter` — 5회
+- `g1_file` — 5회
+- `g5_write_notice_` — 5회
+- `$g5[sms5_book_table]` — 4회
+- `l_turn_temp` — 4회
+- `$move_write_table` — 4회
+- `2` — 4회
+- `cache` — 4회
+- `zero` — 4회
+- `their` — 4회
+- `row` — 4회
+- `beginning` — 4회
+- `font` — 4회
+- `l_menu` — 4회
+- `l_filter` — 4회
+- `$receipt_time` — 4회
+- `process` — 4회
+- `incoming` — 4회
+- `encode` — 4회
+- `PEAR_Error` — 4회
+- `appropriate` — 4회
+- `tokens` — 4회
+- `GET` — 4회
+- `{$g5['uniqid_table']}` — 3회
+- `function` — 3회
+- `{$g5['g5_shop_default_table']}` — 3회
+- `{$g5['sms5_config_table']}` — 3회
+- `sql_query` — 3회
+- `{$table_prefix}content` — 3회
+- `user's` — 3회
+- `top` — 3회
+- `right` — 3회
+- `bottom` — 3회
+- `Excel` — 3회
+- `text` — 3회
+- `stack'` — 3회
+- `string` — 3회
+- `index` — 3회
+- `old` — 3회
+- `BIFF8` — 3회
+- `column` — 3회
+- `single` — 3회
+- `UST` — 3회
+- `Calibri` — 3회
+- `4` — 3회
+- `locale` — 3회
+- `fitToPage` — 3회
+- `'` — 3회
+- `{$g5['cert_history_table']}` — 3회
+- `{$g5['g5_shop_post_log_table']}` — 3회
+- `l_confirm_memo` — 3회
+- `RFC2821` — 3회
+- `rfc` — 3회
+- `UTF-8` — 3회
+- `that` — 3회
+- `another` — 3회
+- `input` — 3회
+- `THE` — 3회
+- `default` — 3회
+- `all'` — 2회
+- `{$g5['write_prefix']}$target_table` — 2회
+- `$g5['board_table']` — 2회
+- `{$g5['member_cert_history_table']}` — 2회
+- `$sum_point` — 2회
+- `$g5[sms5_book_group_table]` — 2회
+- `msg_cust_log_202605` — 2회
+- `{$table_name}` — 2회
+- `$tmp_write_table` — 2회
+- `Msg_Spam` — 2회
+- `CONTINUE` — 2회
+- `PEAR` — 2회
+- `memory` — 2회
+- `disk` — 2회
+- `printer` — 2회
+- `kvp_'` — 2회
+- `Numerical` — 2회
+- `coordinate` — 2회
+- `BIFF5` — 2회
+- `current` — 2회
+- `human` — 2회
+- `page` — 2회
+- `any` — 2회
+- `range` — 2회
+- `PHP` — 2회
+- `1-1-1601` — 2회
+- `last` — 2회
+- `autofilter` — 2회
+- `Office` — 2회
+- `chunks` — 2회
+- `l_lucky_custom` — 2회
+- `l_pay_in` — 2회
+- `g1_now_page` — 2회
+- `email` — 2회
+- `and` — 2회
+- `address` — 2회
+- `lines` — 2회
+- `it` — 2회
+- `capabilities` — 2회
+- `interval` — 2회
+- `timestamp` — 2회
+- `time` — 2회
+- `MIME-sniffing` — 2회
+- `HTML` — 2회
+- `$_GET` — 2회
+- `Unicode` — 2회
+- `interfering` — 2회
+- `silently` — 2회
+- `something` — 2회
+- `regular` — 2회
+- `$1` — 2회
+- `$CurrentToken` — 2회
+- `target` — 2회
+- `recaptcha` — 2회
+- `signed` — 2회
+- `persistent` — 2회
+- `twitter` — 2회
+- `what` — 2회
+- `przemek` — 2회
+- `consideration` — 2회
+- `Hybrid_Provider_Model_OAuth2` — 2회
+- `working` — 2회
+- `g5_write_prd` — 2회
+- `l_res_log` — 2회
+- `g5_board` — 2회
+- `INFORMATION_SCHEMA` — 2회
+- `g5_write_main_slider` — 2회
+- `g5_login_check` — 2회
+- `g5_shop_order` — 2회
+- `g5_write_{$bo_table}` — 2회
+- `-` — 1회
+- `l_ad_list_dump` — 1회
+- `{$g5['g5_shop_order_delete_table']}` — 1회
+- `$od_shop_memo` — 1회
+- `as_subject` — 1회
+- `l_log` — 1회
+- `{$table_prefix}config` — 1회
+- `{$table_prefix}qa_config` — 1회
+- `{$table_prefix}member` — 1회
+- `{$table_prefix}faq_master` — 1회
+- `{$table_prefix}group` — 1회
+- `{$table_prefix}board` — 1회
+- `{$g5_shop_prefix}default` — 1회
+- `Tk` — 1회
+- `_tmp_format` — 1회
+- `0xA4` — 1회
+- `APC` — 1회
+- `Memcache` — 1회
+- `CacheBase` — 1회
+- `query` — 1회
+- `Wincache` — 1회
+- `January` — 1회
+- `complexNumber1` — 1회
+- `absolute` — 1회
+- `number` — 1회
+- `Value` — 1회
+- `cache'` — 1회
+- `columnindex` — 1회
+- `Maped` — 1회
+- `source` — 1회
+- `twoCellAnchors` — 1회
+- `rule` — 1회
+- `Excel_Spreadsheet_Reader` — 1회
+- `stream` — 1회
+- `FORMULA` — 1회
+- `binary` — 1회
+- `REF` — 1회
+- `mapping` — 1회
+- `XF` — 1회
+- `blocks` — 1회
+- `end` — 1회
+- `hyperlinks` — 1회
+- `data` — 1회
+- `merged` — 1회
+- `protected` — 1회
+- `styles` — 1회
+- `workbook` — 1회
+- `references` — 1회
+- `anything` — 1회
+- `named` — 1회
+- `pixel` — 1회
+- `Hessenberg` — 1회
+- `2D` — 1회
+- `packed` — 1회
+- `LINPACK` — 1회
+- `e` — 1회
+- `self` — 1회
+- `UTF-16LE` — 1회
+- `root` — 1회
+- `beggining` — 1회
+- `SAT` — 1회
+- `OpenXML` — 1회
+- `Encoding` — 1회
+- `http` — 1회
+- `archive` — 1회
+- `-1` — 1회
+- `criteria` — 1회
+- `options` — 1회
+- `operator` — 1회
+- `dimensions` — 1회
+- `within` — 1회
+- `values` — 1회
+- `images` — 1회
+- `$objWriter->startElement` — 1회
+- `font's` — 1회
+- `numberFormat's` — 1회
+- `$str_pos` — 1회
+- `writeString` — 1회
+- `rich` — 1회
+- `spreadsheet` — 1회
+- `cells` — 1회
+- `cellXf` — 1회
+- `xfIndex` — 1회
+- `$mysql_db` — 1회
+- `$consume` — 1회
+- `{$shop_item_table}` — 1회
+- `version` — 1회
+- `name` — 1회
+- `or` — 1회
+- `functions` — 1회
+- `'regular'` — 1회
+- `CRLF` — 1회
+- `RFC3447` — 1회
+- `multiple` — 1회
+- `embedded` — 1회
+- `plain` — 1회
+- `reply` — 1회
+- `Source` — 1회
+- `each` — 1회
+- `The` — 1회
+- `several` — 1회
+- `literal` — 1회
+- `8-bit` — 1회
+- `div` — 1회
+- `Google` — 1회
+- `adressa` — 1회
+- `au` — 1회
+- `je` — 1회
+- `normal` — 1회
+- `environment` — 1회
+- `ini` — 1회
+- `{$this->remoteVerUrl}` — 1회
+- `possible` — 1회
+- `needed` — 1회
+- `sections` — 1회
+- `$matches` — 1회
+- `preg` — 1회
+- `object's` — 1회
+- `different` — 1회
+- `constraints` — 1회
+- `lowest` — 1회
+- `many` — 1회
+- `rgb` — 1회
+- `PHP_Compat` — 1회
+- `aliased` — 1회
+- `XML` — 1회
+- `utf8ToUnicode` — 1회
+- `MediaWiki` — 1회
+- `entity` — 1회
+- `non-HTMLPurifier_Token` — 1회
+- `attribute` — 1회
+- `TinyMCE's` — 1회
+- `fast-forwarding` — 1회
+- `handlers` — 1회
+- `factory` — 1회
+- `getting` — 1회
+- `document` — 1회
+- `AttrTransform` — 1회
+- `RFC` — 1회
+- `browsers` — 1회
+- `$r` — 1회
+- `ever` — 1회
+- `Firefox` — 1회
+- `$dtd_regex` — 1회
+- `HTMLPurifier_ChildDef_Required` — 1회
+- `needing` — 1회
+- `StartTags` — 1회
+- `injector'` — 1회
+- `most` — 1회
+- `phone` — 1회
+- `token` — 1회
+- `$attr` — 1회
+- `nesting` — 1회
+- `effect` — 1회
+- `common` — 1회
+- `$a1` — 1회
+- `8000` — 1회
+- `segments` — 1회
+- `problems` — 1회
+- `separate` — 1회
+- `could` — 1회
+- `wellformed` — 1회
+- `measuring` — 1회
+- `thinking` — 1회
+- `content` — 1회
+- `tbody` — 1회
+- `paragraphs` — 1회
+- `DOM` — 1회
+- `play` — 1회
+- `stack` — 1회
+- `alias` — 1회
+- `CSS` — 1회
+- `node` — 1회
+- `Facebook` — 1회
+- `www` — 1회
+- `facebook` — 1회
+- `$_REQUEST[` — 1회
+- `profile` — 1회
+- `hybrid` — 1회
+- `general` — 1회
+- `your` — 1회
+- `Hybrid_Provider_Model_OAuth1` — 1회
+- `stored` — 1회
+- `fb` — 1회
+- `serialized` — 1회
+- `social` — 1회
+- `them` — 1회
+- `l_yak` — 1회
+- `mhash` — 1회
+- `for` — 1회
+- `integer` — 1회
+- `N` — 1회
+- `16` — 1회
+- `$add_update_sql` — 1회
+- `g5_write_prd_top` — 1회
+
+## 7. 공통 파일 호출
+
+- `./_common.php` — 624회
+- `_common.php` — 201회
+- `./admin.tail.php` — 96회
+- `./admin.head.php` — 78회
+- `../../common.php` — 42회
+- `./_head.php` — 27회
+- `./_tail.php` — 27회
+- `./visit.sub.php` — 20회
+- `../common.php` — 11회
+- `../../../common.php` — 9회
+- `./member.head.php` — 5회
+- `./safe_check.php` — 4회
+- `./admin.shop.lib.php` — 4회
+- `./ordermail.inc.php` — 4회
+- `./m.php` — 4회
+- `install_common.php` — 4회
+- `../config.php` — 4회
+- `./install.inc2.php` — 4회
+- `./inc.alarmList.php` — 4회
+- `JSON.php` — 4회
+- `./qahead.php` — 3회
+- `./qatail.php` — 3회
+- `./install.inc.php` — 3회
+- `, ` — 3회
+- `config.php` — 3회
+- `./hpcert.config.php` — 3회
+- `./ipin.config.php` — 3회
+- `./board_delete.inc.php` — 2회
+- `./member_list_exel.lib.php` — 2회
+- `./sms_write_form.php` — 2회
+- `./move.php` — 2회
+- `./_head.sub.php` — 2회
+- `./_tail.sub.php` — 2회
+- `./register_form_update_mail3.php` — 2회
+- `./write_update_mail.php` — 2회
+- `./pc.php` — 2회
+- `./install.function.php` — 2회
+- `../lib/common.lib.php` — 2회
+- `../lib/hook.lib.php` — 2회
+- `../lib/get_data.lib.php` — 2회
+- `class.writeexcel_biffwriter.inc.php` — 2회
+- `OLE.php` — 2회
+- `pp_ax_hub_lib.php` — 2회
+- `../../../../common.php` — 2회
+- `../editor.lib.php` — 2회
+- `./JSON.php` — 2회
+- `captcha.lib.php` — 2회
+- `./XPayClient.php` — 2회
+- `./key_dir_check.php` — 2회
+- `html.inc` — 2회
+- `branches.map.php` — 2회
+- `./common.php` — 1회
+- `_rewrite_config_form.php` — 1회
+- `./itemdelete.inc.php` — 1회
+- `./ordersms.inc.php` — 1회
+- `./delete_all.php` — 1회
+- `./poll_etc_update_mail.php` — 1회
+- `./register_form_update_mail1.php` — 1회
+- `./register_form_update_mail2.php` — 1회
+- `./board_head.php` — 1회
+- `./board_tail.php` — 1회
+- `./write_comment_update.sns.php` — 1회
+- `cloudflare.check.php` — 1회
+- `./library.check.php` — 1회
+- `../cloudflare.check.php` — 1회
+- `../lib/uri.lib.php` — 1회
+- `../lib/cache.lib.php` — 1회
+- `class.writeexcel_format.inc.php` — 1회
+- `class.writeexcel_formula.inc.php` — 1회
+- `class.writeexcel_olewriter.inc.php` — 1회
+- `class.writeexcel_workbook.inc.php` — 1회
+- `class.ole_pps_root.php` — 1회
+- `class.ole_pps_file.php` — 1회
+- `PEAR.php` — 1회
+- `oleread.inc.php` — 1회
+- `)))) {
+                        if (isset($parent[` — 1회
+- `extras/ntlm_sasl_client.php` — 1회
+- `vendor/autoload.php` — 1회
+- `../../../../../common.php` — 1회
+- `../../../../../../common.php` — 1회
+- `../../../editor.lib.php` — 1회
+- `UploadHandler.php` — 1회
+- ` not ` — 1회
+- ` is used.
+ *
+ * @warning
+ *      This file requires that the include path contains the HTML Purifier
+ *      library directory; this is not auto-set.
+ */
+
+
+
+/*! @mainpage
+ *
+ * HTML Purifier is an HTML filter that will take an arbitrary snippet of
+ * HTML and rigorously test, validate and filter it into a version that
+ * is safe for output onto webpages. It achieves this by:
+ *
+ *  -# Lexing (parsing into tokens) the document,
+ *  -# Executing various strategies on the tokens:
+ *      -# Removing all elements not in the whitelist,
+ *      -# Making the tokens well-formed,
+ *      -# Fixing the nesting of the nodes, and
+ *      -# Validating attributes of the nodes; and
+ *  -# Generating HTML from the purified tokens.
+ *
+ * However, most users will only need to interface with the HTMLPurifier
+ * and HTMLPurifier_Config.
+ */
+
+/*
+    HTML Purifier 4.15.0 - Standards Compliant HTML Filtering
+    Copyright (C) 2006-2008 Edward Z. Yang
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/**
+ * Facade that coordinates HTML Purifier` — 1회
+- `, but Antonio Parraga reports that with
+        // Zend extensions such as Zend debugger and APC, this invariant
+        // may be broken.  Since we have efficient alternatives, pay
+        // the cost here and avoid the bug.
+        require_once HTMLPURIFIER_PREFIX . ` — 1회
+- `./write.php` — 1회
+- `base_facebook.php` — 1회
+- `$base/src/base_facebook.php` — 1회
+- `$base/src/facebook.php` — 1회
+- `twitteroauth/twitteroauth.php` — 1회
+- `OAuth.php` — 1회
+- `includes/g5_endpoint.php` — 1회
+- `../libs/INIStdPayUtil.php` — 1회
+- `[path/]sha256.inc.php` — 1회
+- `sha256.inc.php` — 1회
+- `./orderinquiry.sub.php` — 1회
+- `./settle_lg.inc.php` — 1회
+- `./settle_kcp.inc.php` — 1회
+
+## 8. TODO·FIXME 표시
+
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php:115` — `# initialisation is delayed until a formula is required. TODO: use a pre-`
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php:591` — `// TODO: use real error codes`
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php:672` — `// TODO: use real error codes`
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php:699` — `// TODO: use real error codes`
+- `lib/Excel/php_writeexcel/class.writeexcel_formula.inc.php:796` — `// TODO: use real error codes`
+- `lib/Excel/php_writeexcel/class.writeexcel_olewriter.inc.php:268` — `* Write property storage. TODO: add summary sheets`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:92` — `//todo: print error`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:100` — `//todo`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:145` — `# TODO: Add accessor for $self->{_sheetname} for international Excel versions.`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:229` — `// todo`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:241` — `//todo        carp "Color index $index outside range: 8 <= index <= 64";`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:250` — `//todo        carp "Color component outside range: 0 <= color <= 255";`
+- `lib/Excel/php_writeexcel/class.writeexcel_workbook.inc.php:407` — `//todo`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:219` — `//todo            warn "Unable to create temp files in $dir. Refer to set_tempdir()".`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:872` — `# TODO`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:1024` — `# TODO use functions in Utility.pm`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:1167` — `//TODO`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:1429` — `//TODO    ($_[5], $_[6]) = ($_[6], $_[5]) if (ref $_[5]);`
+- `lib/Excel/php_writeexcel/class.writeexcel_worksheet.inc.php:1672` — `/* TODO`
+- `lib/Excel/reader.php:122` — `* todo`
+- `lib/Excel/reader.php:179` — `* todo`
+- `lib/Excel/reader.php:188` — `* todo`
+- `lib/Excel/reader.php:196` — `* todo`
+- `lib/Excel/reader.php:307` — `* todo`
+- `lib/Excel/reader.php:356` — `* @todo return a valid value`
+- `lib/Excel/reader.php:707` — `* @param todo`
+- `lib/Excel/reader.php:708` — `* @todo fix return codes`
+- `lib/Excel/reader.php:925` — `* @param todo`
+- `lib/PHPExcel/Calculation/Database.php:229` — `* @TODO    The field argument is optional. If field is omitted, DCOUNT counts all records in the`
+- `lib/PHPExcel/Calculation/Database.php:273` — `* @TODO    The field argument is optional. If field is omitted, DCOUNTA counts all records in the`
+- `lib/PHPExcel/Calculation/LookupRef.php:305` — `* @todo    Support for the optional a1 parameter introduced in Excel 2010`
+- `lib/PHPExcel/Calculation/MathTrig.php:947` — `$tens = array('', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC');`
+- `lib/PHPExcel/Calculation/Statistical.php:1005` — `* @todo    Cumulative distribution function`
+- `lib/PHPExcel/Calculation/Statistical.php:1355` — `* @todo    Warning. This implementation differs from the algorithm detailed on the MS`
+- `lib/PHPExcel/Calculation/Statistical.php:2143` — `* @todo    Try implementing P J Acklam's refinement algorithm for greater`
+- `lib/PHPExcel/Cell/DataType.php:86` — `// TODO: Sanitize Rich-Text string (max. character count is 32,767)`
+- `lib/PHPExcel/Reader/Excel2007.php:1416` — `// TODO: Autoshapes from twoCellAnchors!`
+- `lib/PHPExcel/Reader/Excel2007.php:1596` — `$rangeSets = explode(',', $extractedRange);        // FIXME: what if sheetname contains comma?`
+- `lib/PHPExcel/Reader/Excel2007.php:1599` — `$range = explode('!', $rangeSet);    // FIXME: what if sheetname contains exclamation mark?`
+- `lib/PHPExcel/Reader/Excel5.php:1138` — `$ranges = explode(',', $definedName['formula']); // FIXME: what if sheetname contains comma?`
+- `lib/PHPExcel/Reader/Excel5.php:1145` — `$explodes = explode('!', $range);    // FIXME: what if sheetname contains exclamation mark?`
+- `lib/PHPExcel/Reader/Excel5.php:1169` — `$ranges = explode(',', $definedName['formula']); // FIXME: what if sheetname contains comma?`
+- `lib/PHPExcel/Reader/Excel5.php:1216` — `//    TODO Provide support for named values`
+- `lib/PHPExcel/Reader/Excel5.php:4165` — `// todo: what if string is very long? continue record`
+- `lib/PHPExcel/Reader/Excel5.php:4334` — `//FIXME: set $firstVisibleRow and $firstVisibleColumn`
+- `lib/PHPExcel/Reader/Excel5.php:4681` — `// todo: implement`
+- `lib/PHPExcel/Reader/Excel5.php:4944` — `// TODO: Investigate structure for .xls SHEETLAYOUT record as saved by MS Office Excel 2007`
+- `lib/PHPExcel/Reader/Excel5.php:6959` — `// todo: if cell range is just a single cell, should this funciton`
+- `lib/PHPExcel/Reader/Excel5.php:7016` — `// TODO: if cell range is just a single cell, should this funciton`
+- `lib/PHPExcel/Reader/Excel5.php:7178` — `// todo: check if we have identified the whole set of special characters`
+- `lib/PHPExcel/Reader/Excel5.php:7188` — `// TODO: external sheet support`
+- `lib/PHPExcel/Reader/HTML.php:223` — `//    TODO`
+- `lib/PHPExcel/Reader/HTML.php:239` — `//    TODO`
+- `lib/PHPExcel/Reader/HTML.php:255` — `//    TODO`
+- `lib/PHPExcel/Shared/Font.php:68` — `//  XXX: Constants created!`
+- `lib/PHPExcel/Shared/JAMA/Matrix.php:62` — `*    As PHP has no support for polymorphic constructors, we hack our own sort of polymorphism using func_num_args, func_get_arg, and gettype. In essence, we're `
+- `lib/PHPExcel/Writer/Excel5/Escher.php:191` — `$rgbUid = pack('VVVV', 0, 0, 0, 0); // todo`
+- `lib/PHPExcel/Writer/Excel5/Escher.php:197` — `$foDelay = 0; //todo`
+- `lib/PHPExcel/Writer/Excel5/Escher.php:230` — `$rgbUid1 = pack('VVVV', 0, 0, 0, 0); // todo`
+- `lib/PHPExcel/Writer/Excel5/Escher.php:233` — `$tag = 0xFF; // todo`
+- `lib/PHPExcel/Writer/Excel5/Escher.php:257` — `$rgbUid1 = pack('VVVV', 0, 0, 0, 0); // todo`
+- `lib/PHPExcel/Writer/Excel5/Escher.php:260` — `$tag = 0xFF; // todo`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:558` — `// TODO: use real error codes`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:633` — `// TODO: possible class value 0,1,2 check Formula.pm`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:638` — `// TODO: use real error codes`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:654` — `// TODO: use real error codes`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:726` — `//            // TODO: use real error codes`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:981` — `$col2 = 65535; // FIXME: maximum possible value for Excel 5 (change this!!!)`
+- `lib/PHPExcel/Writer/Excel5/Parser.php:983` — `// FIXME: this changes for BIFF8`
+- `lib/PHPExcel/Writer/Excel5/Workbook.php:445` — `/* TODO: store external SUPBOOK records and XCT and CRN records`
+- `lib/PHPExcel/Writer/Excel5/Workbook.php:971` — `$supbook_index = 0;           // FIXME: only using internal SUPBOOK record`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:505` — `// @todo CFRule & CFHeader`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:1295` — `// FIXME !!!`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3678` — `//@todo writeCFRule() => $blockLineStyle => Index Color for left line`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3679` — `//@todo writeCFRule() => $blockLineStyle => Index Color for right line`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3680` — `//@todo writeCFRule() => $blockLineStyle => Top-left to bottom-right on/off`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3681` — `//@todo writeCFRule() => $blockLineStyle => Bottom-left to top-right on/off`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3683` — `//@todo writeCFRule() => $blockColor => Index Color for top line`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3684` — `//@todo writeCFRule() => $blockColor => Index Color for bottom line`
+- `lib/PHPExcel/Writer/Excel5/Worksheet.php:3685` — `//@todo writeCFRule() => $blockColor => Index Color for diagonal line`
+- `lib/PHPExcel/Writer/HTML.php:1582` — `// TODO: Same for columns`
+- `lib/PHPExcel/Writer/OpenDocument/Cell/Comment.php:57` — `// TODO: Not realized in PHPExcel_Comment yet.`
+- `lib/PHPExcel/Writer/OpenDocument/Meta.php:78` — `//<meta:document-statistic meta:table-count="XXX" meta:cell-count="XXX" meta:object-count="XXX"/>`
+- `plugin/PHPMailer/class.phpmailer.php:234` — `* @TODO Why is this needed when the SMTP class takes care of it?`
+- `plugin/PHPMailer/class.phpmailer.php:366` — `* @TODO This should really not be public`
+- `plugin/PHPMailer/class.phpmailer.php:1168` — `// @TODO: Write our own "idn_to_ascii" function for PHP <= 5.2.`
+- `plugin/PHPMailer/class.phpmailer.php:1387` — `// TODO: If possible, this should be changed to escapeshellarg.  Needs thorough testing.`
+- `plugin/PHPMailer/class.phpmailer.php:2372` — `// @TODO would be nice to use php://temp streams here, but need to wrap for PHP < 5.1`
+- `plugin/PHPMailer/class.phpmailer.php:3720` — `* @TODO Should this not be using the __set() magic function?`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/JSON.php:861` — `* @todo Ultimately, this should just call PEAR::isError()`
+- `plugin/editor/smarteditor2/photo_uploader/popup/php/JSON.php:922` — `* @todo Ultimately, this class shall be descended from PEAR_Error`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:71` — `* @todo We need an easier way to inject strategies using the configuration`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:168` — `// :TODO: make the config merge in, instead of replace`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:622` — `* properly. THIS IS A HACK!`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:765` — `// XXX This is kind of poor, since we don't actually /clone/`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:801` — `// FIXME: ^^ not always, see start and value of list items`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:1649` — `// TODO: support SLASH syntax`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:1718` — `* @todo Refactor duplicate elements into common class (probably using`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:1736` — `// :TODO: Is this htmlspecialchars() call really necessary?`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:1822` — `* @todo Reconsider some of the public member variables`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:2699` — `// XXX this is not correct on some versions of HTML Purifier`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:2909` — `* @todo Unit test`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:3178` — `* @todo Create a separate maintenance file advanced users can use to`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:3181` — `* @todo Implement memcached`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:3660` — `// XXX: Design note: currently, it's not possible to override`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5191` — `* @todo Refactor interface so that configuration/context is determined`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5193` — `* @todo Make some of the more internal functions protected, and have`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5206` — `* :HACK: Whether or not generator should comment the insides of <script> tags.`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5453` — `* @todo This really ought to be protected, but until we have a facility`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5929` — `* @todo Give this its own class, probably static interface`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:5982` — `* @todo Consider making some member functions protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:6675` — `// :TODO:`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:6792` — `* @todo Allow injectors to request a re-run on their output. This`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7108` — `* @todo Make it private, fix usage in HTMLPurifier_LanguageTest`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7208` — `* @todo Implement conditionals? Right now, some messages make`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7276` — `* @todo Serialized cache for languages`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7565` — `// Hack:`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7784` — `// hack out something using XSLT, remove this stipulation`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:7949` — `* @todo Consider making protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:8009` — `* @todo Consider making protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:8779` — `* @todo Port DirectLex to use this`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:10181` — `* fill it back in as necessary.  (ToDo: Maybe it's more user friendly`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:10358` — `// escape sequences.   So here is some dumb hack to`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:10523` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:11583` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:12206` — `// :TODO: optimization: test directly for !important and ! important`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:12434` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:12440` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:13478` — `// XXX error reporting`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14245` — `// XXX Kind of inefficient`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14394` — `// the reasoning that it could only hack the SWF, not us.`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14463` — `// XXX Kind of inefficient`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14811` — `// XXX: This whole business with 'wrap' is all a bit unsatisfactory`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14860` — `// ToDo: Make this more robust in the case of not ol/ul`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14870` — `$current_li->empty = false; // XXX fascinating! Check for this error elsewhere ToDo`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14974` — `// XXX One of these ought to be redundant or something`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:14980` — `// ToDo: Make configurable`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:15008` — `* @note This is a hack to reuse code from HTMLPurifier_ChildDef_Required,`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:15274` — `// XXX This breaks rendering properties with`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:15730` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:15743` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:15756` — `* @todo Make protected`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:16745` — `// XXX The wrap attribute is handled by MakeWellFormed.  This is all`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:17209` — `// TODO: create custom child-definition for noscript that`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:17215` — `// TODO: convert this to new syntax, main problem is getting`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:17542` — `* @todo Figure out how to protect some of these methods/properties`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:17576` — `* @todo Wildcard matching and error reporting when an added or`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:18131` — `* @todo Ensure all states are unit tested, including variations as well.`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:18132` — `* @todo Make a graph of the flow control for this Injector.`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:18714` — `// HACK, see HTMLPurifier/Printer/ConfigForm.php`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:19178` — `* @todo data and tagName properties don't seem to exist in DOMNode?`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:19347` — `* @todo Reread XML spec and document differences.`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:19961` — `// XXX inefficiency here, normalization is not necessary`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20105` — `* @todo Enable nodes to be bubbled out of the structure.  This is`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20199` — `// ToDo: I don't think it matters if it's def or`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20215` — `// XXX I suppose it would be slightly more efficient to`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20232` — `// XXX This will miss mutations of internal nodes. Perhaps defer to the child validators`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20365` — `// XXX: Fix with a legitimate lookup table of enabled filters`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:20478` — `// XXX fuckup`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:22003` — `// XXX: The not so good bit about how this is all set up now is we`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:22133` — `// XXX probably want to refactor this into a general mechanism`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:22351` — `* @todo Validate the email address`
+- `plugin/htmlpurifier/HTMLPurifier.standalone.php:22352` — `* @todo Filter allowed query parameters`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Filter/ExtractStyleBlocks.php:90` — `* @todo Extend to indicate non-text/css style blocks`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/ConfigForm.php:4` — `* @todo Rewrite to use Interchange objects`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/ConfigForm.php:323` — `//TODO does this need a break?`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/ConfigForm.php:331` — `// HACK`
+- `plugin/htmlpurifier/standalone/HTMLPurifier/Printer/HTMLDefinition.php:278` — `* @todo Also add information about internal state`
+- `plugin/lgxpay/lgdacom/JSON.php:764` — `* @todo Ultimately, this should just call PEAR::isError()`
+- `plugin/lgxpay/lgdacom/JSON.php:793` — `* @todo Ultimately, this class shall be descended from PEAR_Error`
+- `plugin/lgxpay/lgdacom/XPayClient.php:816` — `if(strpos(PHP_OS, "WIN") !== false) $var_value = str_replace("/", "\\", $var_value); // win hack`
+- `plugin/lgxpay/lgdacom/XPayClient4DB.php:982` — `// hack to make it working`
+- `plugin/lgxpay/lgdacom/XPayClient4DB.php:1020` — `if(strpos(PHP_OS, "WIN") !== false) $var_value = str_replace("/", "\\", $var_value); // win hack`
+- `plugin/sms5/JSON.php:861` — `* @todo Ultimately, this should just call PEAR::isError()`
+- `plugin/sms5/JSON.php:922` — `* @todo Ultimately, this class shall be descended from PEAR_Error`
+- `plugin/social/Hybrid/thirdparty/OpenID/LightOpenID.php:446` — `# This is a hack for providers who don't support HEAD requests.`
+- `shop/inicis/libs/JSON.php:764` — `* @todo Ultimately, this should just call PEAR::isError()`
+- `shop/inicis/libs/JSON.php:793` — `* @todo Ultimately, this class shall be descended from PEAR_Error`
+
+## 9. PHP 8 호환성 후보
+
+### 구형 mysql 함수 (6건)
+
+- `install/install.function.php:97` — `return @mysql_query($sql, $link);`
+- `install/install.function.php:125` — `return mysql_num_rows($result);`
+- `lib/common.lib.php:1951` — `mysql_query(" set names {$charset} ", $link);`
+- `lib/common.lib.php:2015` — `$result = @mysql_query($sql, $link);`
+- `lib/common.lib.php:2031` — `$result = @mysql_query($sql, $link);`
+- `lib/common.lib.php:2189` — `return mysql_num_rows($result);`
+
+### 따옴표 없는 배열 키 (638건)
+
+- `adm/admin.lib.php:628` — `$maps[G5_SMS5_ADMIN_URL] = G5_SMS5_ADMIN_PATH;`
+- `adm/config_form_update.php:375` — `//sql_query(" OPTIMIZE TABLE `$g5[config_table]` ");`
+- `adm/shop_admin/itemform.php:79` — `//$it[ca_id] = _COOKIE[ck_ca_id];`
+- `adm/shop_admin/itemform.php:91` — `//$it[it_maker]  = stripslashes($_COOKIE[ck_maker]);`
+- `adm/shop_admin/itemform.php:92` — `//$it[it_origin] = stripslashes($_COOKIE[ck_origin]);`
+- `adm/shop_admin/itemform.php:156` — `//$script .= "ca_explan_html['$row[ca_id]'] = $row[ca_explan_html];\n";`
+- `adm/shop_admin/itemformupdate.php:211` — `//@setcookie("ck_ca_id",  $ca_id,  time() + 86400*31, $default[de_cookie_dir], $default[de_cookie_domain]);`
+- `adm/shop_admin/itemformupdate.php:212` — `//@setcookie("ck_maker",  stripslashes($it_maker),  time() + 86400*31, $default[de_cookie_dir], $default[de_cookie_domain]);`
+- `adm/shop_admin/itemformupdate.php:213` — `//@setcookie("ck_origin", stripslashes($it_origin), time() + 86400*31, $default[de_cookie_dir], $default[de_cookie_domain]);`
+- `adm/shop_admin/orderformcartupdate.php:137` — `//insert_point($mb_id, (-1) * ($ct[ct_point] * $ct[ct_qty]), "주문번호 $od_id ($ct_id) 취소");`
+- `adm/shop_admin/orderprintresult.php:123` — `//echo '"'.multibyte_digit((string)$row[od_b_tel]).'"'.',';`
+- `adm/shop_admin/orderprintresult.php:124` — `//echo '"'.multibyte_digit((string)$row[od_b_hp]).'"'.',';`
+- `adm/shop_admin/orderprintresult.php:134` — `//echo '"'.preg_replace("/\"/", "&#034;", preg_replace("/\n/", "", $row[od_memo])).'"';`
+- `adm/sms_admin/num_book_update.php:114` — `$res = sql_fetch("select * from $g5[sms5_book_table] where bk_no='$bk_no'");`
+- `adm/sms_admin/num_book_update.php:118` — `if (!$res[mb_id])`
+- `adm/sms_admin/num_book_update.php:120` — `if ($res[receipt] == 1)`
+- `adm/sms_admin/num_book_update.php:125` — `sql_query("delete from $g5[sms5_book_table] where bk_no='$bk_no'");`
+- `adm/sms_admin/num_book_update.php:126` — `sql_query("update $g5[sms5_book_group_table] set bg_count = bg_count - 1, bg_nomember = bg_nomember - 1, $sql_sms where bg_no = '$res[bg_no]'");`
+- `adm/sms_admin/sms_write.php:531` — `//echo "add(\"$row[wr_message]\");\n";`
+- `ajax/ajax.find.mb_id.php:7` — `echo $row[cnt];`
+- `auto/ajax.timecheck01.php:8` — `$weekAry = explode("|",$config[cf_auto1_week]);`
+- `auto/ajax.timecheck01.php:15` — `if($row[cf_auto1_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck01.php:18` — `if($row[cf_auto1_time] < date("H:i:s")){`
+- `auto/ajax.timecheck01.php:22` — `if($row[cf_auto1_time] < date("H:i:s")){`
+- `auto/ajax.timecheck01.php:23` — `if($row[cf_auto1_ing] != 2){`
+- `auto/ajax.timecheck02.php:8` — `$weekAry = explode("|",$config[cf_auto2_week]);`
+- `auto/ajax.timecheck02.php:15` — `if($row[cf_auto2_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck02.php:18` — `if($row[cf_auto2_time] < date("H:i:s")){`
+- `auto/ajax.timecheck02.php:22` — `if($row[cf_auto2_time] < date("H:i:s")){`
+- `auto/ajax.timecheck02.php:23` — `if($row[cf_auto2_ing] != 2){`
+- `auto/ajax.timecheck03.php:8` — `$weekAry = explode("|",$config[cf_auto3_week]);`
+- `auto/ajax.timecheck03.php:15` — `if($row[cf_auto3_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck03.php:18` — `if($row[cf_auto3_time] < date("H:i:s")){`
+- `auto/ajax.timecheck03.php:22` — `if($row[cf_auto3_time] < date("H:i:s")){`
+- `auto/ajax.timecheck03.php:23` — `if($row[cf_auto3_ing] != 2){`
+- `auto/ajax.timecheck04.php:8` — `$weekAry = explode("|",$config[cf_auto4_week]);`
+- `auto/ajax.timecheck04.php:15` — `if($row[cf_auto4_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck04.php:18` — `if($row[cf_auto4_time] < date("H:i:s")){`
+- `auto/ajax.timecheck04.php:22` — `if($row[cf_auto4_time] < date("H:i:s")){`
+- `auto/ajax.timecheck04.php:23` — `if($row[cf_auto4_ing] != 2){`
+- `auto/ajax.timecheck05.php:8` — `$weekAry = explode("|",$config[cf_auto5_week]);`
+- `auto/ajax.timecheck05.php:15` — `if($row[cf_auto5_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck05.php:18` — `if($row[cf_auto5_time] < date("H:i:s")){`
+- `auto/ajax.timecheck05.php:22` — `if($row[cf_auto5_time] < date("H:i:s")){`
+- `auto/ajax.timecheck05.php:23` — `if($row[cf_auto5_ing] != 2){`
+- `auto/ajax.timecheck06.php:15` — `if($row[cf_auto6_date] != date("Y-m-d")){`
+- `auto/ajax.timecheck06.php:18` — `if($row[cf_auto6_time] < date("H:i:s")){`
+- `auto/ajax.timecheck06.php:22` — `if($row[cf_auto6_time] < date("H:i:s")){`
+- `auto/ajax.timecheck06.php:23` — `if($row[cf_auto6_ing] != 2){`
+- `auto/auto.php:6` — `if($config[cf_auto1_date] != date("Y-m-d")){`
+- `auto/auto.php:10` — `/*if($config[cf_auto1_ing] != "2"){`
+- `bbs/delete.php:69` — `//$sql = " select wr_id, mb_id, wr_comment from $write_table where wr_parent = '$write[wr_id]' order by wr_id ";`
+- `bbs/delete.php:128` — `if ((int)$write[wr_id] != (int)$notice_array[$k])`
+- `bbs/delete_all.php:84` — `//$sql = " select wr_id, mb_id, wr_comment from {$write_table} where wr_parent = '{$write[wr_id]}' order by wr_id ";`
+- `bbs/password_check.php:23` — `//set_session("ss_secret", "$bo_table|$wr[wr_num]");`
+- `bbs/password_check.php:44` — `//set_session("ss_secret", "$bo_table|$wr[wr_num]");`
+- `bbs/register_form.php:75` — `if (!($member[mb_password] == sql_password($_POST[mb_password]) && $_POST[mb_password]))`
+- `bbs/register_form.php:79` — `set_session("ss_tmp_password", $_POST[mb_password]);`
+- `bbs/write_comment_update.php:95` — `if ($member[mb_point] + $board[bo_comment_point] < 0 && !$is_admin)`
+- `bbs/write_comment_update.php:96` — `alert('보유하신 포인트('.number_format($member[mb_point]).')가 없거나 모자라서 댓글쓰기('.number_format($board[bo_comment_point]).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시 댓글을 써 주십시오.');`
+- `bbs/write_comment_update.php:158` — `//$row[max_comment] -= 1;`
+- `lib/Excel/oleread.inc.php:21` — `//echo bin2hex($data[ROOT_START_BLOCK_POS])."\n";`
+- `lib/Excel/oleread.inc.php:23` — `//echo $data[ROOT_START_BLOCK_POS];`
+- `lib/Excel/oleread.inc.php:185` — `$nameSize = ord($d[SIZE_OF_NAME_POS]) | (ord($d[SIZE_OF_NAME_POS+1]) << 8);`
+- `lib/Excel/oleread.inc.php:187` — `$type = ord($d[TYPE_POS]);`
+- `lib/PHPExcel/Reader/Excel2007.php:457` — `$xmlStrings = simplexml_load_string($this->securityScan($this->getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXml`
+- `lib/PHPExcel/Reader/Excel2007.php:497` — `$xmlStyles = simplexml_load_string($this->securityScan($this->getFromZipArchive($zip, "$dir/$xpath[Target]")), 'SimpleXMLElement', PHPExcel_Settings::getLibXmlL`
+- `lib/PHPExcel/Reader/Excel2007.php:512` — `$tmpNumFmt = self::getArrayItem($numFmts->xpath("sml:numFmt[@numFmtId=$xf[numFmtId]]"));`
+- `lib/PHPExcel/Reader/Excel2007.php:551` — `$tmpNumFmt = self::getArrayItem($numFmts->xpath("sml:numFmt[@numFmtId=$xf[numFmtId]]"));`
+- `lib/PHPExcel/Reader/Excel2007.php:1169` — `$docSheet->setBreak("A$brk[id]", PHPExcel_Worksheet::BREAK_ROW);`
+- `lib/PHPExcel/Shared/JAMA/utils/Error.php:75` — `if (isset($error[JAMALANG][$errorNumber])) {`
+- `lib/PHPExcel/Shared/JAMA/utils/Error.php:76` — `return $error[JAMALANG][$errorNumber];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:279` — `$v_options[PCLZIP_OPT_NO_COMPRESSION] = false;`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:317` — `$v_options[PCLZIP_OPT_ADD_PATH] = $v_arg_list[0];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:321` — `$v_options[PCLZIP_OPT_REMOVE_PATH] = $v_arg_list[1];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:445` — `$v_options[PCLZIP_OPT_NO_COMPRESSION] = false;`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:485` — `$v_options[PCLZIP_OPT_ADD_PATH] = $v_add_path = $v_arg_list[0];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:489` — `$v_options[PCLZIP_OPT_REMOVE_PATH] = $v_arg_list[1];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:689` — `$v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:725` — `if (isset($v_options[PCLZIP_OPT_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:726` — `$v_path = $v_options[PCLZIP_OPT_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:728` — `if (isset($v_options[PCLZIP_OPT_REMOVE_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:729` — `$v_remove_path = $v_options[PCLZIP_OPT_REMOVE_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:731` — `if (isset($v_options[PCLZIP_OPT_REMOVE_ALL_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:732` — `$v_remove_all_path = $v_options[PCLZIP_OPT_REMOVE_ALL_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:734` — `if (isset($v_options[PCLZIP_OPT_ADD_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:739` — `$v_path .= $v_options[PCLZIP_OPT_ADD_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:840` — `$v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:875` — `if (isset($v_options[PCLZIP_OPT_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:876` — `$v_path = $v_options[PCLZIP_OPT_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:878` — `if (isset($v_options[PCLZIP_OPT_REMOVE_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:879` — `$v_remove_path = $v_options[PCLZIP_OPT_REMOVE_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:881` — `if (isset($v_options[PCLZIP_OPT_REMOVE_ALL_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:882` — `$v_remove_all_path = $v_options[PCLZIP_OPT_REMOVE_ALL_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:884` — `if (isset($v_options[PCLZIP_OPT_ADD_PATH])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:889` — `$v_path .= $v_options[PCLZIP_OPT_ADD_PATH];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:891` — `if (!isset($v_options[PCLZIP_OPT_EXTRACT_AS_STRING])) {`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:892` — `$v_options[PCLZIP_OPT_EXTRACT_AS_STRING] = false;`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:927` — `$v_options[PCLZIP_OPT_BY_INDEX] = $v_options_trick[PCLZIP_OPT_BY_INDEX];`
+- `lib/PHPExcel/Shared/PCLZip/pclzip.lib.php:1399` — `if (isset($v_result_list[PCLZIP_OPT_TEMP_FILE_OFF])) {`
+- 나머지 538건은 후속 검사 필요
+
+## 10. 다음 점검 순서
+
+1. 홈페이지 공개 화면
+2. 회원가입·로그인·마이페이지
+3. 로또 예약·구매·당첨 결과
+4. 결제·포인트·환급
+5. 게시판·공지사항
+6. 관리자 전체 메뉴
+7. 등록·수정·삭제 기능
+8. 권한·보안·파일 업로드
+9. 모바일 화면
+10. Cafe24 배포 준비
+
