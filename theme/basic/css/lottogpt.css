@@ -1439,3 +1439,108 @@
         height: 42px;
     }
 }
+
+
+/* LottoGPT service cards */
+.lg-service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.lg-service-card {
+    position: relative;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 25px 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(30, 199, 190, .08), transparent 38%),
+        linear-gradient(145deg, rgba(15, 23, 33, .96), rgba(8, 13, 20, .98));
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
+
+.lg-service-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(229, 184, 76, .3);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
+}
+
+.lg-service-number {
+    position: absolute;
+    top: 19px;
+    right: 21px;
+    color: rgba(229, 184, 76, .25);
+    font: 800 30px Montserrat, sans-serif;
+}
+
+.lg-service-card > i {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 26px;
+    border: 1px solid rgba(30, 199, 190, .2);
+    border-radius: 14px;
+    background: rgba(30, 199, 190, .07);
+    color: var(--lg-teal);
+    font-size: 21px;
+}
+
+.lg-service-card h3 {
+    color: #fff;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.lg-service-card p {
+    margin-top: 13px;
+    color: #84909d;
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.lg-service-card strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 24px;
+    color: var(--lg-gold-light);
+    font-size: 12px;
+}
+
+.lg-service-card strong i {
+    font-size: 10px;
+    transition: transform .2s ease;
+}
+
+.lg-service-card:hover strong i {
+    transform: translateX(4px);
+}
+
+.lg-content-grid {
+    grid-template-columns: 1.25fr .75fr;
+}
+
+@media (max-width: 1000px) {
+    .lg-service-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 620px) {
+    .lg-service-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lg-service-card {
+        min-height: 245px;
+    }
+}

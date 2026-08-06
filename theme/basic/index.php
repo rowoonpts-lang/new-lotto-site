@@ -61,7 +61,7 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
         <div class="lg-shell lg-hero-grid">
             <div class="lg-hero-copy">
                 <div class="lg-live-badge"><span></span> LOTTOGPT AI ENGINE ACTIVE</div>
-                <p class="lg-eyebrow">PREMIUM AI LOTTO DATA PLATFORM</p>
+                <p class="lg-eyebrow">AI LOTTO DATA PLATFORM</p>
                 <h1>AI가 분석한 데이터,<br><strong>가능성의 새로운 기준</strong></h1>
                 <p class="lg-lead">누적 회차와 통계 데이터를 기반으로 번호 흐름을 분석하고, 사용자가 더 쉽게 판단할 수 있도록 핵심 정보를 정리합니다.</p>
                 <div class="lg-actions">
@@ -182,11 +182,38 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
                 <p>LOTTOGPT ANALYSIS PROCESS</p>
                 <h2>데이터가 분석 결과로 이어지는 과정</h2>
             </div>
-            <div class="lg-process-grid">
-                <article><b>01</b><i class="fas fa-database"></i><h3>데이터 수집</h3><p>누적 회차와 공개 통계 데이터를 정리합니다.</p></article>
-                <article><b>02</b><i class="fas fa-brain"></i><h3>패턴 분석</h3><p>구간, 홀짝, 빈도 등 여러 기준으로 비교합니다.</p></article>
-                <article><b>03</b><i class="fas fa-bullseye"></i><h3>조합 구성</h3><p>조건에 맞는 번호 조합을 단계적으로 구성합니다.</p></article>
-                <article><b>04</b><i class="fas fa-chart-line"></i><h3>결과 제공</h3><p>사용자가 이해하기 쉬운 데이터 화면으로 제공합니다.</p></article>
+            <div class="lg-service-grid">
+                <a class="lg-service-card" href="<?=G5_URL?>/sub/my_lotto.php">
+                    <span class="lg-service-number">01</span>
+                    <i class="fas fa-robot"></i>
+                    <h3>AI 번호 분석</h3>
+                    <p>설정한 조건을 기준으로 번호 조합을 분석하고 보기 쉽게 정리합니다.</p>
+                    <strong>분석 시작 <i class="fas fa-arrow-right"></i></strong>
+                </a>
+
+                <a class="lg-service-card" href="<?=G5_URL?>/sub/stats.php">
+                    <span class="lg-service-number">02</span>
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>회차별 통계</h3>
+                    <p>누적 당첨번호의 빈도, 구간, 홀짝과 여러 통계 기준을 비교합니다.</p>
+                    <strong>통계 보기 <i class="fas fa-arrow-right"></i></strong>
+                </a>
+
+                <a class="lg-service-card" href="<?=G5_URL?>/sub/my_lotto.php">
+                    <span class="lg-service-number">03</span>
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>번호 조합</h3>
+                    <p>사용자가 선택한 조건을 적용해 다양한 번호 조합을 구성합니다.</p>
+                    <strong>조합 만들기 <i class="fas fa-arrow-right"></i></strong>
+                </a>
+
+                <a class="lg-service-card" href="<?=G5_URL?>/sub/stats.php">
+                    <span class="lg-service-number">04</span>
+                    <i class="fas fa-search"></i>
+                    <h3>당첨결과 비교</h3>
+                    <p>최근 당첨결과와 보유 번호를 빠르게 확인하고 비교할 수 있습니다.</p>
+                    <strong>결과 확인 <i class="fas fa-arrow-right"></i></strong>
+                </a>
             </div>
         </div>
     </section>
@@ -218,12 +245,7 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
                 </ul>
             </article>
 
-            <article class="lg-panel lg-premium-panel">
-                <span class="lg-premium-label">PREMIUM AI</span>
-                <h2>더 깊이 있는 분석을 경험하세요</h2>
-                <ul><li>등급별 서비스 안내</li><li>회원 전용 페이지 연결</li><li>기존 결제·회원 기능 유지</li></ul>
-                <a class="lg-btn lg-btn-primary" href="<?=G5_URL?>/sub/sub0201.php">멤버십 자세히 보기</a>
-            </article>
+
         </div>
     </section>
 
@@ -234,7 +256,7 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
 
 <script>
 $(function () {
-    var menuNames = ['AI 소개', '멤버십', '데이터랩', '고객지원', 'MY GPT', 'Premium AI'];
+    var menuNames = ['AI 소개', '멤버십', '데이터랩', '고객지원', 'MY GPT'];
     $('.header .menu > li > a').each(function (index) {
         if (menuNames[index]) $(this).text(menuNames[index]);
     });
