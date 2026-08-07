@@ -2254,3 +2254,246 @@
     display: none;
     content: none;
 }
+
+/* LottoGPT about page */
+.lg-about-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 12%, rgba(38, 226, 192, .10), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(229, 184, 76, .10), transparent 28%),
+        var(--lg-bg);
+    color: var(--lg-text);
+}
+
+.lg-about-hero {
+    position: relative;
+    padding: 120px 0 110px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(229, 184, 76, .14);
+}
+
+.lg-about-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(38, 226, 192, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(38, 226, 192, .025) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, #000, transparent);
+}
+
+.lg-about-hero .lg-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.lg-about-hero h1 {
+    max-width: 850px;
+    margin: 18px 0 26px;
+    color: #fff;
+    font-size: clamp(46px, 5vw, 72px);
+    line-height: 1.15;
+    letter-spacing: -.055em;
+}
+
+.lg-about-hero h1 strong {
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #fff2b7,
+        var(--lg-gold),
+        #b78528
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.lg-about-hero-copy {
+    max-width: 720px;
+    margin: 0;
+    color: #b9c3ce;
+    font-size: 18px;
+    line-height: 1.85;
+    word-break: keep-all;
+}
+
+.lg-about-section {
+    padding: 100px 0;
+}
+
+.lg-about-heading {
+    max-width: 720px;
+    margin-bottom: 50px;
+}
+
+.lg-about-heading h2 {
+    margin: 14px 0 18px;
+    color: #fff;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.25;
+    letter-spacing: -.04em;
+}
+
+.lg-about-heading > p:last-child {
+    margin: 0;
+    color: #aeb8c3;
+    font-size: 17px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-about-values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.lg-about-card {
+    min-height: 260px;
+    padding: 34px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(16, 25, 35, .96),
+            rgba(8, 13, 20, .96)
+        );
+    border: 1px solid rgba(229, 184, 76, .20);
+    border-radius: 18px;
+}
+
+.lg-about-card-number {
+    display: block;
+    margin-bottom: 54px;
+    color: var(--lg-teal);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+}
+
+.lg-about-card h3 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: 24px;
+    letter-spacing: -.03em;
+}
+
+.lg-about-card p {
+    margin: 0;
+    color: #9fabb7;
+    font-size: 15px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-about-message {
+    padding: 0 0 110px;
+}
+
+.lg-about-message-panel {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 70px;
+    align-items: center;
+    padding: 55px 60px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 24, 34, .98),
+            rgba(8, 12, 18, .98)
+        );
+    border: 1px solid var(--lg-line);
+    border-radius: 20px;
+}
+
+.lg-about-message-panel h2 {
+    margin: 14px 0 0;
+    color: #fff;
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.35;
+    letter-spacing: -.04em;
+}
+
+.lg-about-message-panel > p {
+    margin: 0;
+    color: #aeb8c3;
+    font-size: 16px;
+    line-height: 1.9;
+    word-break: keep-all;
+}
+
+@media (max-width: 900px) {
+    .lg-about-hero {
+        padding: 80px 0 72px;
+    }
+
+    .lg-about-section {
+        padding: 72px 0;
+    }
+
+    .lg-about-values {
+        grid-template-columns: 1fr;
+    }
+
+    .lg-about-card {
+        min-height: 0;
+    }
+
+    .lg-about-card-number {
+        margin-bottom: 30px;
+    }
+
+    .lg-about-message {
+        padding-bottom: 72px;
+    }
+
+    .lg-about-message-panel {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 36px 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-about-page .lg-shell {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .lg-about-hero {
+        padding: 64px 0 58px;
+    }
+
+    .lg-about-hero h1 {
+        font-size: 40px;
+    }
+
+    .lg-about-hero-copy {
+        font-size: 16px;
+        line-height: 1.75;
+    }
+
+    .lg-about-heading h2 {
+        font-size: 31px;
+    }
+
+    .lg-about-heading > p:last-child {
+        font-size: 15px;
+    }
+
+    .lg-about-card {
+        padding: 28px 24px;
+    }
+
+    .lg-about-card h3 {
+        font-size: 22px;
+    }
+
+    .lg-about-message-panel h2 {
+        font-size: 28px;
+    }
+
+    .lg-about-message-panel > p {
+        font-size: 15px;
+    }
+}
