@@ -1,231 +1,536 @@
 <?php
-	include_once("_common.php");
-	include_once(G5_PATH."/_head.php");
+include_once("./_common.php");
+include_once(G5_PATH . "/include/lotto_result.lib.php");
+
+$g5['title'] = '로또 데이터 통계';
+
+// LottoGPT 전용 전체 폭 레이아웃
+$lottogpt_full_width_page = true;
+
+add_stylesheet(
+    '<link rel="stylesheet" href="' . G5_THEME_URL . '/css/lottogpt.css">',
+    0
+);
+
+$table = lotto_result_table_name();
+
+$summary = sql_fetch(
+    "SELECT
+        COUNT(*) AS total_draws,
+        MIN(draw_no) AS first_draw,
+        MAX(draw_no) AS latest_draw
+     FROM `{$table}`",
+    false
+);
+
+$total_draws = isset($summary['total_draws'])
+    ? (int) $summary['total_draws']
+    : 0;
+
+$first_draw = isset($summary['first_draw'])
+    ? (int) $summary['first_draw']
+    : 0;
+
+$latest_draw = isset($summary['latest_draw'])
+    ? (int) $summary['latest_draw']
+    : 0;
+
+/*
+ * 전체 회차 번호별 출현 횟수와 마지막 출현 회차
+ */
+$frequency_sql = "
+    SELECT
+        lotto_number,
+        COUNT(*) AS appearance_count,
+        MAX(draw_no) AS last_draw
+    FROM (
+        SELECT draw_no, num_1 AS lotto_number FROM `{$table}`
+        UNION ALL
+        SELECT draw_no, num_2 FROM `{$table}`
+        UNION ALL
+        SELECT draw_no, num_3 FROM `{$table}`
+        UNION ALL
+        SELECT draw_no, num_4 FROM `{$table}`
+        UNION ALL
+        SELECT draw_no, num_5 FROM `{$table}`
+        UNION ALL
+        SELECT draw_no, num_6 FROM `{$table}`
+    ) AS number_history
+    GROUP BY lotto_number
+    ORDER BY lotto_number ASC
+";
+
+$frequency_result = sql_query($frequency_sql, false);
+
+$number_stats = array();
+
+for ($number = 1; $number <= 45; $number++) {
+    $number_stats[$number] = array(
+        'count' => 0,
+        'last_draw' => 0,
+        'recent_count' => 0,
+    );
+}
+
+if ($frequency_result) {
+    while ($row = sql_fetch_array($frequency_result)) {
+        $number = (int) $row['lotto_number'];
+
+        if ($number >= 1 && $number <= 45) {
+            $number_stats[$number]['count'] =
+                (int) $row['appearance_count'];
+
+            $number_stats[$number]['last_draw'] =
+                (int) $row['last_draw'];
+        }
+    }
+}
+
+/*
+ * 최근 10회 번호별 출현 횟수
+ */
+$recent_frequency_sql = "
+    SELECT
+        lotto_number,
+        COUNT(*) AS appearance_count
+    FROM (
+        SELECT num_1 AS lotto_number FROM (
+            SELECT num_1
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_1
+
+        UNION ALL
+
+        SELECT num_2 FROM (
+            SELECT num_2
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_2
+
+        UNION ALL
+
+        SELECT num_3 FROM (
+            SELECT num_3
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_3
+
+        UNION ALL
+
+        SELECT num_4 FROM (
+            SELECT num_4
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_4
+
+        UNION ALL
+
+        SELECT num_5 FROM (
+            SELECT num_5
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_5
+
+        UNION ALL
+
+        SELECT num_6 FROM (
+            SELECT num_6
+            FROM `{$table}`
+            ORDER BY draw_no DESC
+            LIMIT 10
+        ) AS recent_6
+    ) AS recent_numbers
+    GROUP BY lotto_number
+    ORDER BY lotto_number ASC
+";
+
+$recent_result = sql_query($recent_frequency_sql, false);
+
+if ($recent_result) {
+    while ($row = sql_fetch_array($recent_result)) {
+        $number = (int) $row['lotto_number'];
+
+        if ($number >= 1 && $number <= 45) {
+            $number_stats[$number]['recent_count'] =
+                (int) $row['appearance_count'];
+        }
+    }
+}
+
+/*
+ * 전체 통계 계산
+ */
+$total_numbers = 0;
+$odd_count = 0;
+$even_count = 0;
+
+$range_stats = array(
+    '1~10' => 0,
+    '11~20' => 0,
+    '21~30' => 0,
+    '31~40' => 0,
+    '41~45' => 0,
+);
+
+foreach ($number_stats as $number => $stat) {
+    $count = (int) $stat['count'];
+
+    $total_numbers += $count;
+
+    if ($number % 2 === 0) {
+        $even_count += $count;
+    } else {
+        $odd_count += $count;
+    }
+
+    if ($number <= 10) {
+        $range_stats['1~10'] += $count;
+    } elseif ($number <= 20) {
+        $range_stats['11~20'] += $count;
+    } elseif ($number <= 30) {
+        $range_stats['21~30'] += $count;
+    } elseif ($number <= 40) {
+        $range_stats['31~40'] += $count;
+    } else {
+        $range_stats['41~45'] += $count;
+    }
+}
+
+$odd_percent = $total_numbers > 0
+    ? ($odd_count / $total_numbers) * 100
+    : 0;
+
+$even_percent = $total_numbers > 0
+    ? ($even_count / $total_numbers) * 100
+    : 0;
+
+/*
+ * 많이 나온 번호 / 적게 나온 번호
+ */
+$ranking = $number_stats;
+
+uasort($ranking, function ($a, $b) {
+    if ($a['count'] === $b['count']) {
+        return 0;
+    }
+
+    return ($a['count'] > $b['count']) ? -1 : 1;
+});
+
+$hot_numbers = array_slice($ranking, 0, 5, true);
+
+uasort($ranking, function ($a, $b) {
+    if ($a['count'] === $b['count']) {
+        return 0;
+    }
+
+    return ($a['count'] < $b['count']) ? -1 : 1;
+});
+
+$cold_numbers = array_slice($ranking, 0, 5, true);
+
+/*
+ * 최근 10회에서 많이 나온 번호
+ */
+$recent_ranking = $number_stats;
+
+uasort($recent_ranking, function ($a, $b) {
+    if ($a['recent_count'] === $b['recent_count']) {
+        return 0;
+    }
+
+    return ($a['recent_count'] > $b['recent_count']) ? -1 : 1;
+});
+
+$recent_hot_numbers = array_filter(
+    array_slice($recent_ranking, 0, 10, true),
+    function ($stat) {
+        return (int) $stat['recent_count'] > 0;
+    }
+);
+
+function lotto_stats_ball_class($number)
+{
+    $number = (int) $number;
+
+    if ($number <= 10) {
+        return 'lg-ball-yellow';
+    }
+
+    if ($number <= 20) {
+        return 'lg-ball-blue';
+    }
+
+    if ($number <= 30) {
+        return 'lg-ball-red';
+    }
+
+    if ($number <= 40) {
+        return 'lg-ball-gray';
+    }
+
+    return 'lg-ball-green';
+}
+
+include_once(G5_PATH . "/_head.php");
 ?>
 
-<div class="stats">
+<main class="lg-stats-page">
+    <section class="lg-stats-hero">
+        <div class="lg-shell">
+            <p class="lg-eyebrow">LOTTOGPT DATA LAB</p>
+            <h1>로또 데이터 통계</h1>
+            <p>
+                저장된 실제 당첨번호를 기준으로 번호 출현 빈도와
+                홀짝·구간 통계를 계산합니다.
+            </p>
+        </div>
+    </section>
 
-	<div class="sts_box">
-		<p class="sts_tit">총합</p>
-		<p class="sts_desc">
-			당첨번호 6개를 더한 값입니다.(ex : 31회의 당첨번호 18+7+23+35+28+9=134)<br>
-			일반적으로 120~180사이를 봅니다만, 불출 번호대에 따라서 많이 달라 지는것 같습니다.
-		</p>
-	</div>
+    <section class="lg-stats-section">
+        <div class="lg-shell">
 
-	<div class="sts_box">
-		<p class="sts_tit">저고</p>
-		<p class="sts_desc">
-			45개 번호중 23을 기준으로 23이하 숫자는 低(저) 23이상은 高(고)로 나눕니다.(ex: 낮은수 1~22 높은수 23~45)<br>
-			저고패턴은 0:6 1:5 2:4 3:3 4:2 5:1 6:0의 7가지 패턴이 있습니다.<br>
-			저고 패턴이 1:5이나 0:6이라면 총합은 올라 가겠고 반대면 내려 가겠죠!
-		</p>
-	</div>
+            <div class="lg-stats-summary">
+                <article>
+                    <span>분석 회차</span>
+                    <strong>
+                        <?=number_format($first_draw)?> ~
+                        <?=number_format($latest_draw)?>회
+                    </strong>
+                </article>
 
-	<div class="sts_box">
-		<p class="sts_tit">홀짝</p>
-		<p class="sts_desc">
-			당첨번호중 짝수와 홀수의 갯수를 나타냅니다.<br>
-			홀짝패턴은 0:6 1:5 2:4 3:3 4:2 5:1 6:0의 7가지 패턴이 있습니다.<br>
-			1:5 3:3 5:1이 나오면 총합은 홀수로, 0:6 2:4 4:2 6:0이 나오면 짝수로 나타 나겠죠.
-		</p>
-	</div>
+                <article>
+                    <span>전체 회차</span>
+                    <strong><?=number_format($total_draws)?>회</strong>
+                </article>
 
-	<div class="sts_box">
-		<p class="sts_tit">끝자리수</p>
-		<p class="sts_desc">
-			당첨번호를 십자리와 단자리로 나눈후 단자리에 해당하는 숫자들 입니다.(ex: 42 4/2 끝자리는 2)<br>
-			당첨번호를 보면 끝자리가 같은수가 하나정도 포함됩니다.(31회의 경우 18번과 28번이 같은 끝수입니다.)
-		</p>
-	</div>
+                <article>
+                    <span>분석 번호 수</span>
+                    <strong><?=number_format($total_numbers)?>개</strong>
+                </article>
 
-	<div class="sts_box">
-		<p class="sts_tit">끝자리수 합</p>
-		<p class="sts_desc">
-			당첨번호를 십자리와 단자리로 나눈후 단자리를 모두 더한 값입니다.<br>
-			보통 20~36사이 조금 좁게는 22~28을 봅니다.
-		</p>
-	</div>
-	
-	<div class="sts_box">
-		<p class="sts_tit">낙수</p>
-		<p class="sts_desc">
-			당첨 번호 각각이 몇회전에 당첨된후 다시 당첨 번호로 나왓는지를 보는 것입니다.<br>
-			(ex: 31회차 당첨번호중 18번은 28회에 나오고 31회에 나왓으므로 낙수는 3이 되것습니다.<br>
-			이렇게 6개 번호를 하나하나 거꾸로 추적하시면 됩니다.)
-		</p>
-	</div>
+                <article>
+                    <span>최신 회차</span>
+                    <strong><?=number_format($latest_draw)?>회</strong>
+                </article>
+            </div>
 
-	<div class="sts_box">
-		<p class="sts_tit">낙첨합</p>
-		<p class="sts_desc">
-			낙수 낙첨과 동일 개념으로 보시고 위에서 추적한 낙수의 합을 말합니다.
-		</p>
-	</div>
+            <section class="lg-stats-panel">
+                <div class="lg-stats-panel-head">
+                    <div>
+                        <span>NUMBER FREQUENCY</span>
+                        <h2>번호별 전체 출현 횟수</h2>
+                    </div>
 
-	<div class="sts_box">
-		<p class="sts_tit">산술적 복잡도</p>
-		<p class="sts_desc">
-			AC값은 산술적 복잡성을 말하는 것으로 무작위로 6개 숫자를 뽑을 경우 숫자 간의 차이가 동일한 가능성이 낮습니다.<br>
-			4부터 10까지의 숫자로 나타나는데, 국내외 로또 당첨번호를 보면 통상 7이상의 경우가 대다수이고 8,9,10이 주축을 이룹니다.
-		</p>
-	</div>
+                    <p>
+                        보너스번호를 제외한 6개 당첨번호 기준입니다.
+                    </p>
+                </div>
 
-	<div class="sts_box">
-		<p class="sts_tit">뜨거운수 차가운수</p>
-		<p class="sts_desc">
-			낙수와 연결해서 최근 5회에 나온수를 뜨거운수(혹은 hot수)라 하고 6~10회 사이에 나온수를 미지근한수 10회 이후에 나온수를 차가운수(cool수)라 합니다.<br>
-			뜨거운수의 낙수는 작을것이고 차가운수의 낙수는 크겠죠?<br>
-			사람에 따라 10회 기준으로 뜨거운수와 차가운수 두가지로 분류 하기도하며, 보시는 분마다 적용하는 기준이 제각각인거 같습니다.
-		</p>
-	</div>
+                <div class="lg-number-frequency-grid">
+                    <?php foreach ($number_stats as $number => $stat) { ?>
+                        <article class="lg-number-frequency-item">
+                            <span class="lg-lotto-ball <?=lotto_stats_ball_class($number)?>">
+                                <?=$number?>
+                            </span>
 
-	<div class="sts_box">
-		<p class="sts_tit">소삼합</p>
-		<p class="sts_desc">
-			당첨번호를 소수,3배수,합성수로 나누어 정리한 자료입니다.
-		</p>
-	</div>
-	
-	<div class="sts_box">
-		<p class="sts_tit">소수</p>
-		<p class="sts_desc">
-			소수는 1과 자신 이외에는 나누어지지 않는 수를 말합니다.<br>
-			해당하는 숫자 2,5,7,11,13,17,19,23,29,31,37,41,43 이상 13개의 숫자는 이론적으로는 매번 평균 2개가 나올 가능성이 있습니다.
-		</p>
-	</div>
+                            <strong>
+                                <?=number_format((int) $stat['count'])?>회
+                            </strong>
 
-	<div class="sts_box">
-		<p class="sts_tit">3배수</p>
-		<p class="sts_desc">
-			선택된 6개 숫자 중 3의 배수를 몇개 포함하는가를 나타내는 것입니다.<br>
-			1부터 45까지의 배수는 3,6,9,12,15,18,21,24,27,30,33,36,39,42,45로 모두 15개입니다. 이론적으로는 매번 평균 2개가 나올 가능성이 있습니다.<br>
-			같은 개념으로 3배수를 변형 또는 응용하여 4배수, 5배수, 7배수의 포함 여부를 보기도 하며,<br>
-			완전제곱수라하여 자기자신을 곱한수의 포함 여부를 보기도 합니다.<br>
-			완전제곱수는 1*1=1 2*2=4 3*3=9 4*4=16 5*5=25 6*6=36 이상 여섯개의 숫자 입니다.
-		</p>
-	</div>
+                            <small>
+                                최근 <?=number_format(
+                                    $latest_draw - (int) $stat['last_draw']
+                                )?>회 미출현
+                            </small>
+                        </article>
+                    <?php } ?>
+                </div>
+            </section>
 
-	<div class="sts_box">
-		<p class="sts_tit">합성수</p>
-		<p class="sts_desc">
-			합성수는 소수와 3배수를 제외한 숫자를 말하는 것입니다.<br>
-			1부터 45까지 합성수는 1,4,8,10,14,16,20,22,25,26,28,32,34,35,38,40,44로 17개의 숫자가 있습니다.<br>
-			이론적으로 2개정도가 나올가능성이 높습니다.<br>
-			위에처럼 로또 45개 번호를 소수-3배수-합성수로 각각 나누어 분류하는 법을 3집단분류 혹은 피멍이패턴(피멍이란분이 이론적으로 제시 했답니다.)이라고 하는데, 이름이야 주기 나름이겠지요.<br>
-			3은 3배수와 소수에 동시에 포함되는데 분류하는 사람이나 필터링 프로그램에 따라 소수로 분류하기도 하고 3배수로 분류합니다.<br>
-			3집단 분류를 다시 정리하자면...<br>
-			소수 ::: 2,5,7,11,13,17,19,23,29,31,37,41,43<br>
-			3배수 ::: 3,6,9,12,15,18,21,24,27,30,33,36,39,42,45<br>
-			합성수 ::: 1,4,8,10,14,16,20,22,25,26,28,32,34,35,38,40,44<br>
-			이상과 같이 세개의 구룹으로 나누어 보는 것입니다.
-		</p>
-	</div>
+            <div class="lg-stats-two-column">
+                <section class="lg-stats-panel">
+                    <div class="lg-stats-panel-head">
+                        <div>
+                            <span>ALL TIME</span>
+                            <h2>전체 출현 상위 번호</h2>
+                        </div>
+                    </div>
 
-	<div class="sts_box">
-		<p class="sts_tit">동형수</p>
-		<p class="sts_desc">
-			십단위와 단단위를 분리한다음 다시 더했을때 같은 값이고, 모양이 거울에 비친 모양을 나타내는 수입니다.<br>
-			12/21 13/31 14/41 23/32 24/42 34/43이 있고 예외적으로 6/9를 추가합니다.<br>
-			(ex: 12/21를 십단위와 단자리로 나눈후 다시 더하면 3이 되고 12를 뒤집으면 21...이해 하시죠?)
-		</p>
-	</div>
+                    <div class="lg-stats-ranking">
+                        <?php
+                        $rank = 1;
+                        foreach ($hot_numbers as $number => $stat) {
+                        ?>
+                            <div>
+                                <b><?=$rank?></b>
 
-	<div class="sts_box">
-		<p class="sts_tit">회귀설</p>
-		<p class="sts_desc">
-			회귀설의 기초가 된것은 일본의 6회귀설이 바탕이었고, 전회차회귀설, 2회귀설, 3회귀설, 6회귀설, 9회귀설, 12회귀설...등등 수도 없이 많습니다.<br>
-			회귀설은 현재을 기준으로 과거 x前회차의 당첨번호에서 포함된 숫자를 말하는 것입니다.<br>
-			예를들어 3회귀설이라면 현재회차 기준으로 3회차전에 나왔던 당첨번호가 이번회차에 다시 나올 수 있다는 것입니다.<br>
-			사실 이건 아무회차나 임으로 선택해 봐도 나올 확률은 비슷해 집니다.
-		</p>
-	</div>
-	
-	<div class="sts_box">
-		<p class="sts_tit">3구간 패턴</p>
-		<p class="sts_desc">
-			45개 숫자를 3개 구룹으로 나누는 것은 위의 3집단 분류와 같은 형태지만, 이것은 번호순대로 정확히 15개씩 나눈다는것이 조금 다릅니다.<br>
-			즉, 1구간은 1~15까지, 2구간은 16~30까지, 3구간은 31~45까지 각각 15개의 숫자로 분류하는것입니다.<br>
-			15개씩 나누므로 확률상 각각 2개씩 포함되어야 하지만, 이것은 위의 3집단 분류에 비해 그 편차가 심합니다. 나오지 않은 번호대가 있기 때문이지요.
-		</p>
-	</div>
-	
-	<div class="sts_box">
-		<p class="sts_tit">10단위 패턴</p>
-		<p class="sts_desc">
-			45개 숫자를 번호대 별로 분류한 것입니다.<br>
-			1~9, 10~19, 20~29, 30~39, 40~45 다섯개의 구릅으로 나누기도 하고 공의 색에 따라서 1~10, 11~20, 21~30, 31~40 41~45로 나누기도 합니다.<br>
-			흔히 (3-2-1-0-0)이라거나 (2-1-2-1-0)이라고 써진 것을 보신다면... 다섯개로 분류하엿으므로 십단위 패턴이고 3-2-1-0-0을 해석해보면 단단위3개 10단위 2개 20단위 1개 30단위와 40단위는 번호가 없다는 말이 됩니다.<br>
-			이것처럼 분류하면 132가지의 패턴이 나오는데, 한번호대 6개 출현 같은 무효패턴(?)을 제외한 가능성있는 패턴은 125가지이며<br>
-			또 그것을 통계내보면, 두개 번호대 죽는 경우는125개 중 70개 56%이며, 한개 번호대 죽는 경우는 125개 중 50개 40% 입니다.<br>
-			전체 번호대가 다 나올 경우는 125개 중 5개 4%로서 한개 이상의 번호대를 죽이는것이 적절하다 할것 입니다.
-		</p>
-	</div>
+                                <span class="lg-lotto-ball <?=lotto_stats_ball_class($number)?>">
+                                    <?=$number?>
+                                </span>
 
-	<div class="sts_box">
-		<p class="sts_tit">그외 단위패턴</p>
-		<p class="sts_desc">
-			슬립용지의 세로열을 기준으로 7개의 구룹으로 나누는 7단위 패턴, 5개씩 끊어서 구분하는 5분법, 9개씩 끊는 9분법등 다양합니다.<br>
-			알려지진 않았지만, 분석가님들 개개인이 분류하는 방법까지한다면 아마 셀수도 없이 많겠죠....
-		</p>
-	</div>
+                                <strong>
+                                    <?=number_format((int) $stat['count'])?>회
+                                </strong>
+                            </div>
+                        <?php
+                            $rank++;
+                        }
+                        ?>
+                    </div>
+                </section>
 
-	<div class="sts_box">
-		<p class="sts_tit">할로겐 볼</p>
-		<p class="sts_desc">
-			로또추첨방송이 끝나고 당첨번호를 보여줄때 할로겐통에 보이는 공을 말합니다.
-		</p>
-	</div>
+                <section class="lg-stats-panel">
+                    <div class="lg-stats-panel-head">
+                        <div>
+                            <span>ALL TIME</span>
+                            <h2>전체 출현 하위 번호</h2>
+                        </div>
+                    </div>
 
-	<div class="sts_box">
-		<p class="sts_tit">포아송 [삼각수]공식</p>
-		<p class="sts_desc">
-			당첨번호를 순서대로 나열해서 큰수에서 작은수를 뺀 나머지 각각의수.<br>
-			예를들어 96회차의 당번을 출현순서로 나열합니다..(보볼제외)
-		</p>
-	</div>
+                    <div class="lg-stats-ranking">
+                        <?php
+                        $rank = 1;
+                        foreach ($cold_numbers as $number => $stat) {
+                        ?>
+                            <div>
+                                <b><?=$rank?></b>
 
-	<div class="sts_box">
-		<p class="sts_tit">포아송 [삼각수]공식</p>
-		<p class="sts_desc">
-			당첨번호를 순서대로 나열해서 큰수에서 작은수를 뺀 나머지 각각의수.<br>
-			예를들어 96회차의 당번을 출현순서로 나열합니다..(보볼제외)<br><br>
-			(3-31),(31-8),(8-1),(1-21),(21-22)<br>
-			(28),(23),(7),(20),(1) .....다시 뺍니다 (1)<br>
-			(28-23),(23-7),(7-20),(20-1)<br>
-			(5),(16),(13),(19)......또 뺍니다. (2)<br>
-			(5-16),(16-13),(13-19)<br>
-			(11),(3),(6) .......또 뺍니다 (3)<br>
-			(11-3),(3-6)<br>
-			(8),(3).......마지막으로 뺍니다 (4)<br>
-			(8-3)<br>
-			(5)......................(5)<br>
-			위의 1,2,3,4,5 의 번호들을 중복수빼고 나열하면...<br>
-			(1,3,5,6,7,8,11,13,16,19,20,23,28)→13수를 삼각수라고 합니다.
-		</p>
-	</div>
+                                <span class="lg-lotto-ball <?=lotto_stats_ball_class($number)?>">
+                                    <?=$number?>
+                                </span>
 
-	<div class="sts_box">
-		<p class="sts_tit">합의 개념(궁)</p>
-		<p class="sts_desc">
-			숫자를 십단위와 단자리로 나눈후 이두개를 다시 더합니다.<br>
-			이때 더해진 수가 9를 넘을 경우 다시 같은 작업을 반복 하시면 됩니다.(ex: 39⇒3+9=12 ⇒ 1+2=3 즉, 3궁이 됩니다.)<br>
-			1부터 45까지 위의 방식으로 하면 다섯개씩 9개의 궁으로 나누어 집니다.<br><br>
-			이것을 정리해보면...<br>
-			1궁 ::: 1,10,19,28,37<br>
-			2궁 ::: 2,11,20,29,38<br>
-			3궁 ::: 3,12,21,30,39<br>
-			4궁 ::: 4,13,22,31,40<br>
-			5궁 ::: 5,14,23,32,41<br>
-			6궁 ::: 6,15,24,33,42<br>
-			7궁 ::: 7,16,25,34,43<br>
-			8궁 ::: 8,17,26,35,44<br>
-			9궁 ::: 9,18,27,36,45
-		</p>
-	</div>
+                                <strong>
+                                    <?=number_format((int) $stat['count'])?>회
+                                </strong>
+                            </div>
+                        <?php
+                            $rank++;
+                        }
+                        ?>
+                    </div>
+                </section>
+            </div>
 
-</div>
+            <section class="lg-stats-panel">
+                <div class="lg-stats-panel-head">
+                    <div>
+                        <span>RECENT 10 DRAWS</span>
+                        <h2>최근 10회 출현 번호</h2>
+                    </div>
 
-<?php
-	include_once(G5_PATH."/_tail.php");
-?>
+                    <p>
+                        최근 10개 회차의 당첨번호 60개를 기준으로 계산합니다.
+                    </p>
+                </div>
+
+                <div class="lg-recent-number-grid">
+                    <?php foreach ($recent_hot_numbers as $number => $stat) { ?>
+                        <article>
+                            <span class="lg-lotto-ball <?=lotto_stats_ball_class($number)?>">
+                                <?=$number?>
+                            </span>
+
+                            <strong>
+                                <?=number_format(
+                                    (int) $stat['recent_count']
+                                )?>회
+                            </strong>
+                        </article>
+                    <?php } ?>
+                </div>
+            </section>
+
+            <div class="lg-stats-two-column">
+                <section class="lg-stats-panel">
+                    <div class="lg-stats-panel-head">
+                        <div>
+                            <span>ODD / EVEN</span>
+                            <h2>홀수 · 짝수 출현 비율</h2>
+                        </div>
+                    </div>
+
+                    <div class="lg-ratio-row">
+                        <div>
+                            <span>홀수</span>
+                            <strong><?=number_format($odd_count)?>개</strong>
+                            <b><?=number_format($odd_percent, 1)?>%</b>
+                        </div>
+
+                        <div>
+                            <span>짝수</span>
+                            <strong><?=number_format($even_count)?>개</strong>
+                            <b><?=number_format($even_percent, 1)?>%</b>
+                        </div>
+                    </div>
+
+                    <div class="lg-ratio-bar">
+                        <span
+                            style="width:<?=number_format(
+                                $odd_percent,
+                                2,
+                                '.',
+                                ''
+                            )?>%"
+                        ></span>
+                    </div>
+                </section>
+
+                <section class="lg-stats-panel">
+                    <div class="lg-stats-panel-head">
+                        <div>
+                            <span>NUMBER RANGE</span>
+                            <h2>번호 구간별 출현 횟수</h2>
+                        </div>
+                    </div>
+
+                    <div class="lg-range-list">
+                        <?php foreach ($range_stats as $range => $count) { ?>
+                            <?php
+                            $range_percent = $total_numbers > 0
+                                ? ($count / $total_numbers) * 100
+                                : 0;
+                            ?>
+
+                            <div>
+                                <span><?=$range?></span>
+
+                                <div>
+                                    <i
+                                        style="width:<?=number_format(
+                                            $range_percent,
+                                            2,
+                                            '.',
+                                            ''
+                                        )?>%"
+                                    ></i>
+                                </div>
+
+                                <strong>
+                                    <?=number_format($count)?>개
+                                </strong>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </section>
+            </div>
+
+            <div class="lg-stats-notice">
+                <i class="fas fa-info-circle"></i>
+                <p>
+                    이 통계는 저장된 과거 당첨번호를 집계한 결과입니다.
+                    과거 출현 빈도가 다음 회차의 당첨 가능성을 보장하지 않습니다.
+                </p>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<?php include_once(G5_PATH . "/_tail.php"); ?>
