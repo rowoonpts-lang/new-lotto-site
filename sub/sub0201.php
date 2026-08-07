@@ -1,35 +1,141 @@
 <?php
-	include_once("_common.php");
-	include_once(G5_PATH."/_head.php");
+include_once("./_common.php");
+
+$g5['title'] = 'LottoGPT 등급안내';
+
+// LottoGPT 전용 전체 폭 레이아웃
+$lottogpt_full_width_page = true;
+
+add_stylesheet(
+    '<link rel="stylesheet" href="' . G5_THEME_URL . '/css/lottogpt.css">',
+    0
+);
+
+include_once(G5_PATH . "/_head.php");
 ?>
 
-	<div class="s0201">
-		<div class="inner_s0201">
-			<div class="s01_li1">LOTTO<span>GPT</span></div>
-			<div class="s01_li2">등급안내</div>
-			<ul class="s0201_ul">
-				<li class="aos-item" data-aos="fade-up" data-aos-duration="1200">
-					<div class="s0201_tit">실버</div>
-					<div class="s0201_cont">1년 10~20조합</div>
-					<div class="s0201_pri"><span>￦</span>&nbsp;110,000&nbsp;<span>원</span></div>
-					<a class="s0201_btn pop_res_open" onClick="fnShowpop('1')">상담문의</a>
-				</li>
-				<li class="aos-item" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
-					<div class="s0201_tit">골드</div>
-					<div class="s0201_cont">VIP 2년 20조합</div>
-					<div class="s0201_pri"><span>￦</span>&nbsp;330,000&nbsp;<span>원</span></div>
-					<a class="s0201_btn pop_res_open" onClick="fnShowpop('2')">상담문의</a>
-				</li>
-				<li class="aos-item" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="600">
-					<div class="s0201_tit">플래티넘</div>
-					<div class="s0201_cont">VVIP 2년~4년</div>
-					<div class="s0201_pri"><span>￦</span>&nbsp;770,000&nbsp;<span>원</span></div>
-					<a class="s0201_btn pop_res_open" onClick="fnShowpop('3')">상담문의</a>
-				</li>
-			</ul>
-		</div>
-	</div>
+<script>
+document.body.classList.add('lottogpt-page');
+</script>
+
+<main class="lg-membership-page">
+
+    <section class="lg-membership-hero">
+        <div class="lg-shell">
+            <p class="lg-eyebrow">LOTTOGPT MEMBERSHIP</p>
+
+            <h1>
+                나에게 맞는<br>
+                <strong>분석 서비스를 선택하세요.</strong>
+            </h1>
+
+            <p>
+                LottoGPT는 이용 목적과 분석 범위에 따라
+                세 가지 서비스 등급을 제공합니다.
+            </p>
+        </div>
+    </section>
+
+    <section class="lg-membership-section">
+        <div class="lg-shell">
+
+            <div class="lg-membership-grid">
+
+                <article class="lg-membership-card lg-membership-basic">
+                    <div class="lg-membership-card-head">
+                        <span class="lg-membership-level">01 · BASIC</span>
+                        <h2>Basic</h2>
+                        <p>기본 데이터 분석</p>
+                    </div>
+
+                    <div class="lg-membership-price">
+                        <strong>220,000</strong>
+                        <span>원</span>
+                    </div>
+
+                    <ul class="lg-membership-features">
+                        <li>로또 데이터 기반 기본 분석</li>
+                        <li>당첨번호 및 회차 데이터 확인</li>
+                        <li>기본 통계 정보 제공</li>
+                    </ul>
+
+                    <a
+                        class="lg-membership-btn pop_res_open"
+                        onclick="fnShowpop('1')"
+                    >
+                        상담문의
+                    </a>
+                </article>
+
+                <article class="lg-membership-card lg-membership-pro">
+                    <div class="lg-membership-badge">RECOMMENDED</div>
+
+                    <div class="lg-membership-card-head">
+                        <span class="lg-membership-level">02 · PRO</span>
+                        <h2>Pro</h2>
+                        <p>고급 데이터 분석</p>
+                    </div>
+
+                    <div class="lg-membership-price">
+                        <strong>440,000</strong>
+                        <span>원</span>
+                    </div>
+
+                    <ul class="lg-membership-features">
+                        <li>Basic 등급의 분석 기능 포함</li>
+                        <li>확장된 데이터 통계 분석</li>
+                        <li>다양한 번호 패턴 정보 제공</li>
+                    </ul>
+
+                    <a
+                        class="lg-membership-btn pop_res_open"
+                        onclick="fnShowpop('2')"
+                    >
+                        상담문의
+                    </a>
+                </article>
+
+                <article class="lg-membership-card lg-membership-premium">
+                    <div class="lg-membership-card-head">
+                        <span class="lg-membership-level">03 · AI PREMIUM</span>
+                        <h2>AI Premium</h2>
+                        <p>맞춤형 AI 분석</p>
+                    </div>
+
+                    <div class="lg-membership-price lg-membership-price-contact">
+                        <strong>금액문의</strong>
+                    </div>
+
+                    <ul class="lg-membership-features">
+                        <li>Pro 등급의 분석 기능 포함</li>
+                        <li>확장형 데이터 분석 서비스</li>
+                        <li>이용 목적에 따른 맞춤 상담</li>
+                    </ul>
+
+                    <a
+                        class="lg-membership-btn pop_res_open"
+                        onclick="fnShowpop('3')"
+                    >
+                        상담문의
+                    </a>
+                </article>
+
+            </div>
+
+            <div class="lg-membership-notice">
+                <span>NOTICE</span>
+                <p>
+                    서비스 내용과 이용 기간은 상담 과정에서 최종 확인될 수 있습니다.
+                    LottoGPT의 분석 정보는 당첨을 보장하지 않으며
+                    데이터 확인과 통계 분석을 위한 참고 자료로 제공됩니다.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</main>
 
 <?php
-	include_once(G5_PATH."/_tail.php");
+include_once(G5_PATH . "/_tail.php");
 ?>

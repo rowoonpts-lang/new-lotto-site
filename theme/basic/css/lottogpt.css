@@ -2497,3 +2497,286 @@
         font-size: 15px;
     }
 }
+
+/* LottoGPT membership page */
+.lg-membership-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(38, 226, 192, .09), transparent 30%),
+        radial-gradient(circle at 82% 16%, rgba(229, 184, 76, .11), transparent 28%),
+        var(--lg-bg);
+    color: var(--lg-text);
+}
+
+.lg-membership-hero {
+    padding: 110px 0 90px;
+    border-bottom: 1px solid rgba(229, 184, 76, .14);
+}
+
+.lg-membership-hero h1 {
+    max-width: 850px;
+    margin: 18px 0 24px;
+    color: #fff;
+    font-size: clamp(46px, 5vw, 70px);
+    line-height: 1.15;
+    letter-spacing: -.055em;
+}
+
+.lg-membership-hero h1 strong {
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #fff2b7,
+        var(--lg-gold),
+        #b78528
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.lg-membership-hero > .lg-shell > p:last-child {
+    max-width: 680px;
+    margin: 0;
+    color: #b7c1cc;
+    font-size: 18px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-membership-section {
+    padding: 90px 0 110px;
+}
+
+.lg-membership-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    align-items: stretch;
+}
+
+.lg-membership-card {
+    position: relative;
+    display: flex;
+    min-height: 540px;
+    padding: 38px 34px 34px;
+    flex-direction: column;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(16, 25, 35, .98),
+            rgba(8, 13, 20, .98)
+        );
+    border: 1px solid rgba(229, 184, 76, .20);
+    border-radius: 20px;
+}
+
+.lg-membership-pro {
+    border-color: rgba(229, 184, 76, .58);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .26),
+        inset 0 0 40px rgba(229, 184, 76, .04);
+}
+
+.lg-membership-badge {
+    position: absolute;
+    top: 0;
+    right: 26px;
+    padding: 9px 14px;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #9b701f, #f1c75b);
+    border-radius: 20px;
+    color: #070a0e;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.lg-membership-card-head {
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.lg-membership-level {
+    display: block;
+    margin-bottom: 20px;
+    color: var(--lg-teal);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+}
+
+.lg-membership-card h2 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: -.04em;
+}
+
+.lg-membership-card-head p {
+    margin: 0;
+    color: #9eaab6;
+    font-size: 15px;
+}
+
+.lg-membership-price {
+    display: flex;
+    min-height: 105px;
+    align-items: flex-end;
+    padding: 28px 0 24px;
+    color: #fff;
+}
+
+.lg-membership-price strong {
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: -.04em;
+}
+
+.lg-membership-price span {
+    margin-left: 6px;
+    color: #b8c1cb;
+    font-size: 15px;
+}
+
+.lg-membership-price-contact strong {
+    color: var(--lg-gold-light);
+    font-size: 34px;
+}
+
+.lg-membership-features {
+    margin: 0 0 32px;
+    padding: 0;
+    list-style: none;
+}
+
+.lg-membership-features li {
+    position: relative;
+    margin-bottom: 14px;
+    padding-left: 22px;
+    color: #aeb8c3;
+    font-size: 14px;
+    line-height: 1.65;
+    word-break: keep-all;
+}
+
+.lg-membership-features li::before {
+    content: "";
+    position: absolute;
+    top: .65em;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--lg-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(38, 226, 192, .45);
+}
+
+.lg-membership-btn {
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    margin-top: auto;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(229, 184, 76, .35);
+    border-radius: 10px;
+    color: #f3e6bd;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+}
+
+.lg-membership-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(229, 184, 76, .10);
+    border-color: rgba(229, 184, 76, .70);
+    color: #fff;
+}
+
+.lg-membership-pro .lg-membership-btn {
+    background: linear-gradient(135deg, #916719, #e9bd50);
+    border-color: transparent;
+    color: #080b0e;
+}
+
+.lg-membership-notice {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 30px;
+    margin-top: 36px;
+    padding: 28px 32px;
+    background: rgba(9, 15, 22, .78);
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 14px;
+}
+
+.lg-membership-notice span {
+    color: var(--lg-gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+}
+
+.lg-membership-notice p {
+    margin: 0;
+    color: #8f9aa6;
+    font-size: 13px;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+
+@media (max-width: 960px) {
+    .lg-membership-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lg-membership-card {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-membership-page .lg-shell {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .lg-membership-hero {
+        padding: 64px 0 58px;
+    }
+
+    .lg-membership-hero h1 {
+        font-size: 39px;
+    }
+
+    .lg-membership-hero > .lg-shell > p:last-child {
+        font-size: 16px;
+    }
+
+    .lg-membership-section {
+        padding: 60px 0 72px;
+    }
+
+    .lg-membership-card {
+        padding: 32px 24px 26px;
+    }
+
+    .lg-membership-card h2 {
+        font-size: 33px;
+    }
+
+    .lg-membership-price strong {
+        font-size: 34px;
+    }
+
+    .lg-membership-notice {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 24px;
+    }
+}
