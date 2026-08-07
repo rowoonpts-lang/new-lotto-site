@@ -3860,3 +3860,367 @@
         font-size: 14px;
     }
 }
+
+/* LottoGPT play guide page */
+.lg-play-guide-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 14% 8%, rgba(38, 226, 192, .09), transparent 29%),
+        radial-gradient(circle at 86% 15%, rgba(229, 184, 76, .09), transparent 28%),
+        var(--lg-bg);
+    color: var(--lg-text);
+}
+
+.lg-play-guide-hero {
+    position: relative;
+    padding: 110px 0 100px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(229, 184, 76, .14);
+}
+
+.lg-play-guide-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(38, 226, 192, .024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(38, 226, 192, .024) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, #000, transparent);
+}
+
+.lg-play-guide-hero .lg-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.lg-play-guide-hero h1 {
+    max-width: 900px;
+    margin: 18px 0 26px;
+    color: #fff;
+    font-size: clamp(46px, 5vw, 72px);
+    line-height: 1.15;
+    letter-spacing: -.055em;
+}
+
+.lg-play-guide-hero h1 strong {
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #fff1b3,
+        var(--lg-gold),
+        #b98529
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.lg-play-guide-hero-copy {
+    max-width: 760px;
+    margin: 0;
+    color: #b5c0ca;
+    font-size: 18px;
+    line-height: 1.85;
+    word-break: keep-all;
+}
+
+.lg-play-guide-section {
+    padding: 95px 0;
+}
+
+.lg-play-guide-heading {
+    max-width: 740px;
+    margin-bottom: 48px;
+}
+
+.lg-play-guide-heading h2 {
+    margin: 13px 0 17px;
+    color: #fff;
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.25;
+    letter-spacing: -.04em;
+}
+
+.lg-play-guide-heading > p:last-child {
+    margin: 0;
+    color: #aab5c0;
+    font-size: 16px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-play-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.lg-play-guide-card {
+    position: relative;
+    min-height: 285px;
+    padding: 28px 27px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 23, 33, .98),
+            rgba(8, 13, 20, .98)
+        );
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 17px;
+}
+
+.lg-play-guide-number {
+    display: block;
+    margin-bottom: 35px;
+    color: var(--lg-teal);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+}
+
+.lg-play-guide-code {
+    display: inline-block;
+    margin-bottom: 13px;
+    color: var(--lg-gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.lg-play-guide-card h3 {
+    margin: 0 0 15px;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.45;
+    letter-spacing: -.025em;
+    word-break: keep-all;
+}
+
+.lg-play-guide-card p {
+    margin: 0;
+    color: #96a3b0;
+    font-size: 14px;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+
+.lg-play-guide-data {
+    padding: 95px 0;
+    background: rgba(255, 255, 255, .012);
+    border-top: 1px solid rgba(255, 255, 255, .045);
+    border-bottom: 1px solid rgba(255, 255, 255, .045);
+}
+
+.lg-play-guide-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.lg-play-guide-stats article {
+    padding: 30px;
+    background: rgba(11, 17, 25, .88);
+    border: 1px solid rgba(229, 184, 76, .13);
+    border-radius: 17px;
+}
+
+.lg-play-guide-stats span {
+    display: block;
+    margin-bottom: 15px;
+    color: var(--lg-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.lg-play-guide-stats strong {
+    display: block;
+    color: var(--lg-gold-light);
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -.035em;
+}
+
+.lg-play-guide-stats p {
+    margin: 16px 0 0;
+    color: #8f9caa;
+    font-size: 13px;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+
+.lg-play-guide-explain {
+    display: grid;
+    grid-template-columns: .95fr 1.05fr;
+    gap: 65px;
+    align-items: center;
+    margin-top: 55px;
+    padding: 50px 52px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 24, 34, .98),
+            rgba(8, 13, 19, .98)
+        );
+    border: 1px solid var(--lg-line);
+    border-radius: 19px;
+}
+
+.lg-play-guide-explain h2 {
+    margin: 13px 0 0;
+    color: #fff;
+    font-size: clamp(29px, 3vw, 40px);
+    line-height: 1.4;
+    letter-spacing: -.04em;
+}
+
+.lg-play-guide-explain h2 strong {
+    color: var(--lg-gold-light);
+}
+
+.lg-play-guide-explain-copy p {
+    margin: 0 0 17px;
+    color: #aab5c0;
+    font-size: 15px;
+    line-height: 1.9;
+    word-break: keep-all;
+}
+
+.lg-play-guide-explain-copy p:last-child {
+    margin-bottom: 0;
+}
+
+.lg-play-guide-notice {
+    padding: 90px 0 110px;
+}
+
+.lg-play-guide-notice-panel {
+    padding: 45px 48px;
+    text-align: center;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(38, 226, 192, .08), transparent 48%),
+        rgba(10, 16, 24, .95);
+    border: 1px solid rgba(38, 226, 192, .19);
+    border-radius: 18px;
+}
+
+.lg-play-guide-notice-panel > span {
+    display: block;
+    margin-bottom: 13px;
+    color: var(--lg-teal);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .17em;
+}
+
+.lg-play-guide-notice-panel h2 {
+    margin: 0;
+    color: var(--lg-gold-light);
+    font-size: clamp(27px, 3vw, 38px);
+    line-height: 1.35;
+    letter-spacing: -.035em;
+}
+
+.lg-play-guide-notice-panel p {
+    max-width: 780px;
+    margin: 20px auto 0;
+    color: #a7b2bd;
+    font-size: 15px;
+    line-height: 1.9;
+    word-break: keep-all;
+}
+
+@media (max-width: 950px) {
+    .lg-play-guide-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lg-play-guide-explain {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+}
+
+@media (max-width: 760px) {
+    .lg-play-guide-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-play-guide-page .lg-shell {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .lg-play-guide-hero {
+        padding: 64px 0 60px;
+    }
+
+    .lg-play-guide-hero h1 {
+        font-size: 39px;
+    }
+
+    .lg-play-guide-hero-copy {
+        font-size: 15px;
+    }
+
+    .lg-play-guide-section,
+    .lg-play-guide-data {
+        padding: 68px 0;
+    }
+
+    .lg-play-guide-heading {
+        margin-bottom: 34px;
+    }
+
+    .lg-play-guide-heading h2 {
+        font-size: 30px;
+    }
+
+    .lg-play-guide-heading > p:last-child {
+        font-size: 14px;
+    }
+
+    .lg-play-guide-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lg-play-guide-card {
+        min-height: 0;
+        padding: 24px 22px;
+    }
+
+    .lg-play-guide-number {
+        margin-bottom: 26px;
+    }
+
+    .lg-play-guide-stats article {
+        padding: 25px 23px;
+    }
+
+    .lg-play-guide-explain {
+        margin-top: 38px;
+        padding: 32px 27px;
+    }
+
+    .lg-play-guide-explain h2 {
+        font-size: 27px;
+    }
+
+    .lg-play-guide-notice {
+        padding: 68px 0 75px;
+    }
+
+    .lg-play-guide-notice-panel {
+        padding: 32px 25px;
+        text-align: left;
+    }
+
+    .lg-play-guide-notice-panel h2 {
+        font-size: 26px;
+    }
+
+    .lg-play-guide-notice-panel p {
+        font-size: 14px;
+    }
+}

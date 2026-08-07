@@ -67,7 +67,7 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 					<ul class="gnb_2dul">
 						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/stats.php" class="gnb_2da">로또 분석용어</a></li>
 						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/stats2.php" class="gnb_2da">확률과 조합 분석</a></li>
-						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/stats3.php" class="gnb_2da">로또 구입 잘하는법</a></li>
+						 <li class="gnb_2dli"><a href="<?=G5_URL?>/sub/stats3.php" class="gnb_2da">로또 이용 가이드</a></li>
 					</ul>
 				</li>
 				<li class="gnb_1dli">

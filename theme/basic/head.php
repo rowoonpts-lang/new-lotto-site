@@ -85,7 +85,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 						<ul class="sub_menu">
 							<li><a href="<?=G5_URL?>/sub/stats.php">로또 분석용어</a></li>
 							<li><a href="<?=G5_URL?>/sub/stats2.php">확률과 조합 분석</a></li>
-							<li><a href="<?=G5_URL?>/sub/stats3.php">로또 구입 잘하는법</a></li>
+							<li><a href="<?=G5_URL?>/sub/stats3.php">로또 이용 가이드</a></li>
 						</ul>
 					</li>
 					<li>
