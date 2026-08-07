@@ -1,96 +1,143 @@
 <?php
-	include_once("_common.php");
-	include_once(G5_PATH."/_head.php");
+include_once("./_common.php");
+
+$g5['title'] = 'LottoGPT 분석 시스템';
+
+// LottoGPT 전용 전체 폭 레이아웃
+$lottogpt_full_width_page = true;
+
+add_stylesheet(
+    '<link rel="stylesheet" href="' . G5_THEME_URL . '/css/lottogpt.css">',
+    0
+);
+
+include_once(G5_PATH . "/_head.php");
 ?>
 
-<section id="s11">
-	<article class="s11_1">
-		<div class="inner">
-			<div class="s11_1desc1">단 한 번의 클릭만으로 로또 1등 당첨에 다가서다!</div>
-			<div class="s11_1desc2">로또 클릭만의&nbsp;<span class="font_mont">VRAS</span>&nbsp;프로그램</div>
-			<div class="s11_1desc3 font_mont">Virtual Reality Analysis System</div>
-		</div>
-	</article>
-	<article class="s11_2">
-		<div class="inner">
-			<?php if(!G5_IS_MOBILE){?>
-			<div class="s11_2tit">데이터의 양, 처리속도, 정확성만이 차별을 말할 수 있다.</div>
-			<div class="s11_2desc1">언제까지 방대한 자동 확률에 매주 만원씩 버리겠습니까?<br>로또 클릭 VRAS는 여러분들이 원하는 바를 이루어 드립니다!</div>
-			<?php }else{?>
-			<div class="s11_2tit">데이터의 양, 처리속도, 정확성만이<br>차별을 말할 수 있다.</div>
-			<div class="s11_2desc1">언제까지 방대한 자동 확률에 매주 만원씩 버리겠습니까?<br>로또 클릭 VRAS는 여러분들이 원하는 바를<br>이루어 드립니다!</div>
-			<?php }?>
-			<ul class="s11_2ul">
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon1.png" alt=""></div>
-						<div class="desc">데이터 통계구성</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon2.png" alt=""></div>
-						<div class="desc">목표 데이터값 수정</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon3.png" alt=""></div>
-						<div class="desc">데이터 생성</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon4.png" alt=""></div>
-						<div class="desc">정제된 목푯값 추출</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="500">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon5.png" alt=""></div>
-						<div class="desc">데이터마이닝</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon6.png" alt=""></div>
-						<div class="desc">그룹핑</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon7.png" alt=""></div>
-						<div class="desc">패턴 필터링 작업 </div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon8.png" alt=""></div>
-						<div class="desc">시뮬레이션 결과 창출</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon9.png" alt=""></div>
-						<div class="desc">최종 조합 구성</div>	
-					</div>
-				</li>
-				<li data-aos="fade-up" data-aos-duration="800" data-aos-delay="500">
-					<div class="li_box">
-						<div class="thum"><img src="<?=G5_THEME_IMG_URL?>/s11_icon10.png" alt=""></div>
-						<div class="desc">SMS 발송</div>	
-					</div>
-				</li>
-			</ul>
-			<?php if(!G5_IS_MOBILE){?>
-			<div class="s11_2desc2">그리고 체계적인 고객 관리시스템 구축으로 지속적인 당첨관리! </div>	
-			<?php }else{?>
-			<div class="s11_2desc2">그리고 체계적인 고객 관리시스템<br>구축으로 지속적인 당첨관리! </div>
-			<?php }?>
-		</div>
-	</article>
-</section>
+<script>
+document.body.classList.add('lottogpt-page');
+</script>
+
+<main class="lg-analysis-page">
+
+    <section class="lg-analysis-hero">
+        <div class="lg-shell">
+            <p class="lg-eyebrow">LOTTOGPT ANALYSIS SYSTEM</p>
+
+            <h1>
+                로또 데이터를<br>
+                <strong>분석 가능한 정보로.</strong>
+            </h1>
+
+            <p class="lg-analysis-hero-copy">
+                LottoGPT는 축적된 로또 회차 데이터를 정리하고 분석하여
+                번호 분포와 통계 정보를 사용자가 쉽게 확인할 수 있는 형태로 제공합니다.
+            </p>
+        </div>
+    </section>
+
+    <section class="lg-analysis-section">
+        <div class="lg-shell">
+
+            <div class="lg-analysis-heading">
+                <p class="lg-eyebrow">ANALYSIS FLOW</p>
+                <h2>데이터가 정보가 되는 과정</h2>
+                <p>
+                    원본 회차 데이터를 그대로 보여주는 것에 그치지 않고,
+                    정리와 분석 과정을 거쳐 이해하기 쉬운 정보로 구성합니다.
+                </p>
+            </div>
+
+            <div class="lg-analysis-flow">
+
+                <article class="lg-analysis-step">
+                    <span class="lg-analysis-step-number">01</span>
+                    <span class="lg-analysis-step-code">DATA</span>
+                    <h3>데이터 축적</h3>
+                    <p>
+                        회차별 당첨번호와 추첨 결과 데이터를
+                        지속적으로 저장하고 관리합니다.
+                    </p>
+                </article>
+
+                <article class="lg-analysis-step">
+                    <span class="lg-analysis-step-number">02</span>
+                    <span class="lg-analysis-step-code">CLEAN</span>
+                    <h3>데이터 정리</h3>
+                    <p>
+                        저장된 번호와 회차 정보를 분석하기 쉬운
+                        일정한 형태로 정리합니다.
+                    </p>
+                </article>
+
+                <article class="lg-analysis-step">
+                    <span class="lg-analysis-step-number">03</span>
+                    <span class="lg-analysis-step-code">ANALYZE</span>
+                    <h3>통계 분석</h3>
+                    <p>
+                        출현 빈도와 번호 구간 등
+                        다양한 통계 정보를 계산합니다.
+                    </p>
+                </article>
+
+                <article class="lg-analysis-step">
+                    <span class="lg-analysis-step-number">04</span>
+                    <span class="lg-analysis-step-code">PATTERN</span>
+                    <h3>데이터 탐색</h3>
+                    <p>
+                        축적된 결과에서 확인할 수 있는
+                        번호 분포와 데이터 특성을 탐색합니다.
+                    </p>
+                </article>
+
+                <article class="lg-analysis-step">
+                    <span class="lg-analysis-step-number">05</span>
+                    <span class="lg-analysis-step-code">OUTPUT</span>
+                    <h3>정보 제공</h3>
+                    <p>
+                        분석 결과를 표와 카드 등
+                        사용자가 이해하기 쉬운 형태로 제공합니다.
+                    </p>
+                </article>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="lg-analysis-principle">
+        <div class="lg-shell">
+
+            <div class="lg-analysis-principle-panel">
+
+                <div>
+                    <p class="lg-eyebrow">DATA PRINCIPLE</p>
+
+                    <h2>
+                        예측을 약속하기보다<br>
+                        <strong>데이터를 보여줍니다.</strong>
+                    </h2>
+                </div>
+
+                <div class="lg-analysis-principle-copy">
+                    <p>
+                        LottoGPT의 분석은 과거 로또 데이터를 기반으로
+                        통계와 정보 확인을 돕기 위한 기능입니다.
+                    </p>
+
+                    <p>
+                        로또 추첨은 무작위 방식이므로 과거 결과와 통계가
+                        미래의 당첨번호 또는 당첨 가능성을 보장하지 않습니다.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
 
 <?php
-	include_once(G5_THEME_PATH.'/tail.php');
+include_once(G5_PATH . "/_tail.php");
 ?>

@@ -3240,3 +3240,260 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* LottoGPT analysis system page */
+.lg-analysis-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(38, 226, 192, .10), transparent 30%),
+        radial-gradient(circle at 84% 18%, rgba(229, 184, 76, .10), transparent 30%),
+        var(--lg-bg);
+    color: var(--lg-text);
+}
+
+.lg-analysis-hero {
+    position: relative;
+    padding: 115px 0 100px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(229, 184, 76, .14);
+}
+
+.lg-analysis-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(38, 226, 192, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(38, 226, 192, .025) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, #000, transparent);
+}
+
+.lg-analysis-hero .lg-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.lg-analysis-hero h1 {
+    max-width: 850px;
+    margin: 18px 0 26px;
+    color: #fff;
+    font-size: clamp(46px, 5vw, 72px);
+    line-height: 1.15;
+    letter-spacing: -.055em;
+}
+
+.lg-analysis-hero h1 strong {
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #fff2b7,
+        var(--lg-gold),
+        #b78528
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.lg-analysis-hero-copy {
+    max-width: 720px;
+    margin: 0;
+    color: #b9c3ce;
+    font-size: 18px;
+    line-height: 1.85;
+    word-break: keep-all;
+}
+
+.lg-analysis-section {
+    padding: 100px 0;
+}
+
+.lg-analysis-heading {
+    max-width: 720px;
+    margin-bottom: 50px;
+}
+
+.lg-analysis-heading h2 {
+    margin: 14px 0 18px;
+    color: #fff;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.25;
+    letter-spacing: -.04em;
+}
+
+.lg-analysis-heading > p:last-child {
+    margin: 0;
+    color: #aeb8c3;
+    font-size: 17px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-analysis-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.lg-analysis-step {
+    position: relative;
+    min-height: 300px;
+    padding: 28px 24px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(16, 25, 35, .98),
+            rgba(8, 13, 20, .98)
+        );
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 16px;
+}
+
+.lg-analysis-step-number {
+    display: block;
+    margin-bottom: 40px;
+    color: var(--lg-teal);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+}
+
+.lg-analysis-step-code {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--lg-gold);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.lg-analysis-step h3 {
+    margin: 0 0 15px;
+    color: #fff;
+    font-size: 21px;
+    letter-spacing: -.03em;
+}
+
+.lg-analysis-step p {
+    margin: 0;
+    color: #98a4b0;
+    font-size: 14px;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+
+.lg-analysis-principle {
+    padding: 0 0 110px;
+}
+
+.lg-analysis-principle-panel {
+    display: grid;
+    grid-template-columns: .95fr 1.05fr;
+    gap: 70px;
+    align-items: center;
+    padding: 56px 60px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(15, 24, 34, .98),
+            rgba(8, 12, 18, .98)
+        );
+    border: 1px solid var(--lg-line);
+    border-radius: 20px;
+}
+
+.lg-analysis-principle h2 {
+    margin: 14px 0 0;
+    color: #fff;
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.35;
+    letter-spacing: -.04em;
+}
+
+.lg-analysis-principle h2 strong {
+    color: var(--lg-gold-light);
+}
+
+.lg-analysis-principle-copy p {
+    margin: 0 0 18px;
+    color: #aeb8c3;
+    font-size: 16px;
+    line-height: 1.9;
+    word-break: keep-all;
+}
+
+.lg-analysis-principle-copy p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 1100px) {
+    .lg-analysis-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 800px) {
+    .lg-analysis-principle-panel {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-analysis-page .lg-shell {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .lg-analysis-hero {
+        padding: 64px 0 58px;
+    }
+
+    .lg-analysis-hero h1 {
+        font-size: 40px;
+    }
+
+    .lg-analysis-hero-copy {
+        font-size: 16px;
+    }
+
+    .lg-analysis-section {
+        padding: 70px 0;
+    }
+
+    .lg-analysis-heading h2 {
+        font-size: 31px;
+    }
+
+    .lg-analysis-heading > p:last-child {
+        font-size: 15px;
+    }
+
+    .lg-analysis-flow {
+        grid-template-columns: 1fr;
+    }
+
+    .lg-analysis-step {
+        min-height: 0;
+    }
+
+    .lg-analysis-step-number {
+        margin-bottom: 28px;
+    }
+
+    .lg-analysis-principle {
+        padding-bottom: 72px;
+    }
+
+    .lg-analysis-principle-panel {
+        padding: 36px 28px;
+    }
+
+    .lg-analysis-principle h2 {
+        font-size: 28px;
+    }
+
+    .lg-analysis-principle-copy p {
+        font-size: 15px;
+    }
+}
