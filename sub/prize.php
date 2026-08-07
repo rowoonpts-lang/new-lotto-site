@@ -1,100 +1,280 @@
 <?php
-	include_once("_common.php");
-	include_once(G5_PATH."/_head.php");
+include_once("./_common.php");
+
+$g5['title'] = 'LottoGPT 회차 당첨 데이터';
+
+// LottoGPT 전용 전체 폭 레이아웃
+$lottogpt_full_width_page = true;
+
+add_stylesheet(
+    '<link rel="stylesheet" href="' . G5_THEME_URL . '/css/lottogpt.css">',
+    0
+);
+
+include_once(G5_PATH . "/_head.php");
+
+$range = sql_fetch(
+    "select
+        min(draw_no) as min_draw,
+        max(draw_no) as max_draw
+     from g5_lotto_result",
+    false
+);
+
+$minDraw = isset($range['min_draw']) ? (int) $range['min_draw'] : 0;
+$maxDraw = isset($range['max_draw']) ? (int) $range['max_draw'] : 0;
+
+$turn = isset($_GET['turn'])
+    ? (int) $_GET['turn']
+    : $maxDraw;
+
+if ($turn < $minDraw || $turn > $maxDraw) {
+    $turn = $maxDraw;
+}
+
+$result = array();
+
+if ($turn > 0) {
+    $result = sql_fetch(
+        "select
+            draw_no,
+            draw_date,
+            num_1,
+            num_2,
+            num_3,
+            num_4,
+            num_5,
+            num_6,
+            bonus_num,
+            rank1_winners,
+            rank1_amount
+         from g5_lotto_result
+         where draw_no = '{$turn}'
+         limit 1",
+        false
+    );
+}
+
+$hasResult = is_array($result)
+    && !empty($result['draw_no']);
+
+$numbers = array();
+
+if ($hasResult) {
+    $numbers = array(
+        (int) $result['num_1'],
+        (int) $result['num_2'],
+        (int) $result['num_3'],
+        (int) $result['num_4'],
+        (int) $result['num_5'],
+        (int) $result['num_6'],
+    );
+}
+
+function lottogpt_ball_class($number)
+{
+    $number = (int) $number;
+
+    if ($number <= 10) {
+        return 'lg-ball-yellow';
+    }
+
+    if ($number <= 20) {
+        return 'lg-ball-blue';
+    }
+
+    if ($number <= 30) {
+        return 'lg-ball-red';
+    }
+
+    if ($number <= 40) {
+        return 'lg-ball-gray';
+    }
+
+    return 'lg-ball-green';
+}
 ?>
-<div class="sub_top sub_top_bg2 prize_sub">
-	<div class="s01_li1">LOTTO<span>GPT</span></div>
-	<div class="s01_li2">당첨지역</div>
-		<ul class="product_ul2 prize_top">
-			<li id="view_turn_result">
-				<?php
-					$currentTurn = getTurn();
-					$turn = isset($_GET['turn'])
-					        ? max(1, (int) $_GET['turn'])
-					        : ($currentTurn > 1 ? $currentTurn - 1 : 0);
 
-					include_once(G5_PATH."/sub/ajax.turn.list.view2.php"); 
-				?>
-				
-			</li>
-		</ul>
-</div>
-<div class="sub_tit">당첨판매점</div>
-<div class="inner_3">
-	<div id="prize">
-		<ul class="prz_ul">
-			<li class="active"><a href="<?=G5_URL?>/sub/prize.php?type=1">서울</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=2">인천·경기</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=3">대전·충남</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=4">대구·경북</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=5">부산·경남</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=6">광주·전라</a></li>
-			<li><a href="<?=G5_URL?>/sub/prize.php?type=7">강원</a></li>
-		</ul>
+<script>
+document.body.classList.add('lottogpt-page');
+</script>
 
-		<table class="sts_tb">
-			<tr>
-				<th>판매점</th>
-				<th>배출건수</th>
-				<th>주소</th>
-			</tr>
-			<tr>
-				<td>스파</td>
-				<td>132</td>
-				<td>
-					서울 노원구 상계동 666-3 주공10단지종합상가111</p>
-					<a href="" class="prz_loc">
-						<img src="<?=G5_THEME_IMG_URL?>/map_icon.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>부일카서비스</td>
-				<td>97</td>
-				<td>
-					부산 동구 범일동 830-195번지
-					<a href="" class="prz_loc">
-						<img src="<?=G5_THEME_IMG_URL?>/map_icon.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>제이복권방</td>
-				<td>69</td>
-				<td>
-					서울 종로구 종로5가 58번지 평창빌딩 1층 103호
-					<a href="" class="prz_loc">
-						<img src="<?=G5_THEME_IMG_URL?>/map_icon.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>목화휴게소</td>
-				<td>58</td>
-				<td>
-					경남 사천시 용현면 주문리 4
-					<a href="" class="prz_loc">
-						<img src="<?=G5_THEME_IMG_URL?>/map_icon.png">
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>로또명당인주점</td>
-				<td>51</td>
-				<td>
-					충남 아산시 인주면 신성리 188-8
-					<a href="" class="prz_loc">
-						<img src="<?=G5_THEME_IMG_URL?>/map_icon.png">
-					</a>
-				</td>
-			</tr>
-		</table>
+<main class="lg-winning-page">
 
-		<div class="more_btn">
-			<a href="">더 많은 당첨 판매점 보기</a>
-		</div>
-	</div>
-</div>
+    <section class="lg-winning-hero">
+        <div class="lg-shell">
+            <p class="lg-eyebrow">LOTTOGPT WINNING DATA</p>
+
+            <h1>
+                회차별<br>
+                <strong>당첨 데이터를 확인하세요.</strong>
+            </h1>
+
+            <p>
+                LottoGPT에 저장된 로또 회차 데이터를 기준으로
+                과거 당첨번호와 추첨 결과를 확인할 수 있습니다.
+            </p>
+        </div>
+    </section>
+
+    <section class="lg-winning-section">
+        <div class="lg-shell">
+
+            <div class="lg-winning-panel">
+
+                <div class="lg-winning-panel-head">
+                    <div>
+                        <span class="lg-winning-label">DRAW RESULT</span>
+                        <h2>회차 당첨번호</h2>
+                    </div>
+
+                    <span class="lg-winning-db-status">
+                        <i></i>
+                        DATABASE CONNECTED
+                    </span>
+                </div>
+
+                <?php if ($hasResult) { ?>
+
+                <div class="lg-winning-result">
+
+                    <div class="lg-winning-result-head">
+                        <div>
+                            <strong>
+                                <?=number_format((int) $result['draw_no'])?>회
+                            </strong>
+
+                            <span>당첨번호</span>
+
+                            <small>
+                                추첨일
+                                <?=htmlspecialchars(
+                                    date(
+                                        'Y.m.d',
+                                        strtotime($result['draw_date'])
+                                    ),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                )?>
+                            </small>
+                        </div>
+
+                        <form
+                            method="get"
+                            action="<?=G5_URL?>/sub/prize.php"
+                            class="lg-winning-turn-form"
+                        >
+                            <label for="turn">회차 선택</label>
+
+                            <select
+                                id="turn"
+                                name="turn"
+                                onchange="this.form.submit()"
+                            >
+                                <?php
+                                for (
+                                    $draw = $maxDraw;
+                                    $draw >= $minDraw;
+                                    $draw--
+                                ) {
+                                ?>
+                                <option
+                                    value="<?=$draw?>"
+                                    <?=$turn === $draw ? 'selected' : ''?>
+                                >
+                                    <?=$draw?>회
+                                </option>
+                                <?php } ?>
+                            </select>
+                        </form>
+                    </div>
+
+                    <div class="lg-winning-balls">
+
+                        <?php foreach ($numbers as $number) { ?>
+                        <span
+                            class="lg-winning-ball <?=lottogpt_ball_class($number)?>"
+                        >
+                            <?=$number?>
+                        </span>
+                        <?php } ?>
+
+                        <span class="lg-winning-plus">+</span>
+
+                        <span
+                            class="lg-winning-ball <?=lottogpt_ball_class((int) $result['bonus_num'])?>"
+                        >
+                            <?=(int) $result['bonus_num']?>
+                        </span>
+
+                    </div>
+
+                    <div class="lg-winning-summary">
+
+                        <div>
+                            <span>1등 당첨자</span>
+                            <strong>
+                                <?=number_format((int) $result['rank1_winners'])?>명
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>1등 당첨금</span>
+                            <strong>
+                                <?=number_format((int) $result['rank1_amount'])?>원
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <?php } else { ?>
+
+                <div class="lg-winning-empty">
+                    등록된 당첨 데이터가 없습니다.
+                </div>
+
+                <?php } ?>
+
+            </div>
+
+            <div class="lg-winning-guide">
+
+                <article>
+                    <span>01</span>
+                    <h3>실제 DB 데이터</h3>
+                    <p>
+                        g5_lotto_result에 저장된 회차별
+                        당첨 결과를 기준으로 표시합니다.
+                    </p>
+                </article>
+
+                <article>
+                    <span>02</span>
+                    <h3>전체 회차 조회</h3>
+                    <p>
+                        저장된 1회부터 최신 회차까지
+                        원하는 결과를 선택해 확인할 수 있습니다.
+                    </p>
+                </article>
+
+                <article>
+                    <span>03</span>
+                    <h3>데이터 안내</h3>
+                    <p>
+                        과거 당첨 결과와 통계 데이터는
+                        미래의 당첨을 보장하지 않습니다.
+                    </p>
+                </article>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
 <?php
-	include_once(G5_PATH."/_tail.php");
+include_once(G5_PATH . "/_tail.php");
 ?>

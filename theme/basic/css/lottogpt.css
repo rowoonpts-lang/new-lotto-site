@@ -2780,3 +2780,463 @@
         padding: 24px;
     }
 }
+
+/* LottoGPT winning data page */
+.lg-winning-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(38, 226, 192, .09), transparent 30%),
+        radial-gradient(circle at 85% 18%, rgba(229, 184, 76, .10), transparent 28%),
+        var(--lg-bg);
+    color: var(--lg-text);
+}
+
+.lg-winning-hero {
+    padding: 110px 0 90px;
+    border-bottom: 1px solid rgba(229, 184, 76, .14);
+}
+
+.lg-winning-hero h1 {
+    max-width: 850px;
+    margin: 18px 0 24px;
+    color: #fff;
+    font-size: clamp(46px, 5vw, 70px);
+    line-height: 1.15;
+    letter-spacing: -.055em;
+}
+
+.lg-winning-hero h1 strong {
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #fff2b7,
+        var(--lg-gold),
+        #b78528
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.lg-winning-hero > .lg-shell > p:last-child {
+    max-width: 700px;
+    margin: 0;
+    color: #b7c1cc;
+    font-size: 18px;
+    line-height: 1.8;
+    word-break: keep-all;
+}
+
+.lg-winning-section {
+    padding: 90px 0 110px;
+}
+
+.lg-winning-panel {
+    padding: 40px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(16, 25, 35, .98),
+            rgba(8, 13, 20, .98)
+        );
+    border: 1px solid rgba(229, 184, 76, .22);
+    border-radius: 20px;
+}
+
+.lg-winning-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.lg-winning-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--lg-teal);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+}
+
+.lg-winning-panel-head h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 30px;
+    letter-spacing: -.04em;
+}
+
+.lg-winning-db-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8f9ba7;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+}
+
+.lg-winning-db-status i {
+    width: 7px;
+    height: 7px;
+    background: var(--lg-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(38, 226, 192, .55);
+}
+
+.lg-winning-result {
+    padding-top: 40px;
+}
+
+/* ajax.turn.list.view2.php 기존 구조 LottoGPT 스타일 */
+.lg-winning-result .flex_center {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.lg-winning-result .product_li1_1 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+}
+
+.lg-winning-result .product_li1_1 b {
+    color: var(--lg-gold-light);
+}
+
+.lg-winning-result .product_li1_1 em {
+    display: block;
+    margin-top: 8px;
+    color: #8f9ba7;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.lg-winning-result .product_li1_2 select {
+    min-width: 150px;
+    height: 46px;
+    padding: 0 38px 0 15px;
+    background: #0d151e;
+    border: 1px solid rgba(229, 184, 76, .30);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+.lg-winning-result .product_li1_3 {
+    margin-top: 40px;
+    padding: 34px 28px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 16px;
+}
+
+.lg-winning-result .product_li1_3 ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.lg-winning-result .l_ball {
+    display: flex;
+    width: 58px;
+    height: 58px;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, .25),
+        0 8px 24px rgba(0, 0, 0, .24);
+}
+
+.lg-winning-result .l_plus {
+    background: transparent !important;
+    box-shadow: none;
+    color: var(--lg-gold);
+    font-size: 26px;
+}
+
+.lg-winning-guide {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 28px;
+}
+
+.lg-winning-guide article {
+    padding: 30px;
+    background: rgba(11, 18, 26, .78);
+    border: 1px solid rgba(255, 255, 255, .07);
+    border-radius: 16px;
+}
+
+.lg-winning-guide article > span {
+    display: block;
+    margin-bottom: 28px;
+    color: var(--lg-teal);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .15em;
+}
+
+.lg-winning-guide h3 {
+    margin: 0 0 12px;
+    color: #fff;
+    font-size: 20px;
+    letter-spacing: -.03em;
+}
+
+.lg-winning-guide p {
+    margin: 0;
+    color: #97a3af;
+    font-size: 14px;
+    line-height: 1.75;
+    word-break: keep-all;
+}
+
+@media (max-width: 800px) {
+    .lg-winning-panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .lg-winning-result .flex_center {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .lg-winning-result .product_li1_2,
+    .lg-winning-result .product_li1_2 select {
+        width: 100%;
+    }
+
+    .lg-winning-guide {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-winning-page .lg-shell {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .lg-winning-hero {
+        padding: 64px 0 58px;
+    }
+
+    .lg-winning-hero h1 {
+        font-size: 39px;
+    }
+
+    .lg-winning-hero > .lg-shell > p:last-child {
+        font-size: 16px;
+    }
+
+    .lg-winning-section {
+        padding: 60px 0 72px;
+    }
+
+    .lg-winning-panel {
+        padding: 26px 22px;
+    }
+
+    .lg-winning-panel-head h2 {
+        font-size: 25px;
+    }
+
+    .lg-winning-result {
+        padding-top: 30px;
+    }
+
+    .lg-winning-result .product_li1_1 {
+        font-size: 21px;
+    }
+
+    .lg-winning-result .product_li1_3 {
+        padding: 26px 18px;
+    }
+
+    .lg-winning-result .l_ball {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+}
+
+/* LottoGPT winning data page - DB result layout */
+.lg-winning-result-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.lg-winning-result-head > div {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lg-winning-result-head strong {
+    color: #fff;
+    font-size: 30px;
+    letter-spacing: -.04em;
+}
+
+.lg-winning-result-head span {
+    color: var(--lg-gold-light);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.lg-winning-result-head small {
+    width: 100%;
+    margin-top: 3px;
+    color: #8f9ba7;
+    font-size: 13px;
+}
+
+.lg-winning-turn-form {
+    min-width: 170px;
+}
+
+.lg-winning-turn-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #8f9ba7;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.lg-winning-turn-form select {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    background: #0d151e;
+    border: 1px solid rgba(229, 184, 76, .30);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+.lg-winning-balls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 38px;
+    padding: 38px 24px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 16px;
+}
+
+.lg-winning-ball {
+    display: flex;
+    width: 62px;
+    height: 62px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 19px;
+    font-weight: 800;
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, .28),
+        0 10px 24px rgba(0, 0, 0, .28);
+}
+
+.lg-ball-yellow {
+    background: linear-gradient(145deg, #f3c84e, #a97914);
+}
+
+.lg-ball-blue {
+    background: linear-gradient(145deg, #4d9be8, #235a94);
+}
+
+.lg-ball-red {
+    background: linear-gradient(145deg, #ee6565, #983939);
+}
+
+.lg-ball-gray {
+    background: linear-gradient(145deg, #8b949d, #4d555d);
+}
+
+.lg-ball-green {
+    background: linear-gradient(145deg, #53b87a, #286742);
+}
+
+.lg-winning-plus {
+    color: var(--lg-gold);
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.lg-winning-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.lg-winning-summary > div {
+    padding: 22px 24px;
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .06);
+    border-radius: 12px;
+}
+
+.lg-winning-summary span {
+    display: block;
+    margin-bottom: 8px;
+    color: #8f9ba7;
+    font-size: 12px;
+}
+
+.lg-winning-summary strong {
+    color: #fff;
+    font-size: 20px;
+}
+
+.lg-winning-empty {
+    padding: 40px 0 10px;
+    color: #b7c1cc;
+    font-size: 17px;
+}
+
+@media (max-width: 640px) {
+    .lg-winning-result-head {
+        flex-direction: column;
+    }
+
+    .lg-winning-turn-form {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .lg-winning-ball {
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+    }
+
+    .lg-winning-summary {
+        grid-template-columns: 1fr;
+    }
+}
