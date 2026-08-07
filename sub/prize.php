@@ -3,7 +3,7 @@
 	include_once(G5_PATH."/_head.php");
 ?>
 <div class="sub_top sub_top_bg2 prize_sub">
-	<div class="s01_li1">LOTTO JOONGSI<span>M</span></div>
+	<div class="s01_li1">LOTTO<span>GPT</span></div>
 	<div class="s01_li2">당첨지역</div>
 		<ul class="product_ul2 prize_top">
 			<li id="view_turn_result">

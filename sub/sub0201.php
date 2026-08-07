@@ -5,7 +5,7 @@
 
 	<div class="s0201">
 		<div class="inner_s0201">
-			<div class="s01_li1">LOTTO JOONGSI<span>M</span></div>
+			<div class="s01_li1">LOTTO<span>GPT</span></div>
 			<div class="s01_li2">등급안내</div>
 			<ul class="s0201_ul">
 				<li class="aos-item" data-aos="fade-up" data-aos-duration="1200">
