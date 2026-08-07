@@ -2233,3 +2233,24 @@
         font-size: 10px;
     }
 }
+
+/* LottoGPT official image logo */
+.lottogpt-page .header .header_ul_1 .logo {
+    width: 220px;
+}
+
+.lottogpt-page .header .header_ul_1 .logo a {
+    display: block;
+}
+
+.lottogpt-page .header .header_ul_1 .logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.lottogpt-page .header .header_ul_1 .logo a::before,
+.lottogpt-page .header .header_ul_1 .logo a::after {
+    display: none;
+    content: none;
+}

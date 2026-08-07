@@ -47,7 +47,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 <header class="header">
 	<div class="inner">
 		<ul class="header_ul_1">
-			<li class="logo"><a href="<?=G5_URL?>"><img src="<?=G5_THEME_IMG_URL?>/logo.png" alt="로또중심"></a></li>
+			<li class="logo"><a href="<?=G5_URL?>"><img src="<?=G5_THEME_IMG_URL?>/lottogpt-logo-header.png" alt="LottoGPT"></a></li>
 			<li class="top_menu">
 				<?php if ($is_member) {  ?>
 				<!--div><a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php">정보수정</a></div-->
@@ -117,7 +117,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 	<input type="hidden" name="lr_etc" id="lr_etc_1" value="">
 		<ul class="pop_res_ul">
 			<li class="pop_res_li1">로또 1등 당첨번호 받기</li>
-			<li class="pop_res_li2">항상 친절하게 상담하겠습니다.<br>로또중심에 궁금하시 점을 해결해드립니다.</li>
+			<li class="pop_res_li2">항상 친절하게 상담하겠습니다.<br>LottoGPT에 궁금하신 점을 해결해드립니다.</li>
 			<li class="pop_res_li3"><input type="text" placeholder="이름을 입력해 주세요." name="lr_name" id="lr_name_1"></li>
 			<li class="pop_res_li4">
 				<select id="lr_hp1_1" name="lr_hp1">
@@ -134,7 +134,7 @@ if(defined('_INDEX_')) { // index에서만 실행
 			<li class="pop_res_li5">
 				<div class="ck_box">
 					<input type="checkbox" name="chk" id="chk_1" checked>
-					<label for="chk_1">로또중심 이용약관</label>
+					<label for="chk_1">LottoGPT 이용약관</label>
 				</div>
 				<div class="ck_box">
 					<input type="checkbox" name="chk2" id="chk2_1" checked>
@@ -239,7 +239,7 @@ $is_lottogpt_full_width_page = !empty($lottogpt_full_width_page);
 <div id="sub_div">
 	<?php if($basename != "sub0101.php" && $basename != "sub0102.php" && $basename != "sub0201.php" && $basename != "prize.php" && $basename != "sub0301.php" && $basename != "deluxe.php") {?>
 	<div class="sub_top <?=$sub_top_bg?>">
-		<div class="s01_li1">LOTTO JOONGSI<span>M</span></div>
+		<div class="s01_li1">LOTTO<span>GPT</span></div>
 		<div class="s01_li2"><?=$s01_li2?></div>
 		<ul class="sub_top_ul flex_center">
 			<?=$sub_top_li1?>

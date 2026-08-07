@@ -42,7 +42,7 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
     <div id="hd_wrapper">
 
         <div id="logo">
-            <a href="<?php echo G5_URL ?>"><img src="<?=G5_THEME_IMG_URL?>/logo.png" alt="<?php echo $config['cf_title']; ?>"></a>
+            <a href="<?php echo G5_URL ?>"><img src="<?=G5_THEME_IMG_URL?>/lottogpt-logo-header.png" alt="<?php echo $config['cf_title']; ?>"></a>
         </div>
 
         <button type="button" id="gnb_open" class="hd_opener"><i class="fa fa-bars" aria-hidden="true"></i><span class="sound_only"> 메뉴열기</span></button>
@@ -161,7 +161,7 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 	<input type="hidden" name="lr_type" id="lr_type_1">
 		<ul class="pop_res_ul">
 			<li class="pop_res_li1">로또 1등 당첨번호 받기</li>
-			<li class="pop_res_li2">항상 친절하게 상담하겠습니다.<br>로또중심에 궁금하시 점을 해결해드립니다.</li>
+			<li class="pop_res_li2">항상 친절하게 상담하겠습니다.<br>LottoGPT에 궁금하신 점을 해결해드립니다.</li>
 			<li class="pop_res_li3"><input type="text" placeholder="이름을 입력해 주세요." name="lr_name" id="lr_name_1"></li>
 			<li class="pop_res_li4">
 				<select id="lr_hp1_1" name="lr_hp1">
@@ -178,7 +178,7 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 			<li class="pop_res_li5">
 				<div class="ck_box">
 					<input type="checkbox" name="chk" id="chk_1" checked>
-					<label for="chk_1">로또중심 이용약관</label>
+					<label for="chk_1">LottoGPT 이용약관</label>
 				</div>
 				<div class="ck_box">
 					<input type="checkbox" name="chk2" id="chk2_1" checked>
@@ -269,7 +269,7 @@ function fnSubmit(v){
 <div id="sub_div">
 	<?php if($basename != "sub0101.php" && $basename != "sub0102.php" && $basename != "sub0201.php" && $basename != "prize.php" && $basename != "sub0301.php" && $basename != "deluxe.php") {?>
 	<div class="sub_top <?=$sub_top_bg?>">
-		<div class="s01_li1">LOTTO JOONGSI<span>M</span></div>
+		<div class="s01_li1">LOTTO<span>GPT</span></div>
 		<div class="s01_li2"><?=$s01_li2?></div>
 		<ul class="sub_top_ul flex_center">
 			<?=$sub_top_li1?>
