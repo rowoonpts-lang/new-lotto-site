@@ -74,15 +74,14 @@ $co_id = isset($co_id) ? (string) $co_id : '';
 			$sub_top_bg = "sub_top_bg4";
 		break;
 
-		case "my_lotto.php":
-			$s01_li2 = "마이페이지";
-			$sub_top_li1 = "<li class='sub_top_li sub_top_li1 active'><a onClick='tabBtn(\"1\")'>나의 당첨현황</a></li>";
-			$sub_top_li2 = "<li class='sub_top_li sub_top_li2'><a onClick='tabBtn(\"2\")'>나의 로또 당첨 현황</a></li>";
-			$sub_top_li3 = "<li class='sub_top_li sub_top_li3'><a onClick='tabBtn(\"3\")'>나의 로또 보관함</a></li>";
-			$sub_tit = "나의 당첨현황";
-			$sub_top_bg = "sub_top_bg3";
-		break;
-
+            case "my_lotto.php":
+                    $s01_li2 = "마이페이지";
+                    $sub_top_li1 = "<li class='active'><a href='/sub/my_lotto.php'>나의 로또</a></li>";
+                    $sub_top_li2 = "";
+                    $sub_top_li3 = "";
+                    $sub_tit = "나의 로또";
+                    $sub_top_bg = "sub_top_bg3";
+            break;
 		case "my_info.php":
 			$s01_li2 = "마이페이지";
 			$sub_top_li1 = "<li class='active'><a>회원정보</a></li>";

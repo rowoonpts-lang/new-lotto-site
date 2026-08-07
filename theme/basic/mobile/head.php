@@ -23,6 +23,10 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
 
 <link rel="stylesheet" href="<?=G5_CSS_URL?>/style.css" />
+
+<?php if (!empty($lottogpt_full_width_page)) { ?>
+<link rel="stylesheet" href="<?=G5_THEME_URL?>/css/lottogpt.css?ver=<?=G5_CSS_VER?>">
+<?php } ?>
 <link rel="stylesheet" href="<?=G5_CSS_URL?>/aos.css" />
 
 <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap" rel="stylesheet">
