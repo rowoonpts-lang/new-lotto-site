@@ -2,9 +2,50 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
-	$mb_id = base64_decode($mb_id);
-	$sql = "select * from g5_member where 1=1 and mb_id = '{$mb_id}'";
-	$row = sql_fetch($sql);
+	$loginLevel = isset($member['mb_level'])
+		? (int) $member['mb_level']
+		: 0;
+
+	if (!lottoCanCreateStaff($loginLevel)) {
+		alert('직원 계정 관리 권한이 없습니다.');
+	}
+
+	$encodedMbId = isset($_GET['mb_id'])
+		? trim((string) $_GET['mb_id'])
+		: '';
+
+	$mb_id = $encodedMbId !== ''
+		? base64_decode($encodedMbId, true)
+		: '';
+
+	if ($mb_id === false) {
+		alert('잘못된 직원 정보입니다.');
+	}
+
+	$mb_id = (string) $mb_id;
+	$mbIdSql = sql_real_escape_string($mb_id);
+
+	$row = array();
+
+	if ($mb_id !== '') {
+		$sql = "select *
+				from g5_member
+				where mb_id = '{$mbIdSql}'
+				limit 1";
+
+		$row = sql_fetch($sql);
+
+		if (empty($row['mb_id'])) {
+			alert('직원 정보를 찾을 수 없습니다.');
+		}
+
+		if (
+			$row['mb_id'] === 'rwadmin'
+			|| (int) $row['mb_level'] === LOTTO_ROLE_SUPER_ADMIN
+		) {
+			alert('최고관리자 계정은 이 화면에서 수정할 수 없습니다.');
+		}
+	}
 ?>
 <!-- Main content -->
 <section class="content">
@@ -85,10 +126,20 @@
 								<div class="col-12">
 									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_level" aria-hidden="true" autocomplete="off">
 										<?php
-											$list = getLevelList();	
-											for($i=0; $i < count($list); $i++){
+											$roleOptions = array(
+												LOTTO_ROLE_STAFF1 => '직원1',
+												LOTTO_ROLE_STAFF2 => '직원2',
+												LOTTO_ROLE_TEAM_LEADER => '팀장',
+												LOTTO_ROLE_ADMIN => '관리자',
+											);
+
+											$currentLevel = isset($row['mb_level'])
+												? (int) $row['mb_level']
+												: LOTTO_ROLE_STAFF1;
+
+											foreach ($roleOptions as $level => $label) {
 										?>
-										<option value="<?=$i+5?>" <?php if($row[mb_level] == ($i+5)){echo "selected";}?>><?=$list[$i]?></option>
+										<option value="<?=$level?>" <?php if($currentLevel === $level){echo "selected";}?>><?=$label?></option>
 										<?php }?>
 									</select>
 								</div>
@@ -112,7 +163,7 @@ function fnFindHP(){
 	mb_hp = mb_hp.replace(/-/gi,'');
 	$("#mb_hp").val(mb_hp);
 	if(mb_hp == ""){alert("휴대폰 번호를 입력해주세요.");return false;}
-	
+
 	$.ajax({
 		type: "POST",
 		url: "<?=G5_URL?>/ajax/ajax.find.mb_hp.php",
@@ -142,7 +193,7 @@ function fnFindID(){
 	var mb_id = $("#mb_id").val().replace(/ /gi,'');
 	$("#mb_id").val(mb_id);
 	if(mb_id == ""){alert("아이디를 입력해주세요.");return false;}
-	
+
 	$.ajax({
 		type: "POST",
 		url: "<?=G5_URL?>/ajax/ajax.find.mb_id.php",
