@@ -86,7 +86,6 @@
 						 mb_addr_jibeon = '{$mb_addr_jibeon}',
 						 mb_signature = '{$mb_signature}',
 						 mb_profile = '{$mb_profile}',
-						 mb_today_login = null,
 						 mb_datetime = '".G5_TIME_YMDHIS."',
 						 mb_ip = '{$_SERVER['REMOTE_ADDR']}',
 						 mb_level = '{$mb_level}',

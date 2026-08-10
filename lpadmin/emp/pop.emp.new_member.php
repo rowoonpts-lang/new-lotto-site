@@ -61,7 +61,7 @@
 				<!-- /.card-header -->
 				<!-- form start -->
 				<form name="frm" id="frm" role="form" method="post" autocomplete="off" action="emp.save.php" onSubmit="return fnSubmit();">
-				<input type="hidden" id="mb_no" name="mb_no" value="<?=$row[mb_no]?>">
+				<input type="hidden" id="mb_no" name="mb_no" value="<?=$row['mb_no']?>">
 				<input type="hidden" id="mb_hp_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
 				<input type="hidden" id="mb_id_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
 					<div class="card-body">
@@ -69,7 +69,7 @@
 							<label for="mb_hp">휴대폰번호</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="mb_hp" name="mb_hp" placeholder="" value=<?=$row[mb_hp]?> <?php if($mb_id){?>readonly<?php }?>>
+									<input type="text" class="form-control" id="mb_hp" name="mb_hp" placeholder="" value=<?=$row['mb_hp']?> <?php if($mb_id){?>readonly<?php }?>>
 								</div>
 								<?php if(!$mb_id){?>
 								<div class="col-4">
@@ -80,13 +80,13 @@
 						</div>
 						<div class="form-group">
 							<label for="mb_name">이름</label>
-							<input type="text" class="form-control" id="mb_name" name="mb_name" placeholder="" required value=<?=$row[mb_name]?>>
+							<input type="text" class="form-control" id="mb_name" name="mb_name" placeholder="" required value=<?=$row['mb_name']?>>
 						</div>
 						<div class="form-group">
 							<label for="mb_id">아이디</label>
 							<div class="row">
 								<div class="col-8">
-									<input type="text" class="form-control" id="mb_id" name="mb_id" placeholder="" value="<?=$row[mb_id]?>" <?php if($mb_id){?>readonly<?php }?>>
+									<input type="text" class="form-control" id="mb_id" name="mb_id" placeholder="" value="<?=$row['mb_id']?>" <?php if($mb_id){?>readonly<?php }?>>
 								</div>
 								<div class="col-4">
 									<button type="button" class="btn btn-block btn-primary" onClick="fnFindID()">중복검사</button>
@@ -97,7 +97,7 @@
 							<label for="mb_id">패스워드</label>
 							<div class="row">
 								<div class="col-12">
-									<input type="text" class="form-control" id="mb_password" name="mb_password" placeholder="" value="<?=$row[emp_pw]?>" required>
+									<input type="text" class="form-control" id="mb_password" name="mb_password" placeholder="" value="<?=$row['emp_pw']?>" required>
 								</div>
 							</div>
 						</div>
@@ -110,7 +110,7 @@
 											$list = getTeamList();	
 											for($i=0; $i < count($list); $i++){
 										?>
-										<option value="<?=$list[$i]?>" <?php if($row[mb_team] ==$list[$i]){echo "selected";}?>><?=$list[$i]?></option>
+										<option value="<?=$list[$i]?>" <?php if($row['mb_team'] ==$list[$i]){echo "selected";}?>><?=$list[$i]?></option>
 										<?php }?>
 									</select>
 								</div>
