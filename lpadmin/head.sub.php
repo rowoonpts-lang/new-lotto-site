@@ -6,15 +6,6 @@
 			goto_url(G5_LADMIN_URL."/login.php");
 		}
 
-		$step2_code = isset($config['cf_10']) ? trim((string) $config['cf_10']) : '';
-		if ($step2_code === '') {
-			alert("2차 인증 코드가 설정되지 않았습니다. 최고관리자에게 문의해주세요.");
-		}
-
-		if ((string) get_session('ss_step2') !== $step2_code) {
-			goto_url(G5_LADMIN_URL."/login.step2.php");
-		}
-
 		$basename=basename($_SERVER["PHP_SELF"]); 
 
 		$sql = "select * from l_menu where 1=1 and lm_php_name = '{$basename}'";
