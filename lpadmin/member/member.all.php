@@ -192,9 +192,11 @@
 			<div class="row">
 				<div class="col-10">
 				</div>
+				<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
 				<div class="col-2">
 					<button type="button" class="btn btn-block btn-danger" onClick="fnMemberChkDel()">선택삭제</button>
 				</div>
+				<?php } ?>
 			</div>
 			<div class="card-header">
 				<h3 class="card-title"></h3>
@@ -296,7 +298,11 @@
 						<?php }?>
 					</td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">상세상담</button></td>
-					<td><button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row['mb_id'])?>')">삭제</button></td>
+					<td>
+						<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
+						<button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row['mb_id'])?>')">삭제</button>
+						<?php } ?>
+					</td>
 				</tr>
 				<?php }?>
 				<?php if($total_count < 1){?>
