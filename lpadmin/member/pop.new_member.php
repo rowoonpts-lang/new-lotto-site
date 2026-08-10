@@ -57,17 +57,19 @@
 							<label for="mb_password">패스워드</label>
 							<input type="text" class="form-control" id="mb_password" name="mb_password" placeholder="" required>
 						</div-->
+						<input type="hidden" name="mb_type" value="무료회원">
+						<?php if (lottoCanCreateStaff($member['mb_level'])) { ?>
 						<div class="form-group">
-							<label for="exampleInputPassword1">등급선택</label>
-							<div class="form-group clearfix">
-								<div class="icheck-primary d-inline">
-									<input type="radio" id="radioPrimary1" name="mb_type" checked value="무료회원">
-									<label for="radioPrimary1">
-										무료회원
-									</label>
-								</div>
-							</div>
+							<label for="mb_level">권한설정</label>
+							<select class="form-control" id="mb_level" name="mb_level">
+								<option value="2">일반회원</option>
+								<option value="<?=LOTTO_ROLE_STAFF1?>">직원1</option>
+								<option value="<?=LOTTO_ROLE_STAFF2?>">직원2</option>
+								<option value="<?=LOTTO_ROLE_TEAM_LEADER?>">팀장</option>
+								<option value="<?=LOTTO_ROLE_ADMIN?>">관리자</option>
+							</select>
 						</div>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- /.card-body -->

@@ -1,6 +1,34 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
+	if (!lottoIsStaffLevel($member['mb_level'])) {
+		alert('회원등록 권한이 없습니다.');
+	}
+
+	$save_mb_level = 2;
+	$save_mb_type = '무료회원';
+
+	if (lottoCanCreateStaff($member['mb_level'])) {
+		$requested_mb_level = isset($mb_level) ? (int) $mb_level : 2;
+		$allowed_levels = array(
+			2,
+			LOTTO_ROLE_STAFF1,
+			LOTTO_ROLE_STAFF2,
+			LOTTO_ROLE_TEAM_LEADER,
+			LOTTO_ROLE_ADMIN,
+		);
+
+		if (!in_array($requested_mb_level, $allowed_levels, true)) {
+			alert('허용되지 않은 권한입니다.');
+		}
+
+		$save_mb_level = $requested_mb_level;
+
+		if ($save_mb_level !== 2) {
+			$save_mb_type = '직원';
+		}
+	}
+
 	$mb_code = fnNewMbCode();
 
 	$sql = " insert into {$g5['member_table']}
@@ -22,17 +50,16 @@
                      mb_addr_jibeon = '{$mb_addr_jibeon}',
                      mb_signature = '{$mb_signature}',
                      mb_profile = '{$mb_profile}',
-                     mb_today_login = null,
                      mb_datetime = '".G5_TIME_YMDHIS."',
                      mb_ip = '{$_SERVER['REMOTE_ADDR']}',
-                     mb_level = '{$config['cf_register_level']}',
+                     mb_level = '{$save_mb_level}',
                      mb_recommend = '{$mb_recommend}',
                      mb_login_ip = '{$_SERVER['REMOTE_ADDR']}',
                      mb_mailling = '{$mb_mailling}',
                      mb_sms = '{$mb_sms}',
                      mb_open = '{$mb_open}',
                      mb_open_date = '".G5_TIME_YMD."',
-					 mb_type = '{$mb_type}',
+					 mb_type = '{$save_mb_type}',
                      mb_1 = '{$mb_1}',
                      mb_2 = '{$mb_2}',
                      mb_3 = '{$mb_3}',
