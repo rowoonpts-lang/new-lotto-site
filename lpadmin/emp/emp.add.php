@@ -1,6 +1,10 @@
 <?php
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
+
+	if ((int) $member['mb_level'] < LOTTO_ROLE_ADMIN) {
+		alert('접근 권한이 없습니다.', '../');
+	}
 	$sql_common = " from g5_member a ";
 	$sql_search = " where 1=1 and a.mb_id != 'admin' and mb_level >= 5";
 	$sql_order = " order by mb_datetime desc ";

@@ -102,6 +102,8 @@ for($i=0; $row_menu = sql_fetch_array($result);$i++){
 $menu1[$i]["lm_cate"] = $row_menu["lm_cate1"];
 $menu1[$i]["lm_name"] = $row_menu["lm_name"];
 $menu1[$i]["lm_url"] = $row_menu["lm_url"];
+$menu1[$i]["active"] = "";
+$menu2[$i] = array();
 $sql2 = "select * from l_menu where 1=1 {$sql_where} and lm_cate1 = \"{$row_menu["lm_cate1"]}\" and lm_cate2 != \"0\" and lm_use = \"1\" order by lm_order asc";
 $result2 = sql_query($sql2);
 for($j=0; $row2 = sql_fetch_array($result2); $j++){
