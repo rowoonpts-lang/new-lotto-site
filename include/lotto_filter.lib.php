@@ -260,3 +260,75 @@ function lottoFilterAnalyzeCombination(array $numbers)
         'max_consecutive' => lottoFilterGetMaxConsecutive($numbers),
     );
 }
+
+/**
+ * 전체 로또 조합을 순회하면서 현재 필터/분석 파이프라인을 실행한다.
+ *
+ * 처리 순서:
+ * 1. 전체 조합 생성
+ * 2. 총합수 필터
+ * 3. 통과 조합 기본 분석
+ *
+ * 조합 자체는 메모리에 누적하지 않는다.
+ *
+ * @param int $sumMin
+ * @param int $sumMax
+ * @return array
+ */
+function lottoFilterRunAnalysisPipeline($sumMin, $sumMax)
+{
+    $sumMin = (int) $sumMin;
+    $sumMax = (int) $sumMax;
+
+    $totalCount = 0;
+    $sumPassCount = 0;
+    $analyzedCount = 0;
+
+    for ($n1 = 1; $n1 <= 40; $n1++) {
+        for ($n2 = $n1 + 1; $n2 <= 41; $n2++) {
+            for ($n3 = $n2 + 1; $n3 <= 42; $n3++) {
+                for ($n4 = $n3 + 1; $n4 <= 43; $n4++) {
+                    for ($n5 = $n4 + 1; $n5 <= 44; $n5++) {
+                        for ($n6 = $n5 + 1; $n6 <= 45; $n6++) {
+                            $totalCount++;
+
+                            $sum = $n1
+                                + $n2
+                                + $n3
+                                + $n4
+                                + $n5
+                                + $n6;
+
+                            if (!lottoFilterPassSum($sum, $sumMin, $sumMax)) {
+                                continue;
+                            }
+
+                            $sumPassCount++;
+
+                            $analysis = lottoFilterAnalyzeCombination(array(
+                                $n1,
+                                $n2,
+                                $n3,
+                                $n4,
+                                $n5,
+                                $n6,
+                            ));
+
+                            if ($analysis === false) {
+                                continue;
+                            }
+
+                            $analyzedCount++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return array(
+        'total_count' => $totalCount,
+        'sum_pass_count' => $sumPassCount,
+        'analyzed_count' => $analyzedCount,
+    );
+}
