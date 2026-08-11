@@ -197,10 +197,10 @@ function fnGetMemoStatus()
 function fnGetTypePre()
 {
     return [
-        '프로',
-        '탑클래스',
-        '퍼펙트',
-        '퍼스트',
+        'Basic',
+        'Pro',
+        'Premium',
+        'AI Premium',
     ];
 }
 
@@ -210,9 +210,9 @@ function fnGetTypePre()
 function fnGetTypeYak()
 {
     return [
-        '탑클래스',
-        '퍼펙트',
-        '퍼스트',
+        'Pro',
+        'Premium',
+        'AI Premium',
     ];
 }
 
@@ -223,10 +223,10 @@ function fnGetType()
 {
     return [
         '무료회원',
-        '프로',
-        '탑클래스',
-        '퍼펙트',
-        '퍼스트',
+        'Basic',
+        'Pro',
+        'Premium',
+        'AI Premium',
     ];
 }
 
@@ -237,13 +237,15 @@ function fnGetTypePrice($mbType)
 {
     $prices = [
         '무료회원' => 0,
-        '프로' => 121000,
-        '탑클래스' => 880000,
-        '퍼펙트' => 2200000,
-        '퍼스트' => 6500000,
+        'Basic' => 220000,
+        'Pro' => 440000,
+        'Premium' => null,
+        'AI Premium' => null,
     ];
 
-    return $prices[$mbType] ?? 0;
+    return array_key_exists($mbType, $prices)
+        ? $prices[$mbType]
+        : null;
 }
 
 /**

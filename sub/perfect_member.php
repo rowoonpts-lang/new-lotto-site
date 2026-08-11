@@ -2,8 +2,8 @@
 	include_once("_common.php");
 	include_once(G5_PATH."/_head.php");
 
-	if(!$is_admin && $member['mb_type'] != "퍼펙트"){
-		alert('죄송합니다.\n퍼펙트회원 전용페이지입니다.');
+	if(!$is_admin && $member['mb_type'] != "Premium"){
+		alert('죄송합니다.\nPremium 회원 전용페이지입니다.');
 	}
 
 	$turn = getTurn()-1;
@@ -29,16 +29,16 @@
 
 <section id="npf">
 	<div class="npf_top">
-		<div class="tit">모두가 기다리고 기다렸던<br><span class="c_r">로또 1등</span>&nbsp;당첨의 끝판왕!&nbsp;<span class="font_gm_b c_r">	PERFECT!</span></div>
-		<div class="desc">기존 TOP-CLASS 등급의 Change-Up!</div>
+		<div class="tit">모두가 기다리고 기다렸던<br><span class="c_r">로또 1등</span>&nbsp;당첨의 끝판왕!&nbsp;<span class="font_gm_b c_r">	PREMIUM!</span></div>
+		<div class="desc">Premium 멤버십 전용 서비스</div>
 	</div>
 	<div class="npf_bg">
 		<div class="inner npf_inner">
 			<div id="" class="perfect_div">
 				<div class="mbs_rt">
 					<div class="mbs_rt_box mbs_rt_perfect">
-						<p class="mbs_type">VVIP 회원</p>
-						<h3 class="mbs_grade font_gm_b">PERFECT</h3>
+						<p class="mbs_type">Premium 회원</p>
+						<h3 class="mbs_grade font_gm_b">PREMIUM</h3>
 						<!--p class="mbs_price"><b>2,750,000</b> 원</p-->
 						<div class="mbs_btn_box">
 							<button type="button" class="mbs_btn" onclick="fnBbsPopOn('VVIP회원');">상담 문의</button>
