@@ -53,9 +53,9 @@ if(defined('_INDEX_')) { // index에서만 실행
 				<!--div><a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php">정보수정</a></div-->
 				<div><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></div>
 				<div><a href="<?=G5_URL?>/sub/my_lotto.php">마이페이지</a></div>
-				<?php if ($is_admin) {  ?>
-				<div class="eng"><a href="<?php echo G5_ADMIN_URL ?>">관리자</a></div>
-				<?php }  ?>
+				<?php if (lottoIsStaffLevel($member['mb_level'])) { ?>
+				<div><a href="<?=G5_LADMIN_URL?>">관리자페이지</a></div>
+				<?php } ?>
 				<?php } else {  ?>
 				<div><a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a></div>
 				<div class="lottogpt-hidden-signup"><a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a></div>

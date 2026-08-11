@@ -90,11 +90,11 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 				<li class="gnb_1dli">
                     <a href="<?=G5_URL?>/sub/my_lotto.php" class="gnb_1da">마이페이지</a>
 				</li>
-				<?php if ($is_admin) {  ?>
+				<?php if (lottoIsStaffLevel($member['mb_level'])) { ?>
 				<li class="gnb_1dli">
-                    <a href="<?php echo G5_ADMIN_URL ?>" class="gnb_1da">관리자</a>
+                    <a href="<?=G5_LADMIN_URL?>" class="gnb_1da">관리자페이지</a>
 				</li>
-				<?php }  ?>
+				<?php } ?>
 				<?php } else {  ?>
 				<li class="gnb_1dli">
                     <a href="<?php echo G5_BBS_URL ?>/login.php" class="gnb_1da">로그인</a>
