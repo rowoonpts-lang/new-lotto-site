@@ -5,6 +5,39 @@ if (!defined('_GNUBOARD_')) {
 }
 
 /**
+ * GitHub Codespaces 프록시 환경에서는 HTTP_HOST가 localhost로 전달될 수 있으므로
+ * G5_URL의 공개 호스트와 동일한 URL은 같은 사이트로 인정합니다.
+ */
+add_replace('check_same_url_host', 'lottoCodespacesCheckSameUrlHost', 10, 6);
+
+function lottoCodespacesCheckSameUrlHost(
+    $isDifferentHost,
+    $parsedUrl,
+    $host,
+    $isHostCheck,
+    $returnUrl,
+    $isRedirect
+) {
+    if (
+        getenv('CODESPACES') !== 'true'
+        || !defined('G5_URL')
+        || $isHostCheck
+        || empty($parsedUrl['host'])
+    ) {
+        return $isDifferentHost;
+    }
+
+    $siteUrl = parse_url(G5_URL);
+    $siteHost = $siteUrl['host'] ?? '';
+
+    if ($siteHost !== '' && strcasecmp($parsedUrl['host'], $siteHost) === 0) {
+        return false;
+    }
+
+    return $isDifferentHost;
+}
+
+/**
  * 다음 회원 코드를 6자리 문자열로 생성합니다.
  */
 function fnNewMbCode()
