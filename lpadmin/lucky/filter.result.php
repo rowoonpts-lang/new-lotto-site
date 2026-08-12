@@ -11,17 +11,28 @@ $loginLevel = isset($member['mb_level'])
     ? (int) $member['mb_level']
     : 0;
 
-if (!lottoIsStaffLevel($loginLevel)) {
+if (!lottoCanViewAllMembers($loginLevel)) {
     alert('접근 권한이 없습니다.');
 }
 
-$currentTurn = (int) getTurn();
-$previousTurn = $currentTurn > 1
-    ? $currentTurn - 1
+$latestResultRow = sql_fetch(
+    "select max(draw_no) as draw_no
+       from g5_lotto_result",
+    false
+);
+
+$latestResultTurn = isset($latestResultRow['draw_no'])
+    ? (int) $latestResultRow['draw_no']
     : 0;
 
+$currentTurn = $latestResultTurn > 0
+    ? $latestResultTurn + 1
+    : 0;
+
+$previousTurn = $latestResultTurn;
+
 $sumMin = 100;
-$sumMax = 180;
+$sumMax = 190;
 
 $resultSetting = sql_query(
     "select setting_key, setting_value
@@ -40,20 +51,49 @@ while ($resultSetting && ($settingRow = sql_fetch_array($resultSetting))) {
     }
 }
 
-$currentCandidateCount = 0;
-$previousCandidateCount = 0;
-
-$row = sql_fetch(
-    "select candidate_count
-       from l_filter_run
-      where draw_no = '{$currentTurn}'
-      limit 1",
-    false
+$currentRun = array(
+    'lfr_id' => 0,
+    'source_draw_no' => 0,
+    'status' => '',
+    'candidate_count' => 0,
+    'excluded_numbers' => '',
+    'started_at' => '',
+    'filtered_at' => '',
+    'ranked_at' => '',
+    'last_error' => '',
 );
 
-if (isset($row['candidate_count'])) {
-    $currentCandidateCount = (int) $row['candidate_count'];
+if ($currentTurn > 0) {
+    $currentRunRow = sql_fetch(
+        "select
+            lfr_id,
+            source_draw_no,
+            status,
+            candidate_count,
+            excluded_numbers,
+            started_at,
+            filtered_at,
+            ranked_at,
+            last_error
+         from l_filter_run
+         where draw_no = '{$currentTurn}'
+         limit 1",
+        false
+    );
+
+    if (
+        isset($currentRunRow['lfr_id'])
+        && (int) $currentRunRow['lfr_id'] > 0
+    ) {
+        $currentRun = $currentRunRow;
+    }
 }
+
+$currentCandidateCount = isset($currentRun['candidate_count'])
+    ? (int) $currentRun['candidate_count']
+    : 0;
+
+$previousCandidateCount = 0;
 
 if ($previousTurn > 0) {
     $row = sql_fetch(
@@ -69,185 +109,70 @@ if ($previousTurn > 0) {
     }
 }
 
-$allowedMemberIdsSql = '';
-
-if (!lottoCanViewAllMembers($loginLevel)) {
-    $staffIds = array($loginMbId);
-
-    if (
-        $loginLevel === LOTTO_ROLE_STAFF2
-        || $loginLevel === LOTTO_ROLE_TEAM_LEADER
-    ) {
-        $childStaffIds = lottoGetDirectChildStaffIds($loginMbId);
-
-        foreach ($childStaffIds as $childStaffId) {
-            $staffIds[] = $childStaffId;
-        }
-    }
-
-    $staffIds = array_values(array_unique($staffIds));
-    $staffIdsSql = array();
-
-    foreach ($staffIds as $staffId) {
-        $staffIdsSql[] = "'" . sql_real_escape_string($staffId) . "'";
-    }
-
-    if (count($staffIdsSql) > 0) {
-        $allowedMemberIdsSql = "
-            and exists (
-                select 1
-                  from l_member_assignment lma
-                 where lma.mb_id = a.mb_id
-                   and lma.staff_mb_id in (" . implode(',', $staffIdsSql) . ")
-            )
-        ";
-    } else {
-        $allowedMemberIdsSql = " and 1 = 0 ";
-    }
-}
-
-$rankCounts = array(
-    1 => 0,
-    2 => 0,
-    3 => 0,
-    4 => 0,
-    5 => 0,
-);
-
-$sql = "select
-            a.result_rank,
-            count(*) as cnt
-        from l_member_combination a
-        where a.draw_no = '{$previousTurn}'
-          and a.result_rank between 1 and 5
-          {$allowedMemberIdsSql}
-        group by a.result_rank";
-
-$rankResult = sql_query($sql, false);
-
-while ($rankResult && ($rankRow = sql_fetch_array($rankResult))) {
-    $rank = (int) $rankRow['result_rank'];
-
-    if (isset($rankCounts[$rank])) {
-        $rankCounts[$rank] = (int) $rankRow['cnt'];
-    }
-}
-
-$allowedSchSelect = array(
-    'b.mb_code',
-    'b.mb_name',
-    'b.mb_hp',
-    'b.mb_id',
-);
-
-$turn = isset($_GET['turn'])
-    ? max(1, (int) $_GET['turn'])
-    : $previousTurn;
-
-$schSelect = isset($_GET['sch_select'])
-    && in_array($_GET['sch_select'], $allowedSchSelect, true)
-        ? $_GET['sch_select']
-        : '';
-
-$schText = isset($_GET['sch_text'])
-    ? trim((string) $_GET['sch_text'])
-    : '';
-
-$schMbType = isset($_GET['sch_mb_type'])
-    ? trim((string) $_GET['sch_mb_type'])
-    : '';
-
-$luckyResult = isset($_GET['lucky_result'])
-    ? max(0, (int) $_GET['lucky_result'])
-    : 0;
-
-$page = isset($_GET['page'])
-    ? max(1, (int) $_GET['page'])
+$candidatePage = isset($_GET['candidate_page'])
+    ? max(1, (int) $_GET['candidate_page'])
     : 1;
 
-$schTextSql = sql_real_escape_string($schText);
-$schMbTypeSql = sql_real_escape_string($schMbType);
+$candidateRows = 50;
+$candidateTotalCount = 0;
+$candidateTotalPage = 0;
+$candidateFromRecord = 0;
+$candidateResult = false;
 
-$sqlCommon = "
-    from l_member_combination a
-    inner join g5_member b
-        on b.mb_id = a.mb_id
-";
+if ($currentTurn > 0) {
+    $candidateCountRow = sql_fetch(
+        "select count(*) as cnt
+           from l_filter_candidate
+          where draw_no = '{$currentTurn}'",
+        false
+    );
 
-$sqlSearch = "
-    where a.draw_no = '{$turn}'
-      and a.result_rank between 1 and 5
-      {$allowedMemberIdsSql}
-";
+    $candidateTotalCount = isset($candidateCountRow['cnt'])
+        ? (int) $candidateCountRow['cnt']
+        : 0;
 
-if ($schText !== '') {
-    if ($schSelect !== '') {
-        $sqlSearch .= "
-            and {$schSelect} like '%{$schTextSql}%'
-        ";
-    } else {
-        $sqlSearch .= "
-            and (
-                b.mb_code like '%{$schTextSql}%'
-                or b.mb_name like '%{$schTextSql}%'
-                or b.mb_hp like '%{$schTextSql}%'
-                or b.mb_id like '%{$schTextSql}%'
-            )
-        ";
+    if ($candidateTotalCount > 0) {
+        $candidateTotalPage = (int) ceil(
+            $candidateTotalCount / $candidateRows
+        );
+
+        if ($candidatePage > $candidateTotalPage) {
+            $candidatePage = $candidateTotalPage;
+        }
+
+        $candidateFromRecord =
+            ($candidatePage - 1) * $candidateRows;
+
+        $candidateResult = sql_query(
+            "select
+                lfc_id,
+                rank_no,
+                num1,
+                num2,
+                num3,
+                num4,
+                num5,
+                num6,
+                score,
+                sum_value,
+                ac_value,
+                odd_count,
+                low_count,
+                carry_count,
+                neighbor_count,
+                prime_count,
+                multiple3_count,
+                max_consecutive,
+                empty_zone_count,
+                created_at
+             from l_filter_candidate
+             where draw_no = '{$currentTurn}'
+             order by rank_no asc
+             limit {$candidateFromRecord}, {$candidateRows}",
+            false
+        );
     }
 }
-
-if ($schMbType !== '') {
-    $sqlSearch .= "
-        and a.member_type = '{$schMbTypeSql}'
-    ";
-}
-
-if ($luckyResult >= 1 && $luckyResult <= 5) {
-    $sqlSearch .= "
-        and a.result_rank = '{$luckyResult}'
-    ";
-}
-
-$row = sql_fetch(
-    "select count(*) as cnt
-       {$sqlCommon}
-       {$sqlSearch}",
-    false
-);
-
-$totalCount = isset($row['cnt'])
-    ? (int) $row['cnt']
-    : 0;
-
-$rows = 50;
-$totalPage = $totalCount > 0
-    ? (int) ceil($totalCount / $rows)
-    : 0;
-
-$fromRecord = ($page - 1) * $rows;
-
-$sql = "
-    select
-        a.*,
-        b.mb_code,
-        b.mb_name,
-        b.mb_hp
-    {$sqlCommon}
-    {$sqlSearch}
-    order by a.result_rank asc, a.lmc_id desc
-    limit {$fromRecord}, {$rows}
-";
-
-$result = sql_query($sql, false);
-
-$qstr = http_build_query(array(
-    'turn' => $turn,
-    'sch_select' => $schSelect,
-    'sch_text' => $schText,
-    'sch_mb_type' => $schMbType,
-    'lucky_result' => $luckyResult,
-));
 
 $canManageSetting = lottoCanManageAdminSettings($loginLevel);
 ?>
@@ -298,7 +223,7 @@ $canManageSetting = lottoCanManageAdminSettings($loginLevel);
                 </div>
 
                 <div class="col-md-6">
-                    기본값은 100 ~ 180이며,
+                    기본값은 100 ~ 190이며,
                     저장된 값은 다음 필터 실행부터 적용합니다.
                 </div>
             </div>
@@ -306,196 +231,300 @@ $canManageSetting = lottoCanManageAdminSettings($loginLevel);
     </form>
 </div>
 
-<div class="row">
-    <div class="col-md-2 col-6">
-        <div class="small-box bg-info">
-            <div class="inner">
-                <h3><?=number_format($currentCandidateCount)?></h3>
-                <p><?=$currentTurn?>회 미추첨 총조합</p>
-            </div>
-        </div>
+<?php
+$runStatus = isset($currentRun['status'])
+    ? trim((string) $currentRun['status'])
+    : '';
+
+$runStatusLabels = array(
+    'running' => '실행중',
+    'filtered' => '필터완료',
+    'failed' => '실패',
+);
+
+if ($runStatus === '') {
+    $runStatusText = '미실행';
+} elseif (isset($runStatusLabels[$runStatus])) {
+    $runStatusText = $runStatusLabels[$runStatus];
+} else {
+    $runStatusText = $runStatus;
+}
+
+$sourceDrawNo = isset($currentRun['source_draw_no'])
+    ? (int) $currentRun['source_draw_no']
+    : 0;
+
+if ($sourceDrawNo < 1) {
+    $sourceDrawNo = $previousTurn;
+}
+
+$excludedNumbers = isset($currentRun['excluded_numbers'])
+    ? trim((string) $currentRun['excluded_numbers'])
+    : '';
+
+$startedAt = isset($currentRun['started_at'])
+    ? trim((string) $currentRun['started_at'])
+    : '';
+
+$filteredAt = isset($currentRun['filtered_at'])
+    ? trim((string) $currentRun['filtered_at'])
+    : '';
+
+$rankedAt = isset($currentRun['ranked_at'])
+    ? trim((string) $currentRun['ranked_at'])
+    : '';
+
+$lastError = isset($currentRun['last_error'])
+    ? trim((string) $currentRun['last_error'])
+    : '';
+?>
+
+<div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">필터 실행 상태</h3>
     </div>
 
-    <div class="col-md-2 col-6">
-        <div class="small-box bg-secondary">
-            <div class="inner">
-                <h3><?=number_format($previousCandidateCount)?></h3>
-                <p><?=$previousTurn?>회 총조합</p>
-            </div>
-        </div>
-    </div>
-
-    <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
-    <div class="col-md-1 col-6">
-        <div class="small-box bg-light">
-            <div class="inner">
-                <h3><?=number_format($rankCounts[$rank])?></h3>
-                <p><?=$rank?>등</p>
-            </div>
-        </div>
-    </div>
-    <?php } ?>
-</div>
-
-<div class="card card-default">
     <div class="card-body">
-        <form method="get" autocomplete="off">
-            <div class="row">
-                <div class="col-md-1">
-                    <input
-                        type="number"
-                        class="form-control"
-                        name="turn"
-                        value="<?=$turn?>"
-                        min="1"
-                        placeholder="회차"
-                    >
-                </div>
-
-                <div class="col-md-2">
-                    <select class="form-control" name="sch_select">
-                        <option value="">전체검색</option>
-                        <option value="b.mb_code" <?=$schSelect === 'b.mb_code' ? 'selected' : ''?>>회원코드</option>
-                        <option value="b.mb_name" <?=$schSelect === 'b.mb_name' ? 'selected' : ''?>>회원명</option>
-                        <option value="b.mb_hp" <?=$schSelect === 'b.mb_hp' ? 'selected' : ''?>>연락처</option>
-                        <option value="b.mb_id" <?=$schSelect === 'b.mb_id' ? 'selected' : ''?>>아이디</option>
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <input
-                        type="text"
-                        class="form-control"
-                        name="sch_text"
-                        value="<?=htmlspecialchars($schText, ENT_QUOTES)?>"
-                        placeholder="검색어"
-                    >
-                </div>
-
-                <div class="col-md-2">
-                    <select class="form-control" name="sch_mb_type">
-                        <option value="">등급전체</option>
-                        <?php
-                        $memberTypes = fnGetType();
-
-                        foreach ($memberTypes as $memberType) {
-                        ?>
-                        <option
-                            value="<?=$memberType?>"
-                            <?=$schMbType === $memberType ? 'selected' : ''?>
-                        >
-                            <?=$memberType?>
-                        </option>
-                        <?php } ?>
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <select class="form-control" name="lucky_result">
-                        <option value="0">당첨전체</option>
-                        <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
-                        <option
-                            value="<?=$rank?>"
-                            <?=$luckyResult === $rank ? 'selected' : ''?>
-                        >
-                            <?=$rank?>등
-                        </option>
-                        <?php } ?>
-                    </select>
-                </div>
-
-                <div class="col-md-1">
-                    <button class="btn btn-danger btn-block">
-                        검색
-                    </button>
+        <div class="row">
+            <div class="col-md-2 col-6 mb-3">
+                <strong>대상 회차</strong>
+                <div>
+                    <?=number_format($currentTurn)?>회
                 </div>
             </div>
-        </form>
+
+            <div class="col-md-2 col-6 mb-3">
+                <strong>기준 회차</strong>
+                <div>
+                    <?=$sourceDrawNo > 0
+                        ? number_format($sourceDrawNo) . '회'
+                        : '-'?>
+                </div>
+            </div>
+
+            <div class="col-md-2 col-6 mb-3">
+                <strong>실행 상태</strong>
+                <div>
+                    <?=htmlspecialchars(
+                        $runStatusText,
+                        ENT_QUOTES
+                    )?>
+                </div>
+            </div>
+
+            <div class="col-md-2 col-6 mb-3">
+                <strong>최종 후보</strong>
+                <div>
+                    <?=number_format(
+                        $currentCandidateCount
+                    )?>건
+                </div>
+            </div>
+
+            <div class="col-md-4 col-12 mb-3">
+                <strong>추천 제외수</strong>
+                <div>
+                    <?=$excludedNumbers !== ''
+                        ? htmlspecialchars(
+                            $excludedNumbers,
+                            ENT_QUOTES
+                        )
+                        : '-'?>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <strong>시작 시각</strong>
+                <div>
+                    <?=$startedAt !== ''
+                        ? htmlspecialchars(
+                            $startedAt,
+                            ENT_QUOTES
+                        )
+                        : '-'?>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <strong>필터 완료</strong>
+                <div>
+                    <?=$filteredAt !== ''
+                        ? htmlspecialchars(
+                            $filteredAt,
+                            ENT_QUOTES
+                        )
+                        : '-'?>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6 mb-3">
+                <strong>랭킹 완료</strong>
+                <div>
+                    <?=$rankedAt !== ''
+                        ? htmlspecialchars(
+                            $rankedAt,
+                            ENT_QUOTES
+                        )
+                        : '-'?>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-12 mb-3">
+                <strong>최근 오류</strong>
+                <div>
+                    <?=$lastError !== ''
+                        ? htmlspecialchars(
+                            $lastError,
+                            ENT_QUOTES
+                        )
+                        : '-'?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <?=$currentTurn?>회 최종 필터 후보
+        </h3>
+
+        <div class="card-tools">
+            총 <?=number_format($candidateTotalCount)?>건
+        </div>
+    </div>
+
     <div class="card-body table-responsive p-0">
         <table class="table table-hover text-nowrap">
             <thead>
             <tr>
-                <th>NO</th>
-                <th>회차</th>
-                <th>회원코드</th>
-                <th>이름/연락처</th>
-                <th>등급</th>
+                <th>순위</th>
                 <th>번호</th>
-                <th>당첨결과</th>
-                <th>배분일시</th>
+                <th>Trend 점수</th>
+                <th>총합</th>
+                <th>AC</th>
+                <th>홀짝</th>
+                <th>저고</th>
+                <th>이월수</th>
+                <th>이웃수</th>
+                <th>소수</th>
+                <th>3배수</th>
+                <th>최대연번</th>
+                <th>멸구간</th>
             </tr>
             </thead>
 
             <tbody>
             <?php
-            for (
-                $i = 0;
-                $result && ($row = sql_fetch_array($result));
-                $i++
-            ) {
-                $detailUrl = './filter.result.detail.php?mb_id='
-                    . urlencode(base64_encode($row['mb_id']))
-                    . '&turn='
-                    . (int) $row['draw_no'];
+            $candidateDisplayed = 0;
 
-                $ballText = implode(',', array(
-                    $row['num1'],
-                    $row['num2'],
-                    $row['num3'],
-                    $row['num4'],
-                    $row['num5'],
-                    $row['num6'],
+            while (
+                $candidateResult
+                && ($candidateRow = sql_fetch_array($candidateResult))
+            ) {
+                $candidateDisplayed++;
+
+                $candidateBallText = implode(',', array(
+                    $candidateRow['num1'],
+                    $candidateRow['num2'],
+                    $candidateRow['num3'],
+                    $candidateRow['num4'],
+                    $candidateRow['num5'],
+                    $candidateRow['num6'],
                 ));
+
+                $oddCount = (int) $candidateRow['odd_count'];
+                $evenCount = 6 - $oddCount;
+
+                $lowCount = (int) $candidateRow['low_count'];
+                $highCount = 6 - $lowCount;
             ?>
             <tr>
                 <td>
-                    <?=$totalCount - (($page - 1) * $rows) - $i?>
+                    <?=number_format(
+                        (int) $candidateRow['rank_no']
+                    )?>
                 </td>
 
                 <td>
-                    <?=$row['draw_no']?>
+                    <?php
+                    $ballNumbers = explode(',', $candidateBallText);
+
+                    foreach ($ballNumbers as $ballNumber) {
+                        $ballNumber = (int) $ballNumber;
+
+                        if ($ballNumber <= 10) {
+                            $ballClass = 'lotto_ball_style01';
+                        } elseif ($ballNumber <= 20) {
+                            $ballClass = 'lotto_ball_style02';
+                        } elseif ($ballNumber <= 30) {
+                            $ballClass = 'lotto_ball_style03';
+                        } elseif ($ballNumber <= 40) {
+                            $ballClass = 'lotto_ball_style04';
+                        } else {
+                            $ballClass = 'lotto_ball_style05';
+                        }
+                    ?>
+                    <span class="lotto_ball <?=$ballClass?>">
+                        <?=$ballNumber?>
+                    </span>
+                    <?php } ?>
                 </td>
 
                 <td>
-                    <a href="<?=$detailUrl?>">
-                        <?=$row['mb_code']?>
-                    </a>
+                    <?=number_format(
+                        (float) $candidateRow['score'],
+                        6
+                    )?>
                 </td>
 
                 <td>
-                    <a href="<?=$detailUrl?>">
-                        <?=$row['mb_name']?>
-                        <br>
-                        <?=$row['mb_hp']?>
-                    </a>
+                    <?=(int) $candidateRow['sum_value']?>
                 </td>
 
                 <td>
-                    <?=$row['member_type']?>
+                    <?=(int) $candidateRow['ac_value']?>
                 </td>
 
                 <td>
-                    <?=getBall($ballText)?>
+                    <?=$oddCount?>:<?=$evenCount?>
                 </td>
 
                 <td>
-                    <?=$row['result_rank']?>등
+                    <?=$lowCount?>:<?=$highCount?>
                 </td>
 
                 <td>
-                    <?=$row['created_at']?>
+                    <?=(int) $candidateRow['carry_count']?>
+                </td>
+
+                <td>
+                    <?=(int) $candidateRow['neighbor_count']?>
+                </td>
+
+                <td>
+                    <?=(int) $candidateRow['prime_count']?>
+                </td>
+
+                <td>
+                    <?=(int) $candidateRow['multiple3_count']?>
+                </td>
+
+                <td>
+                    <?=(int) $candidateRow['max_consecutive']?>
+                </td>
+
+                <td>
+                    <?=(int) $candidateRow['empty_zone_count']?>
                 </td>
             </tr>
             <?php } ?>
 
-            <?php if ($totalCount < 1) { ?>
+            <?php if ($candidateDisplayed < 1) { ?>
             <tr>
-                <td colspan="8">
-                    당첨 내역이 없습니다.
+                <td colspan="13">
+                    현재 회차의 필터 후보가 없습니다.
                 </td>
             </tr>
             <?php } ?>
@@ -503,15 +532,38 @@ $canManageSetting = lottoCanManageAdminSettings($loginLevel);
         </table>
 
         <?php
-        echo get_paging(
-            G5_IS_MOBILE
-                ? $config['cf_mobile_pages']
-                : $config['cf_write_pages'],
-            $page,
-            $totalPage,
-            '?'.$qstr.'&amp;page='
-        );
+        if ($candidateTotalPage > 1) {
+            $candidateQstr = '';
+
+            $candidatePaging = get_paging(
+                G5_IS_MOBILE
+                    ? $config['cf_mobile_pages']
+                    : $config['cf_write_pages'],
+                $candidatePage,
+                $candidateTotalPage,
+                '?' . $candidateQstr
+            );
+
+            $candidatePaging = str_replace(
+                '&amp;page=',
+                '&amp;candidate_page=',
+                $candidatePaging
+            );
+
+            echo $candidatePaging;
+        }
         ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2 col-6">
+        <div class="small-box bg-secondary">
+            <div class="inner">
+                <h3><?=number_format($previousCandidateCount)?></h3>
+                <p><?=$previousTurn?>회 총조합</p>
+            </div>
+        </div>
     </div>
 </div>
 

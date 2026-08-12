@@ -30,3 +30,13 @@
 - `l_turn_{회차}`
 
 현재는 기존 코드에서 구조를 분석하고 있으며, 확인되지 않은 컬럼은 임의로 추가하지 않습니다.
+
+## Lotto Platform 마이그레이션
+
+- `008_lotto_filter_setting.sql`
+  - 로또 필터 설정 테이블과 필터결과 관리자 메뉴
+- `009_lotto_filter_final_defaults.sql`
+  - 최종 로또 필터 기본값
+- `010_lotto_result_admin_menu.sql`
+  - 필터결과 메뉴를 관리자 이상으로 제한
+  - 당첨결과 관리자 메뉴 추가 및 직원/팀장/관리자 접근 설정
