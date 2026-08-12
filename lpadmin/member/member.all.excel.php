@@ -1,7 +1,7 @@
 <?php
 include_once("./_common.php");
-if($_SESSION['ss_step2'] != $config['cf_10'] || !$is_admin){
-	die();
+if ((int) $member['mb_level'] < LOTTO_ROLE_ADMIN) {
+	alert('엑셀 다운로드 권한이 없습니다.', './member.all.php');
 }
 header( "Content-type: application/vnd.ms-excel" );
 header( "Content-type: application/vnd.ms-excel; charset=utf-8");

@@ -16,6 +16,7 @@
 	$sch_mb_type = isset($_GET['sch_mb_type']) ? trim((string) $_GET['sch_mb_type']) : '';
 	$sch_mb_db = isset($_GET['sch_mb_db']) ? trim((string) $_GET['sch_mb_db']) : '';
 	$sch_mb_status = isset($_GET['sch_mb_status']) ? trim((string) $_GET['sch_mb_status']) : '';
+	$sch_staff_mb_id = isset($_GET['sch_staff_mb_id']) ? trim((string) $_GET['sch_staff_mb_id']) : '';
 	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
 	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
 	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -25,13 +26,78 @@
 	$sch_mb_type_sql = sql_real_escape_string($sch_mb_type);
 	$sch_mb_db_sql = sql_real_escape_string($sch_mb_db);
 	$sch_mb_status_sql = sql_real_escape_string($sch_mb_status);
+	$sch_staff_mb_id_sql = sql_real_escape_string($sch_staff_mb_id);
 	$start_date_sql = sql_real_escape_string($start_date);
 	$end_date_sql = sql_real_escape_string($end_date);
 	
 	$spamList = fnGetSpan();
-	$sql_common = " from g5_member a, g5_member_etc b ";
-	$sql_search = " where 1=1 and a.mb_id = b.mb_id and a.mb_id != 'admin' and mb_level < 5 ";
-	$sql_order = " order by mb_datetime desc ";
+
+	$login_mb_id = isset($member['mb_id'])
+		? trim((string) $member['mb_id'])
+		: '';
+
+	$login_level = isset($member['mb_level'])
+		? (int) $member['mb_level']
+		: 0;
+
+	$can_view_all = lottoCanViewAllMembers($login_level);
+
+	$sql_common = "
+		from g5_member a
+		inner join g5_member_etc b
+			on b.mb_id = a.mb_id
+		left join l_member_assignment c
+			on c.mb_id = a.mb_id
+		left join g5_member d
+			on d.mb_id = c.staff_mb_id
+	";
+
+	$sql_search = "
+		where 1=1
+		  and a.mb_id != 'admin'
+		  and a.mb_level < 5
+	";
+
+	if (!$can_view_all) {
+		$staff_ids = array($login_mb_id);
+
+		if (
+			$login_level === LOTTO_ROLE_STAFF2
+			|| $login_level === LOTTO_ROLE_TEAM_LEADER
+		) {
+			$child_staff_ids =
+				lottoGetDirectChildStaffIds($login_mb_id);
+
+			foreach ($child_staff_ids as $child_staff_id) {
+				$staff_ids[] = $child_staff_id;
+			}
+		}
+
+		$staff_ids = array_values(
+			array_unique(
+				array_filter($staff_ids)
+			)
+		);
+
+		$staff_ids_sql = array();
+
+		foreach ($staff_ids as $staff_id) {
+			$staff_ids_sql[] =
+				"'" . sql_real_escape_string($staff_id) . "'";
+		}
+
+		if (count($staff_ids_sql) > 0) {
+			$sql_search .= "
+				and c.staff_mb_id in (
+					" . implode(',', $staff_ids_sql) . "
+				)
+			";
+		} else {
+			$sql_search .= " and 1 = 0 ";
+		}
+	}
+
+	$sql_order = " order by a.mb_datetime desc ";
 
 	if($sch_select){
 		if($sch_select == "a.mb_code"){
@@ -44,15 +110,15 @@
 	}
 
 	if($sch_mb_type){
-		if($sch_mb_type != "종료등급"){
-			if($sch_mb_type == "일시정지"){
-				$sql_search .= " and b.left_day > 0 ";
-			}else{
-				$sql_search .= " and a.mb_type = '{$sch_mb_type_sql}' and b.left_day < 1 ";
-			}
-		}else if($sch_mb_type == "종료등급"){
-			$sql_search .= " and a.free_pre_type != '' ";
+		if($sch_mb_type == "일시정지"){
+			$sql_search .= " and b.left_day > 0 ";
+		}else{
+			$sql_search .= " and a.mb_type = '{$sch_mb_type_sql}' and b.left_day < 1 ";
 		}
+	}
+
+	if($sch_staff_mb_id){
+		$sql_search .= " and c.staff_mb_id = '{$sch_staff_mb_id_sql}' ";
 	}
 
 	if($sch_mb_db){
@@ -85,8 +151,36 @@
 
 	$limit = " limit {$from_record}, {$rows} ";
 
-	$sql = "select * {$sql_common} {$sql_search} {$sql_order} {$limit}";
+	$sql = "select
+			a.*,
+			b.*,
+			c.staff_mb_id,
+			d.mb_name as staff_name
+		{$sql_common}
+		{$sql_search}
+		{$sql_order}
+		{$limit}";
 	$result = sql_query($sql);
+
+	$assignment_staff_rows = array();
+
+	if ($can_view_all) {
+		$assignment_staff_result = sql_query(
+			"select mb_id, mb_name, mb_level
+			   from g5_member
+			  where mb_level in (
+				".LOTTO_ROLE_STAFF1.",
+				".LOTTO_ROLE_STAFF2.",
+				".LOTTO_ROLE_TEAM_LEADER."
+			  )
+			  order by mb_level desc, mb_name asc, mb_id asc",
+			false
+		);
+
+		while ($assignment_staff_row = sql_fetch_array($assignment_staff_result)) {
+			$assignment_staff_rows[] = $assignment_staff_row;
+		}
+	}
 
 ?>
 
@@ -119,7 +213,58 @@
 						<?php
 						}
 						?>
-						<option value="종료등급" <?php if($sch_mb_type == "종료등급"){echo "selected";}?>>종료등급</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_staff_mb_id" aria-hidden="true">
+						<option value="">담당자전체</option>
+						<?php
+						$staff_filter_ids = array();
+
+						if ($can_view_all) {
+							$staff_filter_result = sql_query(
+								"select mb_id, mb_name, mb_level
+								   from g5_member
+								  where mb_level in (
+									".LOTTO_ROLE_STAFF1.",
+									".LOTTO_ROLE_STAFF2.",
+									".LOTTO_ROLE_TEAM_LEADER."
+								  )
+								  order by mb_level desc, mb_name asc, mb_id asc",
+								false
+							);
+
+							while ($staff_filter_row = sql_fetch_array($staff_filter_result)) {
+								$staff_filter_ids[] = (string) $staff_filter_row['mb_id'];
+						?>
+						<option value="<?=htmlspecialchars((string) $staff_filter_row['mb_id'], ENT_QUOTES)?>" <?php if($sch_staff_mb_id === (string) $staff_filter_row['mb_id']){echo "selected";}?>>
+							<?=htmlspecialchars((string) $staff_filter_row['mb_name'], ENT_QUOTES)?>
+						</option>
+						<?php
+							}
+						} else {
+							foreach ($staff_ids as $staff_filter_id) {
+								$staff_filter_id_sql = sql_real_escape_string($staff_filter_id);
+								$staff_filter_row = sql_fetch(
+									"select mb_id, mb_name, mb_level
+									   from g5_member
+									  where mb_id = '{$staff_filter_id_sql}'
+									    and mb_level >= ".LOTTO_ROLE_STAFF1."
+									  limit 1",
+									false
+								);
+
+								if (empty($staff_filter_row['mb_id'])) {
+									continue;
+								}
+						?>
+						<option value="<?=htmlspecialchars((string) $staff_filter_row['mb_id'], ENT_QUOTES)?>" <?php if($sch_staff_mb_id === (string) $staff_filter_row['mb_id']){echo "selected";}?>>
+							<?=htmlspecialchars((string) $staff_filter_row['mb_name'], ENT_QUOTES)?>
+						</option>
+						<?php
+							}
+						}
+						?>
 					</select>
 				</div>
 				<div class="col-md-1">
@@ -147,7 +292,7 @@
 						<?php 	}?>
 					</select>
 				</div>
-				<div class="col-md-5">
+				<div class="col-md-3">
 					<div class="row">
 						<div class="col-md-4">
 							<div class="input-group">
@@ -173,7 +318,10 @@
 							<button class="btn btn-block btn-danger">검색</button>
 						</div>
 						<div class="col-md-2">
-							<button class="btn btn-block btn-success" type="button" onClick="fnExcel()">엑셀다운</button>
+							<button class="btn btn-block btn-primary" type="button" onClick="fnAddMember()">회원등록</button>
+<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
+<button class="btn btn-block btn-success" type="button" onClick="fnExcel()">엑셀다운</button>
+<?php } ?>
 						</div>
 					</div>
 				</div>
@@ -213,7 +361,7 @@
 					<th>회원명/연락처</th>
 					<th>아이디</th>
 					<th>등급</th>
-					<th>종료등급</th>
+					<th>담당자</th>
 					<th>남은기간</th>
 					<th>요일/조합</th>
 					<th>가입일/최근접속일</th>
@@ -249,7 +397,39 @@
 							}
 						?>
 					</td>
-					<td><?=$row['free_pre_type']?></td>
+					<td>
+						<?php
+						$current_staff_mb_id = isset($row['staff_mb_id'])
+							? trim((string) $row['staff_mb_id'])
+							: '';
+
+						$staff_name = isset($row['staff_name'])
+							? trim((string) $row['staff_name'])
+							: '';
+						?>
+
+						<?php if ($can_view_all) { ?>
+						<select
+							class="form-control form-control-sm member-staff-select"
+							data-mb-id="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>"
+							data-original-value="<?=htmlspecialchars($current_staff_mb_id, ENT_QUOTES)?>"
+						>
+							<option value="">미배정</option>
+							<?php foreach ($assignment_staff_rows as $assignment_staff_row) { ?>
+							<option
+								value="<?=htmlspecialchars((string) $assignment_staff_row['mb_id'], ENT_QUOTES)?>"
+								<?php if ($current_staff_mb_id === (string) $assignment_staff_row['mb_id']) { echo 'selected'; } ?>
+							>
+								<?=htmlspecialchars((string) $assignment_staff_row['mb_name'], ENT_QUOTES)?>
+							</option>
+							<?php } ?>
+						</select>
+						<?php } else { ?>
+						<?=($staff_name !== ''
+							? htmlspecialchars($staff_name, ENT_QUOTES)
+							: '-')?>
+						<?php } ?>
+					</td>
 					<td>
 						<?php
 							if($row['left_day'] < 1){
@@ -314,7 +494,14 @@
 				</table>
 				</form>
 				<?php
-					$qstr .= "&sch_select={$sch_select}&sch_text={$sch_text}&sch_mb_type={$sch_mb_type}&start_date={$start_date}&end_date={$end_date}&sch_mb_status={$sch_mb_status}&sch_mb_db={$sch_mb_db}";
+					$qstr .= "&sch_select=".urlencode($sch_select)
+				."&sch_text=".urlencode($sch_text)
+				."&sch_mb_type=".urlencode($sch_mb_type)
+				."&sch_staff_mb_id=".urlencode($sch_staff_mb_id)
+				."&start_date=".urlencode($start_date)
+				."&end_date=".urlencode($end_date)
+				."&sch_mb_status=".urlencode($sch_mb_status)
+				."&sch_mb_db=".urlencode($sch_mb_db);
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
 				?>
 			</div>
@@ -326,6 +513,49 @@
 </div>
 
 <script>
+$(document).on('change', '.member-staff-select', function(){
+	var $select = $(this);
+	var mbId = $select.data('mb-id');
+	var staffMbId = $select.val();
+	var originalValue = $select.attr('data-original-value');
+
+	$select.prop('disabled', true);
+
+	$.ajax({
+		type: 'POST',
+		url: './ajax.member.assignment.update.php',
+		data: {
+			mb_id: mbId,
+			staff_mb_id: staffMbId
+		},
+		dataType: 'json',
+		success: function(response) {
+			if (!response || response.success !== true) {
+				alert(
+					response && response.message
+						? response.message
+						: '담당자 변경에 실패했습니다.'
+				);
+
+				$select.val(originalValue);
+				return;
+			}
+
+			$select.attr(
+				'data-original-value',
+				response.staff_mb_id || ''
+			);
+		},
+		error: function() {
+			alert('담당자 변경 중 오류가 발생했습니다.');
+			$select.val(originalValue);
+		},
+		complete: function() {
+			$select.prop('disabled', false);
+		}
+	});
+});
+
 function fnMemberChkDel(){
 	if(confirm("선택하신 회원을 삭제하시겠습니까?")==true){
 		var string = $("form[name=frm_member]").serialize();
@@ -360,6 +590,14 @@ $(document).ready(function(){
         }
     })
 })
+
+function fnAddMember(){
+	var url = "./pop.new_member.php";
+	var name = "new_member";
+	var option = "width=500,height=650,top=100,left=200,location=no";
+
+	window.open(url, name, option);
+}
 
 function fnExcel(){
 	location.href="./member.all.excel.php?1=1<?=$qstr?>";
