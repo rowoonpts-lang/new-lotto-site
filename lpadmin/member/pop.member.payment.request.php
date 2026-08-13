@@ -4,7 +4,7 @@ include_once("_common.php");
 $mb_id = isset($_POST['mb_id']) ? trim((string) $_POST['mb_id']) : '';
 $product_type = isset($_POST['product_type']) ? trim((string) $_POST['product_type']) : '';
 $request_amount_raw = isset($_POST['request_amount']) ? preg_replace('/[^0-9]/', '', (string) $_POST['request_amount']) : '';
-$bank_account = isset($_POST['bank_account']) ? trim((string) $_POST['bank_account']) : '';
+$bank_account_id = isset($_POST['bank_account_id']) ? (int) $_POST['bank_account_id'] : 0;
 $depositor_name = isset($_POST['depositor_name']) ? trim((string) $_POST['depositor_name']) : '';
 $sms_send = isset($_POST['sms_send']) && (string) $_POST['sms_send'] === '1' ? 1 : 0;
 
@@ -38,19 +38,30 @@ if (!is_array($product_list) || !in_array($product_type, $product_list, true)) {
     exit;
 }
 
-$bank_accounts = array();
-$configured_accounts = isset($config['cf_mu_num']) ? preg_split('/\r\n|\r|\n/', (string) $config['cf_mu_num']) : array();
-foreach ($configured_accounts as $configured_account) {
-    $configured_account = trim((string) $configured_account);
-    if ($configured_account !== '') {
-        $bank_accounts[] = $configured_account;
-    }
-}
-
-if ($bank_account === '' || !in_array($bank_account, $bank_accounts, true)) {
-    alert('입금계좌가 올바르지 않습니다.');
+if ($bank_account_id < 1) {
+    alert('입금계좌를 선택하세요.');
     exit;
 }
+
+$bank_account = sql_fetch(
+    "select lpba_id, bank_name, account_number, account_holder
+       from l_payment_bank_account
+      where lpba_id = {$bank_account_id}
+        and is_active = 1
+      limit 1",
+    false
+);
+
+if (empty($bank_account['lpba_id'])) {
+    alert('사용할 수 없는 입금계좌입니다.');
+    exit;
+}
+
+$bank_account_text = trim(
+    (string) $bank_account['bank_name'].' '.
+    (string) $bank_account['account_number'].' '.
+    (string) $bank_account['account_holder']
+);
 
 $mb_id_sql = sql_real_escape_string($mb_id);
 $target_member = sql_fetch(
@@ -99,7 +110,7 @@ $staff_mb_id_sql = sql_real_escape_string($assigned_staff_mb_id);
 $requested_by_sql = sql_real_escape_string($login_mb_id);
 $product_type_sql = sql_real_escape_string($product_type);
 $member_phone_sql = sql_real_escape_string((string) $target_member['mb_hp']);
-$bank_account_sql = sql_real_escape_string($bank_account);
+$bank_account_sql = sql_real_escape_string($bank_account_text);
 $depositor_name_sql = sql_real_escape_string($depositor_name);
 
 $sql = "insert into l_payment_request set
@@ -122,7 +133,7 @@ sql_query($sql);
 fnSetLog($login_mb_id, $mb_id.'님의 무통장 결제 승인요청을 등록하였습니다.');
 
 if ($sms_send === 1) {
-    $message = (string) $target_member['mb_name'].'고객님 입금 안내 '.$bank_account.' / '.number_format($request_amount).'원';
+    $message = (string) $target_member['mb_name'].'고객님 입금 안내 '.$bank_account_text.' / '.number_format($request_amount).'원';
     fnSendOneshot($config['cf_oneshot_tel'], (string) $target_member['mb_hp'], $message, '');
 }
 
