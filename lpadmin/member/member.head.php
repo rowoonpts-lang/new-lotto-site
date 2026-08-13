@@ -1,6 +1,7 @@
 <?php
 	$basename=basename($_SERVER["PHP_SELF"]); 
 ?>
+<link rel="stylesheet" href="<?=G5_LADMIN_URL?>/css/member.unified.css">
 <div class="row">
 	<div class="col-2">
 		<a href="./pop.member.php?mb_id=<?=$mb_id2?>"><button class="btn btn-block <?php if($basename == "pop.member.php"){?>btn-warning<?php }else{?>btn-secondary<?php }?>">회원정보</button></a>
