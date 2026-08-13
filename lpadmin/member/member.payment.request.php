@@ -4,12 +4,14 @@ if (!isset($row['mb_id']) || !isset($login_level) || $login_level >= LOTTO_ROLE_
 }
 
 $bank_accounts = array();
-$configured_accounts = isset($config['cf_mu_num']) ? preg_split('/\r\n|\r|\n/', (string) $config['cf_mu_num']) : array();
-foreach ($configured_accounts as $configured_account) {
-    $configured_account = trim((string) $configured_account);
-    if ($configured_account !== '') {
-        $bank_accounts[] = $configured_account;
-    }
+$bank_account_result = sql_query(
+    "select lpba_id, bank_name, account_number, account_holder
+       from l_payment_bank_account
+      where is_active = 1
+      order by sort_order asc, lpba_id asc"
+);
+while ($bank_account_row = sql_fetch_array($bank_account_result)) {
+    $bank_accounts[] = $bank_account_row;
 }
 
 $product_list = fnGetTypePre();
@@ -27,11 +29,17 @@ $product_list = fnGetTypePre();
                     <input type="text" class="form-control" id="bank_depositor_name" name="depositor_name" value="<?=htmlspecialchars((string) $row['mb_name'], ENT_QUOTES)?>">
                 </div>
                 <div class="col-md-3 col-sm-6 mb-2">
-                    <label for="bank_account">입금계좌</label>
-                    <select class="form-control" id="bank_account" name="bank_account">
-                        <option value="">선택</option>
-                        <?php foreach ($bank_accounts as $bank_account) { ?>
-                        <option value="<?=htmlspecialchars($bank_account, ENT_QUOTES)?>"><?=htmlspecialchars($bank_account, ENT_QUOTES)?></option>
+                    <label for="bank_account_id">입금계좌</label>
+                    <select class="form-control" id="bank_account_id" name="bank_account_id" <?=count($bank_accounts) < 1 ? 'disabled' : ''?>>
+                        <option value=""><?=count($bank_accounts) < 1 ? '등록된 입금계좌 없음' : '선택'?></option>
+                        <?php foreach ($bank_accounts as $bank_account) {
+                            $bank_account_text = trim(
+                                (string) $bank_account['bank_name'].' '.
+                                (string) $bank_account['account_number'].' '.
+                                (string) $bank_account['account_holder']
+                            );
+                        ?>
+                        <option value="<?=htmlspecialchars((string) $bank_account['lpba_id'], ENT_QUOTES)?>"><?=htmlspecialchars($bank_account_text, ENT_QUOTES)?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -56,9 +64,12 @@ $product_list = fnGetTypePre();
                     </div>
                 </div>
             </div>
+            <?php if (count($bank_accounts) < 1) { ?>
+            <div class="text-danger">사용 가능한 입금계좌가 등록되어 있지 않습니다. 관리자에게 계좌 등록을 요청하세요.</div>
+            <?php } ?>
         </div>
         <div class="card-footer text-right">
-            <button type="submit" class="btn btn-success">무통장 승인요청</button>
+            <button type="submit" class="btn btn-success" <?=count($bank_accounts) < 1 ? 'disabled' : ''?>>무통장 승인요청</button>
         </div>
     </form>
 </div>
@@ -88,9 +99,9 @@ function validateBankPaymentRequest(){
         $('#bank_depositor_name').focus();
         return false;
     }
-    if ($('#bank_account').val() === '') {
+    if ($('#bank_account_id').val() === '') {
         alert('입금계좌를 선택하세요.');
-        $('#bank_account').focus();
+        $('#bank_account_id').focus();
         return false;
     }
     if ($('#bank_product_type').val() === '') {
