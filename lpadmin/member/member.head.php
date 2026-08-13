@@ -3,6 +3,9 @@
 ?>
 <div class="row">
 	<div class="col-2">
+		<a href="./pop.member.php?mb_id=<?=$mb_id2?>"><button class="btn btn-block <?php if($basename == "pop.member.php"){?>btn-warning<?php }else{?>btn-secondary<?php }?>">회원정보</button></a>
+	</div>
+	<div class="col-2">
 		<a href="./pop.memo.php?mb_id=<?=$mb_id2?>"><button class="btn btn-block <?php if($basename == "pop.memo.php"){?>btn-warning<?php }else{?>btn-secondary<?php }?>">상세상담</button></a>
 	</div>
 	<div class="col-2">
