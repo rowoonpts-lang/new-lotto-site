@@ -22,3 +22,6 @@
 		<a href="./pop.sms.php?mb_id=<?=$mb_id2?>"><button class="btn btn-block btn-secondary <?php if($basename == "pop.sms.php"){?>btn-warning<?php }else{?>btn-secondary<?php }?>">문자발송</button></a>
 	</div>
 </div>
+<?php if ($basename === 'pop.member.php') { ?>
+	<?php include_once('./member.payment.request.php'); ?>
+<?php } ?>
