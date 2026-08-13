@@ -1,241 +1,243 @@
 <?php
-	include_once("_common.php");
-	include_once(G5_LADMIN_PATH."/head.sub.php");
+include_once("_common.php");
+include_once(G5_LADMIN_PATH."/head.sub.php");
 
-	$loginLevel = isset($member['mb_level'])
-		? (int) $member['mb_level']
-		: 0;
+$loginLevel = isset($member['mb_level'])
+        ? (int) $member['mb_level']
+        : 0;
 
-	if (!lottoCanCreateStaff($loginLevel)) {
-		alert('직원 계정 관리 권한이 없습니다.');
-	}
+if (!lottoCanCreateStaff($loginLevel)) {
+        alert('직원 계정 관리 권한이 없습니다.');
+}
 
-	$encodedMbId = isset($_GET['mb_id'])
-		? trim((string) $_GET['mb_id'])
-		: '';
+$encodedMbId = isset($_GET['mb_id'])
+        ? trim((string) $_GET['mb_id'])
+        : '';
 
-	$mb_id = $encodedMbId !== ''
-		? base64_decode($encodedMbId, true)
-		: '';
+$mb_id = $encodedMbId !== ''
+        ? base64_decode($encodedMbId, true)
+        : '';
 
-	if ($mb_id === false) {
-		alert('잘못된 직원 정보입니다.');
-	}
+if ($mb_id === false) {
+        alert('잘못된 직원 정보입니다.');
+}
 
-	$mb_id = (string) $mb_id;
-	$mbIdSql = sql_real_escape_string($mb_id);
+$mb_id = (string) $mb_id;
+$mbIdSql = sql_real_escape_string($mb_id);
 
-	$row = array();
+$row = array();
 
-	if ($mb_id !== '') {
-		$sql = "select *
-				from g5_member
-				where mb_id = '{$mbIdSql}'
-				limit 1";
+if ($mb_id !== '') {
+        $sql = "select *
+                  from g5_member
+                 where mb_id = '{$mbIdSql}'
+                 limit 1";
 
-		$row = sql_fetch($sql);
+        $row = sql_fetch($sql);
 
-		if (empty($row['mb_id'])) {
-			alert('직원 정보를 찾을 수 없습니다.');
-		}
+        if (empty($row['mb_id'])) {
+                alert('직원 정보를 찾을 수 없습니다.');
+        }
 
-		if (
-			$row['mb_id'] === 'rwadmin'
-			|| (int) $row['mb_level'] === LOTTO_ROLE_SUPER_ADMIN
-		) {
-			alert('최고관리자 계정은 이 화면에서 수정할 수 없습니다.');
-		}
-	}
+        if (
+                $row['mb_id'] === 'rwadmin'
+                || (int) $row['mb_level'] === LOTTO_ROLE_SUPER_ADMIN
+        ) {
+                alert('최고관리자 계정은 이 화면에서 수정할 수 없습니다.');
+        }
+
+        if (!lottoIsStaffLevel((int) $row['mb_level'])) {
+                alert('직원 계정만 수정할 수 있습니다.');
+        }
+}
+
+$isEdit = $mb_id !== '';
+
+$roleOptions = array(
+        LOTTO_ROLE_STAFF1 => '직원1',
+        LOTTO_ROLE_STAFF2 => '직원2',
+        LOTTO_ROLE_TEAM_LEADER => '팀장',
+        LOTTO_ROLE_ADMIN => '관리자',
+);
+
+$currentLevel = isset($row['mb_level'])
+        ? (int) $row['mb_level']
+        : LOTTO_ROLE_STAFF1;
 ?>
-<!-- Main content -->
+
 <section class="content">
-	<div class="container-fluid">
-	<div class="row">
-		<!-- left column -->
-		<div class="col-md-12 col-12">
-			<!-- general form elements -->
-			<div class="card card-primary">
-				<div class="card-header">
-					<h3 class="card-title">대리가입</h3>
-				</div>
-				<!-- /.card-header -->
-				<!-- form start -->
-				<form name="frm" id="frm" role="form" method="post" autocomplete="off" action="emp.save.php" onSubmit="return fnSubmit();">
-				<input type="hidden" id="mb_no" name="mb_no" value="<?=$row['mb_no']?>">
-				<input type="hidden" id="mb_hp_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
-				<input type="hidden" id="mb_id_chk" value="<?php if($mb_id){echo "1";}else{echo "0";}?>">
-					<div class="card-body">
-						<div class="form-group">
-							<label for="mb_hp">휴대폰번호</label>
-							<div class="row">
-								<div class="col-8">
-									<input type="text" class="form-control" id="mb_hp" name="mb_hp" placeholder="" value=<?=$row['mb_hp']?> <?php if($mb_id){?>readonly<?php }?>>
-								</div>
-								<?php if(!$mb_id){?>
-								<div class="col-4">
-									<button type="button" class="btn btn-block btn-primary" onClick="fnFindHP();">중복검사</button>
-								</div>
-								<?php }?>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="mb_name">이름</label>
-							<input type="text" class="form-control" id="mb_name" name="mb_name" placeholder="" required value=<?=$row['mb_name']?>>
-						</div>
-						<div class="form-group">
-							<label for="mb_id">아이디</label>
-							<div class="row">
-								<div class="col-8">
-									<input type="text" class="form-control" id="mb_id" name="mb_id" placeholder="" value="<?=$row['mb_id']?>" <?php if($mb_id){?>readonly<?php }?>>
-								</div>
-								<div class="col-4">
-									<button type="button" class="btn btn-block btn-primary" onClick="fnFindID()">중복검사</button>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="mb_id">패스워드</label>
-							<div class="row">
-								<div class="col-12">
-									<input type="text" class="form-control" id="mb_password" name="mb_password" placeholder="" value="<?=$row['emp_pw']?>" required>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="mb_id">팀선택</label>
-							<div class="row">
-								<div class="col-12">
-									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_team" aria-hidden="true" autocomplete="off">
-										<?php
-											$list = getTeamList();	
-											for($i=0; $i < count($list); $i++){
-										?>
-										<option value="<?=$list[$i]?>" <?php if($row['mb_team'] ==$list[$i]){echo "selected";}?>><?=$list[$i]?></option>
-										<?php }?>
-									</select>
-								</div>
-							</div>
-						</div>
-						<!--div class="form-group">
-							<label for="mb_password">패스워드</label>
-							<input type="text" class="form-control" id="mb_password" name="mb_password" placeholder="" required>
-						</div-->
-						<div class="form-group">
-							<label for="mb_id">권한선택</label>
-							<div class="row">
-								<div class="col-12">
-									<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="mb_level" aria-hidden="true" autocomplete="off">
-										<?php
-											$roleOptions = array(
-												LOTTO_ROLE_STAFF1 => '직원1',
-												LOTTO_ROLE_STAFF2 => '직원2',
-												LOTTO_ROLE_TEAM_LEADER => '팀장',
-												LOTTO_ROLE_ADMIN => '관리자',
-											);
+        <div class="container-fluid">
+                <div class="row">
+                        <div class="col-md-12 col-12">
+                                <div class="card card-primary">
+                                        <div class="card-header">
+                                                <h3 class="card-title">
+                                                        <?=$isEdit ? '직원 수정' : '직원 등록'?>
+                                                </h3>
+                                        </div>
 
-											$currentLevel = isset($row['mb_level'])
-												? (int) $row['mb_level']
-												: LOTTO_ROLE_STAFF1;
+                                        <form
+                                                name="frm"
+                                                id="frm"
+                                                role="form"
+                                                method="post"
+                                                autocomplete="off"
+                                                action="emp.save.php"
+                                                onsubmit="return fnSubmit();"
+                                        >
+                                                <input
+                                                        type="hidden"
+                                                        name="mb_no"
+                                                        value="<?=isset($row['mb_no']) ? (int) $row['mb_no'] : 0?>"
+                                                >
 
-											foreach ($roleOptions as $level => $label) {
-										?>
-										<option value="<?=$level?>" <?php if($currentLevel === $level){echo "selected";}?>><?=$label?></option>
-										<?php }?>
-									</select>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /.card-body -->
+                                                <div class="card-body">
+                                                        <div class="form-group">
+                                                                <label for="mb_id">아이디</label>
+                                                                <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="mb_id"
+                                                                        name="mb_id"
+                                                                        maxlength="20"
+                                                                        value="<?=htmlspecialchars((string) ($row['mb_id'] ?? ''), ENT_QUOTES)?>"
+                                                                        <?=$isEdit ? 'readonly' : ''?>
+                                                                        required
+                                                                >
+                                                        </div>
 
-				<div class="card-footer">
-					<button type="submit" class="btn btn-primary">저장</button>
-				</div>
-			</form>
-		</div>
-	</div>
+                                                        <div class="form-group">
+                                                                <label for="mb_password">패스워드</label>
+                                                                <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="mb_password"
+                                                                        name="mb_password"
+                                                                        value=""
+                                                                        <?=$isEdit ? '' : 'required'?>
+                                                                        placeholder="<?=$isEdit ? '변경할 때만 입력' : ''?>"
+                                                                >
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                                <label for="mb_name">이름</label>
+                                                                <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="mb_name"
+                                                                        name="mb_name"
+                                                                        value="<?=htmlspecialchars((string) ($row['mb_name'] ?? ''), ENT_QUOTES)?>"
+                                                                        required
+                                                                >
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                                <label for="mb_hp">핸드폰번호</label>
+                                                                <input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        id="mb_hp"
+                                                                        name="mb_hp"
+                                                                        maxlength="20"
+                                                                        value="<?=htmlspecialchars((string) ($row['mb_hp'] ?? ''), ENT_QUOTES)?>"
+                                                                        placeholder="01012345678"
+                                                                        required
+                                                                >
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                                <label for="mb_team">팀</label>
+                                                                <select
+                                                                        class="form-control"
+                                                                        id="mb_team"
+                                                                        name="mb_team"
+                                                                >
+                                                                        <option value="">미지정</option>
+                                                                        <?php foreach (getTeamList() as $teamName) { ?>
+                                                                        <option
+                                                                                value="<?=htmlspecialchars($teamName, ENT_QUOTES)?>"
+                                                                                <?=((string) ($row['mb_team'] ?? '') === $teamName) ? 'selected' : ''?>
+                                                                        >
+                                                                                <?=htmlspecialchars($teamName, ENT_QUOTES)?>
+                                                                        </option>
+                                                                        <?php } ?>
+                                                                </select>
+                                                                </div>
+
+                                                        <div class="form-group">
+                                                                <label for="mb_level">직원 권한</label>
+                                                                <select
+                                                                        class="form-control"
+                                                                        id="mb_level"
+                                                                        name="mb_level"
+                                                                >
+                                                                        <?php foreach ($roleOptions as $level => $label) { ?>
+                                                                        <option
+                                                                                value="<?=$level?>"
+                                                                                <?=$currentLevel === $level ? 'selected' : ''?>
+                                                                        >
+                                                                                <?=$label?>
+                                                                        </option>
+                                                                        <?php } ?>
+                                                                </select>
+                                                        </div>
+                                                </div>
+
+                                                <div class="card-footer">
+                                                        <button type="submit" class="btn btn-primary">
+                                                                저장
+                                                        </button>
+                                                        <button
+                                                                type="button"
+                                                                class="btn btn-secondary"
+                                                                onclick="window.close();"
+                                                        >
+                                                                취소
+                                                        </button>
+                                                </div>
+                                        </form>
+                                </div>
+                        </div>
+                </div>
+        </div>
 </section>
-<!-- /.card -->
+
 <script>
-function fnFindHP(){
-	var mb_hp = $("#mb_hp").val().replace(/ /gi,'');
-	mb_hp = mb_hp.replace(/-/gi,'');
-	$("#mb_hp").val(mb_hp);
-	if(mb_hp == ""){alert("휴대폰 번호를 입력해주세요.");return false;}
+function fnSubmit()
+{
+        var mbId = $.trim($("#mb_id").val());
+        var password = $("#mb_password").val();
+        var mbName = $.trim($("#mb_name").val());
+        var mbHp = $("#mb_hp").val().replace(/[^0-9]/g, '');
 
-	$.ajax({
-		type: "POST",
-		url: "<?=G5_URL?>/ajax/ajax.find.mb_hp.php",
-		data: {mb_hp : mb_hp}, 
-		cache: false,
-		async: false,
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		success: function(data) {
-			if(data*1 > 0){
-				alert("현재 사용중인 휴대폰 번호입니다.");
-				$("#mb_hp").val('');
-				$("#mb_id").val('');
-				return false;
-			}else{
-				alert("사용이 가능한 휴대폰 번호입니다.");
-				$("#mb_id").val(mb_hp);
-				$("#mb_hp").attr('readonly', true);
-				$("#mb_hp_chk").val("1");
-				return false;
-			}
-		}
-	});
-	return false;
-}
+        $("#mb_id").val(mbId);
+        $("#mb_name").val(mbName);
+        $("#mb_hp").val(mbHp);
 
-function fnFindID(){
-	var mb_id = $("#mb_id").val().replace(/ /gi,'');
-	$("#mb_id").val(mb_id);
-	if(mb_id == ""){alert("아이디를 입력해주세요.");return false;}
+        if (mbId === '') {
+                alert('아이디를 입력해주세요.');
+                $("#mb_id").focus();
+                return false;
+        }
 
-	$.ajax({
-		type: "POST",
-		url: "<?=G5_URL?>/ajax/ajax.find.mb_id.php",
-		data: {mb_id : mb_id}, 
-		cache: false,
-		async: false,
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		success: function(data) {
-			if(data*1 > 0){
-				alert("현재 사용중인 아이디입니다.");
-				$("#mb_id").val('');
-				return false;
-			}else{
-				alert("사용이 가능한 아이디입니다.");
-				$("#mb_id").attr('readonly', true);
-				$("#mb_id_chk").val("1");
-				return false;
-			}
-		}
-	});
-	return false;
-}
+        if (!<?=$isEdit ? 'true' : 'false'?> && password === '') {
+                alert('패스워드를 입력해주세요.');
+                $("#mb_password").focus();
+                return false;
+        }
 
-function fnSubmit(){
-	if($("#mb_hp_chk").val() == "0"){
-		alert("휴대폰 번호 중복검사를 진행해주세요.");
-		return false;
-	}
-	$("#mb_name").val($("#mb_name").val().replace(/ /gi,''));
-	if($("#mb_name").val() == ""){
-		alert("이름을 입력해주세요");
-		return false;
-	}
-	if($("#mb_id_chk").val() == "0"){
-		alert("아이디 중복검사를 진행해주세요.");
-		return false;
-	}
-	/*$("#mb_password").val($("#mb_password").val().replace(/ /gi,''));
-	if($("#mb_password").val() == ""){
-		alert("패스워드를 입력해주세요");
-		return false;
-	}*/
-	return true;
+        if (mbName === '') {
+                alert('이름을 입력해주세요.');
+                $("#mb_name").focus();
+                return false;
+        }
+
+        if (!/^01[0-9][0-9]{7,8}$/.test(mbHp)) {
+                alert('핸드폰번호를 정확하게 입력해주세요.');
+                $("#mb_hp").focus();
+                return false;
+        }
+
+        return true;
 }
 </script>

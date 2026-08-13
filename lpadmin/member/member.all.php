@@ -29,7 +29,7 @@
 	$sch_staff_mb_id_sql = sql_real_escape_string($sch_staff_mb_id);
 	$start_date_sql = sql_real_escape_string($start_date);
 	$end_date_sql = sql_real_escape_string($end_date);
-	
+
 	$spamList = fnGetSpan();
 
 	$login_mb_id = isset($member['mb_id'])
@@ -135,7 +135,7 @@
 		$sql_search .= " and b.recent_select = '{$sch_mb_status_sql}' ";
 	}
 
-	
+
 
 	$sql = " select count(distinct a.mb_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
 
@@ -317,16 +317,11 @@
 						<div class="col-md-2">
 							<button class="btn btn-block btn-danger">검색</button>
 						</div>
-						<div class="col-md-2">
-							<button class="btn btn-block btn-primary" type="button" onClick="fnAddMember()">회원등록</button>
-<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
-<button class="btn btn-block btn-success" type="button" onClick="fnExcel()">엑셀다운</button>
-<?php } ?>
-						</div>
+
 					</div>
 				</div>
-				
-				
+
+
 			</div>
 		</form>
 		</div>
@@ -334,21 +329,40 @@
 </div>
 
 <div class="row">
-	
+
 	<div class="col-12">
 		<div class="card">
-			<div class="row">
-				<div class="col-10">
-				</div>
-				<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
-				<div class="col-2">
-					<button type="button" class="btn btn-block btn-danger" onClick="fnMemberChkDel()">선택삭제</button>
-				</div>
-				<?php } ?>
-			</div>
-			<div class="card-header">
-				<h3 class="card-title"></h3>
-			</div>
+			<div class="card-header d-flex align-items-center">
+                                <h3 class="card-title mb-0">회원관리</h3>
+
+                                <div class="ml-auto d-flex align-items-center">
+                                        <button
+                                                class="btn btn-sm btn-primary mr-1"
+                                                type="button"
+                                                onClick="fnAddMember()"
+                                        >회원등록</button>
+
+                                        <?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
+                                        <button
+                                                class="btn btn-sm btn-info mr-1"
+                                                type="button"
+                                                onClick="fnExcelUpload()"
+                                        >회원일괄등록</button>
+
+                                        <button
+                                                class="btn btn-sm btn-success mr-1"
+                                                type="button"
+                                                onClick="fnExcel()"
+                                        >다운로드</button>
+
+                                        <button
+                                                class="btn btn-sm btn-danger"
+                                                type="button"
+                                                onClick="fnMemberChkDel()"
+                                        >선택삭제</button>
+                                        <?php } ?>
+                                </div>
+                        </div>
 			<!-- /.card-header -->
 			<div class="card-body table-responsive p-0">
 				<form name="frm_member" id="frm_member">
@@ -439,7 +453,7 @@
 									echo "0";
 								}
 						}else{
-							echo $row['left_day'];							
+							echo $row['left_day'];
 						}
 						?>일
 					</td>
@@ -456,7 +470,7 @@
 									$tot_text.= $totAryKor[$k]." : ".$row[$totAry[$k]];
 								}
 							}
-							
+
 						?>
 						남은조합 : <?=($tot_num-$row['use_num'])?><br>
 						<?=$tot_text?>
@@ -502,14 +516,14 @@
 				."&end_date=".urlencode($end_date)
 				."&sch_mb_status=".urlencode($sch_mb_status)
 				."&sch_mb_db=".urlencode($sch_mb_db);
-					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page='); 
+					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 				?>
 			</div>
 			<!-- /.card-body -->
 		</div>
 		<!-- /.card -->
 	</div>
-	
+
 </div>
 
 <script>
@@ -563,7 +577,7 @@ function fnMemberChkDel(){
 		$.ajax({
 			type: "POST",
 			url: "./member.alldel.php",
-			data: string, 
+			data: string,
 			cache: false,
 			async: false,
 			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
@@ -595,6 +609,14 @@ function fnAddMember(){
 	var url = "./pop.new_member.php";
 	var name = "new_member";
 	var option = "width=500,height=650,top=100,left=200,location=no";
+
+	window.open(url, name, option);
+}
+
+function fnExcelUpload(){
+	var url = "./member.excel.upload.php";
+	var name = "member_excel_upload";
+	var option = "width=650,height=600,top=100,left=200,location=no";
 
 	window.open(url, name, option);
 }

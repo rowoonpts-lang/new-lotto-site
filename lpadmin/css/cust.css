@@ -82,3 +82,48 @@
 
 .ul-horizen {overflow:hidden;padding:0;margin:0;}
 .ul-horizen li {float:left;list-style:none;padding:0;margin:0;margin-right:20px}
+/* 관리자 화면 기본 크기 조정 */
+body.text-sm {
+    font-size: 0.82rem;
+}
+
+.main-header .nav-link,
+.main-sidebar .nav-link {
+    font-size: 0.86rem;
+}
+
+.card-header {
+    padding: 0.55rem 0.8rem;
+}
+
+.card-body {
+    padding: 0.75rem;
+}
+
+.form-control,
+.custom-select {
+    font-size: 0.84rem;
+    height: calc(1.8rem + 2px);
+    padding: 0.25rem 0.5rem;
+}
+
+.btn {
+    font-size: 0.82rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.table th,
+.table td {
+    padding: 0.45rem 0.55rem;
+    font-size: 0.82rem;
+    vertical-align: middle;
+}
+
+.card-title {
+    font-size: 0.95rem;
+}
+
+.input-group-text {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.82rem;
+}

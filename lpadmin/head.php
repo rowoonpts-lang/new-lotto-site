@@ -65,6 +65,11 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
+      <li class="nav-item">
+        <a class="nav-link" href="<?=G5_URL?>" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-home mr-1"></i> 홈페이지
+        </a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link" href="<?=G5_LADMIN_URL?>/logout.php">
           <i class="fas fa-sign-out-alt"></i>
@@ -80,7 +85,7 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
     <a href="<?=G5_LADMIN_URL?>" class="brand-link">
       <img src="<?=G5_LADMIN_URL?>/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
-      <span class="brand-text font-weight-light"><?=$config["cf_title"]?> ADMIN <?=$if_connect?></span>
+      <span class="brand-text font-weight-light"><?=htmlspecialchars((string) ($member['mb_name'] ?? $member['mb_id'] ?? ''), ENT_QUOTES)?> ADMIN <?=$if_connect?></span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
