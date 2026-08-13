@@ -1,0 +1,56 @@
+body:has(#frm_member_memo) {
+    font-size: 0.78rem;
+}
+
+body:has(#frm_member_memo) .card-title {
+    font-size: 0.86rem;
+}
+
+body:has(#frm_member_memo) .card-header {
+    padding: 0.4rem 0.65rem;
+}
+
+body:has(#frm_member_memo) .card-body {
+    padding: 0.6rem;
+}
+
+body:has(#frm_member_memo) .card-footer {
+    padding: 0.5rem 0.65rem;
+}
+
+body:has(#frm_member_memo) label,
+body:has(#frm_member_memo) strong {
+    font-size: 0.78rem;
+}
+
+body:has(#frm_member_memo) .form-group {
+    margin-bottom: 0.65rem;
+}
+
+body:has(#frm_member_memo) .form-control,
+body:has(#frm_member_memo) .custom-select {
+    font-size: 0.78rem;
+    height: calc(1.7rem + 2px);
+    padding: 0.2rem 0.45rem;
+}
+
+body:has(#frm_member_memo) textarea.form-control {
+    height: auto;
+    line-height: 1.35;
+}
+
+body:has(#frm_member_memo) .btn {
+    font-size: 0.76rem;
+    padding: 0.2rem 0.45rem;
+}
+
+body:has(#frm_member_memo) .table th,
+body:has(#frm_member_memo) .table td {
+    font-size: 0.75rem;
+    padding: 0.32rem 0.4rem;
+    vertical-align: middle;
+}
+
+body:has(#frm_member_memo) hr {
+    margin: 0.5rem 0;
+}
