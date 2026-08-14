@@ -1,11 +1,15 @@
 <?php
 include_once("_common.php");
 
+$login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
 $login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
-if ($login_level < LOTTO_ROLE_ADMIN) {
-    alert('관리자 이상만 접근할 수 있습니다.');
+
+if ($login_mb_id === '') {
+    alert('로그인이 필요합니다.');
     exit;
 }
+
+$can_view_all_sales = $login_level >= LOTTO_ROLE_ADMIN;
 
 $sch_method = isset($_GET['sch_method']) ? trim((string) $_GET['sch_method']) : '';
 $sch_product = isset($_GET['sch_product']) ? trim((string) $_GET['sch_product']) : '';
@@ -17,6 +21,10 @@ $start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : 
 $end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
 $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 $rows = 30;
+
+if (!$can_view_all_sales) {
+    $sch_staff = $login_mb_id;
+}
 
 $where = array('1=1');
 
@@ -64,16 +72,18 @@ while ($product_row = sql_fetch_array($product_result)) {
     $product_list[] = (string) $product_row['product_type'];
 }
 
-$staff_result = sql_query(
-    "select distinct a.staff_mb_id, m.mb_name
-       from l_sales a
-       left join g5_member m on m.mb_id = a.staff_mb_id
-      where a.staff_mb_id <> ''
-      order by m.mb_name asc, a.staff_mb_id asc"
-);
 $staff_list = array();
-while ($staff_row = sql_fetch_array($staff_result)) {
-    $staff_list[] = $staff_row;
+if ($can_view_all_sales) {
+    $staff_result = sql_query(
+        "select distinct a.staff_mb_id, m.mb_name
+           from l_sales a
+           left join g5_member m on m.mb_id = a.staff_mb_id
+          where a.staff_mb_id <> ''
+          order by m.mb_name asc, a.staff_mb_id asc"
+    );
+    while ($staff_row = sql_fetch_array($staff_result)) {
+        $staff_list[] = $staff_row;
+    }
 }
 
 $count_row = sql_fetch(
@@ -130,6 +140,7 @@ include_once(G5_LADMIN_PATH."/head.php");
                         <?php } ?>
                     </select>
                 </div>
+                <?php if ($can_view_all_sales) { ?>
                 <div class="col-md-2 mb-2">
                     <select name="sch_staff" class="form-control">
                         <option value="">담당자전체</option>
@@ -142,6 +153,7 @@ include_once(G5_LADMIN_PATH."/head.php");
                         <?php } ?>
                     </select>
                 </div>
+                <?php } ?>
                 <div class="col-md-3 mb-2">
                     <input type="text" name="sch_text" class="form-control" value="<?=htmlspecialchars($sch_text, ENT_QUOTES)?>" placeholder="회원명/회원코드/아이디/담당자">
                 </div>
@@ -226,7 +238,7 @@ include_once(G5_LADMIN_PATH."/head.php");
         $query = http_build_query(array(
             'sch_method' => $sch_method,
             'sch_product' => $sch_product,
-            'sch_staff' => $sch_staff,
+            'sch_staff' => $can_view_all_sales ? $sch_staff : '',
             'sch_text' => $sch_text,
             'min_amount' => $min_amount_raw,
             'max_amount' => $max_amount_raw,
