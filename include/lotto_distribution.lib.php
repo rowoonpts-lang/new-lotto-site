@@ -11,6 +11,7 @@ if (!defined('_GNUBOARD_')) {
  * - l_distribution_cursor를 행 잠금하여 중복 배분을 막는다.
  * - SMS는 이 단계에서 처리하지 않는다.
  * - 동일 회차/회원/요일의 regular 배분이 이미 있으면 다시 배분하지 않는다.
+ * - 회원 use_num/recent_auto_date/recent_turn 갱신까지 같은 트랜잭션으로 처리한다.
  *
  * @param int $drawNo
  * @param string $mbId
@@ -74,6 +75,7 @@ function lottoDistributionDistributeMember(
 
     if (
         $runId < 1
+        || !isset($run['status'])
         || $run['status'] !== 'filtered'
         || $candidateCount < 1
     ) {
@@ -113,6 +115,45 @@ function lottoDistributionDistributeMember(
         }
 
         $transactionStarted = true;
+
+        $usageRow = sql_fetch(
+            "select
+                use_num,
+                num_mon,
+                num_tue,
+                num_wed,
+                num_thur,
+                num_fri,
+                num_sat
+             from g5_member_etc
+             where mb_id = '{$mbIdSql}'
+             limit 1
+             for update",
+            false
+        );
+
+        if (!isset($usageRow['use_num'])) {
+            throw new RuntimeException(
+                '회원 배분 설정을 확인하지 못했습니다.'
+            );
+        }
+
+        $weekTotal =
+            (int) $usageRow['num_mon']
+            + (int) $usageRow['num_tue']
+            + (int) $usageRow['num_wed']
+            + (int) $usageRow['num_thur']
+            + (int) $usageRow['num_fri']
+            + (int) $usageRow['num_sat'];
+
+        $useNum = (int) $usageRow['use_num'];
+        $leftNum = max(0, $weekTotal - $useNum);
+
+        if ($count > $leftNum) {
+            throw new RuntimeException(
+                '남은 주간 조합 수보다 배분 요청 수량이 많습니다.'
+            );
+        }
 
         $cursorInsert = sql_query(
             "insert into l_distribution_cursor
@@ -217,7 +258,9 @@ function lottoDistributionDistributeMember(
             $lfcId = (int) $candidate['lfc_id'];
             $rankNo = (int) $candidate['rank_no'];
             $distributionSeq = $index + 1;
-            $score = (string) $candidate['score'];
+            $score = sql_real_escape_string(
+                (string) $candidate['score']
+            );
 
             $numbers = array(
                 (int) $candidate['num1'],
@@ -247,7 +290,7 @@ function lottoDistributionDistributeMember(
                     distribution_day = '{$distributionDay}',
                     distribution_batch = '{$distributionBatchSql}',
                     distribution_seq = '{$distributionSeq}',
-                    score = '" . sql_real_escape_string($score) . "',
+                    score = '{$score}',
                     sms_required = 0,
                     sms_status = 'not_required',
                     created_by = '{$createdBySql}'",
@@ -281,6 +324,24 @@ function lottoDistributionDistributeMember(
         if ($cursorUpdate === false) {
             throw new RuntimeException(
                 '배분 커서 저장에 실패했습니다.'
+            );
+        }
+
+        $today = date('Y-m-d');
+        $usageUpdate = sql_query(
+            "update g5_member_etc
+             set
+                use_num = use_num + '{$count}',
+                recent_auto_date = '{$today}',
+                recent_auto_datetime = now(),
+                recent_turn = '{$drawNo}'
+             where mb_id = '{$mbIdSql}'",
+            false
+        );
+
+        if ($usageUpdate === false) {
+            throw new RuntimeException(
+                '회원 배분 사용량 저장에 실패했습니다.'
             );
         }
 
