@@ -60,7 +60,7 @@ if ($login_level < LOTTO_ROLE_ADMIN) {
             and a.lm_alarm_view = 0
             and trim(a.lm_alarm_date) <> ''
             and a.lm_alarm_date <> '0000-00-00 00:00:00'
-            and left(a.lm_alarm_date, 16) <= date_format(now(), '%Y-%m-%d %H:%i')
+            and left(a.lm_alarm_date, 16) <= date_format(date_add(utc_timestamp(), interval 9 hour), '%Y-%m-%d %H:%i')
           order by a.lm_alarm_date asc, a.lm_id asc",
         false
     );
