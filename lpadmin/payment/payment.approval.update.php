@@ -1,0 +1,212 @@
+<?php
+include_once("_common.php");
+
+$login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
+if ($login_level < LOTTO_ROLE_ADMIN) {
+    alert('관리자 이상만 처리할 수 있습니다.');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    alert('올바른 요청이 아닙니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$lpr_id = isset($_POST['lpr_id']) ? (int) $_POST['lpr_id'] : 0;
+$service_start_date = isset($_POST['service_start_date']) ? trim((string) $_POST['service_start_date']) : '';
+$service_end_date = isset($_POST['service_end_date']) ? trim((string) $_POST['service_end_date']) : '';
+
+if ($lpr_id < 1) {
+    alert('결제 승인요청 번호가 올바르지 않습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$date_pattern = '/^\d{4}-\d{2}-\d{2}$/';
+if (!preg_match($date_pattern, $service_start_date) || !preg_match($date_pattern, $service_end_date)) {
+    alert('이용 시작일과 종료일을 모두 선택해주세요.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$start_parts = explode('-', $service_start_date);
+$end_parts = explode('-', $service_end_date);
+if (
+    count($start_parts) !== 3 || !checkdate((int) $start_parts[1], (int) $start_parts[2], (int) $start_parts[0]) ||
+    count($end_parts) !== 3 || !checkdate((int) $end_parts[1], (int) $end_parts[2], (int) $end_parts[0])
+) {
+    alert('이용기간 날짜가 올바르지 않습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if ($service_end_date < $service_start_date) {
+    alert('이용 종료일은 시작일보다 빠를 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query('START TRANSACTION', false)) {
+    alert('승인 처리를 시작할 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$request_result = sql_query(
+    "select *
+       from l_payment_request
+      where lpr_id = {$lpr_id}
+      for update",
+    false
+);
+
+if (!$request_result) {
+    sql_query('ROLLBACK', false);
+    alert('결제 승인요청을 조회하지 못했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$request = sql_fetch_array($request_result);
+if (!$request || empty($request['lpr_id'])) {
+    sql_query('ROLLBACK', false);
+    alert('결제 승인요청을 찾을 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if ($request['request_status'] !== '승인대기') {
+    sql_query('ROLLBACK', false);
+    alert('이미 처리된 결제 승인요청입니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if ($request['payment_method'] !== '무통장') {
+    sql_query('ROLLBACK', false);
+    alert('현재는 무통장 승인요청만 승인완료 처리할 수 있습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$mb_id = trim((string) $request['mb_id']);
+$staff_mb_id = trim((string) $request['staff_mb_id']);
+$product_type = trim((string) $request['product_type']);
+$request_amount = (int) $request['request_amount'];
+$approved_by = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
+
+if ($mb_id === '' || $staff_mb_id === '' || $product_type === '' || $request_amount < 1 || $approved_by === '') {
+    sql_query('ROLLBACK', false);
+    alert('승인요청 필수 정보가 올바르지 않습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$mb_id_sql = sql_real_escape_string($mb_id);
+$staff_mb_id_sql = sql_real_escape_string($staff_mb_id);
+$product_type_sql = sql_real_escape_string($product_type);
+$approved_by_sql = sql_real_escape_string($approved_by);
+$service_start_sql = sql_real_escape_string($service_start_date);
+$service_end_sql = sql_real_escape_string($service_end_date);
+
+$member_row = sql_fetch("select mb_id, mb_name from g5_member where mb_id = '{$mb_id_sql}' limit 1");
+if (!$member_row || empty($member_row['mb_id'])) {
+    sql_query('ROLLBACK', false);
+    alert('승인 대상 회원을 찾을 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$member_etc_row = sql_fetch("select mb_id from g5_member_etc where mb_id = '{$mb_id_sql}' limit 1");
+if (!$member_etc_row || empty($member_etc_row['mb_id'])) {
+    sql_query('ROLLBACK', false);
+    alert('승인 대상 회원의 기간정보를 찾을 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query(
+    "update g5_member
+        set mb_type = '{$product_type_sql}'
+      where mb_id = '{$mb_id_sql}'",
+    false
+)) {
+    sql_query('ROLLBACK', false);
+    alert('회원등급 반영 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query(
+    "update g5_member_etc
+        set start_date = '{$service_start_sql}',
+            end_date = '{$service_end_sql}'
+      where mb_id = '{$mb_id_sql}'",
+    false
+)) {
+    sql_query('ROLLBACK', false);
+    alert('회원 이용기간 반영 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query(
+    "insert into l_sales set
+        lpr_id = {$lpr_id},
+        mb_id = '{$mb_id_sql}',
+        staff_mb_id = '{$staff_mb_id_sql}',
+        payment_method = '무통장',
+        product_type = '{$product_type_sql}',
+        sale_amount = {$request_amount},
+        approved_by = '{$approved_by_sql}',
+        approved_at = now(),
+        created_at = now()",
+    false
+)) {
+    sql_query('ROLLBACK', false);
+    alert('매출 등록 중 오류가 발생했습니다. 중복 승인 여부를 확인해주세요.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+$member_name = trim((string) $member_row['mb_name']);
+if ($member_name === '') {
+    $member_name = $mb_id;
+}
+$notification_title = '결제 승인완료';
+$notification_message = $member_name.' 회원 '.number_format($request_amount).'원 승인 완료';
+$notification_title_sql = sql_real_escape_string($notification_title);
+$notification_message_sql = sql_real_escape_string($notification_message);
+
+if (!sql_query(
+    "insert into l_notification set
+        recipient_mb_id = '{$staff_mb_id_sql}',
+        mb_id = '{$mb_id_sql}',
+        notification_type = 'payment_approved',
+        title = '{$notification_title_sql}',
+        message = '{$notification_message_sql}',
+        reference_type = 'payment_request',
+        reference_id = {$lpr_id},
+        is_read = 0,
+        created_at = now()",
+    false
+)) {
+    sql_query('ROLLBACK', false);
+    alert('담당자 알림 등록 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query(
+    "update l_payment_request set
+        request_status = '승인완료',
+        service_start_date = '{$service_start_sql}',
+        service_end_date = '{$service_end_sql}',
+        approved_amount = {$request_amount},
+        approved_by = '{$approved_by_sql}',
+        approved_at = now(),
+        updated_at = now()
+      where lpr_id = {$lpr_id}
+        and request_status = '승인대기'",
+    false
+)) {
+    sql_query('ROLLBACK', false);
+    alert('결제 승인상태 변경 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (!sql_query('COMMIT', false)) {
+    sql_query('ROLLBACK', false);
+    alert('결제 승인완료 저장에 실패했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    exit;
+}
+
+if (function_exists('fnSetLog')) {
+    fnSetLog($approved_by, $member_name.' 회원의 결제 승인요청을 승인완료 처리하였습니다.');
+}
+
+alert('결제 승인완료 처리되었습니다.', G5_LADMIN_URL.'/payment/payment.approval.php?sch_status=승인완료');
