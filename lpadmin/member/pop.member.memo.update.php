@@ -6,6 +6,7 @@
 	$recent_memo = isset($_POST['recent_memo']) ? trim((string) $_POST['recent_memo']) : '';
 	$alarm_select = isset($_POST['alarm_select']) ? trim((string) $_POST['alarm_select']) : '';
 	$alarm_date = isset($_POST['alarm_date']) ? trim((string) $_POST['alarm_date']) : '';
+	$alarm_lm_id = isset($_POST['alarm_lm_id']) ? (int) $_POST['alarm_lm_id'] : 0;
 
 	if ($mb_id === '') {
 		alert('회원정보가 올바르지 않습니다.');
@@ -14,9 +15,15 @@
 
 	$mb_id_sql = sql_real_escape_string($mb_id);
 	$recent_select_sql = sql_real_escape_string($recent_select);
-	$recent_memo_sql = sql_real_escape_string(strip_tags($recent_memo));
+	$recent_memo_clean = trim(strip_tags($recent_memo));
+	$recent_memo_sql = sql_real_escape_string($recent_memo_clean);
 	$alarm_select_sql = sql_real_escape_string($alarm_select);
 	$alarm_date_sql = sql_real_escape_string($alarm_date);
+
+	if ($alarm_lm_id > 0 && $recent_memo_clean === '') {
+		alert('통화예약 알림을 완료하려면 상담내용을 작성하세요.');
+		exit;
+	}
 
 	$target_member = sql_fetch(
 		"select a.mb_id
@@ -61,6 +68,25 @@
 		}
 	}
 
+	if ($alarm_lm_id > 0) {
+		$login_mb_id_sql = sql_real_escape_string($login_mb_id);
+		$call_alarm = sql_fetch(
+			"select lm_id, mb_id, from_mb_id, lm_alarm_view
+			   from l_memo
+			  where lm_id = {$alarm_lm_id}
+			    and mb_id = '{$mb_id_sql}'
+			    and from_mb_id = '{$login_mb_id_sql}'
+			    and lm_alarm_view = 0
+			  limit 1",
+			false
+		);
+
+		if (empty($call_alarm['lm_id'])) {
+			alert('처리할 수 없는 통화예약 알림입니다.');
+			exit;
+		}
+	}
+
 	fnSetLog($login_mb_id, $mb_id.'님의 상담내용을 작성하였습니다.');
 
 	$sql = "update g5_member_etc set
@@ -79,6 +105,21 @@
 				lm_alarm_date = '{$alarm_date_sql}',
 				lm_datetime = now()";
 	sql_query($sql);
+
+	if ($alarm_lm_id > 0) {
+		if (!sql_query(
+			"update l_memo
+			    set lm_alarm_view = 1
+			  where lm_id = {$alarm_lm_id}
+			    and mb_id = '{$mb_id_sql}'
+			    and from_mb_id = '".sql_real_escape_string($login_mb_id)."'
+			    and lm_alarm_view = 0",
+			false
+		)) {
+			alert('통화예약 알림 완료 처리 중 오류가 발생했습니다.');
+			exit;
+		}
+	}
 
 	alert(
 		'정상적으로 저장되었습니다.',
