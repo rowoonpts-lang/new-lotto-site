@@ -142,6 +142,8 @@ include_once(G5_LADMIN_PATH."/head.php");
                 <th class="text-right">요청금액</th>
                 <th>상태</th>
                 <th>입금자명</th>
+                <th>입금계좌</th>
+                <th>이용기간 / 승인</th>
                 <th>승인자</th>
                 <th>승인일</th>
             </tr>
@@ -163,12 +165,32 @@ include_once(G5_LADMIN_PATH."/head.php");
                 <td class="text-right"><?=number_format((int) $row['request_amount'])?>원</td>
                 <td><?=htmlspecialchars((string) $row['request_status'], ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['depositor_name'], ENT_QUOTES)?></td>
+                <td><?=htmlspecialchars((string) $row['bank_account'], ENT_QUOTES)?></td>
+                <td style="min-width:290px;">
+                    <?php if ($row['request_status'] === '승인대기' && $row['payment_method'] === '무통장') { ?>
+                    <form method="post" action="<?=G5_LADMIN_URL?>/payment/payment.approval.update.php" class="mb-0" onsubmit="return confirmPaymentApproval(this);">
+                        <input type="hidden" name="lpr_id" value="<?=(int) $row['lpr_id']?>">
+                        <div class="d-flex align-items-center mb-1">
+                            <input type="date" name="service_start_date" class="form-control form-control-sm mr-1" aria-label="이용 시작일" required>
+                            <span class="mr-1">~</span>
+                            <input type="date" name="service_end_date" class="form-control form-control-sm" aria-label="이용 종료일" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block">승인완료</button>
+                    </form>
+                    <?php } elseif (!empty($row['service_start_date']) || !empty($row['service_end_date'])) { ?>
+                        <?=htmlspecialchars((string) $row['service_start_date'], ENT_QUOTES)?>
+                        ~
+                        <?=htmlspecialchars((string) $row['service_end_date'], ENT_QUOTES)?>
+                    <?php } else { ?>
+                        -
+                    <?php } ?>
+                </td>
                 <td><?=htmlspecialchars((string) ($row['approved_by_name'] ?: $row['approved_by']), ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['approved_at'], ENT_QUOTES)?></td>
             </tr>
             <?php } ?>
             <?php if ($list_count < 1) { ?>
-            <tr><td colspan="12" class="text-center">조회된 결제 승인요청이 없습니다.</td></tr>
+            <tr><td colspan="14" class="text-center">조회된 결제 승인요청이 없습니다.</td></tr>
             <?php } ?>
             </tbody>
         </table>
@@ -188,5 +210,24 @@ include_once(G5_LADMIN_PATH."/head.php");
     </div>
     <?php } ?>
 </div>
+
+<script>
+function confirmPaymentApproval(form) {
+    var startDate = form.service_start_date.value;
+    var endDate = form.service_end_date.value;
+
+    if (!startDate || !endDate) {
+        alert('이용 시작일과 종료일을 모두 선택해주세요.');
+        return false;
+    }
+
+    if (endDate < startDate) {
+        alert('이용 종료일은 시작일보다 빠를 수 없습니다.');
+        return false;
+    }
+
+    return confirm('입금을 확인하셨습니까?\n선택한 이용기간으로 승인완료 처리합니다.');
+}
+</script>
 
 <?php include_once(G5_LADMIN_PATH."/tail.php"); ?>
