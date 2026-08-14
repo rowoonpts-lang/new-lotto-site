@@ -91,7 +91,7 @@ if ($page > $total_page) {
 }
 $from_record = ($page - 1) * $rows;
 
-$result = sql_query(
+$sales_result = sql_query(
     "select a.*,
             m.mb_name as member_name,
             m.mb_code as member_code,
@@ -199,7 +199,7 @@ include_once(G5_LADMIN_PATH."/head.php");
             </thead>
             <tbody>
             <?php $list_count = 0; ?>
-            <?php while ($row = sql_fetch_array($result)) { $list_count++; ?>
+            <?php while ($row = sql_fetch_array($sales_result)) { $list_count++; ?>
             <tr>
                 <td><?=htmlspecialchars((string) $row['approved_at'], ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['request_no'], ENT_QUOTES)?></td>
