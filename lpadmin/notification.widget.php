@@ -149,11 +149,33 @@ if ($notification_widget_mb_id === '') {
         $form.append('<input type="hidden" name="alarm_lm_id" value="' + escapeHtml(alarmLmId) + '">');
     }
 
+    function normalizeCallAlarmUrl(href, notificationId) {
+        var match = String(notificationId || '').match(/^call-(\d+)$/);
+        if (!match || !href) {
+            return href;
+        }
+
+        try {
+            var url = new URL(href, window.location.href);
+            url.pathname = url.pathname.replace(/\/member\/pop\.member\.php$/, '/member/pop.memo.php');
+            url.searchParams.set('alarm_lm_id', match[1]);
+            return url.toString();
+        } catch (error) {
+            return href;
+        }
+    }
+
     $(document).on('click', '.lotto-notification-card[data-open-mode="popup"]', function(event){
         event.preventDefault();
         var href = $(this).attr('href');
+        var notificationId = $(this).attr('data-notification-id') || '';
+        var notificationType = $(this).attr('data-notification-type') || '';
         if (!href) {
             return;
+        }
+
+        if (notificationType === 'call_reservation') {
+            href = normalizeCallAlarmUrl(href, notificationId);
         }
 
         window.open(
