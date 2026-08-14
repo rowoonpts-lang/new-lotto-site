@@ -54,3 +54,15 @@ body:has(#frm_member_memo) .table td {
 body:has(#frm_member_memo) hr {
     margin: 0.5rem 0;
 }
+
+body:has(#frm_member_memo) form[action="pop.member.period.update.php"] input[type="date"] {
+    flex: 0 0 170px;
+    width: 170px;
+    max-width: 170px;
+}
+
+body:has(#frm_member_memo) form[action="pop.member.period.update.php"] button[type="submit"] {
+    flex: 0 0 auto;
+    min-width: 82px;
+    white-space: nowrap;
+}
