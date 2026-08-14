@@ -50,6 +50,38 @@ $row_sms = sql_fetch($sql);
 $sms_cnt = $row_sms["cnt"];
 }
 
+$notification_unread_count = 0;
+$notification_list = array();
+$login_notification_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
+$login_notification_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
+
+if ($login_notification_mb_id !== '' && $login_notification_level < LOTTO_ROLE_ADMIN) {
+    $login_notification_mb_id_sql = sql_real_escape_string($login_notification_mb_id);
+    $notification_count_row = sql_fetch(
+        "select count(*) as cnt
+           from l_notification
+          where recipient_mb_id = '{$login_notification_mb_id_sql}'
+            and is_read = 0",
+        false
+    );
+    $notification_unread_count = isset($notification_count_row['cnt']) ? (int) $notification_count_row['cnt'] : 0;
+
+    $notification_result = sql_query(
+        "select ln_id, title, message, created_at
+           from l_notification
+          where recipient_mb_id = '{$login_notification_mb_id_sql}'
+            and is_read = 0
+          order by created_at desc, ln_id desc
+          limit 5",
+        false
+    );
+    if ($notification_result) {
+        while ($notification_row = sql_fetch_array($notification_result)) {
+            $notification_list[] = $notification_row;
+        }
+    }
+}
+
 include_once(G5_LADMIN_PATH."/head.sub.php");
 ?>
 <body class="hold-transition sidebar-mini layout-fixed text-sm">
@@ -64,7 +96,35 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
     </ul>
 <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
+      <?php if ($login_notification_mb_id !== '' && $login_notification_level < LOTTO_ROLE_ADMIN) { ?>
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#" aria-label="알림">
+          <i class="far fa-bell"></i>
+          <?php if ($notification_unread_count > 0) { ?>
+          <span class="badge badge-warning navbar-badge"><?=number_format($notification_unread_count)?></span>
+          <?php } ?>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-item dropdown-header">미확인 알림 <?=number_format($notification_unread_count)?>건</span>
+          <div class="dropdown-divider"></div>
+          <?php if (count($notification_list) > 0) { ?>
+            <?php foreach ($notification_list as $notification_row) { ?>
+            <div class="dropdown-item text-wrap">
+              <strong><?=htmlspecialchars((string) $notification_row['title'], ENT_QUOTES)?></strong>
+              <div class="text-sm"><?=htmlspecialchars((string) $notification_row['message'], ENT_QUOTES)?></div>
+              <div class="text-xs text-muted mt-1"><?=htmlspecialchars((string) $notification_row['created_at'], ENT_QUOTES)?></div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <?php } ?>
+            <form method="post" action="<?=G5_LADMIN_URL?>/notification.read.all.php" class="px-3 py-2 mb-0">
+              <button type="submit" class="btn btn-sm btn-secondary btn-block">모두 읽음</button>
+            </form>
+          <?php } else { ?>
+            <span class="dropdown-item text-center text-muted">새 알림이 없습니다.</span>
+          <?php } ?>
+        </div>
+      </li>
+      <?php } ?>
       <li class="nav-item">
         <a class="nav-link" href="<?=G5_URL?>" target="_blank" rel="noopener noreferrer">
           <i class="fas fa-home mr-1"></i> 홈페이지
