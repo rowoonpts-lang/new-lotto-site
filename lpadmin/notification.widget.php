@@ -33,6 +33,9 @@ if ($notification_widget_mb_id === '') {
     background: #f8f9fa;
     color: #212529;
 }
+.lotto-notification-card[data-notification-type="call_reservation"] {
+    border-left-color: #17a2b8;
+}
 .lotto-notification-title {
     margin-bottom: 4px;
     font-weight: 700;
@@ -46,6 +49,9 @@ if ($notification_widget_mb_id === '') {
     margin-top: 5px;
     font-size: 11px;
     color: #6c757d;
+}
+.navbar a[aria-label="알림"] {
+    display: none !important;
 }
 @media (max-width: 576px) {
     #lotto-notification-stack {
@@ -86,11 +92,14 @@ if ($notification_widget_mb_id === '') {
             var message = escapeHtml(item.message || '');
             var createdAt = escapeHtml(item.created_at || '');
             var openUrl = item.open_url || '';
+            var openMode = item.open_mode || 'same';
+            var type = escapeHtml(item.type || '');
+            var id = escapeHtml(item.id || '');
 
             if (openUrl) {
-                html += '<a class="lotto-notification-card" href="' + escapeHtml(openUrl) + '">';
+                html += '<a class="lotto-notification-card" href="' + escapeHtml(openUrl) + '" data-open-mode="' + escapeHtml(openMode) + '" data-notification-id="' + id + '" data-notification-type="' + type + '">';
             } else {
-                html += '<div class="lotto-notification-card">';
+                html += '<div class="lotto-notification-card" data-notification-id="' + id + '" data-notification-type="' + type + '">';
             }
             html += '<div class="lotto-notification-title">' + title + '</div>';
             html += '<div class="lotto-notification-message">' + message + '</div>';
@@ -123,8 +132,36 @@ if ($notification_widget_mb_id === '') {
         });
     }
 
+    function attachAlarmIdToMemoForm() {
+        if (typeof window.URLSearchParams === 'undefined') {
+            return;
+        }
+        var params = new URLSearchParams(window.location.search || '');
+        var alarmLmId = params.get('alarm_lm_id');
+        if (!alarmLmId || !/^\d+$/.test(alarmLmId)) {
+            return;
+        }
+        var $form = $('#frm_member_memo');
+        if ($form.length < 1) {
+            return;
+        }
+        $form.find('input[name="alarm_lm_id"]').remove();
+        $form.append('<input type="hidden" name="alarm_lm_id" value="' + escapeHtml(alarmLmId) + '">');
+    }
+
+    $(document).on('click', '.lotto-notification-card[data-open-mode="popup"]', function(event){
+        event.preventDefault();
+        var href = $(this).attr('href');
+        var notificationId = $(this).attr('data-notification-id') || 'alarm';
+        if (!href) {
+            return;
+        }
+        window.open(href, 'lotto_' + String(notificationId).replace(/[^a-zA-Z0-9_-]/g, '_'), 'width=1200,height=900,scrollbars=yes,resizable=yes');
+    });
+
     $(function(){
         ensureNotificationStack();
+        attachAlarmIdToMemoForm();
         loadNotifications();
         notificationTimer = window.setInterval(loadNotifications, 5000);
     });
