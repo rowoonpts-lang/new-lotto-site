@@ -157,7 +157,7 @@ if ($notification_widget_mb_id === '') {
 
         try {
             var url = new URL(href, window.location.href);
-            url.pathname = url.pathname.replace(/\/member\/pop\.member\.php$/, '/member/pop.memo.php');
+            url.pathname = url.pathname.replace(/\/member\/pop\.memo\.php$/, '/member/pop.member.php');
             url.searchParams.set('alarm_lm_id', match[1]);
             return url.toString();
         } catch (error) {
@@ -180,8 +180,8 @@ if ($notification_widget_mb_id === '') {
 
         window.open(
             href,
-            'memo',
-            'width=1400,height=700,top=100,left=200,location=no,scrollbars=yes,resizable=yes'
+            'member_info',
+            'width=1400,height=900,top=80,left=120,location=no,scrollbars=yes,resizable=yes'
         );
     });
 
