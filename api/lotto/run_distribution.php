@@ -285,23 +285,6 @@ try {
         );
     }
 
-    $usageUpdate = sql_query(
-        "update g5_member_etc
-         set
-            use_num = use_num + '{$requestCount}',
-            recent_auto_date = '{$today}',
-            recent_auto_datetime = now(),
-            recent_turn = '{$drawNo}'
-         where mb_id = '{$mbIdSql}'",
-        false
-    );
-
-    if ($usageUpdate === false) {
-        throw new RuntimeException(
-            '회원 배분 사용량 저장에 실패했습니다.'
-        );
-    }
-
     echo 'Ranks       : '
         . (int) $result['start_rank_no']
         . '~'
