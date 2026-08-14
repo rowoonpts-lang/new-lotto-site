@@ -13,32 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $lpr_id = isset($_POST['lpr_id']) ? (int) $_POST['lpr_id'] : 0;
-$service_start_date = isset($_POST['service_start_date']) ? trim((string) $_POST['service_start_date']) : '';
-$service_end_date = isset($_POST['service_end_date']) ? trim((string) $_POST['service_end_date']) : '';
 
 if ($lpr_id < 1) {
     alert('결제 승인요청 번호가 올바르지 않습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
-    exit;
-}
-
-$date_pattern = '/^\d{4}-\d{2}-\d{2}$/';
-if (!preg_match($date_pattern, $service_start_date) || !preg_match($date_pattern, $service_end_date)) {
-    alert('이용 시작일과 종료일을 모두 선택해주세요.', G5_LADMIN_URL.'/payment/payment.approval.php');
-    exit;
-}
-
-$start_parts = explode('-', $service_start_date);
-$end_parts = explode('-', $service_end_date);
-if (
-    count($start_parts) !== 3 || !checkdate((int) $start_parts[1], (int) $start_parts[2], (int) $start_parts[0]) ||
-    count($end_parts) !== 3 || !checkdate((int) $end_parts[1], (int) $end_parts[2], (int) $end_parts[0])
-) {
-    alert('이용기간 날짜가 올바르지 않습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
-    exit;
-}
-
-if ($service_end_date < $service_start_date) {
-    alert('이용 종료일은 시작일보다 빠를 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
     exit;
 }
 
@@ -96,20 +73,11 @@ $mb_id_sql = sql_real_escape_string($mb_id);
 $staff_mb_id_sql = sql_real_escape_string($staff_mb_id);
 $product_type_sql = sql_real_escape_string($product_type);
 $approved_by_sql = sql_real_escape_string($approved_by);
-$service_start_sql = sql_real_escape_string($service_start_date);
-$service_end_sql = sql_real_escape_string($service_end_date);
 
 $member_row = sql_fetch("select mb_id, mb_name from g5_member where mb_id = '{$mb_id_sql}' limit 1");
 if (!$member_row || empty($member_row['mb_id'])) {
     sql_query('ROLLBACK', false);
     alert('승인 대상 회원을 찾을 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
-    exit;
-}
-
-$member_etc_row = sql_fetch("select mb_id from g5_member_etc where mb_id = '{$mb_id_sql}' limit 1");
-if (!$member_etc_row || empty($member_etc_row['mb_id'])) {
-    sql_query('ROLLBACK', false);
-    alert('승인 대상 회원의 기간정보를 찾을 수 없습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
     exit;
 }
 
@@ -121,18 +89,6 @@ if (!sql_query(
 )) {
     sql_query('ROLLBACK', false);
     alert('회원등급 반영 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
-    exit;
-}
-
-if (!sql_query(
-    "update g5_member_etc
-        set start_date = '{$service_start_sql}',
-            end_date = '{$service_end_sql}'
-      where mb_id = '{$mb_id_sql}'",
-    false
-)) {
-    sql_query('ROLLBACK', false);
-    alert('회원 이용기간 반영 중 오류가 발생했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
     exit;
 }
 
@@ -184,8 +140,6 @@ if (!sql_query(
 if (!sql_query(
     "update l_payment_request set
         request_status = '승인완료',
-        service_start_date = '{$service_start_sql}',
-        service_end_date = '{$service_end_sql}',
         approved_amount = {$request_amount},
         approved_by = '{$approved_by_sql}',
         approved_at = now(),
