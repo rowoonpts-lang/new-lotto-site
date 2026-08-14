@@ -16,18 +16,17 @@ if (!lottoIsStaffLevel($loginLevel)) {
 
 $canViewAll = lottoCanViewAllMembers($loginLevel);
 
-$latestResultRow = sql_fetch(
+$latestDistributionRow = sql_fetch(
     "select max(draw_no) as draw_no
-       from l_member_combination
-      where result_rank between 1 and 5",
+       from l_member_combination",
     false
 );
 
 $turn = isset($_GET['turn'])
     ? max(1, (int) $_GET['turn'])
     : (
-        isset($latestResultRow['draw_no'])
-            ? (int) $latestResultRow['draw_no']
+        isset($latestDistributionRow['draw_no'])
+            ? (int) $latestDistributionRow['draw_no']
             : 0
     );
 
@@ -42,6 +41,135 @@ if ($turn < 1) {
         ? (int) $latestDrawRow['draw_no']
         : 0;
 }
+
+$drawResult = sql_fetch(
+    "select
+        draw_no,
+        num_1,
+        num_2,
+        num_3,
+        num_4,
+        num_5,
+        num_6,
+        bonus_num
+     from g5_lotto_result
+     where draw_no = '{$turn}'
+     limit 1",
+    false
+);
+
+$hasOfficialResult = isset($drawResult['draw_no'])
+    && (int) $drawResult['draw_no'] === $turn;
+
+$filterRankCounts = array(
+    1 => 0,
+    2 => 0,
+    3 => 0,
+    4 => 0,
+    5 => 0,
+);
+
+$filterCandidateCount = 0;
+$filterResultReady = false;
+
+if ($hasOfficialResult) {
+    $filterCountRow = sql_fetch(
+        "select count(*) as cnt
+         from l_filter_candidate
+         where draw_no = '{$turn}'",
+        false
+    );
+
+    $filterCandidateCount = isset($filterCountRow['cnt'])
+        ? (int) $filterCountRow['cnt']
+        : 0;
+
+    if ($filterCandidateCount > 0) {
+        $winningNumbers = array(
+            (int) $drawResult['num_1'],
+            (int) $drawResult['num_2'],
+            (int) $drawResult['num_3'],
+            (int) $drawResult['num_4'],
+            (int) $drawResult['num_5'],
+            (int) $drawResult['num_6'],
+        );
+
+        $winningNumberSql = implode(',', $winningNumbers);
+        $bonusNumber = (int) $drawResult['bonus_num'];
+
+        $matchExpression = "(
+            (num1 in ({$winningNumberSql}))
+            + (num2 in ({$winningNumberSql}))
+            + (num3 in ({$winningNumberSql}))
+            + (num4 in ({$winningNumberSql}))
+            + (num5 in ({$winningNumberSql}))
+            + (num6 in ({$winningNumberSql}))
+        )";
+
+        $bonusExpression = "(
+            {$bonusNumber} in (
+                num1,
+                num2,
+                num3,
+                num4,
+                num5,
+                num6
+            )
+        )";
+
+        $filterSummaryRow = sql_fetch(
+            "select
+                sum(case when match_count = 6 then 1 else 0 end) as rank1_count,
+                sum(case when match_count = 5 and bonus_match = 1 then 1 else 0 end) as rank2_count,
+                sum(case when match_count = 5 and bonus_match = 0 then 1 else 0 end) as rank3_count,
+                sum(case when match_count = 4 then 1 else 0 end) as rank4_count,
+                sum(case when match_count = 3 then 1 else 0 end) as rank5_count
+             from (
+                select
+                    {$matchExpression} as match_count,
+                    {$bonusExpression} as bonus_match
+                from l_filter_candidate
+                where draw_no = '{$turn}'
+             ) filter_result",
+            false
+        );
+
+        for ($rank = 1; $rank <= 5; $rank++) {
+            $key = 'rank' . $rank . '_count';
+            $filterRankCounts[$rank] = isset($filterSummaryRow[$key])
+                ? (int) $filterSummaryRow[$key]
+                : 0;
+        }
+
+        $filterResultReady = true;
+    }
+}
+
+$memberStateRow = sql_fetch(
+    "select
+        count(*) as total_count,
+        sum(
+            case
+                when result_checked_at is not null then 1
+                else 0
+            end
+        ) as checked_count
+     from l_member_combination
+     where draw_no = '{$turn}'",
+    false
+);
+
+$memberCombinationCount = isset($memberStateRow['total_count'])
+    ? (int) $memberStateRow['total_count']
+    : 0;
+
+$memberCheckedCount = isset($memberStateRow['checked_count'])
+    ? (int) $memberStateRow['checked_count']
+    : 0;
+
+$memberResultReady = $hasOfficialResult
+    && $memberCombinationCount > 0
+    && $memberCheckedCount === $memberCombinationCount;
 
 $allowedSchSelect = array(
     'b.mb_name',
@@ -270,22 +398,157 @@ $qstr = http_build_query(array(
 include_once(G5_LADMIN_PATH."/head.php");
 ?>
 
-<div class="row">
-    <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
-    <div class="col-md-2 col-6">
-        <div class="small-box bg-light">
-            <div class="inner">
-                <h3>
-                    <?=number_format(
-                        $rankCounts[$rank]
-                    )?>
-                </h3>
+<style>
+.lotto-result-summary {
+    margin-bottom: 12px;
+}
 
-                <p><?=$rank?>등</p>
+.lotto-result-summary-row {
+    display: flex;
+    align-items: center;
+    min-height: 54px;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.lotto-result-summary-title {
+    flex: 0 0 130px;
+    margin: 0 14px 0 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.lotto-result-summary-items {
+    display: flex;
+    flex: 1;
+    gap: 8px;
+}
+
+.lotto-result-summary-item {
+    flex: 1;
+    min-width: 72px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: #f4f6f9;
+    text-align: center;
+}
+
+.lotto-result-summary-rank {
+    display: block;
+    color: #6c757d;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.lotto-result-summary-count {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.lotto-result-summary-status {
+    margin-left: 12px;
+    color: #6c757d;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .lotto-result-summary-row {
+        display: block;
+    }
+
+    .lotto-result-summary-title {
+        margin: 0 0 7px;
+    }
+
+    .lotto-result-summary-items {
+        gap: 4px;
+    }
+
+    .lotto-result-summary-item {
+        min-width: 0;
+        padding: 5px 2px;
+    }
+
+    .lotto-result-summary-count {
+        font-size: 15px;
+    }
+
+    .lotto-result-summary-status {
+        display: block;
+        margin: 6px 0 0;
+    }
+}
+</style>
+
+<div class="lotto-result-summary">
+    <div class="lotto-result-summary-row mb-2">
+        <h3 class="lotto-result-summary-title">
+            필터 당첨결과
+        </h3>
+
+        <div class="lotto-result-summary-items">
+            <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+            <div class="lotto-result-summary-item">
+                <span class="lotto-result-summary-rank">
+                    <?=$rank?>등
+                </span>
+                <strong class="lotto-result-summary-count">
+                    <?=$filterResultReady
+                        ? number_format($filterRankCounts[$rank])
+                        : '-'?>
+                </strong>
             </div>
+            <?php } ?>
+        </div>
+
+        <div class="lotto-result-summary-status">
+            <?php if (!$hasOfficialResult) { ?>
+                집계 전
+            <?php } elseif (!$filterResultReady) { ?>
+                필터 후보 없음
+            <?php } else { ?>
+                후보 <?=number_format($filterCandidateCount)?>개 기준
+            <?php } ?>
         </div>
     </div>
-    <?php } ?>
+
+    <div class="lotto-result-summary-row">
+        <h3 class="lotto-result-summary-title">
+            회원 당첨결과
+        </h3>
+
+        <div class="lotto-result-summary-items">
+            <?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+            <div class="lotto-result-summary-item">
+                <span class="lotto-result-summary-rank">
+                    <?=$rank?>등
+                </span>
+                <strong class="lotto-result-summary-count">
+                    <?=$memberResultReady
+                        ? number_format($rankCounts[$rank])
+                        : '-'?>
+                </strong>
+            </div>
+            <?php } ?>
+        </div>
+
+        <div class="lotto-result-summary-status">
+            <?php if (!$hasOfficialResult) { ?>
+                집계 전
+            <?php } elseif ($memberCombinationCount < 1) { ?>
+                배분 데이터 없음
+            <?php } elseif (!$memberResultReady) { ?>
+                결과 처리 전
+            <?php } else { ?>
+                <?=number_format($memberCombinationCount)?>조합 기준
+            <?php } ?>
+        </div>
+    </div>
 </div>
 
 <div class="card card-default">
