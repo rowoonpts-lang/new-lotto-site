@@ -85,8 +85,8 @@
 
 	$start_date = isset($row['start_date']) ? (string) $row['start_date'] : '';
 	$end_date = isset($row['end_date']) ? (string) $row['end_date'] : '';
-	$start_date_text = ($start_date !== '' && $start_date !== '0000-00-00') ? $start_date : '-';
-	$end_date_text = ($end_date !== '' && $end_date !== '0000-00-00') ? $end_date : '-';
+	$start_date_value = ($start_date !== '' && $start_date !== '0000-00-00') ? $start_date : '';
+	$end_date_value = ($end_date !== '' && $end_date !== '0000-00-00') ? $end_date : '';
 ?>
 
 <link rel="stylesheet" href="//mugifly.github.io/jquery-simple-datetimepicker/jquery.simple-dtpicker.css">
@@ -134,7 +134,7 @@ $(function(){
 					</div>
 				</div>
 				<hr>
-				<div class="row">
+				<div class="row align-items-end">
 					<div class="col-md-3 col-sm-6 mb-2">
 						<strong>등급</strong>
 						<div><?=htmlspecialchars((string) ($row['mb_type'] ?? ''), ENT_QUOTES)?></div>
@@ -143,13 +143,17 @@ $(function(){
 						<strong>담당자</strong>
 						<div><?=htmlspecialchars($staff_name, ENT_QUOTES)?></div>
 					</div>
-					<div class="col-md-3 col-sm-6 mb-2">
-						<strong>이용기간 시작</strong>
-						<div><?=htmlspecialchars($start_date_text, ENT_QUOTES)?></div>
-					</div>
-					<div class="col-md-3 col-sm-6 mb-2">
-						<strong>이용기간 종료</strong>
-						<div><?=htmlspecialchars($end_date_text, ENT_QUOTES)?></div>
+					<div class="col-md-6 col-sm-12 mb-2">
+						<strong>유료기간</strong>
+						<form method="post" action="pop.member.period.update.php" class="mt-1" autocomplete="off" onsubmit="return validatePaidPeriod(this);">
+							<input type="hidden" name="mb_id" value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+							<div class="d-flex align-items-center">
+								<input type="date" name="start_date" class="form-control form-control-sm mr-1" value="<?=htmlspecialchars($start_date_value, ENT_QUOTES)?>" aria-label="유료기간 시작일">
+								<span class="mr-1">~</span>
+								<input type="date" name="end_date" class="form-control form-control-sm mr-1" value="<?=htmlspecialchars($end_date_value, ENT_QUOTES)?>" aria-label="유료기간 종료일">
+								<button type="submit" class="btn btn-primary btn-sm text-nowrap">기간 저장</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -284,6 +288,23 @@ $(function(){
 </section>
 
 <script>
+function validatePaidPeriod(form) {
+	var startDate = form.start_date.value;
+	var endDate = form.end_date.value;
+
+	if ((startDate && !endDate) || (!startDate && endDate)) {
+		alert('유료기간 시작일과 종료일을 모두 선택해주세요.');
+		return false;
+	}
+
+	if (startDate && endDate && endDate < startDate) {
+		alert('유료기간 종료일은 시작일보다 빠를 수 없습니다.');
+		return false;
+	}
+
+	return true;
+}
+
 function fnChgHy(v){
 	$.ajax({
 		type: 'POST',
