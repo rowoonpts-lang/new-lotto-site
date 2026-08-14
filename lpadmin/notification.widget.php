@@ -141,7 +141,7 @@ if ($notification_widget_mb_id === '') {
         if (!alarmLmId || !/^\d+$/.test(alarmLmId)) {
             return;
         }
-        var $form = $('#frm_member_memo');
+        var $form = $('#frm_member_memo, #frm').first();
         if ($form.length < 1) {
             return;
         }
@@ -152,11 +152,15 @@ if ($notification_widget_mb_id === '') {
     $(document).on('click', '.lotto-notification-card[data-open-mode="popup"]', function(event){
         event.preventDefault();
         var href = $(this).attr('href');
-        var notificationId = $(this).attr('data-notification-id') || 'alarm';
         if (!href) {
             return;
         }
-        window.open(href, 'lotto_' + String(notificationId).replace(/[^a-zA-Z0-9_-]/g, '_'), 'width=1200,height=900,scrollbars=yes,resizable=yes');
+
+        window.open(
+            href,
+            'memo',
+            'width=1400,height=700,top=100,left=200,location=no,scrollbars=yes,resizable=yes'
+        );
     });
 
     $(function(){
