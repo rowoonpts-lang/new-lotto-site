@@ -83,7 +83,7 @@ if ($login_level < LOTTO_ROLE_ADMIN) {
                 $alarm_message .= ' · '.$alarm_type;
             }
 
-            $open_url = G5_LADMIN_URL.'/member/pop.memo.php?'.http_build_query(array(
+            $open_url = G5_LADMIN_URL.'/member/pop.member.php?'.http_build_query(array(
                 'mb_id' => base64_encode($mb_id),
                 'alarm_lm_id' => $lm_id,
             ));
