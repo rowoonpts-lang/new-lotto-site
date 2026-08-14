@@ -122,3 +122,4 @@ function fnProcDel(table, key_name, key_value){
 	}
 }
 </script>
+<?php include_once(G5_LADMIN_PATH."/notification.widget.php"); ?>
