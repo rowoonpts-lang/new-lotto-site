@@ -5,6 +5,7 @@ header('Content-Type: application/json; charset=UTF-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 $login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
+$login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
 
 if ($login_mb_id === '') {
     http_response_code(401);
@@ -35,15 +36,74 @@ if ($notification_result) {
         }
 
         $notifications[] = array(
-            'id' => $ln_id,
+            'id' => 'notification-'.$ln_id,
             'type' => $notification_type,
             'title' => isset($notification_row['title']) ? (string) $notification_row['title'] : '',
             'message' => isset($notification_row['message']) ? (string) $notification_row['message'] : '',
             'created_at' => isset($notification_row['created_at']) ? (string) $notification_row['created_at'] : '',
             'open_url' => $open_url,
+            'open_mode' => 'same',
         );
     }
 }
+
+if ($login_level < LOTTO_ROLE_ADMIN) {
+    $call_alarm_result = sql_query(
+        "select a.lm_id,
+                a.mb_id,
+                a.lm_alarm_type,
+                a.lm_alarm_date,
+                m.mb_name
+           from l_memo a
+           left join g5_member m on m.mb_id = a.mb_id
+          where a.from_mb_id = '{$login_mb_id_sql}'
+            and a.lm_alarm_view = 0
+            and trim(a.lm_alarm_date) <> ''
+            and a.lm_alarm_date <> '0000-00-00 00:00:00'
+            and left(a.lm_alarm_date, 16) <= date_format(now(), '%Y-%m-%d %H:%i')
+          order by a.lm_alarm_date asc, a.lm_id asc",
+        false
+    );
+
+    if ($call_alarm_result) {
+        while ($call_alarm_row = sql_fetch_array($call_alarm_result)) {
+            $lm_id = isset($call_alarm_row['lm_id']) ? (int) $call_alarm_row['lm_id'] : 0;
+            $mb_id = isset($call_alarm_row['mb_id']) ? trim((string) $call_alarm_row['mb_id']) : '';
+            if ($lm_id < 1 || $mb_id === '') {
+                continue;
+            }
+
+            $member_name = isset($call_alarm_row['mb_name']) ? trim((string) $call_alarm_row['mb_name']) : '';
+            if ($member_name === '') {
+                $member_name = $mb_id;
+            }
+            $alarm_type = isset($call_alarm_row['lm_alarm_type']) ? trim((string) $call_alarm_row['lm_alarm_type']) : '';
+            $alarm_message = $member_name.' 회원 통화예약';
+            if ($alarm_type !== '') {
+                $alarm_message .= ' · '.$alarm_type;
+            }
+
+            $open_url = G5_LADMIN_URL.'/member/pop.member.php?'.http_build_query(array(
+                'mb_id' => base64_encode($mb_id),
+                'alarm_lm_id' => $lm_id,
+            ));
+
+            $notifications[] = array(
+                'id' => 'call-'.$lm_id,
+                'type' => 'call_reservation',
+                'title' => '통화예약',
+                'message' => $alarm_message,
+                'created_at' => isset($call_alarm_row['lm_alarm_date']) ? (string) $call_alarm_row['lm_alarm_date'] : '',
+                'open_url' => $open_url,
+                'open_mode' => 'popup',
+            );
+        }
+    }
+}
+
+usort($notifications, function ($a, $b) {
+    return strcmp((string) $a['created_at'], (string) $b['created_at']);
+});
 
 echo json_encode(array(
     'ok' => true,
