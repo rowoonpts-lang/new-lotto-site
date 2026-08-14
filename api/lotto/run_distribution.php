@@ -12,6 +12,7 @@ if (PHP_SAPI === 'cli') {
 
 include_once __DIR__ . '/_common.php';
 include_once G5_PATH . '/include/lotto_distribution.lib.php';
+include_once G5_PATH . '/include/lotto_free_distribution.lib.php';
 
 date_default_timezone_set('Asia/Seoul');
 set_time_limit(0);
@@ -110,6 +111,7 @@ $memberRow = sql_fetch(
         a.mb_id,
         a.mb_name,
         a.mb_type,
+        a.mb_datetime,
         a.mb_leave_date,
         b.start_date,
         b.end_date,
@@ -121,6 +123,9 @@ $memberRow = sql_fetch(
         b.num_sat,
         b.use_num,
         b.recent_auto_date,
+        b.recent_free_date,
+        b.free_num_qty,
+        b.free_num_date,
         b.recent_turn
      from g5_member a
      inner join g5_member_etc b
@@ -145,92 +150,163 @@ if (trim((string) $memberRow['mb_leave_date']) !== '') {
 
 $memberType = trim((string) $memberRow['mb_type']);
 
-if ($memberType === '' || $memberType === '무료회원') {
-    fwrite(
-        STDERR,
-        '이 실행기는 현재 유료회원 regular 배분 검증용입니다.'
-        . PHP_EOL
-    );
+if ($memberType === '') {
+    fwrite(STDERR, '회원 등급을 확인할 수 없습니다.' . PHP_EOL);
     exit(1);
 }
 
 $today = $now->format('Y-m-d');
-$startDate = trim((string) $memberRow['start_date']);
-$endDate = trim((string) $memberRow['end_date']);
+$isFreeMember = $memberType === '무료회원';
+$requestCount = 0;
+$distributionMode = $isFreeMember ? 'free' : 'regular';
 
-if (
-    $startDate === ''
-    || $endDate === ''
-    || $startDate > $today
-    || $endDate < $today
-) {
-    fwrite(
-        STDERR,
-        '유료 서비스 기간에 포함되지 않는 회원입니다.'
-        . PHP_EOL
+if ($isFreeMember) {
+    $joinDate = substr(
+        trim((string) $memberRow['mb_datetime']),
+        0,
+        10
     );
-    exit(1);
-}
 
-$dayCount = isset($memberRow[$dayColumn])
-    ? (int) $memberRow[$dayColumn]
-    : 0;
+    $sixMonthsAgo = $now
+        ->modify('-6 months')
+        ->format('Y-m-d');
 
-$requestCount = isset($options['count'])
-    ? (int) $options['count']
-    : $dayCount;
+    if ($joinDate === '' || $joinDate < $sixMonthsAgo) {
+        fwrite(
+            STDERR,
+            '무료회원 자동배분 대상 가입기간을 벗어났습니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
 
-if ($dayCount < 1) {
-    fwrite(
-        STDERR,
-        '해당 요일의 배분 수량이 0입니다.'
-        . PHP_EOL
+    $recentFreeDate = trim(
+        (string) $memberRow['recent_free_date']
     );
-    exit(1);
-}
+    $yesterday = $now
+        ->modify('-1 day')
+        ->format('Y-m-d');
 
-if ($requestCount < 1 || $requestCount > $dayCount) {
-    fwrite(
-        STDERR,
-        '요청 수량은 회원의 해당 요일 배분 수량을 초과할 수 없습니다.'
-        . PHP_EOL
+    if (
+        !$force
+        && (
+            $recentFreeDate === $today
+            || $recentFreeDate === $yesterday
+        )
+    ) {
+        fwrite(
+            STDERR,
+            '오늘 또는 어제 이미 무료번호를 받은 회원입니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
+
+    $allowedCount = 10;
+    $freeNumDate = trim(
+        (string) $memberRow['free_num_date']
     );
-    exit(1);
-}
+    $freeNumQty = isset($memberRow['free_num_qty'])
+        ? (int) $memberRow['free_num_qty']
+        : 0;
 
-$weekTotal =
-    (int) $memberRow['num_mon']
-    + (int) $memberRow['num_tue']
-    + (int) $memberRow['num_wed']
-    + (int) $memberRow['num_thur']
-    + (int) $memberRow['num_fri']
-    + (int) $memberRow['num_sat'];
+    if ($freeNumDate >= $today && $freeNumQty > 0) {
+        $allowedCount = $freeNumQty;
+    }
 
-$useNum = isset($memberRow['use_num'])
-    ? (int) $memberRow['use_num']
-    : 0;
+    $requestCount = isset($options['count'])
+        ? (int) $options['count']
+        : $allowedCount;
 
-$leftNum = max(0, $weekTotal - $useNum);
+    if (
+        $requestCount < 1
+        || $requestCount > $allowedCount
+    ) {
+        fwrite(
+            STDERR,
+            '요청 수량은 무료회원 배분 가능 수량을 초과할 수 없습니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
+} else {
+    $startDate = trim((string) $memberRow['start_date']);
+    $endDate = trim((string) $memberRow['end_date']);
 
-if ($requestCount > $leftNum) {
-    fwrite(
-        STDERR,
-        '남은 주간 조합 수보다 요청 수량이 많습니다.'
-        . PHP_EOL
-    );
-    exit(1);
-}
+    if (
+        $startDate === ''
+        || $endDate === ''
+        || $startDate > $today
+        || $endDate < $today
+    ) {
+        fwrite(
+            STDERR,
+            '유료 서비스 기간에 포함되지 않는 회원입니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
 
-if (
-    !$force
-    && trim((string) $memberRow['recent_auto_date']) === $today
-) {
-    fwrite(
-        STDERR,
-        '오늘 이미 자동 배분 처리된 회원입니다.'
-        . PHP_EOL
-    );
-    exit(1);
+    $dayCount = isset($memberRow[$dayColumn])
+        ? (int) $memberRow[$dayColumn]
+        : 0;
+
+    $requestCount = isset($options['count'])
+        ? (int) $options['count']
+        : $dayCount;
+
+    if ($dayCount < 1) {
+        fwrite(
+            STDERR,
+            '해당 요일의 배분 수량이 0입니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
+
+    if ($requestCount < 1 || $requestCount > $dayCount) {
+        fwrite(
+            STDERR,
+            '요청 수량은 회원의 해당 요일 배분 수량을 초과할 수 없습니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
+
+    $weekTotal =
+        (int) $memberRow['num_mon']
+        + (int) $memberRow['num_tue']
+        + (int) $memberRow['num_wed']
+        + (int) $memberRow['num_thur']
+        + (int) $memberRow['num_fri']
+        + (int) $memberRow['num_sat'];
+
+    $useNum = isset($memberRow['use_num'])
+        ? (int) $memberRow['use_num']
+        : 0;
+
+    $leftNum = max(0, $weekTotal - $useNum);
+
+    if ($requestCount > $leftNum) {
+        fwrite(
+            STDERR,
+            '남은 주간 조합 수보다 요청 수량이 많습니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
+
+    if (
+        !$force
+        && trim((string) $memberRow['recent_auto_date']) === $today
+    ) {
+        fwrite(
+            STDERR,
+            '오늘 이미 자동 배분 처리된 회원입니다.'
+            . PHP_EOL
+        );
+        exit(1);
+    }
 }
 
 $lockName = 'lotto_distribution_' . $drawNo;
@@ -261,18 +337,29 @@ try {
     echo 'Draw        : ' . $drawNo . PHP_EOL;
     echo 'Member      : ' . $mbId . PHP_EOL;
     echo 'Member type : ' . $memberType . PHP_EOL;
+    echo 'Mode        : ' . $distributionMode . PHP_EOL;
     echo 'Day         : ' . $distributionDay . PHP_EOL;
     echo 'Count       : ' . $requestCount . PHP_EOL;
     echo 'Started at  : ' . $now->format('Y-m-d H:i:s') . PHP_EOL;
 
-    $result = lottoDistributionDistributeMember(
-        $drawNo,
-        $mbId,
-        $memberType,
-        $requestCount,
-        $distributionDay,
-        'cron'
-    );
+    if ($isFreeMember) {
+        $result = lottoFreeDistributionDistributeMember(
+            $drawNo,
+            $mbId,
+            $requestCount,
+            $distributionDay,
+            'cron'
+        );
+    } else {
+        $result = lottoDistributionDistributeMember(
+            $drawNo,
+            $mbId,
+            $memberType,
+            $requestCount,
+            $distributionDay,
+            'cron'
+        );
+    }
 
     if (
         !isset($result['success'])
