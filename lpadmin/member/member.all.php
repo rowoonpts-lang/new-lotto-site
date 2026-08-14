@@ -379,7 +379,7 @@
 					<th>남은기간</th>
 					<th>요일/조합</th>
 					<th>가입일/최근접속일</th>
-					<th>약관동의</th>
+					<th>유료기간</th>
 					<th>디비경로</th>
 					<th>상태</th>
 					<th>상세상담</th>
@@ -478,10 +478,12 @@
 					<td><?=$row['mb_datetime']?><br><?=$row['mb_today_login']?></td>
 					<td>
 						<?php
-							if(!$row['mb_yak']){
-								echo "N";
-							}else{
-								echo "<span style='color:blue'>".$row['mb_yak']."</span>";
+							$paid_start = isset($row['start_date']) ? trim((string) $row['start_date']) : '';
+							$paid_end = isset($row['end_date']) ? trim((string) $row['end_date']) : '';
+							if ($paid_start !== '' && $paid_start !== '0000-00-00' && $paid_end !== '' && $paid_end !== '0000-00-00') {
+								echo htmlspecialchars($paid_start, ENT_QUOTES).'<br>~ '.htmlspecialchars($paid_end, ENT_QUOTES);
+							} else {
+								echo '-';
 							}
 						?>
 					</td>
@@ -501,7 +503,7 @@
 				<?php }?>
 				<?php if($total_count < 1){?>
 				<tr>
-					<td colspan="13">내역이 없습니다.</td>
+					<td colspan="15">내역이 없습니다.</td>
 				</tr>
 				<?php }?>
 				</tbody>
