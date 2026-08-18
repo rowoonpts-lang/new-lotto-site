@@ -2,13 +2,25 @@
 include_once("_common.php");
 include_once(G5_LADMIN_PATH."/head.sub.php");
 
+$loginMbId = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
+$loginLevel = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
+
 $batch = isset($_GET['batch'])
     ? trim((string) $_GET['batch'])
     : '';
 
 $rows = array();
+$errorMessage = '';
 
-if ($batch !== '') {
+if (!lottoIsStaffLevel($loginLevel)) {
+    $errorMessage = '접근 권한이 없습니다.';
+}
+
+if ($errorMessage === '' && $batch === '') {
+    $errorMessage = '추가발송할 조합 정보가 없습니다.';
+}
+
+if ($errorMessage === '') {
     $batchSql = sql_real_escape_string($batch);
 
     $result = sql_query(
@@ -23,7 +35,9 @@ if ($batch !== '') {
             a.num6,
             a.distribution_seq,
             b.mb_name,
-            b.mb_hp
+            b.mb_hp,
+            b.mb_type,
+            b.mb_leave_date
          from l_member_combination a
          inner join g5_member b
             on b.mb_id = a.mb_id
@@ -37,6 +51,36 @@ if ($batch !== '') {
         while ($row = sql_fetch_array($result)) {
             $rows[] = $row;
         }
+    }
+
+    if (empty($rows)) {
+        $errorMessage = '추가발송할 조합을 찾을 수 없습니다.';
+    }
+}
+
+if ($errorMessage === '' && !empty($rows)) {
+    $targetMbId = trim((string) $rows[0]['mb_id']);
+
+    if (!lottoCanViewMember($loginMbId, $loginLevel, $targetMbId)) {
+        $errorMessage = '조회 권한이 없습니다.';
+        $rows = array();
+    }
+}
+
+if ($errorMessage === '' && !empty($rows)) {
+    $paidMemberTypes = fnGetTypePre();
+    $currentMemberType = trim((string) $rows[0]['mb_type']);
+
+    if (!in_array($currentMemberType, $paidMemberTypes, true)) {
+        $errorMessage = '유료회원만 추가조합 문자를 발송할 수 있습니다.';
+        $rows = array();
+    }
+}
+
+if ($errorMessage === '' && !empty($rows)) {
+    if (trim((string) $rows[0]['mb_leave_date']) !== '') {
+        $errorMessage = '탈퇴 회원에게는 추가조합 문자를 발송할 수 없습니다.';
+        $rows = array();
     }
 }
 
@@ -78,10 +122,10 @@ if (!empty($rows)) {
 
             <div class="card-body">
 
-                <?php if (empty($rows)) { ?>
+                <?php if ($errorMessage !== '') { ?>
 
                     <div class="alert alert-danger">
-                        추가발송 조합을 찾을 수 없습니다.
+                        <?=htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8')?>
                     </div>
 
                 <?php } else { ?>
