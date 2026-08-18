@@ -1,6 +1,7 @@
 <?php
 include_once("_common.php");
 include_once(G5_LADMIN_PATH."/head.sub.php");
+include_once G5_PATH . "/include/lotto_sms.lib.php";
 
 $loginMbId = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
 $loginLevel = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
@@ -94,21 +95,7 @@ if (!empty($rows)) {
     $mbName = (string) $rows[0]['mb_name'];
     $mbHp = (string) $rows[0]['mb_hp'];
 
-    $message .= $drawNo . "회 추가조합\n";
-
-    foreach ($rows as $index => $row) {
-        $message .= ($index + 1) . ". ";
-        $message .= (int) $row['num1'] . ",";
-        $message .= (int) $row['num2'] . ",";
-        $message .= (int) $row['num3'] . ",";
-        $message .= (int) $row['num4'] . ",";
-        $message .= (int) $row['num5'] . ",";
-        $message .= (int) $row['num6'];
-
-        if ($index < count($rows) - 1) {
-            $message .= "\n";
-        }
-    }
+    $message = lottoSmsBuildCombinationMessage($drawNo, '추가조합', $rows);
 }
 ?>
 
