@@ -239,14 +239,27 @@ function fnSmsSend(){
         return false;
     }
 
-    /*
-     * SMS 업체 API 연결 전 개발 단계.
-     * 기존 배분번호는 읽기만 하고 변경하지 않는다.
-     */
-    alert(
-        "재발송 문자 내용 확인 단계까지 정상 처리되었습니다.\n"
-        + "현재 개발환경에서는 실제 SMS를 발송하지 않습니다."
-    );
+    $.ajax({
+        url: "ajax.lotto.sms.prepare.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            batch: <?=json_encode($batch)?>,
+            send_type: "resend",
+            sms_content: message
+        },
+        success: function(result){
+            if(!result || result.success !== true){
+                alert(result && result.message ? result.message : "문자 재발송 전 검증에 실패했습니다.");
+                return;
+            }
+
+            alert(result.message + "\n현재 개발환경에서는 실제 SMS를 발송하지 않습니다.");
+        },
+        error: function(){
+            alert("문자 재발송 전 서버 검증 중 오류가 발생했습니다.");
+        }
+    });
 
     return false;
 }
