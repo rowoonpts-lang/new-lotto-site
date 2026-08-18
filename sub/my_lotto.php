@@ -75,30 +75,6 @@ while ($row = sql_fetch_array($result_query)) {
     $draw_results[(int) $row['draw_no']] = $row;
 }
 
-$available_turn_tables = array();
-
-$table_query = sql_query(
-    "show tables like 'l_turn_%'",
-    false
-);
-
-while ($table_row = sql_fetch_array($table_query)) {
-    $table_values = array_values($table_row);
-    $table_name = isset($table_values[0])
-        ? $table_values[0]
-        : '';
-
-    if (
-        preg_match(
-            '/^l_turn_([0-9]+)$/',
-            $table_name,
-            $matches
-        )
-    ) {
-        $available_turn_tables[(int) $matches[1]] = $table_name;
-    }
-}
-
 function lottogpt_my_rank($numbers, $result)
 {
     if (
@@ -182,15 +158,9 @@ function lottogpt_my_ball_class($number)
     return 'lg-ball-green';
 }
 
-$turn_options = array_unique(
-    array_merge(
-        array_keys($available_turn_tables),
-        array_keys($draw_results)
-    )
-);
+$safe_member_id = sql_real_escape_string($member_id);
 
-rsort($turn_options, SORT_NUMERIC);
-krsort($available_turn_tables, SORT_NUMERIC);
+$member_draws = array();
 
 $customer_rows = array();
 $winning_rows = array();
@@ -206,78 +176,89 @@ $rank_counts = array(
 $total_games = 0;
 $total_draws = 0;
 
-foreach ($available_turn_tables as $draw_no => $table_name) {
+$combination_query = sql_query(
+    "select
+        lmc_id,
+        draw_no,
+        member_type,
+        num1,
+        num2,
+        num3,
+        num4,
+        num5,
+        num6,
+        result_rank,
+        created_at
+     from l_member_combination
+     where mb_id = '{$safe_member_id}'
+     order by draw_no desc, created_at desc, lmc_id desc",
+    false
+);
+
+while ($row = sql_fetch_array($combination_query)) {
+    $draw_no = isset($row['draw_no'])
+        ? (int) $row['draw_no']
+        : 0;
+
+    if ($draw_no < 1) {
+        continue;
+    }
+
+    $member_draws[$draw_no] = true;
+
     $draw_result = isset($draw_results[$draw_no])
         ? $draw_results[$draw_no]
         : array();
 
-    $safe_member_id = sql_real_escape_string($member_id);
-
-    $query = sql_query(
-        "select
-            lt_id,
-            mb_type,
-            turn,
-            num1,
-            num2,
-            num3,
-            num4,
-            num5,
-            num6,
-            lt_datetime
-         from `{$table_name}`
-         where mb_id = '{$safe_member_id}'
-         order by lt_id asc",
-        false
+    $numbers = array(
+        (int) $row['num1'],
+        (int) $row['num2'],
+        (int) $row['num3'],
+        (int) $row['num4'],
+        (int) $row['num5'],
+        (int) $row['num6'],
     );
 
-    $draw_game_count = 0;
+    $rank = lottogpt_my_rank(
+        $numbers,
+        $draw_result
+    );
 
-    while ($row = sql_fetch_array($query)) {
-        $numbers = array(
-            (int) $row['num1'],
-            (int) $row['num2'],
-            (int) $row['num3'],
-            (int) $row['num4'],
-            (int) $row['num5'],
-            (int) $row['num6'],
-        );
+    $item = array(
+        'draw_no' => $draw_no,
+        'draw_date' => isset($draw_result['draw_date'])
+            ? $draw_result['draw_date']
+            : '',
+        'numbers' => $numbers,
+        'rank' => $rank,
+        'mb_type' => isset($row['member_type'])
+            ? $row['member_type']
+            : '',
+        'issued_at' => isset($row['created_at'])
+            ? $row['created_at']
+            : '',
+    );
 
-        $rank = lottogpt_my_rank(
-            $numbers,
-            $draw_result
-        );
+    $customer_rows[] = $item;
 
-        $item = array(
-            'draw_no' => (int) $draw_no,
-            'draw_date' => isset($draw_result['draw_date'])
-                ? $draw_result['draw_date']
-                : '',
-            'numbers' => $numbers,
-            'rank' => $rank,
-            'mb_type' => isset($row['mb_type'])
-                ? $row['mb_type']
-                : '',
-            'issued_at' => isset($row['lt_datetime'])
-                ? $row['lt_datetime']
-                : '',
-        );
-
-        $customer_rows[] = $item;
-
-        if (isset($rank_counts[$rank])) {
-            $rank_counts[$rank]++;
-            $winning_rows[] = $item;
-        }
-
-        $draw_game_count++;
-        $total_games++;
+    if (isset($rank_counts[$rank])) {
+        $rank_counts[$rank]++;
+        $winning_rows[] = $item;
     }
 
-    if ($draw_game_count > 0) {
-        $total_draws++;
-    }
+    $total_games++;
 }
+
+$total_draws = count($member_draws);
+
+$turn_options = array_unique(
+    array_merge(
+        array_keys($member_draws),
+        array_keys($draw_results)
+    )
+);
+
+rsort($turn_options, SORT_NUMERIC);
 
 usort(
     $customer_rows,
