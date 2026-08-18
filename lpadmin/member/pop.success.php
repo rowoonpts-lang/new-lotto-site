@@ -91,6 +91,7 @@
 										<th>조합번호</th>
 										<th>발송시간</th>
 										<th>결과</th>								
+										<th>재발송</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -124,6 +125,8 @@
 												draw_no,
 												member_type,
 												num1, num2, num3, num4, num5, num6,
+												distribution_batch,
+												distribution_seq,
 												result_rank,
 												result_checked_at,
 												created_at
@@ -155,6 +158,11 @@
 												echo '낙첨';
 											}
 											?></td>
+										<td>
+											<?php if ((int) $row2['distribution_seq'] === 1 && !empty($row2['distribution_batch'])) { ?>
+											<button type="button" class="btn btn-sm btn-primary" onClick="fnLottoSmsResend('<?=htmlspecialchars($row2['distribution_batch'], ENT_QUOTES, 'UTF-8')?>');">재발송</button>
+											<?php } ?>
+										</td>
 									</tr>
 									<?php 	}?>
 									<?php if($total_count < 1){?>
@@ -181,6 +189,12 @@
 </section>
 <!-- /.card -->
 <script>
+function fnLottoSmsResend(batch){
+        if(!batch){ return false; }
+        window.open("pop.lotto.sms.resend.php?batch=" + encodeURIComponent(batch), "lottoSmsResend", "width=620,height=720,scrollbars=yes,resizable=yes");
+        return false;
+}
+
 function fnFindHP(){
 	var mb_hp = $("#mb_hp").val().replace(/ /gi,'');
 	mb_hp = mb_hp.replace(/-/gi,'');
