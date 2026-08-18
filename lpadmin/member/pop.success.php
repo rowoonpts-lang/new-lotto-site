@@ -2,14 +2,41 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
-	$mb_id2 = $mb_id;
-	$mb_id = base64_decode($mb_id);
+	$mb_id2 = isset($mb_id) ? $mb_id : '';
+	$mb_id = base64_decode($mb_id2);
+	$safe_mb_id = sql_real_escape_string($mb_id);
 
-	$sql= "select * from g5_member a, g5_member_etc b where 1=1 and a.mb_id = b.mb_id and a.mb_id = '{$mb_id}'";
+	$sql = "
+		select *
+		from g5_member a
+		join g5_member_etc b on a.mb_id = b.mb_id
+		where a.mb_id = '{$safe_mb_id}'
+		limit 1
+	";
 	$row = sql_fetch($sql);
 
-	if(!$turn){
-		$turn = getTurn()-1;
+	$member_turns = array();
+
+	$turn_result = sql_query(
+		"select distinct draw_no
+		   from l_member_combination
+		  where mb_id = '{$safe_mb_id}'
+		  order by draw_no desc",
+		false
+	);
+
+	while ($turn_row = sql_fetch_array($turn_result)) {
+		$draw_no = (int) $turn_row['draw_no'];
+
+		if ($draw_no > 0) {
+			$member_turns[] = $draw_no;
+		}
+	}
+
+	$turn = isset($_GET['turn']) ? (int) $_GET['turn'] : 0;
+
+	if ($turn < 1 && !empty($member_turns)) {
+		$turn = (int) $member_turns[0];
 	}
 
 	$list = getLuckyNum($turn);
@@ -33,11 +60,9 @@
 						<form id="turnForm">
 							<input type="hidden" name="mb_id" value="<?=base64_encode($mb_id)?>">
 							<select id="turn" name="turn" class="form-control select2 select2-hidden-accessible" style="width: 100%;" aria-hidden="true" onChange="$('#turnForm').submit();">
-								<?php
-									for($i=getTurn(); $i >= $config[cf_1]; $i--){
-								?>
-								<option value="<?=$i?>" <?php if($turn == $i){echo "selected";}?>><?=$i?> 회차</option>
-								<?php 	}?>
+								<?php foreach ($member_turns as $member_turn) { ?>
+								<option value="<?=$member_turn?>" <?php if ($turn === $member_turn) { echo "selected"; }?>><?=$member_turn?> 회차</option>
+								<?php } ?>
 							</select>
 						</form>
 					</div>
@@ -71,41 +96,65 @@
 									<tbody>
 									</tbody>
 									<?php
-										$sql_common = " from l_turn_{$turn} a, g5_member b, g5_member_etc c ";
-										$sql_search = " where 1=1 and a.mb_id = b.mb_id and b.mb_id = c.mb_id and a.mb_id = '{$row[mb_id]}' ";
-										$sql_order = " order by a.lt_id desc ";
+										$sql_search = "
+											where mb_id = '{$safe_mb_id}'
+											  and draw_no = '{$turn}'
+										";
 
-										$sql2 = " select count(distinct lt_id) as cnt {$sql_common} {$sql_search} {$sql_order} ";
-
-										$row2 = sql_fetch($sql2);
-										$total_count = $row2['cnt'];
-
+										$row2 = sql_fetch(
+											"select count(*) as cnt
+											   from l_member_combination
+											   {$sql_search}",
+											false
+										);
+										$total_count = (int) $row2['cnt'];
 
 										$rows = 10;
-										$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
-										if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
-										$from_record = ($page - 1) * $rows; // 시작 열을 구함'
+										$total_page = $total_count > 0 ? (int) ceil($total_count / $rows) : 1;
+										$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
+										if ($page < 1) {
+											$page = 1;
+										}
 
-										$limit = " limit {$from_record}, {$rows} ";
+										$from_record = ($page - 1) * $rows;
 
-										$sql2 = "select a.mb_type as mb_type2, a.*, b.*, c.* {$sql_common} {$sql_search} {$sql_order} {$limit}";
+										$sql2 = "select
+												lmc_id,
+												draw_no,
+												member_type,
+												num1, num2, num3, num4, num5, num6,
+												result_rank,
+												result_checked_at,
+												created_at
+											from l_member_combination
+											{$sql_search}
+											order by lmc_id desc
+											limit {$from_record}, {$rows}";
 
-										$result2 = sql_query($sql2);
+										$result2 = sql_query($sql2, false);
 										for($i=0; $row2 = sql_fetch_array($result2); $i++){
 											$ball_text = "";
-											$ball_text = $row2[num1].",".$row2[num2].",".$row2[num3].",".$row2[num4].",".$row2[num5].",".$row2[num6];
+											$ball_text = $row2['num1'].",".$row2['num2'].",".$row2['num3'].",".$row2['num4'].",".$row2['num5'].",".$row2['num6'];
 									?>
 									<tr>
 										<td><?=$total_count-($page-1)*$rows-$i?></td>
-										<td><?=$row2[turn]?></td>
-										<td><?=$row2[mb_type2]?></td>
+										<td><?=(int) $row2['draw_no']?></td>
+										<td><?=htmlspecialchars($row2['member_type'], ENT_QUOTES, 'UTF-8')?></td>
 										<td>
 											<?=getBallColor($ball_text,$luckAry)?>
 											
 										</td>
-										<td><?=$row2[lt_datetime]?></td>										
-										<td><?=$row2[result]?></td>
+										<td><?=htmlspecialchars($row2['created_at'], ENT_QUOTES, 'UTF-8')?></td>
+										<td><?php
+											if (empty($row2['result_checked_at'])) {
+												echo '추첨대기';
+											} elseif ($row2['result_rank'] !== null && (int) $row2['result_rank'] >= 1 && (int) $row2['result_rank'] <= 5) {
+												echo (int) $row2['result_rank'] . '등';
+											} else {
+												echo '낙첨';
+											}
+											?></td>
 									</tr>
 									<?php 	}?>
 									<?php if($total_count < 1){?>
