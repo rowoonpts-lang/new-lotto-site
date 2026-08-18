@@ -27,7 +27,29 @@
 			<th>결과</th>
 		</tr>
 		<?php
-			$sql = "select * from l_turn_{$turn} where 1=1 and mb_id = '{$member[mb_id]}'";
+			$turn = isset($turn) ? (int) $turn : 0;
+			$safe_member_id = sql_real_escape_string($member['mb_id']);
+
+			$sql = "
+				select
+					lmc_id,
+					draw_no,
+					member_type,
+					num1,
+					num2,
+					num3,
+					num4,
+					num5,
+					num6,
+					sms_status,
+					result_rank,
+					result_checked_at,
+					created_at
+				from l_member_combination
+				where draw_no = '{$turn}'
+				  and mb_id = '{$safe_member_id}'
+				order by lmc_id asc
+			";
 
 			$result = sql_query($sql);
 			$cnt = 0;
@@ -36,12 +58,12 @@
 		?>
 		<tr>
 			<td><?=$turn?>회</td>
-			<td><?=date("Y-m-d",strtotime($row[lt_datetime]))?></td>
-			<td><?=$row[mb_type]?></td>
+			<td><?=date("Y-m-d", strtotime($row['created_at']))?></td>
+			<td><?=htmlspecialchars($row['member_type'], ENT_QUOTES, 'UTF-8')?></td>
 			<td>
 				<ul class="lotto_ball">
 					<?php
-						
+
 						$listText = $row['num1'].",".$row['num2'].",".$row['num3'].",".$row['num4'].",".$row['num5'].",".$row['num6'];
 						echo getBallStyle3($listText);
 					?>
@@ -54,14 +76,27 @@
 				</ul>
 			</td>
 			<td>
-				<?php if($row[mb_type] == "무료회원"){?>
-				미발송
-				<?php }else{?>
+				<?php if ($row['sms_status'] === 'sent') { ?>
 				발송
-				<?php }?>
+				<?php } else { ?>
+				미발송
+				<?php } ?>
 			</td>
 			<!--td>확률분석</td-->
-			<td><?=$row['result']?></td>
+			<td><?php
+				if (empty($row['result_checked_at'])) {
+					echo '추첨대기';
+				} elseif (
+					isset($row['result_rank'])
+					&& $row['result_rank'] !== null
+					&& (int) $row['result_rank'] >= 1
+					&& (int) $row['result_rank'] <= 5
+				) {
+					echo (int) $row['result_rank'] . '등';
+				} else {
+					echo '낙첨';
+				}
+				?></td>
 		</tr>
 		<?php	}?>
 		<?php if($cnt < 1){?>
