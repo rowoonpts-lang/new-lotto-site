@@ -27,6 +27,54 @@ if (empty($notification['ln_id'])) {
 $notification_type = isset($notification['notification_type']) ? (string) $notification['notification_type'] : '';
 $target_url = G5_LADMIN_URL;
 
+if ($notification_type === 'payment_rejected') {
+    $reference_type = isset($notification['reference_type'])
+        ? (string) $notification['reference_type']
+        : '';
+
+    $reference_id = isset($notification['reference_id'])
+        ? (int) $notification['reference_id']
+        : 0;
+
+    if ($reference_type !== 'payment_request' || $reference_id < 1) {
+        alert('반려된 결제 승인요청 정보가 올바르지 않습니다.', G5_LADMIN_URL);
+        exit;
+    }
+
+    $payment_request = sql_fetch(
+        "select lpr_id, requested_by, payment_method, request_status
+           from l_payment_request
+          where lpr_id = {$reference_id}
+          limit 1",
+        false
+    );
+
+    if (
+        empty($payment_request['lpr_id'])
+        || (string) $payment_request['requested_by'] !== $login_mb_id
+    ) {
+        alert('확인할 수 없는 결제 승인요청입니다.', G5_LADMIN_URL);
+        exit;
+    }
+
+    if ((string) $payment_request['payment_method'] === '신용카드') {
+        $target_url = G5_LADMIN_URL.'/payment/payment.card.request.edit.php?'.
+            http_build_query(array(
+                'lpr_id' => $reference_id,
+            ));
+    } else {
+        $target_url = G5_LADMIN_URL.'/payment/payment.request.edit.php?'.
+            http_build_query(array(
+                'lpr_id' => $reference_id,
+            ));
+    }
+
+    /*
+     * 반려 알림은 클릭만 해서는 읽음 처리하지 않는다.
+     * 요청자가 실제 수정 후 재승인요청을 완료했을 때 종료한다.
+     */
+}
+
 if ($notification_type === 'payment_approved') {
     $target_mb_id = isset($notification['mb_id']) ? trim((string) $notification['mb_id']) : '';
     $query = array('sch_staff' => $login_mb_id);

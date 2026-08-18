@@ -18,3 +18,6 @@ data/import/*.sql
 # Python cache
 __pycache__/
 *.py[cod]
+
+# Local card payment encryption secret
+data/lotto_card_secret.php

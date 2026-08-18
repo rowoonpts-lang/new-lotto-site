@@ -51,9 +51,11 @@ if ($request['request_status'] !== '승인대기') {
     exit;
 }
 
-if ($request['payment_method'] !== '무통장') {
+$payment_method = trim((string) $request['payment_method']);
+
+if (!in_array($payment_method, array('무통장', '신용카드'), true)) {
     sql_query('ROLLBACK', false);
-    alert('현재는 무통장 승인요청만 승인완료 처리할 수 있습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
+    alert('지원하지 않는 결제수단입니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
     exit;
 }
 
@@ -73,6 +75,26 @@ $mb_id_sql = sql_real_escape_string($mb_id);
 $staff_mb_id_sql = sql_real_escape_string($staff_mb_id);
 $product_type_sql = sql_real_escape_string($product_type);
 $approved_by_sql = sql_real_escape_string($approved_by);
+$payment_method_sql = sql_real_escape_string($payment_method);
+
+if ($payment_method === '신용카드') {
+    $card_secret = sql_fetch(
+        "select lpcs_id
+           from l_payment_card_secret
+          where lpr_id = {$lpr_id}
+          limit 1",
+        false
+    );
+
+    if (empty($card_secret['lpcs_id'])) {
+        sql_query('ROLLBACK', false);
+        alert(
+            '카드 민감정보가 없어 승인완료 처리할 수 없습니다.',
+            G5_LADMIN_URL.'/payment/payment.approval.php'
+        );
+        exit;
+    }
+}
 
 $member_row = sql_fetch("select mb_id, mb_name from g5_member where mb_id = '{$mb_id_sql}' limit 1");
 if (!$member_row || empty($member_row['mb_id'])) {
@@ -97,7 +119,7 @@ if (!sql_query(
         lpr_id = {$lpr_id},
         mb_id = '{$mb_id_sql}',
         staff_mb_id = '{$staff_mb_id_sql}',
-        payment_method = '무통장',
+        payment_method = '{$payment_method_sql}',
         product_type = '{$product_type_sql}',
         sale_amount = {$request_amount},
         approved_by = '{$approved_by_sql}',
@@ -153,6 +175,21 @@ if (!sql_query(
     exit;
 }
 
+if ($payment_method === '신용카드') {
+    if (!sql_query(
+        "delete from l_payment_card_secret
+          where lpr_id = {$lpr_id}",
+        false
+    )) {
+        sql_query('ROLLBACK', false);
+        alert(
+            '카드 민감정보 삭제 중 오류가 발생했습니다.',
+            G5_LADMIN_URL.'/payment/payment.approval.php'
+        );
+        exit;
+    }
+}
+
 if (!sql_query('COMMIT', false)) {
     sql_query('ROLLBACK', false);
     alert('결제 승인완료 저장에 실패했습니다.', G5_LADMIN_URL.'/payment/payment.approval.php');
@@ -163,4 +200,19 @@ if (function_exists('fnSetLog')) {
     fnSetLog($approved_by, $member_name.' 회원의 결제 승인요청을 승인완료 처리하였습니다.');
 }
 
-alert('결제 승인완료 처리되었습니다.', G5_LADMIN_URL.'/payment/payment.approval.php?sch_status=승인완료');
+$from_card_detail = isset($_POST['from_card_detail'])
+    && (string) $_POST['from_card_detail'] === '1';
+
+if ($from_card_detail && $payment_method === '신용카드') {
+    echo '<script>';
+    echo 'alert("카드 결제 승인완료 처리되었습니다.");';
+    echo 'if (window.opener && !window.opener.closed) { window.opener.location.reload(); }';
+    echo 'window.close();';
+    echo '</script>';
+    exit;
+}
+
+alert(
+    '결제 승인완료 처리되었습니다.',
+    G5_LADMIN_URL.'/payment/payment.approval.php?sch_status=승인완료'
+);

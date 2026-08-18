@@ -167,11 +167,27 @@ include_once(G5_LADMIN_PATH."/head.php");
                 <td><?=htmlspecialchars((string) $row['depositor_name'], ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['bank_account'], ENT_QUOTES)?></td>
                 <td>
-                    <?php if ($row['request_status'] === '승인대기' && $row['payment_method'] === '무통장') { ?>
-                    <form method="post" action="<?=G5_LADMIN_URL?>/payment/payment.approval.update.php" class="mb-0" onsubmit="return confirmPaymentApproval();">
-                        <input type="hidden" name="lpr_id" value="<?=(int) $row['lpr_id']?>">
-                        <button type="submit" class="btn btn-primary btn-sm">승인완료</button>
-                    </form>
+                    <?php if ($row['request_status'] === '승인대기') { ?>
+                        <?php if ($row['payment_method'] === '무통장') { ?>
+                        <form method="post" action="<?=G5_LADMIN_URL?>/payment/payment.approval.update.php" class="mb-2" onsubmit="return confirmPaymentApproval();">
+                            <input type="hidden" name="lpr_id" value="<?=(int) $row['lpr_id']?>">
+                            <button type="submit" class="btn btn-primary btn-sm btn-block">승인완료</button>
+                        </form>
+                        <?php } ?>
+
+                        <?php if ($row['payment_method'] === '신용카드') { ?>
+                        <button type="button"
+                                class="btn btn-info btn-sm btn-block mb-2"
+                                onclick="openCardPaymentDetail(<?=(int) $row['lpr_id']?>);">
+                            카드정보 확인
+                        </button>
+                        <?php } ?>
+
+                        <form method="post" action="<?=G5_LADMIN_URL?>/payment/payment.request.reject.php" class="mb-0" onsubmit="return confirmPaymentReject(this);">
+                            <input type="hidden" name="lpr_id" value="<?=(int) $row['lpr_id']?>">
+                            <input type="text" name="reject_reason" class="form-control form-control-sm mb-1" maxlength="255" placeholder="반려사유">
+                            <button type="submit" class="btn btn-danger btn-sm btn-block">반려</button>
+                        </form>
                     <?php } else { ?>
                         -
                     <?php } ?>
@@ -203,8 +219,31 @@ include_once(G5_LADMIN_PATH."/head.php");
 </div>
 
 <script>
+function openCardPaymentDetail(lprId) {
+    var url = '<?=G5_LADMIN_URL?>/payment/payment.card.detail.php?lpr_id=' +
+        encodeURIComponent(lprId);
+
+    window.open(
+        url,
+        'card_payment_detail',
+        'width=1050,height=720,top=80,left=150,location=no,scrollbars=yes,resizable=yes'
+    );
+}
+
 function confirmPaymentApproval() {
     return confirm('입금을 확인하셨습니까?\n승인완료 처리합니다.');
+}
+
+function confirmPaymentReject(form) {
+    var reason = $.trim($(form).find('input[name="reject_reason"]').val());
+
+    if (reason === '') {
+        alert('반려사유를 입력해주세요.');
+        $(form).find('input[name="reject_reason"]').focus();
+        return false;
+    }
+
+    return confirm('이 결제 승인요청을 반려하시겠습니까?');
 }
 </script>
 

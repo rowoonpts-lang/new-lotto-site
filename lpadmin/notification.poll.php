@@ -31,8 +31,21 @@ if ($notification_result) {
         $ln_id = isset($notification_row['ln_id']) ? (int) $notification_row['ln_id'] : 0;
         $open_url = '';
 
-        if ($notification_type === 'payment_approved' && $ln_id > 0) {
+        if (
+            in_array(
+                $notification_type,
+                array('payment_approved', 'payment_rejected'),
+                true
+            )
+            && $ln_id > 0
+        ) {
             $open_url = G5_LADMIN_URL.'/notification.open.php?ln_id='.$ln_id;
+        }
+
+        $open_mode = 'same';
+
+        if ($notification_type === 'payment_rejected') {
+            $open_mode = 'popup';
         }
 
         $notifications[] = array(
@@ -42,7 +55,7 @@ if ($notification_result) {
             'message' => isset($notification_row['message']) ? (string) $notification_row['message'] : '',
             'created_at' => isset($notification_row['created_at']) ? (string) $notification_row['created_at'] : '',
             'open_url' => $open_url,
-            'open_mode' => 'same',
+            'open_mode' => $open_mode,
         );
     }
 }

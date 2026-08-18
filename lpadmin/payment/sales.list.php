@@ -9,7 +9,35 @@ if ($login_mb_id === '') {
     exit;
 }
 
-$can_view_all_sales = $login_level >= LOTTO_ROLE_ADMIN;
+if (!lottoIsStaffLevel($login_level)) {
+    alert('매출내역을 조회할 권한이 없습니다.', G5_LADMIN_URL);
+    exit;
+}
+
+$can_view_all_sales = lottoCanViewAllMembers($login_level);
+
+$sales_staff_ids = array();
+
+if (!$can_view_all_sales) {
+    $sales_staff_ids[] = $login_mb_id;
+
+    if (
+        $login_level === LOTTO_ROLE_STAFF2
+        || $login_level === LOTTO_ROLE_TEAM_LEADER
+    ) {
+        $child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
+
+        foreach ($child_staff_ids as $child_staff_id) {
+            $sales_staff_ids[] = $child_staff_id;
+        }
+    }
+
+    $sales_staff_ids = array_values(
+        array_unique(
+            array_filter($sales_staff_ids)
+        )
+    );
+}
 
 $sch_method = isset($_GET['sch_method']) ? trim((string) $_GET['sch_method']) : '';
 $sch_product = isset($_GET['sch_product']) ? trim((string) $_GET['sch_product']) : '';
@@ -23,10 +51,32 @@ $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 $rows = 30;
 
 if (!$can_view_all_sales) {
-    $sch_staff = $login_mb_id;
+    if (
+        $sch_staff === ''
+        || !in_array($sch_staff, $sales_staff_ids, true)
+    ) {
+        $sch_staff = '';
+    }
 }
 
 $where = array('1=1');
+
+if (!$can_view_all_sales) {
+    $sales_staff_ids_sql = array();
+
+    foreach ($sales_staff_ids as $sales_staff_id) {
+        $sales_staff_ids_sql[] =
+            "'" . sql_real_escape_string($sales_staff_id) . "'";
+    }
+
+    if (count($sales_staff_ids_sql) > 0) {
+        $where[] = 'a.staff_mb_id in ('.
+            implode(',', $sales_staff_ids_sql).
+            ')';
+    } else {
+        $where[] = '1=0';
+    }
+}
 
 $allowed_methods = array('', '무통장', '신용카드');
 if (!in_array($sch_method, $allowed_methods, true)) {
@@ -73,6 +123,7 @@ while ($product_row = sql_fetch_array($product_result)) {
 }
 
 $staff_list = array();
+
 if ($can_view_all_sales) {
     $staff_result = sql_query(
         "select distinct a.staff_mb_id, m.mb_name
@@ -81,8 +132,28 @@ if ($can_view_all_sales) {
           where a.staff_mb_id <> ''
           order by m.mb_name asc, a.staff_mb_id asc"
     );
+
     while ($staff_row = sql_fetch_array($staff_result)) {
         $staff_list[] = $staff_row;
+    }
+} elseif (
+    $login_level === LOTTO_ROLE_STAFF2
+    || $login_level === LOTTO_ROLE_TEAM_LEADER
+) {
+    foreach ($sales_staff_ids as $sales_staff_id) {
+        $sales_staff_id_sql = sql_real_escape_string($sales_staff_id);
+
+        $staff_row = sql_fetch(
+            "select mb_id as staff_mb_id, mb_name
+               from g5_member
+              where mb_id = '{$sales_staff_id_sql}'
+              limit 1",
+            false
+        );
+
+        if (!empty($staff_row['staff_mb_id'])) {
+            $staff_list[] = $staff_row;
+        }
     }
 }
 
@@ -140,7 +211,11 @@ include_once(G5_LADMIN_PATH."/head.php");
                         <?php } ?>
                     </select>
                 </div>
-                <?php if ($can_view_all_sales) { ?>
+                <?php if (
+                    $can_view_all_sales
+                    || $login_level === LOTTO_ROLE_STAFF2
+                    || $login_level === LOTTO_ROLE_TEAM_LEADER
+                ) { ?>
                 <div class="col-md-2 mb-2">
                     <select name="sch_staff" class="form-control">
                         <option value="">담당자전체</option>
@@ -238,7 +313,7 @@ include_once(G5_LADMIN_PATH."/head.php");
         $query = http_build_query(array(
             'sch_method' => $sch_method,
             'sch_product' => $sch_product,
-            'sch_staff' => $can_view_all_sales ? $sch_staff : '',
+            'sch_staff' => $sch_staff,
             'sch_text' => $sch_text,
             'min_amount' => $min_amount_raw,
             'max_amount' => $max_amount_raw,
