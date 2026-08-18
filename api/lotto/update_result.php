@@ -1,4 +1,15 @@
 <?php
+
+if (PHP_SAPI === 'cli') {
+    $_SERVER['SERVER_PORT'] = $_SERVER['SERVER_PORT'] ?? '80';
+    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?? 'localhost';
+    $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI']
+        ?? '/api/lotto/update_result.php';
+    $_SERVER['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR']
+        ?? '127.0.0.1';
+}
+
 include_once __DIR__ . '/_common.php';
 include_once G5_PATH . '/include/lotto_result.lib.php';
 
@@ -64,12 +75,12 @@ try {
             $result = lotto_result_fetch_draw($context);
             $save_status = lotto_result_save($result);
 
-        if ($save_status !== 'inserted') {
-            throw new RuntimeException('예상하지 못한 저장 상태: ' . $save_status);
-        }
+            if ($save_status !== 'inserted') {
+                throw new RuntimeException('예상하지 못한 저장 상태: ' . $save_status);
+            }
 
-        $message = $remote_draw . '회 당첨결과를 저장했습니다.';
-        lotto_result_log($message);
+            $message = $remote_draw . '회 당첨결과를 저장했습니다.';
+            lotto_result_log($message);
 
             $response = array(
                 'success' => true,
