@@ -271,13 +271,13 @@
 								<div class="form-group">
 									<div class="row">
 										<div class="col-3">
-											<label for="mb_hp">수동보내기</label>
+											<label for="dr_num">추가발송</label>
 										</div>
 										<div class="col-6">
-											<input type="number" class="form-control" id="dr_num" name="dr_num" placeholder="">
+											<input type="number" class="form-control" id="dr_num" name="dr_num" min="1" placeholder="">
 										</div>
 										<div class="col-3">
-											<button class="btn btn-block btn-primary">즉시전송</button>
+											<button type="button" class="btn btn-block btn-primary" onClick="fnCreateNumber();">추가발송</button>
 										</div>
 									</div>
 								</div>
@@ -338,37 +338,61 @@ function fnFindID(){
 	return false;
 }
 var isAjax = true;
-function fnCreateNumber(mb_id, mb_type){
-	if(isAjax == false){
-		alert("처리중입니다. 잡시만 기다려주세요.");
-		return false;
-	}
+function fnCreateNumber(){
+    if(isAjax == false){
+            alert("처리중입니다. 잠시만 기다려주세요.");
+            return false;
+    }
 
-	
+    var count = parseInt($("#dr_num").val(), 10);
 
-	if($("#dr_num").val() < 1){
-		alert("수동보내기 갯수를 입력하세요.");
-		$("#dr_num").focus();
-		return false;
-	}
-	if(confirm("조합을 전송하시겠습니까?") == true){
-		isAjax = false;
-		$.ajax({
-			type: "POST",
-			url: "ajax.create.number.php",
-			data: {mb_id : mb_id, cnt : $("#dr_num").val(), mb_type: mb_type}, 
-			cache: false,
-			async: false,
-			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-			success: function(data) {
-				alert("정상적으로 처리되었습니다.");
-				isAjax = true;
-				location.reload();
-			}
-		});
-	}
+    if(!count || count < 1){
+            alert("추가발송 갯수를 입력하세요.");
+            $("#dr_num").focus();
+            return false;
+    }
+
+    if(confirm(count + "개의 추가 조합을 생성하시겠습니까?") !== true){
+            return false;
+    }
+
+    isAjax = false;
+
+    $.ajax({
+            type: "POST",
+            url: "ajax.create.number.php",
+            data: {
+                    mb_id: $("#mb_id").val(),
+                    cnt: count
+            },
+            cache: false,
+            dataType: "json",
+            contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function(data) {
+                    isAjax = true;
+
+                    if(!data || data.success !== true){
+                            alert(data && data.error ? data.error : "추가 조합 생성에 실패했습니다.");
+                            return;
+                    }
+
+                    $("#dr_num").val("");
+
+                    window.open(
+                            "pop.lotto.sms.confirm.php?batch="
+                            + encodeURIComponent(data.distribution_batch),
+                            "lottoSmsConfirm",
+                            "width=620,height=720,scrollbars=yes,resizable=yes"
+                    );
+            },
+            error: function(){
+                    isAjax = true;
+                    alert("추가 조합 처리 중 오류가 발생했습니다.");
+            }
+    });
+
+    return false;
 }
-
 function fnSubmit(){
 	if($("#mb_hp_chk").val() == "0"){
 		alert("휴대폰 번호 중복검사를 진행해주세요.");
@@ -381,13 +405,6 @@ function fnSubmit(){
 	if($("#mb_name").val() == ""){
 		alert("이름을 입력하세요.");
 		return false;
-	}
-	if($("#dr_num").val()*1 > 0){
-		if(confirm("조합을 전송하시겠습니까?") == true){
-			return true;
-		}else{
-			return false;
-		}
 	}
 	/*$("#mb_password").val($("#mb_password").val().replace(/ /gi,''));
 	if($("#mb_password").val() == ""){
