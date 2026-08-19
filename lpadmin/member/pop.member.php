@@ -4,6 +4,7 @@
 
 	$mb_id2 = isset($_GET['mb_id']) ? trim((string) $_GET['mb_id']) : '';
 	$mb_id = $mb_id2 !== '' ? base64_decode($mb_id2, true) : '';
+	$alarm_lm_id = isset($_GET['alarm_lm_id']) ? (int) $_GET['alarm_lm_id'] : 0;
 
 	if ($mb_id === false || $mb_id === '') {
 		echo '<script>alert("회원정보가 올바르지 않습니다.");window.close();</script>';
@@ -167,6 +168,7 @@ $(function(){
 					</div>
 					<form name="frm_member_memo" id="frm_member_memo" method="post" action="pop.member.memo.update.php" autocomplete="off">
 						<input type="hidden" name="mb_id" value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+						<input type="hidden" name="alarm_lm_id" value="<?=$alarm_lm_id?>">
 						<div class="card-body">
 							<div class="form-group">
 								<label for="recent_select">메모선택</label>
