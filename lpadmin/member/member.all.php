@@ -59,25 +59,10 @@
 	";
 
 	if (!$can_view_all) {
-		$staff_ids = array($login_mb_id);
-
-		if (
-			$login_level === LOTTO_ROLE_STAFF2
-			|| $login_level === LOTTO_ROLE_TEAM_LEADER
-		) {
-			$child_staff_ids =
-				lottoGetDirectChildStaffIds($login_mb_id);
-
-			foreach ($child_staff_ids as $child_staff_id) {
-				$staff_ids[] = $child_staff_id;
-			}
-		}
-
-		$staff_ids = array_values(
-			array_unique(
-				array_filter($staff_ids)
-			)
-		);
+		$staff_ids = lottoGetAccessibleStaffIds(
+                        $login_mb_id,
+                        $login_level
+                );
 
 		$staff_ids_sql = array();
 

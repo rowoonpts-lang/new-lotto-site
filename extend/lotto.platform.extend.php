@@ -692,6 +692,74 @@ function lottoGetDirectChildStaffIds($parentMbId)
 }
 
 /**
+ * 로그인 직원이 회원관리에서 접근할 수 있는 직원 아이디 목록을 반환합니다.
+ *
+ * 직원1: 본인
+ * 직원2: 본인 + 직접 하위 직원
+ * 팀장: 본인 + 모든 하위 직원
+ */
+function lottoGetAccessibleStaffIds($mbId, $mbLevel)
+{
+    $mbId = trim((string) $mbId);
+    $mbLevel = (int) $mbLevel;
+    $staffIds = array();
+
+    if ($mbId === '') {
+        return $staffIds;
+    }
+
+    $staffIds[] = $mbId;
+
+    if ($mbLevel === LOTTO_ROLE_STAFF2) {
+        $childStaffIds = lottoGetDirectChildStaffIds($mbId);
+
+        foreach ($childStaffIds as $childStaffId) {
+            $childStaffId = trim((string) $childStaffId);
+
+            if ($childStaffId !== '') {
+                $staffIds[] = $childStaffId;
+            }
+        }
+    } elseif ($mbLevel === LOTTO_ROLE_TEAM_LEADER) {
+        $pendingStaffIds = array($mbId);
+        $processedStaffIds = array();
+
+        while (count($pendingStaffIds) > 0) {
+            $parentStaffId = array_shift($pendingStaffIds);
+
+            if (isset($processedStaffIds[$parentStaffId])) {
+                continue;
+            }
+
+            $processedStaffIds[$parentStaffId] = true;
+
+            $childStaffIds =
+                lottoGetDirectChildStaffIds($parentStaffId);
+
+            foreach ($childStaffIds as $childStaffId) {
+                $childStaffId = trim((string) $childStaffId);
+
+                if ($childStaffId === '') {
+                    continue;
+                }
+
+                $staffIds[] = $childStaffId;
+
+                if (!isset($processedStaffIds[$childStaffId])) {
+                    $pendingStaffIds[] = $childStaffId;
+                }
+            }
+        }
+    }
+
+    return array_values(
+        array_unique(
+            array_filter($staffIds)
+        )
+    );
+}
+
+/**
  * 회원의 현재 담당 직원 아이디를 반환합니다.
  */
 function lottoGetAssignedStaffId($mbId)

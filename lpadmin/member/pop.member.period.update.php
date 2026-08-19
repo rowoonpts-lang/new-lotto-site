@@ -35,16 +35,10 @@ $login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
 $can_view_all = lottoCanViewAllMembers($login_level);
 
 if (!$can_view_all) {
-    $allowed_staff_ids = array($login_mb_id);
-
-    if ($login_level === LOTTO_ROLE_STAFF2 || $login_level === LOTTO_ROLE_TEAM_LEADER) {
-        $child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
-        foreach ($child_staff_ids as $child_staff_id) {
-            $allowed_staff_ids[] = (string) $child_staff_id;
-        }
-    }
-
-    $allowed_staff_ids = array_values(array_unique(array_filter($allowed_staff_ids)));
+    $allowed_staff_ids = lottoGetAccessibleStaffIds(
+    $login_mb_id,
+    $login_level
+);
     $assigned_staff_mb_id = isset($member_row['staff_mb_id']) ? trim((string) $member_row['staff_mb_id']) : '';
 
     if ($assigned_staff_mb_id === '' || !in_array($assigned_staff_mb_id, $allowed_staff_ids, true)) {

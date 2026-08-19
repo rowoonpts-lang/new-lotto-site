@@ -3,14 +3,7 @@ $notification_widget_mb_id = isset($member['mb_id'])
     ? trim((string) $member['mb_id'])
     : '';
 
-$notification_widget_level = isset($member['mb_level'])
-    ? (int) $member['mb_level']
-    : 0;
-
-if (
-    $notification_widget_mb_id === ''
-    || $notification_widget_level >= LOTTO_ROLE_ADMIN
-) {
+if ($notification_widget_mb_id === '') {
     return;
 }
 ?>

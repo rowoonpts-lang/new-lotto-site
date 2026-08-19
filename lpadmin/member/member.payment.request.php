@@ -91,13 +91,6 @@ if ($login_mb_id !== '' && !empty($row['mb_id'])) {
                     <label for="bank_request_amount">입금 예정금액</label>
                     <input type="text" class="form-control" id="bank_request_amount" name="request_amount" inputmode="numeric" placeholder="0">
                 </div>
-                <div class="col-md-2 col-sm-6 mb-2">
-                    <label>입금안내 문자</label>
-                    <div class="form-control d-flex align-items-center">
-                        <label class="mb-0 mr-3"><input type="radio" name="sms_send" value="1"> 발송</label>
-                        <label class="mb-0"><input type="radio" name="sms_send" value="0" checked> 미발송</label>
-                    </div>
-                </div>
             </div>
             <?php if (count($bank_accounts) < 1) { ?>
             <div class="text-danger">사용 가능한 입금계좌가 등록되어 있지 않습니다. 관리자에게 계좌 등록을 요청하세요.</div>

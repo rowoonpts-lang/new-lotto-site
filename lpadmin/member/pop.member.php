@@ -39,16 +39,10 @@
 	$can_view_all = lottoCanViewAllMembers($login_level);
 
 	if (!$can_view_all) {
-		$allowed_staff_ids = array($login_mb_id);
-
-		if ($login_level === LOTTO_ROLE_STAFF2 || $login_level === LOTTO_ROLE_TEAM_LEADER) {
-			$child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
-			foreach ($child_staff_ids as $child_staff_id) {
-				$allowed_staff_ids[] = (string) $child_staff_id;
-			}
-		}
-
-		$allowed_staff_ids = array_values(array_unique(array_filter($allowed_staff_ids)));
+		$allowed_staff_ids = lottoGetAccessibleStaffIds(
+    $login_mb_id,
+    $login_level
+);
 		$assigned_staff_mb_id = isset($assignment['staff_mb_id']) ? trim((string) $assignment['staff_mb_id']) : '';
 
 		if ($assigned_staff_mb_id === '' || !in_array($assigned_staff_mb_id, $allowed_staff_ids, true)) {
@@ -155,6 +149,171 @@ $(function(){
 								<button type="submit" class="btn btn-primary btn-sm text-nowrap">기간 저장</button>
 							</div>
 						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="card card-success card-outline">
+			<div class="card-header">
+				<h3 class="card-title">회원 정보수정</h3>
+			</div>
+
+			<form method="post"
+				  action="pop.member.profile.update.php"
+				  autocomplete="off">
+				<input type="hidden"
+					   name="mb_id"
+					   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-3 mb-3">
+							<label for="profile_mb_name">이름</label>
+							<input type="text"
+								   class="form-control"
+								   id="profile_mb_name"
+								   name="mb_name"
+								   value="<?=htmlspecialchars((string) $row['mb_name'], ENT_QUOTES)?>"
+								   required>
+						</div>
+
+						<div class="col-md-3 mb-3">
+							<label for="profile_mb_hp">휴대폰</label>
+							<input type="text"
+								   class="form-control"
+								   id="profile_mb_hp"
+								   name="mb_hp"
+								   value="<?=htmlspecialchars((string) $row['mb_hp'], ENT_QUOTES)?>"
+								   required>
+						</div>
+
+						<div class="col-md-3 mb-3">
+							<label for="profile_mb_type">회원등급</label>
+							<select class="form-control"
+									id="profile_mb_type"
+									name="mb_type">
+								<?php
+								$member_type_options = fnGetType();
+								foreach ($member_type_options as $member_type_option) {
+									$member_type_option = (string) $member_type_option;
+								?>
+								<option
+									value="<?=htmlspecialchars($member_type_option, ENT_QUOTES)?>"
+									<?=$member_type_option === (string) ($row['mb_type'] ?? '') ? 'selected' : ''?>
+								>
+									<?=htmlspecialchars($member_type_option, ENT_QUOTES)?>
+								</option>
+								<?php } ?>
+							</select>
+						</div>
+
+						<div class="col-md-3 mb-3">
+							<label for="profile_mb_password">비밀번호 변경</label>
+							<input type="password"
+								   class="form-control"
+								   id="profile_mb_password"
+								   name="mb_password"
+								   autocomplete="new-password"
+								   placeholder="변경할 때만 입력">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4 mb-3">
+							<label>아이디</label>
+							<input type="text"
+								   class="form-control"
+								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>"
+								   readonly>
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="profile_free_num_date">무료문자 종료일</label>
+							<input type="date"
+								   class="form-control"
+								   id="profile_free_num_date"
+								   name="free_num_date"
+								   value="<?=htmlspecialchars((string) ($row['free_num_date'] ?? ''), ENT_QUOTES)?>">
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="profile_free_num_qty">무료문자 수량</label>
+							<input type="number"
+								   min="0"
+								   class="form-control"
+								   id="profile_free_num_qty"
+								   name="free_num_qty"
+								   value="<?=(int) ($row['free_num_qty'] ?? 0)?>">
+						</div>
+					</div>
+				</div>
+
+				<div class="card-footer text-right">
+					<button type="submit" class="btn btn-success">
+						회원정보 저장
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="card card-warning card-outline">
+			<div class="card-header">
+				<h3 class="card-title">회원관리</h3>
+			</div>
+
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6 mb-2">
+						<?php if (!empty($row['hold_datetime']) || (int) ($row['left_day'] ?? 0) > 0) { ?>
+						<form method="post"
+							  action="pop.member.status.update.php"
+							  onsubmit="return confirm('일시정지를 해제하시겠습니까?');">
+							<input type="hidden" name="mb_id"
+								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+							<input type="hidden" name="action" value="start">
+
+							<button type="submit" class="btn btn-primary btn-block">
+								일시정지 해제
+							</button>
+						</form>
+						<?php } else { ?>
+						<form method="post"
+							  action="pop.member.status.update.php"
+							  onsubmit="return confirm('이 회원의 이용기간을 일시정지하시겠습니까?');">
+							<input type="hidden" name="mb_id"
+								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+							<input type="hidden" name="action" value="hold">
+
+							<button type="submit" class="btn btn-warning btn-block">
+								일시정지
+							</button>
+						</form>
+						<?php } ?>
+					</div>
+
+					<div class="col-md-6 mb-2">
+						<?php if (trim((string) ($row['mb_leave_date'] ?? '')) === '') { ?>
+						<form method="post"
+							  action="pop.member.status.update.php"
+							  onsubmit="return confirm('정말 이 회원을 탈퇴 처리하시겠습니까?\n상담·결제·배분·문자 이력은 삭제하지 않습니다.');">
+							<input type="hidden" name="mb_id"
+								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+							<input type="hidden" name="action" value="leave">
+
+							<button type="submit" class="btn btn-danger btn-block">
+								회원 탈퇴
+							</button>
+						</form>
+						<?php } else { ?>
+						<button type="button"
+								class="btn btn-secondary btn-block"
+								disabled>
+							탈퇴회원
+							(<?=htmlspecialchars((string) $row['mb_leave_date'], ENT_QUOTES)?>)
+						</button>
+						<?php } ?>
 					</div>
 				</div>
 			</div>

@@ -144,23 +144,9 @@ if ($assigned_staff_mb_id === '') {
     exit;
 }
 
-$allowed_staff_ids = array($login_mb_id);
-
-if (
-    $login_level === LOTTO_ROLE_STAFF2
-    || $login_level === LOTTO_ROLE_TEAM_LEADER
-) {
-    $child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
-
-    foreach ($child_staff_ids as $child_staff_id) {
-        $allowed_staff_ids[] = (string) $child_staff_id;
-    }
-}
-
-$allowed_staff_ids = array_values(
-    array_unique(
-        array_filter($allowed_staff_ids)
-    )
+$allowed_staff_ids = lottoGetAccessibleStaffIds(
+    $login_mb_id,
+    $login_level
 );
 
 if (!in_array($assigned_staff_mb_id, $allowed_staff_ids, true)) {
@@ -268,6 +254,6 @@ if (function_exists('fnSetLog')) {
 
 alert(
     '카드 승인요청이 등록되었습니다.',
-    G5_LADMIN_URL.'/member/pop.member.php?mb_id='.
+    G5_LADMIN_URL.'/member/pop.payment.php?mb_id='.
         urlencode(base64_encode($mb_id))
 );

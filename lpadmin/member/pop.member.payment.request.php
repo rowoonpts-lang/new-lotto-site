@@ -6,7 +6,6 @@ $product_type = isset($_POST['product_type']) ? trim((string) $_POST['product_ty
 $request_amount_raw = isset($_POST['request_amount']) ? preg_replace('/[^0-9]/', '', (string) $_POST['request_amount']) : '';
 $bank_account_id = isset($_POST['bank_account_id']) ? (int) $_POST['bank_account_id'] : 0;
 $depositor_name = isset($_POST['depositor_name']) ? trim((string) $_POST['depositor_name']) : '';
-$sms_send = isset($_POST['sms_send']) && (string) $_POST['sms_send'] === '1' ? 1 : 0;
 
 $login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
 $login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
@@ -90,14 +89,10 @@ if ($assigned_staff_mb_id === '') {
     exit;
 }
 
-$allowed_staff_ids = array($login_mb_id);
-if ($login_level === LOTTO_ROLE_STAFF2 || $login_level === LOTTO_ROLE_TEAM_LEADER) {
-    $child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
-    foreach ($child_staff_ids as $child_staff_id) {
-        $allowed_staff_ids[] = (string) $child_staff_id;
-    }
-}
-$allowed_staff_ids = array_values(array_unique(array_filter($allowed_staff_ids)));
+$allowed_staff_ids = lottoGetAccessibleStaffIds(
+    $login_mb_id,
+    $login_level
+);
 
 if (!in_array($assigned_staff_mb_id, $allowed_staff_ids, true)) {
     alert('접근 권한이 없는 회원입니다.');
@@ -125,20 +120,15 @@ $sql = "insert into l_payment_request set
             member_phone = '{$member_phone_sql}',
             bank_account = '{$bank_account_sql}',
             depositor_name = '{$depositor_name_sql}',
-            sms_send = {$sms_send},
+            sms_send = 0,
             created_at = now(),
             updated_at = now()";
 sql_query($sql);
 
 fnSetLog($login_mb_id, $mb_id.'님의 무통장 결제 승인요청을 등록하였습니다.');
 
-if ($sms_send === 1) {
-    $message = (string) $target_member['mb_name'].'고객님 입금 안내 '.$bank_account_text.' / '.number_format($request_amount).'원';
-    fnSendOneshot($config['cf_oneshot_tel'], (string) $target_member['mb_hp'], $message, '');
-}
-
 alert(
     '무통장 승인요청이 등록되었습니다.',
-    G5_LADMIN_URL.'/member/pop.member.php?mb_id='.urlencode(base64_encode($mb_id))
+    G5_LADMIN_URL.'/member/pop.payment.php?mb_id='.urlencode(base64_encode($mb_id))
 );
 ?>

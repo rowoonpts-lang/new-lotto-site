@@ -2,11 +2,58 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
-	$mb_id2 = $mb_id;
-	$mb_id = base64_decode($mb_id);
+	$mb_id2 = isset($_GET['mb_id']) ? trim((string) $_GET['mb_id']) : '';
+	$mb_id = $mb_id2 !== '' ? base64_decode($mb_id2, true) : '';
 
-	$sql= "select * from g5_member a, g5_member_etc b where 1=1 and a.mb_id = b.mb_id and a.mb_id = '{$mb_id}'";
+	if ($mb_id === false || $mb_id === '') {
+		echo '<script>alert("회원정보가 올바르지 않습니다.");window.close();</script>';
+		exit;
+	}
+
+	$mb_id_sql = sql_real_escape_string($mb_id);
+
+	$sql = "select a.*, b.*
+			from g5_member a
+			left join g5_member_etc b on b.mb_id = a.mb_id
+			where a.mb_id = '{$mb_id_sql}'
+			limit 1";
 	$row = sql_fetch($sql);
+
+	if (empty($row['mb_id'])) {
+		echo '<script>alert("회원정보를 찾을 수 없습니다.");window.close();</script>';
+		exit;
+	}
+
+	$login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
+	$login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
+	$can_view_all = lottoCanViewAllMembers($login_level);
+
+	if (!$can_view_all) {
+		$assignment = sql_fetch(
+			"select staff_mb_id
+			   from l_member_assignment
+			  where mb_id = '{$mb_id_sql}'
+			  limit 1",
+			false
+		);
+
+		$allowed_staff_ids = lottoGetAccessibleStaffIds(
+    $login_mb_id,
+    $login_level
+);
+
+		$assigned_staff_mb_id = isset($assignment['staff_mb_id'])
+			? trim((string) $assignment['staff_mb_id'])
+			: '';
+
+		if (
+			$assigned_staff_mb_id === ''
+			|| !in_array($assigned_staff_mb_id, $allowed_staff_ids, true)
+		) {
+			echo '<script>alert("접근 권한이 없는 회원입니다.");window.close();</script>';
+			exit;
+		}
+	}
 ?>
 <link rel="stylesheet" href="//mugifly.github.io/jquery-simple-datetimepicker/jquery.simple-dtpicker.css">
 <script src="//mugifly.github.io/jquery-simple-datetimepicker/jquery.simple-dtpicker.js"></script>
@@ -30,6 +77,7 @@ $(function(){
 			<!-- general form elements -->
 			<div class="card card-primary">
 				<?php include_once("./member.head.php");?>
+				<?php include_once("./member.payment.request.php"); ?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				
