@@ -63,6 +63,46 @@ $roleOptions = array(
 $currentLevel = isset($row['mb_level'])
         ? (int) $row['mb_level']
         : LOTTO_ROLE_STAFF1;
+
+$selectedChildIds = array();
+$childCandidates = array();
+
+if ($isEdit) {
+        $relationResult = sql_query(
+                "select child_mb_id
+                   from l_staff_relation
+                  where parent_mb_id = '{$mbIdSql}'
+                  order by lsr_id asc",
+                false
+        );
+
+        if ($relationResult) {
+                while ($relationRow = sql_fetch_array($relationResult)) {
+                        $selectedChildIds[] = (string) $relationRow['child_mb_id'];
+                }
+        }
+
+        $candidateResult = sql_query(
+                "select m.mb_id,
+                        m.mb_name,
+                        m.mb_level,
+                        r.parent_mb_id,
+                        p.mb_name as parent_name
+                   from g5_member m
+                   left join l_staff_relation r on r.child_mb_id = m.mb_id
+                   left join g5_member p on p.mb_id = r.parent_mb_id
+                  where m.mb_id != '{$mbIdSql}'
+                    and m.mb_level in (".LOTTO_ROLE_STAFF1.", ".LOTTO_ROLE_STAFF2.")
+                  order by m.mb_level desc, m.mb_name asc, m.mb_id asc",
+                false
+        );
+
+        if ($candidateResult) {
+                while ($candidateRow = sql_fetch_array($candidateResult)) {
+                        $childCandidates[] = $candidateRow;
+                }
+        }
+}
 ?>
 
 <section class="content">
@@ -181,6 +221,71 @@ $currentLevel = isset($row['mb_level'])
                                                                         <?php } ?>
                                                                 </select>
                                                         </div>
+
+                                                        <?php if ($isEdit) { ?>
+                                                        <div class="form-group" id="child_staff_group" style="display:none;">
+                                                                <label>하위 직원 선택</label>
+
+                                                                <div
+                                                                        id="child_staff_list"
+                                                                        class="border rounded p-2"
+                                                                        style="max-height:260px; overflow-y:auto;"
+                                                                >
+                                                                        <?php if (count($childCandidates) > 0) { ?>
+                                                                        <?php foreach ($childCandidates as $candidate) {
+                                                                                $candidateId = (string) $candidate['mb_id'];
+                                                                                $candidateLevel = (int) $candidate['mb_level'];
+                                                                                $candidateName = trim((string) $candidate['mb_name']);
+                                                                                $candidateParentId = trim((string) ($candidate['parent_mb_id'] ?? ''));
+                                                                                $candidateParentName = trim((string) ($candidate['parent_name'] ?? ''));
+                                                                                $isSelected = in_array($candidateId, $selectedChildIds, true);
+                                                                                $roleLabel = lottoGetAdminRoleName($candidateLevel);
+                                                                        ?>
+                                                                        <label
+                                                                                class="d-block mb-2 child-staff-option"
+                                                                                data-level="<?=$candidateLevel?>"
+                                                                        >
+                                                                                <input
+                                                                                        type="checkbox"
+                                                                                        name="child_mb_ids[]"
+                                                                                        value="<?=htmlspecialchars($candidateId, ENT_QUOTES)?>"
+                                                                                        <?=$isSelected ? 'checked' : ''?>
+                                                                                >
+                                                                                <?=htmlspecialchars(
+                                                                                        ($candidateName !== '' ? $candidateName : $candidateId)
+                                                                                        .' ('.$candidateId.') - '.$roleLabel,
+                                                                                        ENT_QUOTES
+                                                                                )?>
+
+                                                                                <?php if (
+                                                                                        $candidateParentId !== ''
+                                                                                        && $candidateParentId !== $mb_id
+                                                                                ) { ?>
+                                                                                <small class="text-muted ml-1">
+                                                                                        현재 상위:
+                                                                                        <?=htmlspecialchars(
+                                                                                                $candidateParentName !== ''
+                                                                                                        ? $candidateParentName
+                                                                                                        : $candidateParentId,
+                                                                                                ENT_QUOTES
+                                                                                        )?>
+                                                                                </small>
+                                                                                <?php } ?>
+                                                                        </label>
+                                                                        <?php } ?>
+                                                                        <?php } else { ?>
+                                                                        <div class="text-muted">
+                                                                                선택 가능한 직원이 없습니다.
+                                                                        </div>
+                                                                        <?php } ?>
+                                                                </div>
+
+                                                                <small class="form-text text-muted">
+                                                                        팀장은 직원1·직원2를 선택할 수 있고,
+                                                                        직원2는 직원1만 선택할 수 있습니다.
+                                                                </small>
+                                                        </div>
+                                                        <?php } ?>
                                                 </div>
 
                                                 <div class="card-footer">
@@ -203,6 +308,44 @@ $currentLevel = isset($row['mb_level'])
 </section>
 
 <script>
+function updateChildStaffOptions()
+{
+        var group = $("#child_staff_group");
+
+        if (group.length < 1) {
+                return;
+        }
+
+        var parentLevel = parseInt($("#mb_level").val(), 10);
+        var canManageChildren =
+                parentLevel === <?=LOTTO_ROLE_TEAM_LEADER?>
+                || parentLevel === <?=LOTTO_ROLE_STAFF2?>;
+
+        group.toggle(canManageChildren);
+
+        $(".child-staff-option").each(function(){
+                var option = $(this);
+                var childLevel = parseInt(option.data("level"), 10);
+                var allowed = false;
+
+                if (parentLevel === <?=LOTTO_ROLE_TEAM_LEADER?>) {
+                        allowed =
+                                childLevel === <?=LOTTO_ROLE_STAFF1?>
+                                || childLevel === <?=LOTTO_ROLE_STAFF2?>;
+                } else if (parentLevel === <?=LOTTO_ROLE_STAFF2?>) {
+                        allowed = childLevel === <?=LOTTO_ROLE_STAFF1?>;
+                }
+
+                option.toggle(allowed);
+                option.find("input[type=checkbox]").prop("disabled", !allowed);
+        });
+}
+
+$(function(){
+        updateChildStaffOptions();
+        $("#mb_level").on("change", updateChildStaffOptions);
+});
+
 function fnSubmit()
 {
         var mbId = $.trim($("#mb_id").val());

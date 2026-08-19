@@ -21,14 +21,33 @@ $sales_staff_ids = array();
 if (!$can_view_all_sales) {
     $sales_staff_ids[] = $login_mb_id;
 
-    if (
-        $login_level === LOTTO_ROLE_STAFF2
-        || $login_level === LOTTO_ROLE_TEAM_LEADER
-    ) {
-        $child_staff_ids = lottoGetDirectChildStaffIds($login_mb_id);
+    if ($login_level === LOTTO_ROLE_TEAM_LEADER) {
+        $pending_staff_ids = array($login_mb_id);
+        $processed_staff_ids = array();
 
-        foreach ($child_staff_ids as $child_staff_id) {
-            $sales_staff_ids[] = $child_staff_id;
+        while (count($pending_staff_ids) > 0) {
+            $parent_staff_id = array_shift($pending_staff_ids);
+
+            if (isset($processed_staff_ids[$parent_staff_id])) {
+                continue;
+            }
+
+            $processed_staff_ids[$parent_staff_id] = true;
+            $child_staff_ids = lottoGetDirectChildStaffIds($parent_staff_id);
+
+            foreach ($child_staff_ids as $child_staff_id) {
+                $child_staff_id = trim((string) $child_staff_id);
+
+                if ($child_staff_id === '') {
+                    continue;
+                }
+
+                $sales_staff_ids[] = $child_staff_id;
+
+                if (!isset($processed_staff_ids[$child_staff_id])) {
+                    $pending_staff_ids[] = $child_staff_id;
+                }
+            }
         }
     }
 
@@ -136,10 +155,7 @@ if ($can_view_all_sales) {
     while ($staff_row = sql_fetch_array($staff_result)) {
         $staff_list[] = $staff_row;
     }
-} elseif (
-    $login_level === LOTTO_ROLE_STAFF2
-    || $login_level === LOTTO_ROLE_TEAM_LEADER
-) {
+} elseif ($login_level === LOTTO_ROLE_TEAM_LEADER) {
     foreach ($sales_staff_ids as $sales_staff_id) {
         $sales_staff_id_sql = sql_real_escape_string($sales_staff_id);
 
@@ -213,7 +229,6 @@ include_once(G5_LADMIN_PATH."/head.php");
                 </div>
                 <?php if (
                     $can_view_all_sales
-                    || $login_level === LOTTO_ROLE_STAFF2
                     || $login_level === LOTTO_ROLE_TEAM_LEADER
                 ) { ?>
                 <div class="col-md-2 mb-2">

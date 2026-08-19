@@ -45,6 +45,20 @@ $requestedLevel = isset($_POST['mb_level'])
         ? (int) $_POST['mb_level']
         : 0;
 
+$childMbIds = array();
+
+if (isset($_POST['child_mb_ids']) && is_array($_POST['child_mb_ids'])) {
+        foreach ($_POST['child_mb_ids'] as $childMbId) {
+                $childMbId = trim((string) $childMbId);
+
+                if ($childMbId !== '') {
+                        $childMbIds[] = $childMbId;
+                }
+        }
+
+        $childMbIds = array_values(array_unique($childMbIds));
+}
+
 if (!in_array($requestedLevel, $allowedStaffLevels, true)) {
         alert('허용되지 않은 직원 권한입니다.');
 }
@@ -72,6 +86,48 @@ if ($mb_id === 'rwadmin') {
 }
 
 $mb_level = $requestedLevel;
+
+$allowedChildLevels = array();
+
+if ($mb_level === LOTTO_ROLE_TEAM_LEADER) {
+        $allowedChildLevels = array(
+                LOTTO_ROLE_STAFF1,
+                LOTTO_ROLE_STAFF2,
+        );
+} elseif ($mb_level === LOTTO_ROLE_STAFF2) {
+        $allowedChildLevels = array(
+                LOTTO_ROLE_STAFF1,
+        );
+} else {
+        $childMbIds = array();
+}
+
+$validatedChildMbIds = array();
+
+foreach ($childMbIds as $childMbId) {
+        if ($childMbId === $mb_id) {
+                alert('자기 자신을 하위 직원으로 선택할 수 없습니다.');
+        }
+
+        $childMbIdSql = sql_real_escape_string($childMbId);
+
+        $childStaff = sql_fetch(
+                "select mb_id, mb_level
+                   from g5_member
+                  where mb_id = '{$childMbIdSql}'
+                  limit 1"
+        );
+
+        if (empty($childStaff['mb_id'])) {
+                alert('선택한 하위 직원 정보를 찾을 수 없습니다.');
+        }
+
+        if (!in_array((int) $childStaff['mb_level'], $allowedChildLevels, true)) {
+                alert('선택할 수 없는 권한의 하위 직원이 포함되어 있습니다.');
+        }
+
+        $validatedChildMbIds[] = $childMbId;
+}
 
 $mbIdSql = sql_real_escape_string($mb_id);
 $mbNameSql = sql_real_escape_string($mb_name);
@@ -211,6 +267,53 @@ if ($mb_no > 0) {
         }
 
         setEtcInfo($mb_id);
+}
+
+if ($mb_no > 0) {
+        $parentMbIdSql = sql_real_escape_string($mb_id);
+        $createdBy = isset($member['mb_id'])
+                ? trim((string) $member['mb_id'])
+                : '';
+        $createdBySql = sql_real_escape_string($createdBy);
+
+        if (!sql_query('START TRANSACTION', false)) {
+                alert('직원 관계 저장을 시작할 수 없습니다.');
+        }
+
+        if (!sql_query(
+                "delete from l_staff_relation
+                  where parent_mb_id = '{$parentMbIdSql}'",
+                false
+        )) {
+                sql_query('ROLLBACK', false);
+                alert('기존 하위 직원 관계를 정리하지 못했습니다.');
+        }
+
+        foreach ($validatedChildMbIds as $childMbId) {
+                $childMbIdSql = sql_real_escape_string($childMbId);
+
+                if (!sql_query(
+                        "insert into l_staff_relation set
+                                parent_mb_id = '{$parentMbIdSql}',
+                                child_mb_id = '{$childMbIdSql}',
+                                created_by = '{$createdBySql}',
+                                created_at = now(),
+                                updated_at = now()
+                         on duplicate key update
+                                parent_mb_id = values(parent_mb_id),
+                                created_by = values(created_by),
+                                updated_at = now()",
+                        false
+                )) {
+                        sql_query('ROLLBACK', false);
+                        alert('하위 직원 관계를 저장하지 못했습니다.');
+                }
+        }
+
+        if (!sql_query('COMMIT', false)) {
+                sql_query('ROLLBACK', false);
+                alert('직원 관계 저장에 실패했습니다.');
+        }
 }
 ?>
 
