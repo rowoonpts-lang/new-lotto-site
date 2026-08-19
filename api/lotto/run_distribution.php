@@ -281,8 +281,16 @@ if ($isFreeMember) {
         + (int) $memberRow['num_fri']
         + (int) $memberRow['num_sat'];
 
-    $useNum = isset($memberRow['use_num'])
-        ? (int) $memberRow['use_num']
+    $recentTurn = isset($memberRow['recent_turn'])
+        ? (int) $memberRow['recent_turn']
+        : 0;
+
+    $useNum = $recentTurn === $drawNo
+        ? (
+            isset($memberRow['use_num'])
+                ? (int) $memberRow['use_num']
+                : 0
+        )
         : 0;
 
     $leftNum = max(0, $weekTotal - $useNum);

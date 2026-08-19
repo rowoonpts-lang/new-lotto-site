@@ -13,7 +13,7 @@
 		$title_meta = isset($row['lm_name']) ? $row['lm_name'] : '';
 
 		switch($basename){
-			case "pop.memo.php": $title_meta = '상세상담'; break;
+
 			case "pop.member_info.php": $title_meta = '정보수정'; break;
 			case "pop.success.php": $title_meta = '배분당첨'; break;
 			case "pop.payment.php": $title_meta = '결제승인'; break;
@@ -110,7 +110,7 @@
 	<!-- AdminLTE App -->
 	<script src="<?=G5_LADMIN_URL?>/dist/js/adminlte.js"></script>
 	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-	
+
 	<!-- AdminLTE for demo purposes -->
 	<script src="<?=G5_LADMIN_URL?>/dist/js/demo.js"></script>
 </head>

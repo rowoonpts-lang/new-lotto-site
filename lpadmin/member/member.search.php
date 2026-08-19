@@ -114,7 +114,7 @@
 					<th>약관동의</th>
 					<th>디비경로</th>
 					<th>상태</th>
-					<th>상세상담</th>
+					<th>회원정보</th>
 					<!--th>정보변경</th-->
 				</tr>
 				</thead>
@@ -184,7 +184,7 @@
 							<?=$row['recent_select']?>
 						<?php }?>
 					</td>
-					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">상세상담</button></td>
+					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">회원정보</button></td>
 				</tr>
 				<?php }?>
 				<?php if($total_count < 1){?>
@@ -221,8 +221,8 @@ function fnMemmberInfo(mb_id){
 }
 
 function fnMemmberMemo(mb_id){
-	var url = "./pop.memo.php?mb_id="+mb_id;
-	var name = "memo";
+	var url = "./pop.member.php?mb_id="+mb_id;
+	var name = "member_info";
 	var option = "width = 1400, height = 700, top = 100, left = 200, location = no"
 	window.open(url, name, option);
 }

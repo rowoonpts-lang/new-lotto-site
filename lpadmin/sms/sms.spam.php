@@ -181,7 +181,7 @@
 					<th>약관동의</th>
 					<th>디비경로</th>
 					<th>상태</th>
-					<th>상세상담</th>
+					<th>회원정보</th>
 					<!--th>탈퇴/삭제</th-->
 					<!--th>정보변경</th-->
 				</tr>
@@ -254,7 +254,7 @@
 							<?=$row[recent_select]?>
 						<?php }?>
 					</td>
-					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row[mb_id])?>')">상세상담</button></td>
+					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row[mb_id])?>')">회원정보</button></td>
 					<!--td><button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row[mb_id])?>')">삭제</button></td-->
 				</tr>
 				<?php }?>

@@ -26,8 +26,8 @@
 
 <script>
 function fnMemmberMemo(mb_id){
-	var url = "<?=G5_LADMIN_URL?>/member/pop.memo.php?mb_id="+mb_id;
-	var name = "memo";
+	var url = "<?=G5_LADMIN_URL?>/member/pop.member.php?mb_id="+mb_id;
+	var name = "member_info";
 	var option = "width = 1400, height = 700, top = 100, left = 200, location = no"
 	window.open(url, name, option);
 }

@@ -34,13 +34,40 @@ $free_num_qty = isset($_POST['free_num_qty'])
     ? (int) $_POST['free_num_qty']
     : 0;
 
+$distribution_day = isset($_POST['distribution_day'])
+    ? trim((string) $_POST['distribution_day'])
+    : 'thur';
+
+$distribution_qty = isset($_POST['distribution_qty'])
+    ? (int) $_POST['distribution_qty']
+    : 20;
+
+$distribution_days = array(
+    'mon' => 'num_mon',
+    'tue' => 'num_tue',
+    'wed' => 'num_wed',
+    'thur' => 'num_thur',
+    'fri' => 'num_fri',
+    'sat' => 'num_sat',
+);
+
 if ($mb_id === '' || $mb_name === '' || $mb_hp === '') {
     alert('회원정보를 확인해주세요.');
     exit;
 }
 
 if ($free_num_qty < 0) {
-    alert('무료문자 수량은 0 이상이어야 합니다.');
+    alert('무료회원 조합 수량은 0 이상이어야 합니다.');
+    exit;
+}
+
+if (!isset($distribution_days[$distribution_day])) {
+    alert('로또 배분 요일이 올바르지 않습니다.');
+    exit;
+}
+
+if ($distribution_qty < 1) {
+    alert('로또 배분 수량은 1개 이상이어야 합니다.');
     exit;
 }
 
@@ -48,7 +75,7 @@ if ($free_num_date !== '') {
     $date_pattern = '/^\d{4}-\d{2}-\d{2}$/';
 
     if (!preg_match($date_pattern, $free_num_date)) {
-        alert('무료문자 종료일이 올바르지 않습니다.');
+        alert('무료회원 조합 종료일이 올바르지 않습니다.');
         exit;
     }
 
@@ -62,7 +89,7 @@ if ($free_num_date !== '') {
             (int) $date_parts[0]
         )
     ) {
-        alert('무료문자 종료일이 올바르지 않습니다.');
+        alert('무료회원 조합 종료일이 올바르지 않습니다.');
         exit;
     }
 }
@@ -80,6 +107,8 @@ $target = sql_fetch(
     "select a.mb_id,
             a.mb_name,
             a.mb_hp,
+            a.mb_level,
+            a.mb_type as current_mb_type,
             c.staff_mb_id
        from g5_member a
        left join l_member_assignment c on c.mb_id = a.mb_id
@@ -193,16 +222,52 @@ if (!$etc_row || empty($etc_row['mb_id'])) {
     exit;
 }
 
-$free_num_date_sql = sql_real_escape_string($free_num_date);
+$etc_set = array();
 
-if (!sql_query(
-    "update g5_member_etc
-        set free_num_date = '{$free_num_date_sql}',
-            free_num_qty = {$free_num_qty}
-      where mb_id = '{$mb_id_sql}'",
-    false
-)) {
-    alert('무료문자 정보 저장 중 오류가 발생했습니다.');
+if ($mb_type === '무료회원') {
+    $free_num_date_sql = sql_real_escape_string(
+        $free_num_date
+    );
+
+    $etc_set[] =
+        "free_num_date = '{$free_num_date_sql}'";
+    $etc_set[] =
+        "free_num_qty = {$free_num_qty}";
+} elseif ($mb_type !== '직원' && $mb_type !== '') {
+    $distribution_values = array(
+        'num_mon' => 0,
+        'num_tue' => 0,
+        'num_wed' => 0,
+        'num_thur' => 0,
+        'num_fri' => 0,
+        'num_sat' => 0,
+    );
+
+    $distribution_column =
+        $distribution_days[$distribution_day];
+
+    $distribution_values[$distribution_column] =
+        $distribution_qty;
+
+    foreach (
+        $distribution_values
+        as $column_name => $column_value
+    ) {
+        $etc_set[] =
+            $column_name . ' = ' . (int) $column_value;
+    }
+}
+
+if (
+    !empty($etc_set)
+    && !sql_query(
+        "update g5_member_etc
+            set ".implode(', ', $etc_set)."
+          where mb_id = '{$mb_id_sql}'",
+        false
+    )
+) {
+    alert('회원 부가정보 저장 중 오류가 발생했습니다.');
     exit;
 }
 

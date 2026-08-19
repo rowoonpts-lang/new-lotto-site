@@ -839,18 +839,14 @@ function lottoCanViewMember($viewerMbId, $viewerLevel, $targetMbId)
         return false;
     }
 
-    if ($assignedStaffId === $viewerMbId) {
-        return true;
-    }
+    $accessibleStaffIds = lottoGetAccessibleStaffIds(
+        $viewerMbId,
+        $viewerLevel
+    );
 
-    if (
-        $viewerLevel !== LOTTO_ROLE_STAFF2
-        && $viewerLevel !== LOTTO_ROLE_TEAM_LEADER
-    ) {
-        return false;
-    }
-
-    $childStaffIds = lottoGetDirectChildStaffIds($viewerMbId);
-
-    return in_array($assignedStaffId, $childStaffIds, true);
+    return in_array(
+        $assignedStaffId,
+        $accessibleStaffIds,
+        true
+    );
 }

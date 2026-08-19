@@ -124,7 +124,8 @@ function lottoDistributionDistributeMember(
                 num_wed,
                 num_thur,
                 num_fri,
-                num_sat
+                num_sat,
+                recent_turn
              from g5_member_etc
              where mb_id = '{$mbIdSql}'
              limit 1
@@ -146,7 +147,14 @@ function lottoDistributionDistributeMember(
             + (int) $usageRow['num_fri']
             + (int) $usageRow['num_sat'];
 
-        $useNum = (int) $usageRow['use_num'];
+        $recentTurn = isset($usageRow['recent_turn'])
+            ? (int) $usageRow['recent_turn']
+            : 0;
+
+        $useNum = $recentTurn === $drawNo
+            ? (int) $usageRow['use_num']
+            : 0;
+
         $leftNum = max(0, $weekTotal - $useNum);
 
         if ($count > $leftNum) {
@@ -331,7 +339,11 @@ function lottoDistributionDistributeMember(
         $usageUpdate = sql_query(
             "update g5_member_etc
              set
-                use_num = use_num + '{$count}',
+                use_num = case
+                    when recent_turn = '{$drawNo}'
+                        then use_num + '{$count}'
+                    else '{$count}'
+                end,
                 recent_auto_date = '{$today}',
                 recent_auto_datetime = now(),
                 recent_turn = '{$drawNo}'

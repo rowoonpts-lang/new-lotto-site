@@ -97,7 +97,7 @@ $(function(){
 });
 </script>
 
-<section class="content">
+<section class="content member-detail-page">
 	<div class="container-fluid">
 		<div class="card card-primary card-outline">
 			<div class="card-body pb-2">
@@ -220,6 +220,34 @@ $(function(){
 						</div>
 					</div>
 
+<?php
+$distribution_day_columns = array(
+    'mon' => 'num_mon',
+    'tue' => 'num_tue',
+    'wed' => 'num_wed',
+    'thur' => 'num_thur',
+    'fri' => 'num_fri',
+    'sat' => 'num_sat',
+);
+
+$distribution_day = 'thur';
+$distribution_qty = 20;
+$distribution_configured = false;
+
+foreach ($distribution_day_columns as $day_key => $column_name) {
+    $day_qty = isset($row[$column_name])
+        ? (int) $row[$column_name]
+        : 0;
+
+    if ($day_qty > 0) {
+        $distribution_day = $day_key;
+        $distribution_qty = $day_qty;
+        $distribution_configured = true;
+        break;
+    }
+}
+?>
+
 					<div class="row">
 						<div class="col-md-4 mb-3">
 							<label>아이디</label>
@@ -229,8 +257,40 @@ $(function(){
 								   readonly>
 						</div>
 
-						<div class="col-md-4 mb-3">
-							<label for="profile_free_num_date">무료문자 종료일</label>
+						<div class="col-md-4 mb-3 distribution-setting-column">
+							<label for="profile_distribution_day">로또 배분 요일</label>
+							<select class="form-control"
+									id="profile_distribution_day"
+									name="distribution_day">
+								<option value="mon" <?=$distribution_day === 'mon' ? 'selected' : ''?>>월요일</option>
+								<option value="tue" <?=$distribution_day === 'tue' ? 'selected' : ''?>>화요일</option>
+								<option value="wed" <?=$distribution_day === 'wed' ? 'selected' : ''?>>수요일</option>
+								<option value="thur" <?=$distribution_day === 'thur' ? 'selected' : ''?>>목요일</option>
+								<option value="fri" <?=$distribution_day === 'fri' ? 'selected' : ''?>>금요일</option>
+								<option value="sat" <?=$distribution_day === 'sat' ? 'selected' : ''?>>토요일</option>
+							</select>
+						</div>
+
+						<div class="col-md-4 mb-3 distribution-setting-column">
+							<label for="profile_distribution_qty">로또 배분 수량</label>
+							<input type="number"
+								   min="1"
+								   class="form-control"
+								   id="profile_distribution_qty"
+								   name="distribution_qty"
+								   value="<?=(int) $distribution_qty?>"
+								   required>
+							<?php if (!$distribution_configured) { ?>
+							<small class="form-text text-muted">
+								미설정 회원은 목요일 20개가 기본입니다.
+							</small>
+							<?php } ?>
+						</div>
+					</div>
+
+					<div class="row" id="free_distribution_setting_row">
+						<div class="col-md-6 mb-3">
+							<label for="profile_free_num_date">무료회원 조합 종료일</label>
 							<input type="date"
 								   class="form-control"
 								   id="profile_free_num_date"
@@ -238,8 +298,8 @@ $(function(){
 								   value="<?=htmlspecialchars((string) ($row['free_num_date'] ?? ''), ENT_QUOTES)?>">
 						</div>
 
-						<div class="col-md-4 mb-3">
-							<label for="profile_free_num_qty">무료문자 수량</label>
+						<div class="col-md-6 mb-3">
+							<label for="profile_free_num_qty">무료회원 조합 수량</label>
 							<input type="number"
 								   min="0"
 								   class="form-control"
@@ -484,4 +544,37 @@ function fnChgHy(v){
 		}
 	});
 }
+</script>
+
+
+<script>
+$(function () {
+    function toggleDistributionSettings() {
+        var memberType = $.trim(
+            $("#profile_mb_type").val() || ""
+        );
+
+        if (memberType === "무료회원") {
+            $(".distribution-setting-column").hide();
+            $("#free_distribution_setting_row").show();
+            return;
+        }
+
+        if (memberType === "직원" || memberType === "") {
+            $(".distribution-setting-column").hide();
+            $("#free_distribution_setting_row").hide();
+            return;
+        }
+
+        $(".distribution-setting-column").show();
+        $("#free_distribution_setting_row").hide();
+    }
+
+    $("#profile_mb_type").on(
+        "change",
+        toggleDistributionSettings
+    );
+
+    toggleDistributionSettings();
+});
 </script>

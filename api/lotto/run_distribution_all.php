@@ -181,6 +181,7 @@ try {
             b.num_fri,
             b.num_sat,
             b.use_num,
+            b.recent_turn,
             b.{$dayColumn} as day_count
          from g5_member a
          inner join g5_member_etc b
@@ -217,9 +218,17 @@ try {
             + (int) $paid['num_fri']
             + (int) $paid['num_sat'];
 
+        $recentTurn = isset($paid['recent_turn'])
+            ? (int) $paid['recent_turn']
+            : 0;
+
+        $useNum = $recentTurn === $drawNo
+            ? (int) $paid['use_num']
+            : 0;
+
         $leftCount = max(
             0,
-            $weekTotal - (int) $paid['use_num']
+            $weekTotal - $useNum
         );
 
         $requestCount = min(
@@ -381,7 +390,11 @@ try {
                     + coalesce(b.num_thur, 0)
                     + coalesce(b.num_fri, 0)
                     + coalesce(b.num_sat, 0)
-                ) - coalesce(b.use_num, 0)
+                ) - case
+                    when b.recent_turn = '{$drawNo}'
+                        then coalesce(b.use_num, 0)
+                    else 0
+                end
            ) > 0",
         false
     );
