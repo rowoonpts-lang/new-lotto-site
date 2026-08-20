@@ -22,30 +22,10 @@ function editor_html($id, $content, $is_dhtml_editor=true)
 
     $html = "";
     $html .= "<span class=\"sound_only\">웹에디터 시작</span>";
-    if ($is_dhtml_editor)
-        $html .= '<script>document.write("<div class=\'cke_sc\'><button type=\'button\' class=\'btn_cke_sc\'>단축키 일람</button></div>");</script>';
-
     if ($is_dhtml_editor && $js) {
         $html .= "\n".'<script src="'.$editor_url.'/js/service/HuskyEZCreator.js"></script>';
         $html .= "\n".'<script>var g5_editor_url = "'.$editor_url.'", oEditors = [], ed_nonce = "'.ft_nonce_create('smarteditor').'";</script>';
         $html .= "\n".'<script src="'.$editor_url.'/config.js"></script>';
-        $html .= "\n<script>";
-        $html .= '
-        $(function(){
-            $(".btn_cke_sc").click(function(){
-                if ($(this).next("div.cke_sc_def").length) {
-                    $(this).next("div.cke_sc_def").remove();
-                    $(this).text("단축키 일람");
-                } else {
-                    $(this).after("<div class=\'cke_sc_def\' />").next("div.cke_sc_def").load("'.$editor_url.'/shortcut.html");
-                    $(this).text("단축키 일람 닫기");
-                }
-            });
-            $(document).on("click", ".btn_cke_sc_close", function(){
-                $(this).parent("div.cke_sc_def").remove();
-            });
-        });';
-        $html .= "\n</script>";
         $js = false;
     }
 

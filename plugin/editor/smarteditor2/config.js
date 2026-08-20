@@ -8,7 +8,7 @@
             nhn.husky.EZCreator.createInIFrame({
                 oAppRef: oEditors,
                 elPlaceHolder: get_id,
-                sSkinURI: g5_editor_url+"/SmartEditor2Skin.html",	
+                sSkinURI: g5_editor_url+"/SmartEditor2Skin.html",
                 htParams : {
                     bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
                     bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
@@ -20,8 +20,14 @@
                     }
                 }, //boolean
                 fOnAppLoad : function(){
-                    //예제 코드
-                    //oEditors.getById["ir1"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
+                    var editor = oEditors.getById[get_id];
+
+                    if (editor) {
+                        editor.exec("SET_DEFAULT_STYLE", [{
+                            fontSize: "17px",
+                            lineHeight: "1.7"
+                        }]);
+                    }
                 },
                 fCreator: "createSEditor2"
             });
