@@ -24,13 +24,22 @@ $co_id = isset($co_id) ? (string) $co_id : '';
 			$inner_x = "inner_x";
 		break;
 
-		case "qalist.php": case "qawrite.php": case "qaview.php":
-			$s01_li2 = "고객센터";
+		case "faq.php":
+			$s01_li2 = "고객지원";
 			$sub_top_li1 = "<li><a href='/bbs/board.php?bo_table=notice'>공지사항</a></li>";
-			$sub_top_li2 = "<li><a href='/bbs/board.php?bo_table=faq'>자주묻는 질문</a></li>";
+			$sub_top_li2 = "<li class='active'><a href='/bbs/faq.php?fm_id=1'>자주묻는 질문</a></li>";
+			$sub_top_li3 = "<li><a href='/bbs/qalist.php'>1:1 상담</a></li>";
+			$sub_tit = "자주묻는 질문";
+			$sub_top_bg = "sub_top_bg1 lg-support-hero";
+		break;
+
+		case "qalist.php": case "qawrite.php": case "qaview.php":
+			$s01_li2 = "고객지원";
+			$sub_top_li1 = "<li><a href='/bbs/board.php?bo_table=notice'>공지사항</a></li>";
+			$sub_top_li2 = "<li><a href='/bbs/faq.php?fm_id=1'>자주묻는 질문</a></li>";
 			$sub_top_li3 = "<li class='active'><a href='/bbs/qalist.php'>1:1 상담</a></li>";
 			$sub_tit = "1:1상담";
-			$sub_top_bg = "sub_top_bg1";
+			$sub_top_bg = "sub_top_bg1 lg-support-hero";
 		break;
 
 		case "login.php":
@@ -102,21 +111,21 @@ $co_id = isset($co_id) ? (string) $co_id : '';
 	switch($bo_table){
 
 	case "notice":
-		$s01_li2 = "고객센터";
+		$s01_li2 = "고객지원";
 		$sub_top_li1 = "<li class='active'><a href='/bbs/board.php?bo_table=notice'>공지사항</a></li>";
-		$sub_top_li2 = "<li><a href='/bbs/board.php?bo_table=faq'>자주묻는 질문</a></li>";
+		$sub_top_li2 = "<li><a href='/bbs/faq.php?fm_id=1'>자주묻는 질문</a></li>";
 		$sub_top_li3 = "<li><a href='/bbs/qalist.php'>1:1 상담</a></li>";
 		$sub_tit = "공지사항";
-		$sub_top_bg = "sub_top_bg1";
+		$sub_top_bg = "sub_top_bg1 lg-support-hero";
 	break;
 
 	case "faq":
-		$s01_li2 = "고객센터";
+		$s01_li2 = "고객지원";
 		$sub_top_li1 = "<li><a href='/bbs/board.php?bo_table=notice'>공지사항</a></li>";
-		$sub_top_li2 = "<li class='active'><a href='/bbs/board.php?bo_table=faq'>자주묻는 질문</a></li>";
+		$sub_top_li2 = "<li class='active'><a href='/bbs/faq.php?fm_id=1'>자주묻는 질문</a></li>";
 		$sub_top_li3 = "<li><a href='/bbs/qalist.php'>1:1 상담</a></li>";
 		$sub_tit = "자주묻는 질문";
-		$sub_top_bg = "sub_top_bg1";
+		$sub_top_bg = "sub_top_bg1 lg-support-hero";
 	break;
 
 	}

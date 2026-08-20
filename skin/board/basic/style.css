@@ -143,7 +143,7 @@ html.no-overflowscrolling #autosave_pop {height:auto;max-height:10000px !importa
 #bo_v_title .bo_v_tit {display:block;font-size:2em;margin:5px 0 0;word-break:break-all}
 
 #bo_v_info {margin:0;border-bottom:1px solid #f1f1f1;color:#666}
-#bo_v_info:after {display:block;visibility:hidden;clear:both;content:""} 
+#bo_v_info:after {display:block;visibility:hidden;clear:both;content:""}
 #bo_v_info h2 {position:absolute;font-size:0;line-height:0;overflow:hidden}
 
 #bo_v_info .profile_info {margin:20px 0 10px;display:inline-block;float:left}
@@ -339,3 +339,358 @@ box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.1)}
 #bo_w .bo_w_select select {border:1px solid #d0d3db;width:100%;height:40px;border-radius:3px}
 #bo_w .btn_submit {padding:0 20px;font-size:1.167em}
 #bo_w .btn_cancel {border-radius:3px;font-size:1.167em}
+
+/* LottoGPT accessibility overrides */
+/* 고객지원 게시판 가독성 기준 */
+
+#bo_list {
+    font-size: 16px;
+    color: #222;
+}
+
+#bo_list table {
+    font-size: 16px;
+    color: #222;
+}
+
+#bo_list table thead th {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #222 !important;
+    background: #f5f6f7;
+}
+
+#bo_list table tbody td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 16px;
+    color: #333 !important;
+}
+
+#bo_list .td_num2,
+#bo_list .td_name,
+#bo_list .td_datetime {
+    font-size: 15px;
+    color: #444 !important;
+}
+
+#bo_list .bo_tit,
+#bo_list .bo_tit a {
+    font-size: 17px;
+    line-height: 1.5;
+    font-weight: 700;
+    color: #222 !important;
+}
+
+#bo_list .bo_tit a:hover,
+#bo_list .bo_tit a:focus {
+    color: #0b63ce !important;
+}
+
+#bo_list .cnt_cmt {
+    font-size: 14px;
+}
+
+#bo_v {
+    font-size: 16px;
+    color: #222;
+}
+
+#bo_v_title .bo_v_tit {
+    margin: 8px 0 0;
+    font-size: 28px !important;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #222 !important;
+}
+
+#bo_v_info {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555 !important;
+}
+
+#bo_v_info strong,
+#bo_v_info a,
+#bo_v_info .sv_member,
+#bo_v_info .sv_guest,
+#bo_v_info .member,
+#bo_v_info .guest {
+    font-size: 16px;
+    color: #333 !important;
+}
+
+#bo_v_info .if_date {
+    font-size: 15px;
+    color: #555 !important;
+}
+
+#bo_v_info .profile_info .profile_info_ct {
+    line-height: 24px;
+}
+
+#bo_v_con {
+    min-height: 240px;
+    margin: 20px 0 40px;
+    font-size: 18px !important;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+#bo_v_con,
+#bo_v_con p,
+#bo_v_con div,
+#bo_v_con span,
+#bo_v_con li,
+#bo_v_con td {
+    font-size: inherit;
+    color: #222 !important;
+}
+
+#bo_v_con a {
+    color: #0b63ce !important;
+}
+
+.cmt_btn {
+    font-size: 17px;
+    color: #222 !important;
+}
+
+.cmt_btn b {
+    font-size: 17px;
+    color: #222 !important;
+}
+
+.cmt_btn span.total {
+    font-size: 16px;
+}
+
+#bo_vc {
+    font-size: 16px;
+    color: #333;
+}
+
+#bo_vc article {
+    font-size: 16px;
+}
+
+#bo_vc .member,
+#bo_vc .guest,
+#bo_vc .sv_member,
+#bo_vc .sv_guest {
+    font-size: 16px;
+    color: #222 !important;
+}
+
+.bo_vc_hdinfo {
+    font-size: 15px;
+    color: #555 !important;
+}
+
+#bo_vc .cmt_contents {
+    padding-bottom: 22px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+#bo_vc_empty {
+    font-size: 16px;
+    color: #555 !important;
+}
+
+.bo_vc_w {
+    font-size: 16px;
+}
+
+.bo_vc_w textarea {
+    height: 150px;
+    padding: 12px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #222 !important;
+}
+
+.bo_vc_w textarea::placeholder {
+    color: #666;
+}
+
+.bo_vc_w_info,
+.bo_vc_w_info .frm_input {
+    font-size: 16px;
+}
+
+.bo_vc_w .btn_submit {
+    height: 48px;
+    padding: 0 22px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.bo_vc_w .btn_confirm .secret_cm label {
+    font-size: 15px !important;
+}
+
+.bo_v_nb {
+    font-size: 16px;
+}
+
+.bo_v_nb li {
+    padding: 15px;
+}
+
+.bo_v_nb li .nb_tit,
+.bo_v_nb li .nb_date {
+    color: #555 !important;
+}
+
+.btn_bo_user .btn,
+.bo_v_com .btn {
+    font-size: 16px;
+}
+
+/* LottoGPT board readability final adjustment */
+
+#bo_v_share .btn {
+    width: auto;
+    min-width: 82px;
+    padding: 0 14px;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+#bo_v_info .profile_info {
+    margin: 18px 0 14px;
+}
+
+#bo_v_info .profile_info .profile_info_ct {
+    font-size: 16px;
+    line-height: 25px;
+}
+
+#bo_v_info strong {
+    margin-right: 14px;
+}
+
+#bo_v_con {
+    padding: 8px 0 20px;
+}
+
+.bo_vc_w textarea {
+    min-height: 150px;
+}
+
+.bo_vc_w .btn_submit {
+    min-width: 90px;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+/* LottoGPT support board action visibility */
+/* 40대 이상 사용자 기준: 아이콘 전용 버튼을 명확한 텍스트 버튼으로 표시 */
+
+#bo_list .btn_bo_user,
+#bo_v .btn_bo_user,
+.bo_fx .btn_bo_user {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#bo_list .btn_bo_user li,
+#bo_v .btn_bo_user li,
+.bo_fx .btn_bo_user li {
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    background: transparent;
+}
+
+#bo_list .btn_bo_user .btn,
+#bo_v .btn_bo_user .btn,
+.bo_fx .btn_bo_user .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 92px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #9aa1a8 !important;
+    border-radius: 4px;
+    background: #ffffff !important;
+    color: #222222 !important;
+    font-size: 16px !important;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+#bo_list .btn_bo_user .btn:hover,
+#bo_list .btn_bo_user .btn:focus,
+#bo_v .btn_bo_user .btn:hover,
+#bo_v .btn_bo_user .btn:focus,
+.bo_fx .btn_bo_user .btn:hover,
+.bo_fx .btn_bo_user .btn:focus {
+    border-color: #333 !important;
+    background: #f3f4f5 !important;
+    color: #111 !important;
+}
+
+/* 기존 sound_only 대신 실제 버튼 이름 표시 */
+#bo_list .btn_bo_user [title="관리자"]::after,
+.bo_fx .btn_bo_user [title="관리자"]::after {
+    content: "관리자";
+}
+
+#bo_list .btn_bo_user [title="게시판 검색"]::after {
+    content: "검색";
+}
+
+#bo_list .btn_bo_user [title="글쓰기"]::after,
+#bo_v .btn_bo_user [title="글쓰기"]::after,
+.bo_fx .btn_bo_user [title="글쓰기"]::after {
+    content: "글쓰기";
+}
+
+#bo_v .btn_bo_user [title="목록"]::after {
+    content: "목록";
+}
+
+#bo_v .btn_bo_user [title="답변"]::after {
+    content: "답변";
+}
+
+#bo_list .btn_bo_user [title="게시판 리스트 옵션"]::after {
+    content: "더보기";
+}
+
+#bo_list .tbl_head01 table {
+    font-size: 17px;
+}
+
+#bo_list .tbl_head01 thead th {
+    height: auto;
+    padding: 14px 10px;
+    font-size: 18px !important;
+    font-weight: 700;
+    color: #222 !important;
+}
+
+#bo_list .tbl_head01 tbody td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 17px !important;
+    color: #333 !important;
+}
+
+#bo_list .empty_table {
+    padding: 38px 15px !important;
+    font-size: 17px !important;
+    line-height: 1.6;
+    color: #444 !important;
+}

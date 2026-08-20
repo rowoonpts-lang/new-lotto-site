@@ -197,7 +197,7 @@ html.no-overflowscrolling #autosave_pop {height:auto;max-height:10000px !importa
 .bo_v_nb li {margin:10px 0;float:left;width:49.5%;text-align:right;color:#b3b3b3;font-size:0.75em}
 .bo_v_nb li:first-child {margin-right:1%;text-align:left}
 .bo_v_nb li:hover {background:#f6f6f6}
-    
+
 .bo_v_com {float:right}
 .bo_v_com > li {position:relative;float:left;margin-left:5px}
 
@@ -315,3 +315,709 @@ html.no-overflowscrolling #autosave_pop {height:auto;max-height:10000px !importa
 .chk_box input[type="checkbox"]:checked + label {color:#000}
 .chk_box input[type="checkbox"]:checked + label span {background:url('./img/chk.png') no-repeat 50% 50% #3a8afd;border-color:#1471f6;border-radius:3px}
 
+
+/* LottoGPT QA accessibility overrides */
+/* 1:1 상담 - 40대 이상 사용자 가독성 기준 */
+
+#bo_list {
+    font-size: 17px;
+    color: #222;
+}
+
+#bo_list .tbl_head01 table {
+    font-size: 17px;
+}
+
+#bo_list .tbl_head01 thead th {
+    height: auto;
+    padding: 14px 10px;
+    font-size: 18px !important;
+    font-weight: 700;
+    color: #222 !important;
+    background: #f5f6f7 !important;
+}
+
+#bo_list .tbl_head01 tbody td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 17px !important;
+    color: #333 !important;
+}
+
+#bo_list .td_subject,
+#bo_list .td_subject a,
+#bo_list .td_name,
+#bo_list .td_date,
+#bo_list .td_stat,
+#bo_list .td_num {
+    font-size: 17px !important;
+    color: #333 !important;
+}
+
+#bo_list .empty_table {
+    padding: 38px 15px !important;
+    font-size: 17px !important;
+    line-height: 1.6;
+    color: #444 !important;
+}
+
+#bo_list .btn_bo_user {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#bo_list .btn_bo_user li {
+    float: none;
+    width: auto;
+    margin: 0;
+}
+
+#bo_list .btn_bo_user .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 100px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #9aa1a8 !important;
+    border-radius: 4px;
+    background: #ffffff !important;
+    color: #222222 !important;
+    font-size: 16px !important;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#bo_list .btn_bo_user .btn:hover,
+#bo_list .btn_bo_user .btn:focus {
+    border-color: #333 !important;
+    background: #f3f4f5 !important;
+    color: #111 !important;
+}
+
+#bo_list .btn_bo_user [title="관리자"]::after {
+    content: "관리자";
+}
+
+#bo_list .btn_bo_user [title="게시판 검색"]::after {
+    content: "검색";
+}
+
+#bo_list .btn_bo_user [title="문의등록"]::after {
+    content: "문의등록";
+}
+
+#bo_list .btn_bo_user [title="선택삭제"]::after {
+    content: "선택삭제";
+}
+
+#bo_list .btn_bo_user [title="목록"]::after {
+    content: "목록";
+}
+
+.txt_done,
+.txt_rdy {
+    font-size: 16px !important;
+    font-weight: 700;
+}
+
+.txt_done {
+    color: #146c43 !important;
+}
+
+.txt_rdy {
+    color: #b54708 !important;
+}
+
+/* 문의 작성 화면 */
+#bo_w {
+    font-size: 17px;
+    color: #222;
+}
+
+#bo_w label,
+#bo_w .bo_w_tit,
+#bo_w .bo_w_info {
+    font-size: 17px !important;
+    color: #222 !important;
+}
+
+#bo_w .frm_input,
+#bo_w textarea,
+#bo_w select {
+    font-size: 17px !important;
+    color: #222 !important;
+}
+
+#bo_w .btn_submit,
+#bo_w .btn_cancel {
+    min-height: 46px;
+    padding: 0 20px;
+    font-size: 17px !important;
+    font-weight: 700;
+}
+
+/* LottoGPT QA form/view readability final */
+/* 40대 이상 사용자 기준 */
+
+/* =========================================================
+   문의 작성 화면
+========================================================= */
+
+#bo_w {
+    font-size: 17px;
+    color: #222;
+}
+
+#bo_w .form_01 li {
+    margin-bottom: 14px;
+}
+
+#bo_w select,
+#bo_w .frm_input,
+#bo_w input[type="text"],
+#bo_w input[type="email"],
+#bo_w input[type="tel"] {
+    min-height: 46px;
+    padding: 9px 12px;
+    font-size: 17px !important;
+    line-height: 1.4;
+    color: #222 !important;
+    background: #fff !important;
+    border: 1px solid #aaa !important;
+}
+
+#bo_w select {
+    height: 46px;
+}
+
+#bo_w .full_input {
+    width: 100%;
+}
+
+#bo_w label,
+#bo_w .bo_w_option label,
+#bo_w .bo_w_info label {
+    font-size: 16px !important;
+    color: #333 !important;
+}
+
+#bo_w input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+
+#bo_w .wr_content,
+#bo_w .qa_content_wrap {
+    font-size: 17px;
+    color: #222;
+}
+
+/* 에디터 iframe/textarea 주변 */
+#bo_w textarea {
+    min-height: 260px;
+    padding: 12px;
+    font-size: 17px !important;
+    line-height: 1.7;
+    color: #222 !important;
+    background: #fff !important;
+}
+
+#bo_w .bo_w_flie {
+    min-height: 48px;
+}
+
+#bo_w .file_wr {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 6px 10px;
+    background: #fff;
+    border: 1px solid #bbb;
+}
+
+#bo_w .file_wr .lb_icon {
+    width: 38px;
+    font-size: 18px;
+    color: #333 !important;
+}
+
+#bo_w .frm_file {
+    font-size: 16px !important;
+    color: #222 !important;
+}
+
+#bo_w .btn_confirm {
+    margin-top: 18px;
+}
+
+#bo_w .btn_confirm .btn,
+#bo_w .btn_submit,
+#bo_w .btn_cancel {
+    min-width: 100px;
+    height: 46px;
+    padding: 0 18px;
+    font-size: 17px !important;
+    line-height: 46px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#bo_w .btn_cancel {
+    color: #fff !important;
+    background: #666 !important;
+}
+
+#bo_w .btn_submit {
+    color: #fff !important;
+    background: #111 !important;
+}
+
+/* =========================================================
+   문의 상세 화면
+========================================================= */
+
+#bo_v {
+    font-size: 17px;
+    color: #222;
+}
+
+#bo_v .bo_v_tit,
+#bo_v h1,
+#bo_v h2,
+#bo_v h3 {
+    color: #222 !important;
+}
+
+#bo_v .bo_v_tit {
+    font-size: 24px !important;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+#bo_v_info,
+#bo_v_info strong,
+#bo_v_info a,
+#bo_v_info span {
+    font-size: 16px !important;
+    line-height: 1.6;
+    color: #444 !important;
+}
+
+#bo_v_con {
+    min-height: 100px;
+    padding: 20px 16px;
+    font-size: 17px !important;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+#bo_v_con,
+#bo_v_con p,
+#bo_v_con div,
+#bo_v_con span,
+#bo_v_con li,
+#bo_v_con td {
+    font-size: 17px !important;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+/* =========================================================
+   답변 표시
+========================================================= */
+
+#bo_v_ans {
+    font-size: 17px;
+    color: #222;
+}
+
+#bo_v_ans h2,
+#bo_v_ans h3,
+#bo_v_ans .bo_v_tit {
+    font-size: 22px !important;
+    line-height: 1.5;
+    font-weight: 700;
+    color: #222 !important;
+}
+
+#bo_v_ans .bo_v_info,
+#bo_v_ans .bo_v_info span,
+#bo_v_ans .bo_v_info strong {
+    font-size: 15px !important;
+    color: #555 !important;
+}
+
+#bo_v_ans .bo_v_con,
+#bo_v_ans .bo_v_con p,
+#bo_v_ans .bo_v_con div,
+#bo_v_ans .bo_v_con span,
+#bo_v_ans .bo_v_con li {
+    font-size: 17px !important;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+/* 실제 answer skin에서 별도 클래스를 쓰는 경우까지 대응 */
+#bo_v_ans .ans_con,
+#bo_v_ans .answer_content,
+#bo_v_ans article,
+#bo_v_ans article p,
+#bo_v_ans article div {
+    font-size: 17px !important;
+    line-height: 1.8;
+    color: #222 !important;
+}
+
+/* =========================================================
+   추가질문 / 상세 버튼
+========================================================= */
+
+.bo_v_btn .add_qa,
+#bo_v_addq .btn_b01,
+#bo_v .btn_b01 {
+    min-width: 150px;
+    min-height: 46px;
+    padding: 0 18px;
+    font-size: 17px !important;
+    line-height: 46px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   답변 입력 폼
+========================================================= */
+
+#bo_v_ans_form {
+    font-size: 17px;
+}
+
+#bo_v_ans_form h2 {
+    margin-bottom: 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+}
+
+#bo_v_ans_form .frm_input,
+#bo_v_ans_form textarea {
+    font-size: 17px !important;
+    color: #222 !important;
+}
+
+#bo_v_ans_form .btn_submit {
+    min-width: 110px;
+    height: 46px;
+    padding: 0 20px;
+    font-size: 17px !important;
+    font-weight: 700;
+}
+
+/* =========================================================
+   모바일
+========================================================= */
+
+@media (max-width: 768px) {
+    #bo_w select,
+    #bo_w .frm_input,
+    #bo_w input[type="text"],
+    #bo_w input[type="email"],
+    #bo_w input[type="tel"],
+    #bo_w textarea {
+        font-size: 16px !important;
+    }
+
+    #bo_v_con,
+    #bo_v_con p,
+    #bo_v_ans .bo_v_con,
+    #bo_v_ans .bo_v_con p {
+        font-size: 16px !important;
+    }
+}
+
+/* LottoGPT QA final form/info correction */
+
+/* 답변 알림 라벨 */
+#bo_w .frm_info,
+#bo_w .chk_box .frm_info {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    margin: 8px 0;
+    font-size: 17px !important;
+    line-height: 1.5;
+    font-weight: 600;
+    color: #f1f3f5 !important;
+}
+
+/* 실제 체크박스 */
+#bo_w .selec_chk {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 7px;
+    vertical-align: middle;
+}
+
+/* 이메일/휴대폰 영역 간격 */
+#bo_w .bo_w_mail,
+#bo_w .bo_w_hp {
+    margin-bottom: 10px;
+}
+
+/* 파일선택 */
+#bo_w .bo_w_flie .file_wr {
+    height: auto !important;
+    min-height: 50px;
+}
+
+#bo_w .bo_w_flie .lb_icon {
+    top: 5px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    font-size: 18px !important;
+    color: #333 !important;
+}
+
+#bo_w .bo_w_flie .frm_file {
+    min-height: 38px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 16px !important;
+    color: #222 !important;
+}
+
+/* 상세의 접근성용 숨김 글자를 다시 확실하게 숨김 */
+#bo_v_info .sound_only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    font-size: 0 !important;
+}
+
+/* 상세 회원정보 줄 */
+#bo_v_info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 12px 20px 18px;
+}
+
+#bo_v_info > strong {
+    margin: 0 !important;
+    font-size: 16px !important;
+    line-height: 1.6;
+    color: #444 !important;
+    white-space: nowrap;
+}
+
+/* 우측 목록/글쓰기 버튼 */
+#bo_v_top {
+    margin-left: auto;
+}
+
+#bo_v_top .bo_v_com {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#bo_v_top .bo_v_com li {
+    float: none;
+    margin: 0;
+}
+
+#bo_v_top .bo_v_com .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid #aaa !important;
+    background: #fff !important;
+    color: #222 !important;
+    font-size: 16px !important;
+    font-weight: 700;
+}
+
+#bo_v_top .bo_v_com [title="목록"]::after {
+    content: "목록";
+    margin-left: 6px;
+}
+
+#bo_v_top .bo_v_com [title="글쓰기"]::after {
+    content: "글쓰기";
+    margin-left: 6px;
+}
+
+/* 추가질문 */
+.bo_v_btn .add_qa,
+#bo_v_addq .btn_b01 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    height: 48px;
+    line-height: 1;
+    padding: 0 20px;
+    border-radius: 4px;
+    background: #ffffff !important;
+    border: 1px solid #999;
+    color: #222 !important;
+    font-size: 17px !important;
+    font-weight: 700;
+}
+
+/* LottoGPT QA checkbox/detail final alignment */
+
+#bo_w .chk_box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+#bo_w .chk_box .frm_input {
+    flex: 1 1 auto;
+}
+
+#bo_w .chk_box .selec_chk {
+    flex: 0 0 20px;
+    margin: 0 !important;
+}
+
+#bo_w .chk_box .frm_info {
+    flex: 0 0 auto;
+    margin: 0 !important;
+    padding: 0;
+    font-size: 17px !important;
+    line-height: 20px;
+    color: #f5f5f5 !important;
+}
+
+#bo_v_info {
+    row-gap: 10px;
+    column-gap: 18px;
+}
+
+#bo_v_top .bo_v_com .btn {
+    min-width: 96px;
+    height: 44px;
+    font-size: 16px !important;
+}
+
+/* LottoGPT QA write final visibility fix */
+
+/* 이메일/휴대폰 영역 */
+#bo_w .bo_w_mail,
+#bo_w .bo_w_hp {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 입력칸은 한 줄 전체 사용 */
+#bo_w .bo_w_mail .frm_input,
+#bo_w .bo_w_hp .frm_input {
+    flex: 1 1 100%;
+    width: 100% !important;
+}
+
+/* Gnuboard 커스텀 체크박스 효과 제거 */
+#bo_w .chk_box .selec_chk {
+    position: static !important;
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    appearance: auto;
+    -webkit-appearance: checkbox;
+}
+
+/* 커스텀 체크 표시용 span 숨김 */
+#bo_w .chk_box .frm_info > span {
+    display: none !important;
+}
+
+/* 답변받기 / SMS 알림 */
+#bo_w .chk_box .frm_info {
+    display: inline-block !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 17px !important;
+    line-height: 24px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    cursor: pointer;
+}
+
+/* 제목 위 여백 */
+#bo_w .bo_w_sbj {
+    clear: both;
+    margin-top: 16px !important;
+}
+
+/* 작성 완료 버튼 영역 */
+#bo_w .btn_confirm {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+    padding-bottom: 10px;
+}
+
+#bo_w .btn_confirm .btn_cancel,
+#bo_w .btn_confirm .btn_submit {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px !important;
+    height: 48px !important;
+    padding: 0 20px !important;
+    border-radius: 4px !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+}
+
+#bo_w .btn_confirm .btn_cancel {
+    border: 1px solid #777 !important;
+    background: #666 !important;
+    color: #ffffff !important;
+}
+
+#bo_w .btn_confirm .btn_submit {
+    border: 1px solid #d6a51f !important;
+    background: #e5b83c !important;
+    color: #111111 !important;
+}
+
+#bo_w .btn_confirm .btn_cancel:hover,
+#bo_w .btn_confirm .btn_cancel:focus {
+    background: #555 !important;
+}
+
+#bo_w .btn_confirm .btn_submit:hover,
+#bo_w .btn_confirm .btn_submit:focus {
+    background: #f0c652 !important;
+}

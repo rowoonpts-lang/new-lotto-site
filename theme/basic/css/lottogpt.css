@@ -4555,3 +4555,239 @@
     font-size:30px;
   }
 }
+/* LottoGPT customer support hero */
+
+.lottogpt-page .sub_top.lg-support-hero {
+    position: relative;
+
+    width: 100%;
+    min-height: 320px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 58px 24px 46px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 20% 20%, rgba(38, 226, 192, .10), transparent 34%),
+        radial-gradient(circle at 80% 15%, rgba(229, 184, 76, .13), transparent 30%),
+        linear-gradient(145deg, #05080d, #0a1119 58%, #06090e);
+
+    border-bottom: 1px solid rgba(229, 184, 76, .20);
+
+    text-align: center;
+}
+
+.lottogpt-page .sub_top.lg-support-hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0,
+            rgba(255,255,255,.025) 50%,
+            transparent 100%
+        );
+}
+
+.lottogpt-page .sub_top.lg-support-hero .s01_li1,
+.lottogpt-page .sub_top.lg-support-hero .s01_li2,
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul {
+    position: relative;
+    z-index: 1;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .s01_li1 {
+    margin: 0 0 14px;
+
+    color: var(--lg-teal);
+
+    font-family: Montserrat, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: .24em;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .s01_li1 span {
+    letter-spacing: .24em;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .s01_li2 {
+    margin: 0 0 36px;
+
+    color: #fff;
+
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.04em;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin: 0;
+    padding: 0;
+
+    flex-wrap: wrap;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul li a {
+    min-width: 142px;
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 20px;
+
+    color: #aeb8c3;
+
+    border: 1px solid rgba(255, 255, 255, .11);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, .025);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition:
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul li a:hover,
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul li a:focus {
+    color: #fff;
+
+    border-color: rgba(38, 226, 192, .35);
+    background: rgba(38, 226, 192, .07);
+}
+
+.lottogpt-page .sub_top.lg-support-hero .sub_top_ul li.active a {
+    color: #090b0e;
+
+    border-color: rgba(229, 184, 76, .72);
+
+    background:
+        linear-gradient(
+            135deg,
+            #9b701f,
+            #f1c75b
+        );
+}
+
+.lottogpt-page #sub_div {
+    margin-top: 0;
+}
+
+.lottogpt-page #sub_div > .sub_tit {
+    margin: 0;
+    padding: 42px 24px 34px;
+
+    color: #fff;
+    background: var(--lg-bg);
+
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .lottogpt-page .sub_top.lg-support-hero {
+        min-height: 250px;
+
+        padding: 42px 16px 34px;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .s01_li1 {
+        margin-bottom: 10px;
+
+        font-size: 10px;
+        letter-spacing: .18em;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .s01_li1 span {
+        letter-spacing: .18em;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .s01_li2 {
+        margin-bottom: 28px;
+
+        font-size: 34px;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .sub_top_ul {
+        width: 100%;
+
+        gap: 7px;
+        flex-wrap: nowrap;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .sub_top_ul li {
+        min-width: 0;
+
+        flex: 1 1 0;
+    }
+
+    .lottogpt-page .sub_top.lg-support-hero .sub_top_ul li a {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+
+        padding: 0 5px;
+
+        border-radius: 8px;
+
+        font-size: clamp(10px, 2.9vw, 12px);
+
+        white-space: nowrap;
+    }
+
+    .lottogpt-page #sub_div > .sub_tit {
+        padding: 30px 16px 24px;
+
+        font-size: 28px;
+    }
+}
+
+/* Customer support legacy sub-top reset */
+
+.lottogpt-page .sub_top.lg-support-hero {
+    height: auto;
+    margin-bottom: 0;
+}
+
+.lottogpt-page .sub_top.lg-support-hero .s01_li1 {
+    padding-top: 0;
+}
+
+@media (max-width: 760px) {
+    .lottogpt-page .sub_top.lg-support-hero {
+        height: auto;
+        min-height: 250px;
+        margin-bottom: 0;
+    }
+}
