@@ -1,6 +1,18 @@
 <?php
 if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
+include_once(G5_PATH.'/include/lotto_site_config.lib.php');
+$site_config = lottoGetSiteConfig();
+
+$footer_brand_name = (string) $site_config['brand_name'];
+$footer_brand_prefix = $footer_brand_name;
+$footer_brand_suffix = '';
+
+if (strlen($footer_brand_name) >= 3 && strcasecmp(substr($footer_brand_name, -3), 'GPT') === 0) {
+    $footer_brand_prefix = substr($footer_brand_name, 0, -3);
+    $footer_brand_suffix = substr($footer_brand_name, -3);
+}
+
 $top_h2 = isset($top_h2) ? (string) $top_h2 : '';
 
 if (G5_IS_MOBILE) {
@@ -20,14 +32,14 @@ if ($basename != "index.php" && empty($lottogpt_full_width_page)) {
     <div class="lg-footer-shell">
         <div class="lg-footer-main">
             <div class="lg-footer-brand">
-                <a href="<?=G5_URL?>" class="lg-footer-logo">Lotto<span>GPT</span></a>
+                <a href="<?=G5_URL?>" class="lg-footer-logo"><?=htmlspecialchars($footer_brand_prefix, ENT_QUOTES)?><?php if ($footer_brand_suffix !== '') { ?><span><?=htmlspecialchars($footer_brand_suffix, ENT_QUOTES)?></span><?php } ?></a>
                 <p>
                     누적 로또 데이터와 통계 정보를 사용자가 쉽게 확인할 수 있도록
                     정리하는 AI 기반 로또 분석 플랫폼입니다.
                 </p>
                 <div class="lg-footer-status">
                     <span></span>
-                    LOTTOGPT SYSTEM ONLINE
+                    <?=htmlspecialchars($site_config['brand_name'], ENT_QUOTES)?> SYSTEM ONLINE
                 </div>
             </div>
 
@@ -47,30 +59,47 @@ if ($basename != "index.php" && empty($lottogpt_full_width_page)) {
 
             <div class="lg-footer-contact">
                 <strong>CONTACT</strong>
-                <p>평일·토요일 10:00 ~ 18:00</p>
-                <p>일요일 및 공휴일 휴무</p>
-                <a href="mailto:lottojoongsim@gmail.com">lottojoongsim@gmail.com</a>
+                <?php if ($site_config['contact_hours'] !== '') { ?>
+                <p><?=htmlspecialchars($site_config['contact_hours'], ENT_QUOTES)?></p>
+                <?php } ?>
+                <?php if ($site_config['contact_closed'] !== '') { ?>
+                <p><?=htmlspecialchars($site_config['contact_closed'], ENT_QUOTES)?></p>
+                <?php } ?>
+                <?php if ($site_config['contact_phone'] !== '') { ?>
+                <p><?=htmlspecialchars($site_config['contact_phone'], ENT_QUOTES)?></p>
+                <?php } ?>
+                <?php if ($site_config['contact_email'] !== '') { ?>
+                <a href="mailto:<?=htmlspecialchars($site_config['contact_email'], ENT_QUOTES)?>"><?=htmlspecialchars($site_config['contact_email'], ENT_QUOTES)?></a>
+                <?php } ?>
             </div>
         </div>
 
         <div class="lg-footer-company">
-            <strong>지오인터내셔널</strong>
-            <span>대표이사 김민지</span>
-            <span>사업자등록번호 350-04-01576</span>
-            <span>통신판매업신고번호 2020-인천남동구-1821</span>
-            <span>개인정보책임자 김민지</span>
-            <span>인천광역시 남동구 남동대로 777번길 43, 5층</span>
+            <strong><?=htmlspecialchars($site_config['company_name'], ENT_QUOTES)?></strong>
+            <?php if ($site_config['representative_name'] !== '') { ?>
+            <span>대표이사 <?=htmlspecialchars($site_config['representative_name'], ENT_QUOTES)?></span>
+            <?php } ?>
+            <?php if ($site_config['business_number'] !== '') { ?>
+            <span>사업자등록번호 <?=htmlspecialchars($site_config['business_number'], ENT_QUOTES)?></span>
+            <?php } ?>
+            <?php if ($site_config['mail_order_number'] !== '') { ?>
+            <span>통신판매업신고번호 <?=htmlspecialchars($site_config['mail_order_number'], ENT_QUOTES)?></span>
+            <?php } ?>
+            <?php if ($site_config['privacy_manager'] !== '') { ?>
+            <span>개인정보책임자 <?=htmlspecialchars($site_config['privacy_manager'], ENT_QUOTES)?></span>
+            <?php } ?>
+            <?php if ($site_config['company_address'] !== '') { ?>
+            <span><?=htmlspecialchars($site_config['company_address'], ENT_QUOTES)?></span>
+            <?php } ?>
         </div>
 
         <div class="lg-footer-notice">
-            LottoGPT의 분석 정보는 로또 번호 조합과 통계 정보를 제공하기 위한 참고 자료이며,
-            당첨을 보장하거나 확정하는 서비스가 아닙니다. 서비스 이용에 따른 최종 판단과 책임은
-            이용자 본인에게 있습니다.
+            <?=nl2br(htmlspecialchars($site_config['common_notice'], ENT_QUOTES))?>
         </div>
 
         <div class="lg-footer-bottom">
-            <span>Copyright © <?=date('Y')?> GIO INTERNATIONAL. All rights reserved.</span>
-            <span>LOTTOGPT · DATA DRIVEN LOTTO PLATFORM</span>
+            <span>Copyright © <?=date('Y')?> <?=htmlspecialchars($site_config['copyright_name'], ENT_QUOTES)?>. All rights reserved.</span>
+            <span><?=htmlspecialchars($site_config['brand_name'], ENT_QUOTES)?> · DATA DRIVEN LOTTO PLATFORM</span>
         </div>
     </div>
 
