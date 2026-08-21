@@ -6,6 +6,12 @@
 	$mb_id = $mb_id2 !== '' ? base64_decode($mb_id2, true) : '';
 	$alarm_lm_id = isset($_GET['alarm_lm_id']) ? (int) $_GET['alarm_lm_id'] : 0;
 
+        $refresh_parent = isset($_GET['refresh_parent'])
+                && (string) $_GET['refresh_parent'] === '1';
+
+
+        $member_token = lottoMemberTokenCreate();
+
 	if ($mb_id === false || $mb_id === '') {
 		echo '<script>alert("회원정보가 올바르지 않습니다.");window.close();</script>';
 		exit;
@@ -88,6 +94,22 @@
 <script src="//mugifly.github.io/jquery-simple-datetimepicker/jquery.simple-dtpicker.js"></script>
 <script>
 $(function(){
+<?php if ($refresh_parent) { ?>
+        if (window.opener && !window.opener.closed) {
+                window.opener.location.reload();
+        }
+
+        if (window.history && window.history.replaceState) {
+                var cleanUrl = new URL(window.location.href);
+                cleanUrl.searchParams.delete('refresh_parent');
+                window.history.replaceState(
+                        {},
+                        document.title,
+                        cleanUrl.pathname + cleanUrl.search + cleanUrl.hash
+                );
+        }
+<?php } ?>
+
 	$('.datetimepicker').appendDtpicker({
 		'locale': 'ko',
 		'minuteInterval': 10,
@@ -334,9 +356,19 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
 							<input type="hidden" name="action" value="start">
 
-							<button type="submit" class="btn btn-primary btn-block">
+							<input type="hidden" name="token"
+                                                               value="<?=htmlspecialchars($member_token, ENT_QUOTES)?>">
+
+                                                    <button type="submit" class="btn btn-primary btn-block">
 								일시정지 해제
 							</button>
+                                                    <div class="mt-2"
+                                                             style="font-size:17px; line-height:1.6; color:#333;">
+                                                            <strong>일시정지 시작:</strong>
+                                                            <?=htmlspecialchars((string) $row['hold_datetime'], ENT_QUOTES)?><br>
+                                                            <strong>남은 이용기간:</strong>
+                                                            <?=(int) ($row['left_day'] ?? 0)?>일
+                                                    </div>
 						</form>
 						<?php } else { ?>
 						<form method="post"
@@ -345,6 +377,8 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 							<input type="hidden" name="mb_id"
 								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
 							<input type="hidden" name="action" value="hold">
+                                                    <input type="hidden" name="token"
+                                                               value="<?=htmlspecialchars($member_token, ENT_QUOTES)?>">
 
 							<button type="submit" class="btn btn-warning btn-block">
 								일시정지
@@ -361,18 +395,39 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 							<input type="hidden" name="mb_id"
 								   value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
 							<input type="hidden" name="action" value="leave">
+                                                    <input type="hidden" name="token"
+                                                               value="<?=htmlspecialchars($member_token, ENT_QUOTES)?>">
 
 							<button type="submit" class="btn btn-danger btn-block">
 								회원 탈퇴
 							</button>
 						</form>
 						<?php } else { ?>
-						<button type="button"
-								class="btn btn-secondary btn-block"
-								disabled>
-							탈퇴회원
-							(<?=htmlspecialchars((string) $row['mb_leave_date'], ENT_QUOTES)?>)
-						</button>
+						<div class="btn btn-secondary btn-block"
+                                                         style="font-size:17px; font-weight:700;">
+                                                    탈퇴회원
+                                                    (<?=htmlspecialchars((string) $row['mb_leave_date'], ENT_QUOTES)?>)
+                                            </div>
+
+                                            <?php if ($login_level >= LOTTO_ROLE_ADMIN) { ?>
+                                            <form method="post"
+                                                      action="pop.member.status.update.php"
+                                                      class="mt-2"
+                                                      onsubmit="return confirm('이 회원의 탈퇴를 취소하시겠습니까?');">
+                                                    <input type="hidden"
+                                                               name="mb_id"
+                                                               value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
+                                                    <input type="hidden" name="action" value="restore">
+                                                    <input type="hidden"
+                                                               name="token"
+                                                               value="<?=htmlspecialchars($member_token, ENT_QUOTES)?>">
+
+                                                    <button type="submit"
+                                                                    class="btn btn-success btn-block">
+                                                            탈퇴 취소
+                                                    </button>
+                                            </form>
+                                            <?php } ?>
 						<?php } ?>
 					</div>
 				</div>

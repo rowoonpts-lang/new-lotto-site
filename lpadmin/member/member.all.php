@@ -2,6 +2,8 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.php");
 
+	$member_token = lottoMemberTokenCreate();
+
 	$allowed_sch_select = array(
 		'a.mb_code',
 		'a.mb_name',
@@ -20,6 +22,14 @@
 	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
 	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
 	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+	$allowed_rows = array(50, 100, 200, 300);
+	$rows = isset($_GET['rows']) ? (int) $_GET['rows'] : 50;
+
+	if (!in_array($rows, $allowed_rows, true)) {
+		$rows = 50;
+	}
+
 	$qstr = isset($qstr) ? (string) $qstr : '';
 
 	$sch_text_sql = sql_real_escape_string($sch_text);
@@ -128,7 +138,6 @@
 	$total_count = isset($row['cnt']) ? (int) $row['cnt'] : 0;
 
 
-	$rows = 30;
 	$total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
 	if ($page < 1) $page = 1; // 페이지가 없으면 첫 페이지 (1 페이지)
 	$from_record = ($page - 1) * $rows; // 시작 열을 구함'
@@ -169,10 +178,32 @@
 
 ?>
 
+<style>
+.member-left-row > td {
+    background-color: #fdeaea !important;
+}
+
+.member-left-row:hover > td {
+    background-color: #f9dddd !important;
+}
+
+.member-left-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #b42318;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+</style>
+
 <div class="card card-default">
 	<div class="card-body">
 		<div class="col-12">
 		<form id="" name="" autocomplete="off">
+			<input type="hidden" name="rows" value="<?=$rows?>">
 			<div class="row">
 				<div class="col-md-1">
 					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_select" aria-hidden="true" autocomplete="off">
@@ -317,37 +348,84 @@
 
 	<div class="col-12">
 		<div class="card">
-			<div class="card-header d-flex align-items-center">
-                                <h3 class="card-title mb-0">회원관리</h3>
+			<div class="card-header d-flex align-items-center flex-nowrap">
+				<h3 class="card-title mb-0" style="margin-right:28px;">회원관리</h3>
 
-                                <div class="ml-auto d-flex align-items-center">
-                                        <button
-                                                class="btn btn-sm btn-primary mr-1"
-                                                type="button"
-                                                onClick="fnAddMember()"
-                                        >회원등록</button>
+				<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
+				<div class="d-flex align-items-center flex-nowrap" style="margin-right:24px;">
+					<select
+						id="member_rows"
+						class="form-control form-control-sm mr-2"
+						style="width:120px;"
+						onchange="fnChangeMemberRows(this.value)"
+					>
+						<?php foreach (array(50, 100, 200, 300) as $row_count) { ?>
+						<option
+							value="<?=$row_count?>"
+							<?=$rows === $row_count ? 'selected' : ''?>
+						>
+							노출 <?=$row_count?>개
+						</option>
+						<?php } ?>
+					</select>
 
-                                        <?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
-                                        <button
-                                                class="btn btn-sm btn-info mr-1"
-                                                type="button"
-                                                onClick="fnExcelUpload()"
-                                        >회원일괄등록</button>
+					<select
+						id="bulk_staff_mb_id"
+						class="form-control form-control-sm mr-2"
+						style="width:175px;"
+					>
+						<option value="">담당자 선택</option>
+						<?php foreach ($assignment_staff_rows as $assignment_staff_row) { ?>
+						<option
+							value="<?=htmlspecialchars((string) $assignment_staff_row['mb_id'], ENT_QUOTES)?>"
+						>
+							<?=htmlspecialchars((string) $assignment_staff_row['mb_name'], ENT_QUOTES)?>
+						</option>
+						<?php } ?>
+					</select>
 
-                                        <button
-                                                class="btn btn-sm btn-success mr-1"
-                                                type="button"
-                                                onClick="fnExcel()"
-                                        >다운로드</button>
+					<button
+						class="btn btn-sm btn-success mr-2"
+						type="button"
+						onclick="fnBulkAssignStaff()"
+					>담당자 지정</button>
 
-                                        <button
-                                                class="btn btn-sm btn-danger"
-                                                type="button"
-                                                onClick="fnMemberChkDel()"
-                                        >선택삭제</button>
-                                        <?php } ?>
-                                </div>
-                        </div>
+					<button
+						class="btn btn-sm btn-warning"
+						type="button"
+						onclick="fnBulkMemberLeave()"
+					>회원탈퇴</button>
+				</div>
+				<?php } ?>
+
+				<div class="ml-auto d-flex align-items-center flex-nowrap">
+					<button
+						class="btn btn-sm btn-primary mr-2"
+						type="button"
+						onClick="fnAddMember()"
+					>회원등록</button>
+
+					<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
+					<button
+						class="btn btn-sm btn-info mr-2"
+						type="button"
+						onClick="fnExcelUpload()"
+					>회원일괄등록</button>
+
+					<button
+						class="btn btn-sm btn-success mr-2"
+						type="button"
+						onClick="fnExcel()"
+					>다운로드</button>
+
+					<button
+						class="btn btn-sm btn-danger"
+						type="button"
+						onClick="fnMemberChkDel()"
+					>선택삭제</button>
+					<?php } ?>
+				</div>
+			</div>
 			<!-- /.card-header -->
 			<div class="card-body table-responsive p-0">
 				<form name="frm_member" id="frm_member">
@@ -373,8 +451,13 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
-				<tr>
+				<?php
+                            for($i=0; $row = sql_fetch_array($result); $i++){
+                                    $is_left_member = trim(
+                                            (string)($row['mb_leave_date'] ?? '')
+                                    ) !== '';
+                            ?>
+				<tr<?=$is_left_member ? ' class="member-left-row"' : ''?>>
 					<td><input type="checkbox" name="chk[]" value="<?=$row['mb_id']?>"></td>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['mb_code']?></td>
@@ -474,10 +557,12 @@
 					</td>
 					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-						<?php if($row['recent_select']){?>
-							<?=$row['recent_select']?>
-						<?php }?>
-					</td>
+                                            <?php if ($is_left_member) { ?>
+                                                    <strong class="member-left-status">탈퇴</strong>
+                                            <?php } else if ($row['recent_select']) { ?>
+                                                    <?=$row['recent_select']?>
+                                            <?php } ?>
+                                    </td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">회원정보</button></td>
 					<td>
 						<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
@@ -502,7 +587,8 @@
 				."&start_date=".urlencode($start_date)
 				."&end_date=".urlencode($end_date)
 				."&sch_mb_status=".urlencode($sch_mb_status)
-				."&sch_mb_db=".urlencode($sch_mb_db);
+				."&sch_mb_db=".urlencode($sch_mb_db)
+				."&rows=".urlencode((string) $rows);
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 				?>
 			</div>
@@ -514,6 +600,129 @@
 </div>
 
 <script>
+var lottoMemberToken = <?=json_encode($member_token)?>;
+
+function fnGetCheckedMemberIds()
+{
+	var ids = [];
+
+	$("form[name=frm_member] input[name='chk[]']:checked").each(function(){
+		ids.push($(this).val());
+	});
+
+	return ids;
+}
+
+function fnChangeMemberRows(rows)
+{
+	var url = new URL(window.location.href);
+
+	url.searchParams.set('rows', rows);
+	url.searchParams.set('page', '1');
+
+	window.location.href = url.toString();
+}
+
+function fnBulkAssignStaff()
+{
+	var ids = fnGetCheckedMemberIds();
+	var staffMbId = $("#bulk_staff_mb_id").val();
+	var staffName = $("#bulk_staff_mb_id option:selected").text().trim();
+
+	if (ids.length < 1) {
+		alert("담당자를 지정할 회원을 먼저 체크해주세요.");
+		return;
+	}
+
+	if (!staffMbId) {
+		alert("담당자를 선택해주세요.");
+		return;
+	}
+
+	if (!confirm(
+		ids.length
+		+ "명의 회원을 "
+		+ staffName
+		+ " 담당자로 지정하시겠습니까?"
+	)) {
+		return;
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "./member.bulk.action.php",
+		data: {
+			action: "assign",
+			staff_mb_id: staffMbId,
+			chk: ids,
+			token: lottoMemberToken
+		},
+		dataType: "json",
+		success: function(response) {
+			if (!response || response.success !== true) {
+				alert(
+					response && response.message
+						? response.message
+						: "담당자 일괄 지정에 실패했습니다."
+				);
+				return;
+			}
+
+			alert(response.message);
+			location.reload();
+		},
+		error: function() {
+			alert("담당자 일괄 지정 중 오류가 발생했습니다.");
+		}
+	});
+}
+
+function fnBulkMemberLeave()
+{
+	var ids = fnGetCheckedMemberIds();
+
+	if (ids.length < 1) {
+		alert("탈퇴 처리할 회원을 먼저 체크해주세요.");
+		return;
+	}
+
+	if (!confirm(
+		"선택한 "
+		+ ids.length
+		+ "명의 회원을 탈퇴 처리하시겠습니까?\n\n"
+		+ "탈퇴는 삭제와 다르며 회원 데이터는 보존됩니다."
+	)) {
+		return;
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "./member.bulk.action.php",
+		data: {
+			action: "leave",
+			chk: ids,
+			token: lottoMemberToken
+		},
+		dataType: "json",
+		success: function(response) {
+			if (!response || response.success !== true) {
+				alert(
+					response && response.message
+						? response.message
+						: "회원 탈퇴 처리에 실패했습니다."
+				);
+				return;
+			}
+
+			alert(response.message);
+			location.reload();
+		},
+		error: function() {
+			alert("회원 탈퇴 처리 중 오류가 발생했습니다.");
+		}
+	});
+}
+
 $(document).on('change', '.member-staff-select', function(){
 	var $select = $(this);
 	var mbId = $select.data('mb-id');
@@ -527,7 +736,8 @@ $(document).on('change', '.member-staff-select', function(){
 		url: './ajax.member.assignment.update.php',
 		data: {
 			mb_id: mbId,
-			staff_mb_id: staffMbId
+			staff_mb_id: staffMbId,
+			token: lottoMemberToken
 		},
 		dataType: 'json',
 		success: function(response) {

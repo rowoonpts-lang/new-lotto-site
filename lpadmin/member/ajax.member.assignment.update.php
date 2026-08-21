@@ -31,6 +31,14 @@ if (
     exit;
 }
 
+if (!lottoMemberTokenCheck()) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => '올바른 요청이 아닙니다. 페이지를 새로고침한 후 다시 시도해주세요.',
+    ));
+    exit;
+}
+
 $targetMbId = isset($_POST['mb_id'])
     ? trim((string) $_POST['mb_id'])
     : '';

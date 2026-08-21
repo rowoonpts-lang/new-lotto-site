@@ -6,6 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!lottoMemberTokenCheck()) {
+    alert('올바르지 않은 요청입니다. 회원정보 화면을 새로고침한 후 다시 시도해 주세요.');
+    exit;
+}
+
 $mb_id = isset($_POST['mb_id'])
     ? trim((string) $_POST['mb_id'])
     : '';
@@ -19,7 +24,7 @@ if ($mb_id === '') {
     exit;
 }
 
-if (!in_array($action, array('hold', 'start', 'leave'), true)) {
+if (!in_array($action, array('hold', 'start', 'leave', 'restore'), true)) {
     alert('처리 유형이 올바르지 않습니다.');
     exit;
 }
@@ -105,7 +110,45 @@ if ($action === 'leave') {
         '회원이 탈퇴 처리되었습니다.',
         G5_LADMIN_URL
         .'/member/pop.member.php?mb_id='
-        .urlencode(base64_encode($mb_id))
+        .urlencode(base64_encode($mb_id)).'&refresh_parent=1'
+    );
+
+    exit;
+}
+
+if ($action === 'restore') {
+    if ($login_level < LOTTO_ROLE_ADMIN) {
+        alert('탈퇴 취소 권한이 없습니다.');
+        exit;
+    }
+
+    if (trim((string) $target['mb_leave_date']) === '') {
+        alert('탈퇴 상태가 아닌 회원입니다.');
+        exit;
+    }
+
+    if (!sql_query(
+        "update g5_member
+            set mb_leave_date = ''
+          where mb_id = '{$mb_id_sql}'",
+        false
+    )) {
+        alert('회원 탈퇴 취소 처리 중 오류가 발생했습니다.');
+        exit;
+    }
+
+    if (function_exists('fnSetLog')) {
+        fnSetLog(
+            $login_mb_id,
+            $target['mb_name'].' 회원의 탈퇴를 취소하였습니다.'
+        );
+    }
+
+    alert(
+        '회원 탈퇴가 취소되었습니다.',
+        G5_LADMIN_URL
+        .'/member/pop.member.php?mb_id='
+        .urlencode(base64_encode($mb_id)).'&refresh_parent=1'
     );
 
     exit;
@@ -229,5 +272,5 @@ alert(
     $message,
     G5_LADMIN_URL
     .'/member/pop.member.php?mb_id='
-    .urlencode(base64_encode($mb_id))
+    .urlencode(base64_encode($mb_id)).'&refresh_parent=1'
 );
