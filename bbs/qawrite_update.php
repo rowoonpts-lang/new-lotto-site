@@ -8,7 +8,10 @@ $w == u : 수정
 ==========================*/
 
 if($is_guest)
-    alert('회원이시라면 로그인 후 이용해 보십시오.', './login.php?url='.urlencode(G5_BBS_URL.'/qalist.php'));
+    alert(
+        '로그인이 필요한 서비스입니다. 상단에서 로그인해 주세요.',
+        G5_BBS_URL.'/board.php?bo_table=notice'
+    );
 
 $msg = array();
 
