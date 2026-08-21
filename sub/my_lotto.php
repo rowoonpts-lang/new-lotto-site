@@ -3,8 +3,8 @@ include_once("_common.php");
 
 if (!$is_member) {
     alert(
-        "로그인 후 이용바랍니다.",
-        "/bbs/login.php?url=/sub/my_lotto.php"
+        "로그인이 필요한 서비스입니다. 상단에서 로그인해 주세요.",
+        G5_URL
     );
 }
 

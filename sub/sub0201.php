@@ -31,7 +31,7 @@ document.body.classList.add('lottogpt-page');
 
             <p>
                 LottoGPT는 이용 목적과 분석 범위에 따라
-                세 가지 서비스 등급을 제공합니다.
+                네 가지 서비스 등급을 제공합니다.
             </p>
         </div>
     </section>
@@ -97,7 +97,30 @@ document.body.classList.add('lottogpt-page');
 
                 <article class="lg-membership-card lg-membership-premium">
                     <div class="lg-membership-card-head">
-                        <span class="lg-membership-level">03 · AI PREMIUM</span>
+                        <span class="lg-membership-level">03 · PREMIUM</span>
+                        <h2>Premium</h2>
+                        <p>프리미엄 분석 서비스</p>
+                    </div>
+
+                    <div class="lg-membership-price lg-membership-price-contact">
+                        <strong>금액문의</strong>
+                    </div>
+
+                    <ul class="lg-membership-features">
+                        <li>상세 서비스 내용은 상담을 통해 안내합니다.</li>
+                    </ul>
+
+                    <a
+                        class="lg-membership-btn pop_res_open"
+                        onclick="fnShowpop('3')"
+                    >
+                        상담문의
+                    </a>
+                </article>
+
+                <article class="lg-membership-card lg-membership-ai-premium">
+                    <div class="lg-membership-card-head">
+                        <span class="lg-membership-level">04 · AI PREMIUM</span>
                         <h2>AI Premium</h2>
                         <p>맞춤형 AI 분석</p>
                     </div>
@@ -114,7 +137,7 @@ document.body.classList.add('lottogpt-page');
 
                     <a
                         class="lg-membership-btn pop_res_open"
-                        onclick="fnShowpop('3')"
+                        onclick="fnShowpop('4')"
                     >
                         상담문의
                     </a>

@@ -53,8 +53,6 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
     + (int) ($config['cf_lucky_2'] ?? 0)
     + (int) ($config['cf_lucky_3'] ?? 0);
 ?>
-<link rel="stylesheet" href="<?=G5_THEME_CSS_URL?>/lottogpt.css?ver=20260806">
-<script>document.body.classList.add('lottogpt-page');</script>
 
 <main class="lg-home">
     <section class="lg-hero">
@@ -253,15 +251,5 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
         <div class="lg-shell">데이터는 과거를 말하고, AI는 가능성을 분석합니다.</div>
     </section>
 </main>
-
-<script>
-$(function () {
-    var menuNames = ['AI 소개', '멤버십', '데이터랩', '고객지원', 'MY GPT'];
-    $('.header .menu > li > a').each(function (index) {
-        if (menuNames[index]) $(this).text(menuNames[index]);
-    });
-    $('.header .logo img').attr('alt', 'LottoGPT');
-});
-</script>
 
 <?php include_once(G5_THEME_PATH.'/tail.php'); ?>

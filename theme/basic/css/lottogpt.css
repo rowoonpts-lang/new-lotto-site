@@ -9,121 +9,12 @@
     --lg-gold-light: #ffe39a;
     --lg-teal: #26e2c0;
     --lg-text: #f6f4ec;
-    --lg-muted: #98a4b3;
+    --lg-muted: #b8c2cc;
 }
 
 .lottogpt-page {
     background: var(--lg-bg);
     color: var(--lg-text);
-}
-
-.lottogpt-page .header {
-    padding: 0;
-    height: 78px;
-    background: rgba(4, 7, 11, .92);
-    border-bottom: 1px solid var(--lg-line);
-    backdrop-filter: blur(18px);
-}
-
-.lottogpt-page .header .inner {
-    height: 78px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.lottogpt-page .header .header_ul_1,
-.lottogpt-page .header .header_ul_2 {
-    padding: 0;
-}
-
-.lottogpt-page .header .header_ul_1 .logo {
-    width: 190px;
-}
-
-.lottogpt-page .header .header_ul_1 .logo a {
-    display: flex;
-    align-items: center;
-}
-
-.lottogpt-page .header .header_ul_1 .logo img {
-    display: none;
-}
-
-.lottogpt-page .header .header_ul_1 .logo a::before {
-    content: "";
-    width: 34px;
-    height: 34px;
-    margin-right: 10px;
-    border: 1px solid var(--lg-gold);
-    transform: rotate(30deg);
-    box-shadow: inset 0 0 18px rgba(229,184,76,.18), 0 0 18px rgba(229,184,76,.15);
-}
-
-.lottogpt-page .header .header_ul_1 .logo a::after {
-    content: "LottoGPT";
-    color: #fff;
-    font-family: Montserrat, sans-serif;
-    font-size: 23px;
-    font-weight: 700;
-    letter-spacing: -.03em;
-}
-
-.lottogpt-page .header .header_ul_1 .logo a {
-    color: var(--lg-gold);
-}
-
-.lottogpt-page .header .header_ul_2 {
-    margin-left: auto;
-    margin-right: 210px;
-}
-
-.lottogpt-page .header .menu > li {
-    margin-right: 38px;
-}
-
-.lottogpt-page .header .menu > li > a,
-.lottogpt-page .header .header_ul_1 .top_menu a {
-    color: #dce3ea;
-    font-size: 14px;
-    letter-spacing: -.02em;
-}
-
-.lottogpt-page .header .menu > li:hover > a {
-    color: var(--lg-gold-light);
-}
-
-.lottogpt-page .header .sub_menu {
-    top: 31px;
-    padding: 12px;
-    background: rgba(9, 14, 21, .98);
-    border: 1px solid var(--lg-line);
-    border-radius: 10px;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu {
-    right: 0;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div {
-    margin-right: 8px;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div:first-child::after {
-    display: none;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu a {
-    display: block;
-    padding: 10px 15px;
-    border: 1px solid rgba(229,184,76,.45);
-    border-radius: 10px;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div:last-child a {
-    background: linear-gradient(135deg, #8d6419, #f2c75b);
-    color: #090b0e;
-    font-weight: 700;
 }
 
 .lg-home {
@@ -170,7 +61,7 @@
 .lg-eyebrow,
 .lg-section-title p {
     color: var(--lg-teal);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .16em;
 }
@@ -237,7 +128,7 @@
     gap: 25px;
     margin-top: 36px;
     color: #9ea9b6;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-trust-list span {
@@ -278,7 +169,7 @@
 
 .lg-card-head > span {
     color: var(--lg-teal);
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-status-dot {
@@ -333,8 +224,8 @@
 .lg-gauge span {
     display: block;
     margin-top: 8px;
-    color: #8c9aa8;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-network {
@@ -431,15 +322,15 @@
 .lg-metric-grid span,
 .lg-metric-grid small {
     display: block;
-    color: #788697;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-card-stats strong {
     display: block;
     margin-top: 7px;
     color: #dce6e8;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-metrics {
@@ -549,7 +440,7 @@
 
 .lg-panel-head a {
     color: var(--lg-teal);
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-insight-grid {
@@ -569,8 +460,8 @@
 .lg-insight-grid span,
 .lg-insight-grid small {
     display: block;
-    color: #748293;
-    font-size: 10px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-insight-grid strong {
@@ -598,11 +489,11 @@
 
 .lg-notice-list time {
     color: #667382;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-empty {
-    color: #84909d;
+    color: #b7c1cc;
 }
 
 .lg-premium-panel {
@@ -646,7 +537,7 @@
 
 .lottogpt-page .footer {
     background: #04070b;
-    color: #8994a0;
+    color: #b7c1cc;
 }
 
 .lottogpt-page .footer .footer_top {
@@ -656,7 +547,7 @@
 .lottogpt-page .footer_top ul li a,
 .lottogpt-page .footer .footer_bottom .f_l li,
 .lottogpt-page .footer .footer_bottom .f_r li {
-    color: #7f8995;
+    color: #b7c1cc;
 }
 
 .lottogpt-page .footer .footer_bottom .f_l li:nth-child(1),
@@ -665,14 +556,6 @@
 }
 
 @media (max-width: 1100px) {
-    .lottogpt-page .header .header_ul_2 {
-        margin-right: 180px;
-    }
-
-    .lottogpt-page .header .menu > li {
-        margin-right: 20px;
-    }
-
     .lg-hero-grid,
     .lg-content-grid {
         grid-template-columns: 1fr;
@@ -714,149 +597,6 @@
     .lg-actions,
     .lg-trust-list {
         flex-direction: column;
-    }
-}
-
-/* LottoGPT header navigation refinement */
-.lottogpt-page .header {
-    color: var(--lg-text);
-}
-
-.lottogpt-page .header .inner {
-    width: min(1320px, calc(100% - 48px));
-}
-
-.lottogpt-page .header .header_ul_1 {
-    flex: 0 0 auto;
-}
-
-.lottogpt-page .header .header_ul_2 {
-    flex: 1 1 auto;
-    justify-content: center;
-    margin: 0 205px 0 28px;
-}
-
-.lottogpt-page .header .header_ul_2 > li {
-    width: 100%;
-}
-
-.lottogpt-page .header .menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-}
-
-.lottogpt-page .header .menu > li {
-    float: none;
-    margin: 0;
-}
-
-.lottogpt-page .header .menu > li > a {
-    display: flex;
-    min-height: 44px;
-    padding: 0 15px;
-    align-items: center;
-    border: 1px solid transparent;
-    border-radius: 9px;
-    color: #c8d0d9;
-    font-weight: 500;
-    line-height: 1;
-    transition: color .18s ease, background .18s ease, border-color .18s ease;
-}
-
-.lottogpt-page .header .menu > li:hover > a,
-.lottogpt-page .header .menu > li:focus-within > a {
-    color: var(--lg-gold-light);
-    border-color: rgba(229,184,76,.22);
-    background: rgba(229,184,76,.065);
-}
-
-.lottogpt-page .header .sub_menu {
-    top: 48px;
-    left: 50%;
-    width: 176px;
-    padding: 8px;
-    transform: translateX(-50%);
-    background: rgba(6, 10, 15, .98);
-    border: 1px solid rgba(229,184,76,.24);
-    border-radius: 12px;
-    box-shadow: 0 18px 45px rgba(0,0,0,.42);
-}
-
-.lottogpt-page .header .sub_menu::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: -5px;
-    width: 9px;
-    height: 9px;
-    transform: translateX(-50%) rotate(45deg);
-    background: #080d13;
-    border-left: 1px solid rgba(229,184,76,.24);
-    border-top: 1px solid rgba(229,184,76,.24);
-}
-
-.lottogpt-page .header .sub_menu > li > a {
-    padding: 11px 12px;
-    border-radius: 8px;
-    color: #aeb8c3;
-    font-size: 13px;
-    transition: color .18s ease, background .18s ease;
-}
-
-.lottogpt-page .header .sub_menu > li > a:hover,
-.lottogpt-page .header .sub_menu > li > a:focus {
-    color: #fff;
-    background: rgba(38,226,192,.09);
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu {
-    gap: 7px;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div {
-    margin: 0;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu a {
-    min-height: 38px;
-    display: flex;
-    padding: 0 13px;
-    align-items: center;
-    justify-content: center;
-    border-color: rgba(255,255,255,.11);
-    background: rgba(255,255,255,.025);
-    color: #b9c3cd;
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu a:hover {
-    color: #fff;
-    border-color: rgba(229,184,76,.30);
-    background: rgba(229,184,76,.06);
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div:last-child a {
-    border-color: rgba(229,184,76,.52);
-    background: linear-gradient(135deg, #805915, #e7b84b);
-    color: #0b0c0e;
-}
-
-.lottogpt-page .header .header_ul_1 .top_menu div:last-child a:hover {
-    color: #08090b;
-    box-shadow: 0 8px 22px rgba(229,184,76,.18);
-}
-
-@media (max-width: 1240px) {
-    .lottogpt-page .header .header_ul_2 {
-        margin-right: 185px;
-    }
-
-    .lottogpt-page .header .menu > li > a {
-        padding: 0 10px;
-        font-size: 13px;
     }
 }
 
@@ -972,7 +712,7 @@
     display: flex;
     align-items: center;
     gap: 28px;
-    color: #8795a4;
+    color: #b7c1cc;
     font: 700 11px Montserrat, sans-serif;
     letter-spacing: .12em;
     animation: lgTicker 22s linear infinite;
@@ -1058,7 +798,7 @@
     border: 1px solid rgba(229,184,76,.3);
     border-radius: 999px;
     color: var(--lg-gold-light);
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-result-empty {
@@ -1085,8 +825,8 @@
 
 .lg-result-round span {
     margin-top: 7px;
-    color: #778596;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-winning-balls {
@@ -1157,7 +897,7 @@
     padding: 0 14px;
     border-bottom: 1px solid rgba(255,255,255,.055);
     color: #aeb8c3;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-prize-row:last-child {
@@ -1171,14 +911,14 @@
 .lg-prize-head {
     min-height: 38px;
     background: rgba(255,255,255,.035);
-    color: #738191;
-    font-size: 10px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-result-footer {
     margin-top: 16px;
     color: #667382;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-result-footer a {
@@ -1213,15 +953,15 @@
 }
 
 .lg-result-round span {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-prize-row {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-prize-head {
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-prize-row strong {
@@ -1234,19 +974,19 @@
     }
 
     .lg-result-round span {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .lg-prize-row {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .lg-prize-head {
-        font-size: 11px;
+        font-size: 15px;
     }
 
     .lg-prize-row strong {
-        font-size: 14px;
+        font-size: 15px;
     }
 }
 
@@ -1260,7 +1000,7 @@
         radial-gradient(circle at 15% 0%, rgba(30, 199, 190, .07), transparent 32%),
         radial-gradient(circle at 85% 10%, rgba(229, 184, 76, .08), transparent 30%),
         #04070b;
-    color: #8995a2;
+    color: #b7c1cc;
 }
 
 .lg-footer-shell {
@@ -1289,8 +1029,8 @@
 .lg-footer-brand p {
     max-width: 420px;
     margin-top: 18px;
-    color: #7e8a97;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.8;
 }
 
@@ -1332,8 +1072,8 @@
 .lg-footer-contact p,
 .lg-footer-contact a {
     margin: 0;
-    color: #7f8a96;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.55;
     transition: color .2s ease;
 }
@@ -1350,14 +1090,14 @@
     padding: 22px 0;
     border-top: 1px solid rgba(255, 255, 255, .06);
     border-bottom: 1px solid rgba(255, 255, 255, .06);
-    font-size: 12px;
+    font-size: 15px;
     line-height: 1.6;
 }
 
 .lg-footer-company strong {
     width: 100%;
     color: #d7dde4;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-footer-notice {
@@ -1367,7 +1107,7 @@
     border-radius: 10px;
     background: rgba(229, 184, 76, .035);
     color: #6f7a86;
-    font-size: 11px;
+    font-size: 15px;
     line-height: 1.75;
 }
 
@@ -1501,8 +1241,8 @@
 
 .lg-service-card p {
     margin-top: 13px;
-    color: #84909d;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.75;
 }
 
@@ -1513,11 +1253,11 @@
     margin-top: auto;
     padding-top: 24px;
     color: var(--lg-gold-light);
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-service-card strong i {
-    font-size: 10px;
+    font-size: 15px;
     transition: transform .2s ease;
 }
 
@@ -1594,8 +1334,8 @@
 .lg-results-summary span {
     display: block;
     margin-bottom: 8px;
-    color: #7f8b98;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-results-summary strong {
@@ -1630,13 +1370,13 @@
 }
 
 .lg-result-item-head span {
-    color: #778391;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-result-item-head a {
-    color: #83909d;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-result-item-head a i {
@@ -1662,7 +1402,7 @@
     display: block;
     margin-top: 13px;
     color: #687481;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-result-prize {
@@ -1678,8 +1418,8 @@
 }
 
 .lg-result-prize span {
-    color: #7f8b98;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-result-prize strong {
@@ -1697,7 +1437,7 @@
 .lg-result-prize small {
     margin-top: 8px;
     color: #697582;
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .lg-results-pagination {
@@ -1715,8 +1455,8 @@
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 10px;
     background: rgba(255, 255, 255, .03);
-    color: #8995a2;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-results-pagination a:hover,
@@ -1730,7 +1470,7 @@
     padding: 80px 20px;
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 16px;
-    color: #8995a2;
+    color: #b7c1cc;
     text-align: center;
 }
 
@@ -1776,7 +1516,7 @@
     }
 
     .lg-result-item-head a i {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .lg-results-pagination a {
@@ -1834,8 +1574,8 @@
 .lg-stats-summary span {
     display: block;
     margin-bottom: 8px;
-    color: #7f8b98;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-stats-summary strong {
@@ -1863,7 +1603,7 @@
 
 .lg-stats-panel-head span {
     color: var(--lg-teal);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .12em;
 }
@@ -1876,7 +1616,7 @@
 
 .lg-stats-panel-head > p {
     color: #687582;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-number-frequency-grid {
@@ -1898,12 +1638,12 @@
 
 .lg-number-frequency-item strong {
     color: #dbe2e9;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-number-frequency-item small {
     color: #687481;
-    font-size: 9px;
+    font-size: 15px;
     text-align: center;
 }
 
@@ -1930,12 +1670,12 @@
 
 .lg-stats-ranking > div > b {
     color: #687481;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-stats-ranking strong {
     color: #e4e9ee;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-recent-number-grid {
@@ -1957,7 +1697,7 @@
     display: block;
     margin-top: 8px;
     color: #dce3e9;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-ratio-row {
@@ -1979,8 +1719,8 @@
 }
 
 .lg-ratio-row span {
-    color: #7d8995;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-ratio-row strong {
@@ -1992,7 +1732,7 @@
 .lg-ratio-row b {
     margin-top: 4px;
     color: var(--lg-gold-light);
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-ratio-bar {
@@ -2024,7 +1764,7 @@
 
 .lg-range-list span {
     color: #9ba6b1;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-range-list > div > div {
@@ -2043,7 +1783,7 @@
 
 .lg-range-list strong {
     color: #dce3e9;
-    font-size: 11px;
+    font-size: 15px;
     text-align: right;
 }
 
@@ -2055,8 +1795,8 @@
     border: 1px solid rgba(229,184,76,.13);
     border-radius: 12px;
     background: rgba(229,184,76,.04);
-    color: #7d8995;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.7;
 }
 
@@ -2116,12 +1856,12 @@
 
 .lg-stats-hero > .lg-shell > p:last-child {
     color: #b8c2cc;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-stats-summary span {
     color: #aeb9c4;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-stats-summary strong {
@@ -2135,7 +1875,7 @@
 }
 
 .lg-stats-panel-head span {
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .lg-stats-panel-head h2 {
@@ -2145,7 +1885,7 @@
 
 .lg-stats-panel-head > p {
     color: #a9b5c0;
-    font-size: 12px;
+    font-size: 15px;
     line-height: 1.6;
 }
 
@@ -2155,12 +1895,12 @@
 
 .lg-number-frequency-item strong {
     color: #f1f4f7;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-number-frequency-item small {
     color: #a7b3bf;
-    font-size: 11px;
+    font-size: 15px;
     line-height: 1.45;
 }
 
@@ -2170,12 +1910,12 @@
 
 .lg-stats-ranking > div > b {
     color: #a6b2be;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-stats-ranking strong {
     color: #f1f4f7;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-recent-number-grid article {
@@ -2184,12 +1924,12 @@
 
 .lg-recent-number-grid strong {
     color: #f1f4f7;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .lg-ratio-row span {
     color: #b2bdc8;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-ratio-row strong {
@@ -2197,17 +1937,17 @@
 }
 
 .lg-ratio-row b {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .lg-range-list span {
     color: #bcc6cf;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-range-list strong {
     color: #f0f4f7;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .lg-range-list > div > div {
@@ -2216,7 +1956,7 @@
 
 .lg-stats-notice {
     color: #bbc5ce;
-    font-size: 12px;
+    font-size: 15px;
     line-height: 1.8;
 }
 
@@ -2226,33 +1966,12 @@
     }
 
     .lg-number-frequency-item strong {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .lg-number-frequency-item small {
-        font-size: 10px;
+        font-size: 15px;
     }
-}
-
-/* LottoGPT official image logo */
-.lottogpt-page .header .header_ul_1 .logo {
-    width: 220px;
-}
-
-.lottogpt-page .header .header_ul_1 .logo a {
-    display: block;
-}
-
-.lottogpt-page .header .header_ul_1 .logo img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-.lottogpt-page .header .header_ul_1 .logo a::before,
-.lottogpt-page .header .header_ul_1 .logo a::after {
-    display: none;
-    content: none;
 }
 
 /* LottoGPT about page */
@@ -2367,7 +2086,7 @@
     display: block;
     margin-bottom: 54px;
     color: var(--lg-teal);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .14em;
 }
@@ -2549,7 +2268,7 @@
 
 .lg-membership-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 22px;
     align-items: stretch;
 }
@@ -2586,7 +2305,7 @@
     background: linear-gradient(135deg, #9b701f, #f1c75b);
     border-radius: 20px;
     color: #070a0e;
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .12em;
 }
@@ -2600,7 +2319,7 @@
     display: block;
     margin-bottom: 20px;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .16em;
 }
@@ -2655,7 +2374,7 @@
     margin-bottom: 14px;
     padding-left: 22px;
     color: #aeb8c3;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.65;
     word-break: keep-all;
 }
@@ -2718,26 +2437,32 @@
 
 .lg-membership-notice span {
     color: var(--lg-gold);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .16em;
 }
 
 .lg-membership-notice p {
     margin: 0;
-    color: #8f9aa6;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.75;
     word-break: keep-all;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
     .lg-membership-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .lg-membership-card {
         min-height: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .lg-membership-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -2855,7 +2580,7 @@
     display: block;
     margin-bottom: 10px;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .16em;
 }
@@ -2871,8 +2596,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #8f9ba7;
-    font-size: 10px;
+    color: #b7c1cc;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .12em;
 }
@@ -2911,8 +2636,8 @@
 .lg-winning-result .product_li1_1 em {
     display: block;
     margin-top: 8px;
-    color: #8f9ba7;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     font-style: normal;
     font-weight: 400;
 }
@@ -2925,7 +2650,7 @@
     border: 1px solid rgba(229, 184, 76, .30);
     border-radius: 9px;
     color: #fff;
-    font-size: 14px;
+    font-size: 15px;
     outline: none;
     cursor: pointer;
 }
@@ -2985,7 +2710,7 @@
     display: block;
     margin-bottom: 28px;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .15em;
 }
@@ -3000,7 +2725,7 @@
 .lg-winning-guide p {
     margin: 0;
     color: #97a3af;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.75;
     word-break: keep-all;
 }
@@ -3104,8 +2829,8 @@
 .lg-winning-result-head small {
     width: 100%;
     margin-top: 3px;
-    color: #8f9ba7;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-winning-turn-form {
@@ -3115,8 +2840,8 @@
 .lg-winning-turn-form label {
     display: block;
     margin-bottom: 8px;
-    color: #8f9ba7;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: .08em;
 }
@@ -3129,7 +2854,7 @@
     border: 1px solid rgba(229, 184, 76, .30);
     border-radius: 9px;
     color: #fff;
-    font-size: 14px;
+    font-size: 15px;
     outline: none;
     cursor: pointer;
 }
@@ -3205,8 +2930,8 @@
 .lg-winning-summary span {
     display: block;
     margin-bottom: 8px;
-    color: #8f9ba7;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-winning-summary strong {
@@ -3354,7 +3079,7 @@
     display: block;
     margin-bottom: 40px;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .14em;
 }
@@ -3363,7 +3088,7 @@
     display: inline-block;
     margin-bottom: 14px;
     color: var(--lg-gold);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .15em;
 }
@@ -3378,7 +3103,7 @@
 .lg-analysis-step p {
     margin: 0;
     color: #98a4b0;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.75;
     word-break: keep-all;
 }
@@ -3580,7 +3305,7 @@
     display: block;
     margin-bottom: 11px;
     color: var(--lg-muted);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
 }
 
@@ -3595,8 +3320,8 @@
 .lg-combination-summary small {
     display: block;
     margin-top: 9px;
-    color: #768493;
-    font-size: 12px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-combination-section {
@@ -3648,7 +3373,7 @@
 .lg-combination-panel-head > span {
     flex: 0 0 auto;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .16em;
 }
@@ -3663,8 +3388,8 @@
 
 .lg-combination-panel-head p {
     margin: 0;
-    color: #8996a4;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.65;
     word-break: keep-all;
 }
@@ -3687,7 +3412,7 @@
     background: rgba(229, 184, 76, .07);
     border-bottom: 1px solid rgba(229, 184, 76, .17);
     color: #d7c78f;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
     text-align: center;
     white-space: nowrap;
@@ -3697,7 +3422,7 @@
     padding: 16px 14px;
     border-bottom: 1px solid rgba(255, 255, 255, .055);
     color: #c5cdd6;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.5;
     text-align: center;
 }
@@ -3742,7 +3467,7 @@
     display: block;
     margin-bottom: 11px;
     color: var(--lg-teal);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .16em;
 }
@@ -3812,7 +3537,7 @@
     }
 
     .lg-combination-heading > p:last-child {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .lg-combination-panel {
@@ -3830,7 +3555,7 @@
     }
 
     .lg-combination-panel-head p {
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .lg-combination-table {
@@ -3839,12 +3564,12 @@
 
     .lg-combination-table th {
         padding: 12px 10px;
-        font-size: 11px;
+        font-size: 15px;
     }
 
     .lg-combination-table td {
         padding: 13px 10px;
-        font-size: 12px;
+        font-size: 15px;
     }
 
     .lg-combination-notice {
@@ -3857,7 +3582,7 @@
     }
 
     .lg-combination-notice > p {
-        font-size: 14px;
+        font-size: 15px;
     }
 }
 
@@ -3974,7 +3699,7 @@
     display: block;
     margin-bottom: 35px;
     color: var(--lg-teal);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .16em;
 }
@@ -3983,7 +3708,7 @@
     display: inline-block;
     margin-bottom: 13px;
     color: var(--lg-gold);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .15em;
 }
@@ -4000,7 +3725,7 @@
 .lg-play-guide-card p {
     margin: 0;
     color: #96a3b0;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.75;
     word-break: keep-all;
 }
@@ -4029,7 +3754,7 @@
     display: block;
     margin-bottom: 15px;
     color: var(--lg-muted);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
 }
 
@@ -4043,8 +3768,8 @@
 
 .lg-play-guide-stats p {
     margin: 16px 0 0;
-    color: #8f9caa;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.75;
     word-break: keep-all;
 }
@@ -4108,7 +3833,7 @@
     display: block;
     margin-bottom: 13px;
     color: var(--lg-teal);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .17em;
 }
@@ -4178,7 +3903,7 @@
     }
 
     .lg-play-guide-heading > p:last-child {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .lg-play-guide-grid {
@@ -4221,7 +3946,7 @@
     }
 
     .lg-play-guide-notice-panel p {
-        font-size: 14px;
+        font-size: 15px;
     }
 }
 
@@ -4285,7 +4010,7 @@
     display: block;
     margin-bottom: 10px;
     color: var(--lg-muted);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
 }
 
@@ -4318,8 +4043,8 @@
 .lg-my-rank-grid small {
     display: block;
     margin-top: 8px;
-    color: #7f8b97;
-    font-size: 11px;
+    color: #b7c1cc;
+    font-size: 15px;
 }
 
 .lg-my-section {
@@ -4377,10 +4102,10 @@
 
 .lg-my-table th {
     padding: 17px 20px;
-    color: #8e9aa7;
+    color: #b7c1cc;
     background: rgba(255, 255, 255, .025);
     border-bottom: 1px solid rgba(255, 255, 255, .07);
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 700;
     text-align: left;
 }
@@ -4389,7 +4114,7 @@
     padding: 20px;
     color: #d6dde4;
     border-bottom: 1px solid rgba(255, 255, 255, .055);
-    font-size: 14px;
+    font-size: 15px;
     vertical-align: middle;
 }
 
@@ -4418,7 +4143,7 @@
     background: rgba(229, 184, 76, .08);
     border: 1px solid rgba(229, 184, 76, .2);
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 800;
 }
 
@@ -4436,8 +4161,8 @@
 .lg-my-empty p {
     max-width: 520px;
     margin: 13px auto 0;
-    color: #8996a3;
-    font-size: 14px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.8;
     word-break: keep-all;
 }
@@ -4454,15 +4179,15 @@
     display: block;
     margin-bottom: 7px;
     color: var(--lg-teal);
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .15em;
 }
 
 .lg-my-note p {
     margin: 0;
-    color: #8f9ca8;
-    font-size: 13px;
+    color: #b7c1cc;
+    font-size: 15px;
     line-height: 1.75;
 }
 
@@ -4491,7 +4216,7 @@
     }
 
     .lg-my-hero-copy {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .lg-my-summary {
@@ -4555,6 +4280,563 @@
     font-size:30px;
   }
 }
+
+/* LottoGPT common site header
+ * PC: logo / navigation / account in one row
+ * Mobile: logo + account / navigation in two rows
+ */
+
+body.lottogpt-page {
+    padding-top: 78px;
+}
+
+body.lottogpt-page .lg-home {
+    padding-top: 0;
+}
+
+.lottogpt-page .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 100%;
+    height: 78px;
+    padding: 0;
+
+    background: rgba(4, 7, 11, .94);
+    border-bottom: 1px solid var(--lg-line);
+    backdrop-filter: blur(18px);
+}
+
+.lottogpt-page .header .inner {
+    position: relative;
+
+    width: min(1320px, calc(100% - 48px));
+    height: 78px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0;
+}
+
+
+/* logo + account */
+
+.lottogpt-page .header .header_ul_1 {
+    position: static;
+
+    width: auto;
+    height: auto;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0;
+    margin: 0;
+
+    flex: 0 0 auto;
+}
+
+.lottogpt-page .header .header_ul_1 .logo {
+    width: clamp(150px, 14vw, 220px);
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.lottogpt-page .header .header_ul_1 .logo a {
+    display: block;
+}
+
+.lottogpt-page .header .header_ul_1 .logo img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+}
+
+.lottogpt-page .header .header_ul_1 .logo a::before,
+.lottogpt-page .header .header_ul_1 .logo a::after {
+    display: none;
+    content: none;
+}
+
+
+/* main navigation */
+
+.lottogpt-page .header .header_ul_2 {
+    position: static;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+    height: 78px;
+
+    margin:
+        0
+        clamp(270px, 22vw, 320px)
+        0
+        clamp(16px, 2vw, 28px);
+
+    padding: 0;
+
+    flex: 1 1 auto;
+}
+
+.lottogpt-page .header .header_ul_2 > li {
+    width: 100%;
+    height: 100%;
+}
+
+.lottogpt-page .header .menu {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+    gap: clamp(0px, .25vw, 4px);
+}
+
+.lottogpt-page .header .menu > li {
+    position: relative;
+
+    float: none;
+
+    width: auto;
+    margin: 0;
+    padding: 0;
+
+    flex: 0 1 auto;
+}
+
+.lottogpt-page .header .menu > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0 clamp(7px, .85vw, 15px);
+
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    color: #c8d0d9;
+
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -.02em;
+
+    white-space: nowrap;
+
+    transform: none;
+
+    transition:
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+}
+
+.lottogpt-page .header .menu > li:hover > a,
+.lottogpt-page .header .menu > li:focus-within > a {
+    color: var(--lg-gold-light);
+
+    border-color: rgba(229, 184, 76, .22);
+    background: rgba(229, 184, 76, .065);
+}
+
+
+/* dropdown */
+
+.lottogpt-page .header .sub_menu {
+    position: absolute;
+
+    top: 60px;
+    left: 50%;
+    z-index: 50;
+
+    display: none;
+
+    width: 176px;
+
+    padding: 8px;
+    margin: 0;
+
+    transform: translateX(-50%);
+
+    background: rgba(6, 10, 15, .98);
+    border: 1px solid rgba(229, 184, 76, .24);
+    border-radius: 12px;
+
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .42);
+}
+
+.lottogpt-page .header .sub_menu > li {
+    margin: 0;
+    padding: 0;
+}
+
+.lottogpt-page .header .sub_menu > li > a {
+    display: block;
+
+    width: 100%;
+
+    padding: 11px 12px;
+
+    color: #aeb8c3;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+    line-height: 1.3;
+
+    transform: none;
+}
+
+.lottogpt-page .header .sub_menu > li > a:hover,
+.lottogpt-page .header .sub_menu > li > a:focus {
+    color: #fff;
+    background: rgba(38, 226, 192, .09);
+}
+
+
+/* account */
+
+.lottogpt-page .header .header_ul_1 .top_menu {
+    position: absolute;
+
+    top: 50%;
+    right: 0;
+    left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: auto;
+
+    margin: 0;
+    padding: 0;
+    gap: 7px;
+
+    transform: translateY(-50%);
+}
+
+.lottogpt-page .header .header_ul_1 .top_menu div {
+    margin: 0;
+}
+
+.lottogpt-page .header .header_ul_1 .top_menu div:first-child::after {
+    display: none;
+    content: none;
+}
+
+.lottogpt-page .header .header_ul_1 .top_menu a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 36px;
+
+    padding: 0 12px;
+
+    color: #b9c3cd;
+
+    border: 1px solid rgba(255, 255, 255, .11);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, .025);
+
+    font-size: 16px;
+
+    white-space: nowrap;
+
+    transform: none;
+}
+
+.lottogpt-page .header .header_ul_1 .top_menu a:hover {
+    color: #fff;
+
+    border-color: rgba(229, 184, 76, .30);
+    background: rgba(229, 184, 76, .06);
+}
+
+
+/* inline login */
+
+.lottogpt-page .header .lg-header-login {
+    display: flex;
+    align-items: center;
+
+    margin: 0;
+    gap: 6px;
+}
+
+.lottogpt-page .header .lg-header-login input {
+    width: clamp(92px, 8vw, 125px);
+    height: 38px;
+
+    box-sizing: border-box;
+
+    padding: 0 9px;
+
+    color: #fff;
+
+    border: 1px solid rgba(255, 255, 255, .28);
+    border-radius: 8px;
+    outline: 0;
+
+    background: rgba(255, 255, 255, .08);
+
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.lottogpt-page .header .lg-header-login input::placeholder {
+    color: #b8c2cc;
+    opacity: 1;
+}
+
+.lottogpt-page .header .lg-header-login input:focus {
+    border-color: rgba(229, 184, 76, .55);
+    background: rgba(255, 255, 255, .07);
+}
+
+.lottogpt-page .header .lg-header-login button {
+    height: 36px;
+
+    padding: 0 12px;
+
+    border: 1px solid rgba(229, 184, 76, .55);
+    border-radius: 8px;
+
+    background: linear-gradient(135deg, #805915, #e7b84b);
+    color: #090b0e;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+
+/* tablet */
+
+@media (max-width: 1100px) {
+    .lottogpt-page .header .header_ul_1 .logo {
+        width: clamp(130px, 15vw, 170px);
+    }
+
+    .lottogpt-page .header .header_ul_2 {
+        margin-right: clamp(225px, 27vw, 270px);
+        margin-left: 12px;
+    }
+
+    .lottogpt-page .header .menu > li > a {
+        padding: 0 7px;
+        font-size: 15px;
+    }
+
+    .lottogpt-page .header .lg-header-login input {
+        width: clamp(70px, 8vw, 88px);
+    }
+}
+
+
+/* mobile
+ * row 1: logo + login/account
+ * row 2: five main menus
+ */
+
+@media (max-width: 760px) {
+    body.lottogpt-page {
+        padding-top: 118px;
+    }
+
+    .lottogpt-page .header {
+        height: 118px;
+    }
+
+    .lottogpt-page .header .inner {
+        width: 100%;
+        height: 118px;
+
+        display: block;
+
+        padding: 0 clamp(8px, 2.7vw, 14px);
+    }
+
+    .lottogpt-page .header .header_ul_1 {
+        width: 100%;
+        height: 64px;
+
+        display: flex;
+        align-items: center;
+
+        margin: 0;
+        padding: 0;
+    }
+
+    .lottogpt-page .header .header_ul_1 .logo {
+        width: clamp(102px, 28vw, 132px);
+    }
+
+    .lottogpt-page .header .header_ul_1 .top_menu {
+        position: static;
+
+        top: auto;
+        right: auto;
+        left: auto;
+
+        min-width: 0;
+
+        margin-left: auto;
+
+        gap: 4px;
+
+        transform: none;
+    }
+
+    .lottogpt-page .header .lg-header-login {
+        min-width: 0;
+
+        gap: 3px;
+    }
+
+    .lottogpt-page .header .lg-header-login input {
+        width: clamp(64px, 18vw, 78px);
+        min-width: 0;
+        height: 34px;
+
+        padding: 0 6px;
+
+        font-size: 15px;
+    }
+
+    .lottogpt-page .header .lg-header-login button {
+        height: 34px;
+
+        padding: 0 clamp(7px, 1.9vw, 10px);
+
+        font-size: 15px;
+    }
+
+    .lottogpt-page .header .header_ul_1 .top_menu a {
+        min-height: 32px;
+
+        padding: 0 clamp(6px, 1.8vw, 9px);
+
+        font-size: 14px;
+    }
+
+    .lottogpt-page .header .header_ul_2 {
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        display: block;
+
+        width: 100%;
+        height: 54px;
+
+        margin: 0;
+        padding: 0;
+
+        border-top: 1px solid rgba(229, 184, 76, .12);
+    }
+
+    .lottogpt-page .header .header_ul_2 > li {
+        width: 100%;
+        height: 54px;
+    }
+
+    .lottogpt-page .header .menu {
+        width: 100%;
+        height: 54px;
+
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+
+        margin: 0;
+        padding: 0;
+
+        gap: 0;
+    }
+
+    .lottogpt-page .header .menu > li {
+        float: none;
+
+        min-width: 0;
+        height: 54px;
+
+        margin: 0;
+        padding: 0;
+
+        flex: 1 1 20%;
+    }
+
+    .lottogpt-page .header .menu > li > a {
+        width: 100%;
+        height: 54px;
+        min-height: 54px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0 2px;
+
+        border: 0;
+        border-radius: 0;
+
+        font-size: 15px;
+        line-height: 1;
+        letter-spacing: -.04em;
+
+        white-space: nowrap;
+    }
+
+    .lottogpt-page .header .sub_menu {
+        display: none !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .lottogpt-page .header .inner {
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    .lottogpt-page .header .header_ul_1 .logo {
+        width: clamp(96px, 27vw, 108px);
+    }
+
+    .lottogpt-page .header .lg-header-login input {
+        width: clamp(55px, 16.5vw, 64px);
+    }
+
+    .lottogpt-page .header .lg-header-login button {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .lottogpt-page .header .menu > li > a {
+        font-size: 14px;
+    }
+}
+
 /* LottoGPT customer support hero */
 
 .lottogpt-page .sub_top.lg-support-hero {
@@ -4612,7 +4894,7 @@
     color: var(--lg-teal);
 
     font-family: Montserrat, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1;
     letter-spacing: .24em;
@@ -4668,7 +4950,7 @@
 
     background: rgba(255, 255, 255, .025);
 
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 600;
 
     transition:
@@ -4725,8 +5007,8 @@
     .lottogpt-page .sub_top.lg-support-hero .s01_li1 {
         margin-bottom: 10px;
 
-        font-size: 10px;
-        letter-spacing: .18em;
+        font-size: 16px;
+        letter-spacing: .12em;
     }
 
     .lottogpt-page .sub_top.lg-support-hero .s01_li1 span {
@@ -4761,7 +5043,7 @@
 
         border-radius: 8px;
 
-        font-size: clamp(10px, 2.9vw, 12px);
+        font-size: 15px;
 
         white-space: nowrap;
     }

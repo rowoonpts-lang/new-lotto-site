@@ -36,6 +36,11 @@ $inner_x = isset($inner_x) ? (string) $inner_x : '';
 <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?=G5_CSS_URL?>/style.css" />
 <link rel="stylesheet" href="<?=G5_CSS_URL?>/aos.css" />
+<link rel="stylesheet" href="<?=G5_THEME_CSS_URL?>/lottogpt.css?ver=<?=G5_CSS_VER?>">
+
+<script>
+document.body.classList.add('lottogpt-page');
+</script>
 
 <?php
 if(defined('_INDEX_')) { // index에서만 실행
@@ -45,67 +50,102 @@ if(defined('_INDEX_')) { // index에서만 실행
 
 
 <header class="header">
-	<div class="inner">
-		<ul class="header_ul_1">
-			<li class="logo"><a href="<?=G5_URL?>"><img src="<?=G5_THEME_IMG_URL?>/lottogpt-logo-header.png" alt="LottoGPT"></a></li>
-			<li class="top_menu">
-				<?php if ($is_member) {  ?>
-				<!--div><a href="<?php echo G5_BBS_URL ?>/member_confirm.php?url=<?php echo G5_BBS_URL ?>/register_form.php">정보수정</a></div-->
-				<div><a href="<?php echo G5_BBS_URL ?>/logout.php">로그아웃</a></div>
-				<div><a href="<?=G5_URL?>/sub/my_lotto.php">마이페이지</a></div>
-				<?php if (lottoIsStaffLevel($member['mb_level'])) { ?>
-				<div><a href="<?=G5_LADMIN_URL?>">관리자페이지</a></div>
-				<?php } ?>
-				<?php } else {  ?>
-				<div><a href="<?php echo G5_BBS_URL ?>/login.php">로그인</a></div>
-				<div class="lottogpt-hidden-signup"><a href="<?php echo G5_BBS_URL ?>/register.php">회원가입</a></div>
-				<?php }  ?>
-				<!-- <div class="eng"><a class="pop_res_open" onClick="fnShowpop()">1등당첨번호 상담요청</a></div> -->
-				<div><a href="<?=G5_URL?>/sub/sub0301.php">문자가 오지 않을 때</a></div>
-			</li>
-		</ul>
-		<ul class="header_ul_2">
-			<li>
-				<ul class="menu clearfix">
-					<li>
-						<a href="<?=G5_URL?>/sub/sub0102.php">회사소개</a>
-						<ul class="sub_menu">
-							<li><a href="<?=G5_URL?>/sub/sub0102.php">인사말</a></li>
-							<li><a href="<?=G5_URL?>/sub/sub0101.php">분석프로그램</a></li>
-						</ul>
-					</li>
-					<li>
-						<a href="<?=G5_URL?>/sub/sub0201.php">등급안내</a>
-					</li>
-<!-- 					<li>
-						<a href="<?=G5_URL?>/sub/prize.php">당첨지역</a>
-					</li> -->
-					<li>
-						<a href="<?=G5_URL?>/sub/stats.php">통계분석실</a>
-						<ul class="sub_menu">
-							<li><a href="<?=G5_URL?>/sub/stats.php">로또 분석용어</a></li>
-							<li><a href="<?=G5_URL?>/sub/stats2.php">확률과 조합 분석</a></li>
-							<li><a href="<?=G5_URL?>/sub/stats3.php">로또 이용 가이드</a></li>
-						</ul>
-					</li>
-					<li>
-						<a href="<?=G5_URL?>/bbs/board.php?bo_table=notice">고객센터</a>
-						<ul class="sub_menu">
-							<li><a href="<?=G5_URL?>/bbs/board.php?bo_table=notice">공지사항</a></li>
-							<li><a href="<?=G5_URL?>/bbs/board.php?bo_table=faq">자주묻는 질문</a></li>
-							<li><a href="<?=G5_URL?>/bbs/qalist.php">1:1 상담</a></li>
-						</ul>
-					</li>
-					<li>
-						<a href="<?=G5_URL?>/sub/my_lotto.php">마이페이지</a>
-					</li>
-					<li class="lottogpt-hidden-menu">
-						<a href="<?=G5_URL?>/sub/deluxe.php">디럭스 그룹</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
+    <div class="inner">
+        <ul class="header_ul_1">
+            <li class="logo">
+                <a href="<?=G5_URL?>">
+                    <img src="<?=G5_THEME_IMG_URL?>/lottogpt-logo-header.png" alt="LottoGPT">
+                </a>
+            </li>
+
+            <?php if ($is_member) { ?>
+                <li class="top_menu">
+                    <div>
+                        <a href="<?=G5_BBS_URL?>/logout.php">로그아웃</a>
+                    </div>
+
+                    <?php if (lottoIsStaffLevel($member['mb_level'])) { ?>
+                        <div>
+                            <a href="<?=G5_LADMIN_URL?>">관리자페이지</a>
+                        </div>
+                    <?php } ?>
+                </li>
+            <?php } else { ?>
+                <li class="top_menu lg-header-login-wrap">
+                    <form
+                        class="lg-header-login"
+                        method="post"
+                        action="<?=G5_HTTPS_BBS_URL?>/login_check.php"
+                        autocomplete="on"
+                    >
+                        <label for="lg_header_mb_id" class="sound_only">아이디</label>
+                        <input
+                            type="text"
+                            name="mb_id"
+                            id="lg_header_mb_id"
+                            maxlength="20"
+                            placeholder="아이디"
+                            autocomplete="username"
+                            required
+                        >
+
+                        <label for="lg_header_mb_password" class="sound_only">비밀번호</label>
+                        <input
+                            type="password"
+                            name="mb_password"
+                            id="lg_header_mb_password"
+                            maxlength="20"
+                            placeholder="비밀번호"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button type="submit">로그인</button>
+                    </form>
+                </li>
+            <?php } ?>
+        </ul>
+
+        <ul class="header_ul_2">
+            <li>
+                <ul class="menu clearfix">
+                    <li>
+                        <a href="<?=G5_URL?>/sub/sub0102.php">AI 소개</a>
+                        <ul class="sub_menu">
+                            <li><a href="<?=G5_URL?>/sub/sub0102.php">LottoGPT 소개</a></li>
+                            <li><a href="<?=G5_URL?>/sub/sub0101.php">분석 시스템</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="<?=G5_URL?>/sub/sub0201.php">멤버십</a>
+                    </li>
+
+                    <li>
+                        <a href="<?=G5_URL?>/sub/stats.php">데이터랩</a>
+                        <ul class="sub_menu">
+                            <li><a href="<?=G5_URL?>/sub/stats.php">로또 데이터 통계</a></li>
+                            <li><a href="<?=G5_URL?>/sub/stats2.php">확률과 조합 분석</a></li>
+                            <li><a href="<?=G5_URL?>/sub/stats3.php">로또 이용 가이드</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="<?=G5_BBS_URL?>/board.php?bo_table=notice">고객지원</a>
+                        <ul class="sub_menu">
+                            <li><a href="<?=G5_BBS_URL?>/board.php?bo_table=notice">공지사항</a></li>
+                            <li><a href="<?=G5_BBS_URL?>/board.php?bo_table=faq">자주묻는 질문</a></li>
+                            <li><a href="<?=G5_BBS_URL?>/qalist.php">1:1 상담</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="<?=G5_URL?>/sub/my_lotto.php">MY GPT</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </header>
 
 <div class="pop_res">
@@ -204,20 +244,20 @@ function fnSubmit(v){
 		var v_val = v;
 
 		if(v_val == 1){
-			$('.pop_res_li1').text('실버 상담 문의');
-			$('#lr_etc_1').val("실버");
+			$('.pop_res_li1').text('Basic 상담 문의');
+			$('#lr_etc_1').val("Basic");
 		}
 		else if(v_val == 2){
-			$('.pop_res_li1').text('골드 상담 문의');
-			$('#lr_etc_1').val("골드");
+			$('.pop_res_li1').text('Pro 상담 문의');
+			$('#lr_etc_1').val("Pro");
 		}
 		else if(v_val == 3){
-			$('.pop_res_li1').text('플래티넘 상담 문의');
-			$('#lr_etc_1').val("플래티넘");
+			$('.pop_res_li1').text('Premium 상담 문의');
+			$('#lr_etc_1').val("Premium");
 		}
 		else if(v_val == 4){
-			$('.pop_res_li1').text('디럭스 그룹');
-			$('#lr_etc_1').val("디럭스 그룹");
+			$('.pop_res_li1').text('AI Premium 상담 문의');
+			$('#lr_etc_1').val("AI Premium");
 		}
 		else{
 			$('.pop_res_li1').text('로또 1등 당첨번호 받기');
