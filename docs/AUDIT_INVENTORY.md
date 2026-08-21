@@ -14,8 +14,6 @@
 - `.gitignore`
 - `LICENSE.txt`
 - `Oneshot2/`
-- `Oneshot_temp1/`
-- `Oneshot_temp2/`
 - `README.md`
 - `SECURITY.md`
 - `_common.php`
