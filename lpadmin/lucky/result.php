@@ -395,6 +395,10 @@ $qstr = http_build_query(array(
     'lucky_result' => $luckyResult,
 ));
 
+if ($loginLevel >= LOTTO_ROLE_ADMIN) {
+    $luckyToken = lottoLuckyTokenCreate();
+}
+
 include_once(G5_LADMIN_PATH."/head.php");
 ?>
 
@@ -516,6 +520,92 @@ include_once(G5_LADMIN_PATH."/head.php");
             <?php } ?>
         </div>
     </div>
+
+    <?php if ($loginLevel >= LOTTO_ROLE_ADMIN) { ?>
+    <div class="lotto-result-summary-row">
+        <h3 class="lotto-result-summary-title">
+            배출 조합 설정
+        </h3>
+
+        <form
+            method="post"
+            action="result.lucky.update.php"
+            class="lotto-result-summary-items"
+            autocomplete="off"
+        >
+            <input
+                type="hidden"
+                name="token"
+                value="<?=htmlspecialchars($luckyToken, ENT_QUOTES)?>"
+            >
+
+            <input
+                type="hidden"
+                name="turn"
+                value="<?=$turn?>"
+            >
+
+            <div class="lotto-result-summary-item">
+                <label class="lotto-result-summary-rank" for="cf_lucky_1">
+                    1등
+                </label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="cf_lucky_1"
+                    name="cf_lucky_1"
+                    min="0"
+                    value="<?=(int)($config['cf_lucky_1'] ?? 0)?>"
+                    style="width:90px;text-align:center;"
+                >
+            </div>
+
+            <div class="lotto-result-summary-item">
+                <label class="lotto-result-summary-rank" for="cf_lucky_2">
+                    2등
+                </label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="cf_lucky_2"
+                    name="cf_lucky_2"
+                    min="0"
+                    value="<?=(int)($config['cf_lucky_2'] ?? 0)?>"
+                    style="width:90px;text-align:center;"
+                >
+            </div>
+
+            <div class="lotto-result-summary-item">
+                <label class="lotto-result-summary-rank" for="cf_lucky_3">
+                    3등
+                </label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="cf_lucky_3"
+                    name="cf_lucky_3"
+                    min="0"
+                    value="<?=(int)($config['cf_lucky_3'] ?? 0)?>"
+                    style="width:90px;text-align:center;"
+                >
+            </div>
+
+            <div class="lotto-result-summary-item">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    저장
+                </button>
+            </div>
+        </form>
+
+        <div class="lotto-result-summary-status">
+            홈페이지 배출 조합 표시값
+        </div>
+    </div>
+
+    <?php } ?>
 
     <div class="lotto-result-summary-row">
         <h3 class="lotto-result-summary-title">
