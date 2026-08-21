@@ -39,14 +39,63 @@ function popup_list_html($value)
 }
 ?>
 
+<style>
+.lotto-admin-list .card-header {
+    min-height: 52px;
+    padding: 10px 14px;
+}
+
+.lotto-admin-list .card-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 32px;
+    color: #ffffff;
+}
+
+.lotto-admin-list .lotto-admin-add-btn {
+    min-width: 120px;
+    padding: 7px 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #212529 !important;
+}
+
+.lotto-admin-list table {
+    font-size: 17px;
+}
+
+.lotto-admin-list table thead th {
+    padding: 11px 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #212529;
+    vertical-align: middle;
+    background: #f8f9fa;
+}
+
+.lotto-admin-list table tbody td {
+    padding: 11px 10px;
+    font-size: 17px;
+    color: #343a40;
+    vertical-align: middle;
+}
+
+.lotto-admin-list .btn-sm {
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+</style>
+
 <div class="row">
     <div class="col-12">
-        <div class="card card-primary">
+        <div class="card card-primary lotto-admin-list">
             <div class="card-header d-flex align-items-center">
                 <h3 class="card-title">중요공지 팝업</h3>
 
                 <div class="ml-auto">
-                    <a href="popup.form.php" class="btn btn-light btn-sm">
+                    <a href="popup.form.php" class="btn btn-warning btn-sm font-weight-bold lotto-admin-add-btn">
                         새 팝업 등록
                     </a>
                 </div>
