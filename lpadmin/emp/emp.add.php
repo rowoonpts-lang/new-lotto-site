@@ -1,5 +1,10 @@
 <?php
 	include_once("_common.php");
+	include_once(G5_PATH."/include/lotto_admin_ip.lib.php");
+
+	$empToken = lottoEmpTokenCreate();
+	$currentAdminIp = lottoAdminGetClientIp();
+
 	include_once(G5_LADMIN_PATH."/head.php");
 
 	if ((int) $member['mb_level'] < LOTTO_ROLE_ADMIN) {
@@ -73,7 +78,11 @@
 				<div class="col-md-12">
 
 				<input type="text" class="form-control" name="cf_ip" id="cf_ip" value="<?=$config['cf_ip']?>" onChange="fnSaveIp(this.value)">
-				<p>허용아이피를 | 단위로 입력</p>
+				<p class="mb-1">허용아이피를 | 단위로 입력</p>
+				<p class="text-danger mb-0">
+					현재 접속 IP :
+					<strong><?=htmlspecialchars($currentAdminIp, ENT_QUOTES)?></strong>
+				</p>
 				</div>
 			</div>
 		</div>
@@ -151,16 +160,31 @@ function fnSaveIp(v){
 	$.ajax({
 		type: "POST",
 		url: "./ajax.saveIp.php",
-		data: {v : v},
+		data: {
+                    v: v,
+                    token: <?=json_encode($empToken)?>
+            },
+		dataType: "json",
 		cache: false,
-		async: false,
-		contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-		success: function(data) {
+		success: function(response) {
+			if (!response || response.success !== true) {
+				alert(
+					response && response.message
+						? response.message
+						: "허용 IP 저장에 실패했습니다."
+				);
+				return;
+			}
 
+			$("#cf_ip").val(response.value);
+			alert(response.message);
+		},
+		error: function() {
+			alert("허용 IP 저장 중 오류가 발생했습니다.");
 		}
 	});
-	return false;
 
+	return false;
 }
 
 function fnAddMemmber(mb_id){
