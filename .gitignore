@@ -21,3 +21,6 @@ __pycache__/
 
 # Local card payment encryption secret
 data/lotto_card_secret.php
+
+# Lotto scheduler secret
+data/lotto_cron_config.php

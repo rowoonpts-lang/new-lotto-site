@@ -1,0 +1,15 @@
+<?php
+
+if (!defined('_GNUBOARD_')) {
+    exit;
+}
+
+/*
+ * Lotto scheduler authentication token.
+ *
+ * Copy this file to:
+ * data/lotto_cron_config.php
+ *
+ * Never commit the real token.
+ */
+define('LOTTO_CRON_TOKEN', 'replace-with-a-long-random-token');
