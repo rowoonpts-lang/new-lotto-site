@@ -1,25 +1,92 @@
 <?php
 
-function lottoSmsBuildCombinationMessage($drawNo, $title, $rows)
+function lottoSmsGetConfig()
 {
-    $message = (int) $drawNo . '회 ' . trim((string) $title) . "\n";
-    $total = count($rows);
+    $row = sql_fetch(
+        "select
+            sender_phone,
+            combination_header,
+            combination_footer,
+            winner_header,
+            winner_footer
+         from l_sms_config
+         where lsc_id = 1
+         limit 1",
+        false
+    );
 
-    foreach ($rows as $index => $row) {
-        $message .= ($index + 1) . '. ';
-        $message .= (int) $row['num1'] . ',';
-        $message .= (int) $row['num2'] . ',';
-        $message .= (int) $row['num3'] . ',';
-        $message .= (int) $row['num4'] . ',';
-        $message .= (int) $row['num5'] . ',';
-        $message .= (int) $row['num6'];
+    if (!isset($row['sender_phone'])) {
+        return array(
+            'sender_phone' => '',
+            'combination_header' => '',
+            'combination_footer' => '',
+            'winner_header' => '',
+            'winner_footer' => '',
+        );
+    }
 
-        if ($index < $total - 1) {
-            $message .= "\n";
+    return array(
+        'sender_phone' => lottoSmsNormalizePhone(
+            isset($row['sender_phone'])
+                ? $row['sender_phone']
+                : ''
+        ),
+        'combination_header' => isset($row['combination_header'])
+            ? trim((string) $row['combination_header'])
+            : '',
+        'combination_footer' => isset($row['combination_footer'])
+            ? trim((string) $row['combination_footer'])
+            : '',
+        'winner_header' => isset($row['winner_header'])
+            ? trim((string) $row['winner_header'])
+            : '',
+        'winner_footer' => isset($row['winner_footer'])
+            ? trim((string) $row['winner_footer'])
+            : '',
+    );
+}
+
+function lottoSmsJoinMessageParts($parts)
+{
+    $result = array();
+
+    foreach ($parts as $part) {
+        $part = trim((string) $part);
+
+        if ($part !== '') {
+            $result[] = $part;
         }
     }
 
-    return $message;
+    return implode("\n\n", $result);
+}
+
+function lottoSmsBuildCombinationMessage($drawNo, $title, $rows)
+{
+    $body = (int) $drawNo . '회 ' . trim((string) $title) . "\n";
+    $total = count($rows);
+
+    foreach ($rows as $index => $row) {
+        $body .= ($index + 1) . '. ';
+        $body .= (int) $row['num1'] . ',';
+        $body .= (int) $row['num2'] . ',';
+        $body .= (int) $row['num3'] . ',';
+        $body .= (int) $row['num4'] . ',';
+        $body .= (int) $row['num5'] . ',';
+        $body .= (int) $row['num6'];
+
+        if ($index < $total - 1) {
+            $body .= "\n";
+        }
+    }
+
+    $config = lottoSmsGetConfig();
+
+    return lottoSmsJoinMessageParts(array(
+        $config['combination_header'],
+        $body,
+        $config['combination_footer'],
+    ));
 }
 function lottoSmsNormalizePhone($phone)
 {
@@ -31,12 +98,19 @@ function lottoSmsBuildWinnerMessage($drawNo, $bestRank)
     $drawNo = (int) $drawNo;
     $bestRank = (int) $bestRank;
 
-    return '[로또] '
-        . $drawNo
-        . '회 당첨 결과가 있습니다. '
+    $body = $drawNo
+        . "회 당첨 결과\n"
         . '최고 '
         . $bestRank
-        . '등. 사이트에서 확인해주세요.';
+        . '등 당첨';
+
+    $config = lottoSmsGetConfig();
+
+    return lottoSmsJoinMessageParts(array(
+        $config['winner_header'],
+        $body,
+        $config['winner_footer'],
+    ));
 }
 
 function lottoSmsBuildWinnerGroupId($drawNo, $mbId)
