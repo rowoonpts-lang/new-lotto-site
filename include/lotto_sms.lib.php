@@ -329,3 +329,214 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
         );
     }
 }
+
+function lottoSmsSyncWinnerResults($drawNo)
+{
+    $drawNo = (int) $drawNo;
+
+    if ($drawNo < 1) {
+        return array(
+            'success' => false,
+            'status' => 'invalid_draw',
+            'error' => '회차가 올바르지 않습니다.',
+        );
+    }
+
+    $tableRow = sql_fetch(
+        "show tables like 'OShotMSG'",
+        false
+    );
+
+    if (!$tableRow || count($tableRow) < 1) {
+        return array(
+            'success' => false,
+            'status' => 'oshot_table_missing',
+            'error' => 'OShotMSG 테이블이 없습니다.',
+        );
+    }
+
+    $result = sql_query(
+        "select
+            lmd_id,
+            mb_id,
+            winner_sms_result_code
+         from l_member_draw
+         where draw_no = '{$drawNo}'
+           and winner_sms_required = 1
+           and winner_sms_status = 'queued'
+         order by lmd_id asc",
+        false
+    );
+
+    if ($result === false) {
+        return array(
+            'success' => false,
+            'status' => 'member_query_failed',
+            'error' => '문자 결과 확인 대상을 조회하지 못했습니다.',
+        );
+    }
+
+    $waitingCount = 0;
+    $sentCount = 0;
+    $failedCount = 0;
+    $missingCount = 0;
+
+    while ($row = sql_fetch_array($result)) {
+        $resultCode = isset($row['winner_sms_result_code'])
+            ? trim((string) $row['winner_sms_result_code'])
+            : '';
+
+        if (strpos($resultCode, 'queue:') !== 0) {
+            $missingCount++;
+            continue;
+        }
+
+        $msgId = (int) substr($resultCode, 6);
+
+        if ($msgId < 1) {
+            $missingCount++;
+            continue;
+        }
+
+        $oshot = sql_fetch(
+            "select
+                MsgID,
+                SendResult,
+                SendDT,
+                ResultMsg
+             from OShotMSG
+             where MsgID = '{$msgId}'
+             limit 1",
+            false
+        );
+
+        if (
+            !isset($oshot['MsgID'])
+            || (int) $oshot['MsgID'] !== $msgId
+        ) {
+            $missingCount++;
+            continue;
+        }
+
+        $sendResult = isset($oshot['SendResult'])
+            ? (int) $oshot['SendResult']
+            : 0;
+
+        /*
+         * OShot 매뉴얼:
+         * 0     : 초기 입력 상태
+         * 1     : 전송요청 완료 / 결과수신대기
+         * 95~99 : 일시적인 통신 오류이며 최종결과가 아님
+         */
+        if (
+            $sendResult === 0
+            || $sendResult === 1
+            || ($sendResult >= 95 && $sendResult <= 99)
+        ) {
+            $waitingCount++;
+            continue;
+        }
+
+        $lmdId = (int) $row['lmd_id'];
+
+        if ($sendResult === 6) {
+            $sendDt = isset($oshot['SendDT'])
+                ? trim((string) $oshot['SendDT'])
+                : '';
+
+            $sendDtSql = $sendDt !== ''
+                ? "'" . sql_real_escape_string($sendDt) . "'"
+                : 'null';
+
+            $updated = sql_query(
+                "update l_member_draw
+                 set
+                    winner_sms_status = 'sent',
+                    winner_sms_result_code = 'oshot:6',
+                    winner_sms_sent_at = {$sendDtSql},
+                    winner_sms_error = null
+                 where lmd_id = '{$lmdId}'
+                   and winner_sms_status = 'queued'",
+                false
+            );
+
+            if ($updated === false) {
+                return array(
+                    'success' => false,
+                    'status' => 'sent_update_failed',
+                    'error' => '문자 성공 상태 저장에 실패했습니다.',
+                );
+            }
+
+            $sentCount++;
+            continue;
+        }
+
+        $resultMessage = isset($oshot['ResultMsg'])
+            ? trim((string) $oshot['ResultMsg'])
+            : '';
+
+        if ($resultMessage === '') {
+            $resultMessage = 'OShot SendResult ' . $sendResult;
+        }
+
+        $updated = sql_query(
+            "update l_member_draw
+             set
+                winner_sms_status = 'failed',
+                winner_sms_result_code = '"
+            . sql_real_escape_string('oshot:' . $sendResult)
+            . "',
+                winner_sms_error = '"
+            . sql_real_escape_string($resultMessage)
+            . "'
+             where lmd_id = '{$lmdId}'
+               and winner_sms_status = 'queued'",
+            false
+        );
+
+        if ($updated === false) {
+            return array(
+                'success' => false,
+                'status' => 'failed_update_failed',
+                'error' => '문자 실패 상태 저장에 실패했습니다.',
+            );
+        }
+
+        $failedCount++;
+    }
+
+    $remainingRow = sql_fetch(
+        "select count(*) as cnt
+         from l_member_draw
+         where draw_no = '{$drawNo}'
+           and winner_sms_required = 1
+           and winner_sms_status in ('pending', 'queued')",
+        false
+    );
+
+    $remainingCount = isset($remainingRow['cnt'])
+        ? (int) $remainingRow['cnt']
+        : 0;
+
+    if ($remainingCount === 0) {
+        sql_query(
+            "update l_result_job
+             set winner_sms_completed_at =
+                coalesce(winner_sms_completed_at, now())
+             where draw_no = '{$drawNo}'",
+            false
+        );
+    }
+
+    return array(
+        'success' => true,
+        'status' => 'completed',
+        'draw_no' => $drawNo,
+        'waiting_count' => $waitingCount,
+        'sent_count' => $sentCount,
+        'failed_count' => $failedCount,
+        'missing_count' => $missingCount,
+        'remaining_count' => $remainingCount,
+    );
+}
