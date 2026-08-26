@@ -4,6 +4,8 @@ if (!defined('_GNUBOARD_')) {
     exit;
 }
 
+include_once __DIR__ . '/lotto_distribution_cursor.lib.php';
+
 /**
  * 관리자가 회원에게 추가 조합을 배분한다.
  *
@@ -146,42 +148,26 @@ function lottoManualDistributionDistributeMember(
             );
         }
 
-        $candidateResult = sql_query(
-            "select
-                lfc_id,
-                rank_no,
-                num1,
-                num2,
-                num3,
-                num4,
-                num5,
-                num6,
-                score
-             from l_filter_candidate
-             where draw_no = '{$drawNo}'
-               and rank_no > '{$lastRankNo}'
-             order by rank_no asc
-             limit {$count}",
-            false
+        $candidateSelection = lottoDistributionSelectCandidates(
+            $drawNo,
+            $count,
+            $lastRankNo,
+            $cycleNo
         );
 
-        if ($candidateResult === false) {
+        if (
+            !isset($candidateSelection['success'])
+            || !$candidateSelection['success']
+        ) {
             throw new RuntimeException(
-                '추가배분 후보를 조회하지 못했습니다.'
+                isset($candidateSelection['error'])
+                    ? (string) $candidateSelection['error']
+                    : '배분 후보를 조회하지 못했습니다.'
             );
         }
 
-        $candidates = array();
-
-        while ($candidate = sql_fetch_array($candidateResult)) {
-            $candidates[] = $candidate;
-        }
-
-        if (count($candidates) !== $count) {
-            throw new RuntimeException(
-                '남은 필터 후보가 추가발송 수량보다 적습니다.'
-            );
-        }
+        $candidates = $candidateSelection['candidates'];
+        $cycleNo = (int) $candidateSelection['cycle_no'];
 
         $distributionBatch = sprintf(
             '%d-manual-%s-%s-%s',
@@ -200,6 +186,9 @@ function lottoManualDistributionDistributeMember(
         foreach ($candidates as $index => $candidate) {
             $lfcId = (int) $candidate['lfc_id'];
             $rankNo = (int) $candidate['rank_no'];
+            $candidateCycle = isset($candidate['_candidate_cycle'])
+                ? (int) $candidate['_candidate_cycle']
+                : $cycleNo;
             $distributionSeq = $index + 1;
             $score = sql_real_escape_string(
                 (string) $candidate['score']
@@ -222,7 +211,7 @@ function lottoManualDistributionDistributeMember(
                     member_type = '{$memberTypeSql}',
                     lfc_id = '{$lfcId}',
                     candidate_rank = '{$rankNo}',
-                    candidate_cycle = '{$cycleNo}',
+                    candidate_cycle = '{$candidateCycle}',
                     num1 = '{$numbers[0]}',
                     num2 = '{$numbers[1]}',
                     num3 = '{$numbers[2]}',

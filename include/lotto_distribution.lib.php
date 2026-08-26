@@ -4,6 +4,8 @@ if (!defined('_GNUBOARD_')) {
     exit;
 }
 
+include_once __DIR__ . '/lotto_distribution_cursor.lib.php';
+
 /**
  * 저장된 필터 후보를 회원 한 명에게 순서대로 배분한다.
  *
@@ -212,42 +214,26 @@ function lottoDistributionDistributeMember(
             );
         }
 
-        $candidateResult = sql_query(
-            "select
-                lfc_id,
-                rank_no,
-                num1,
-                num2,
-                num3,
-                num4,
-                num5,
-                num6,
-                score
-             from l_filter_candidate
-             where draw_no = '{$drawNo}'
-               and rank_no > '{$lastRankNo}'
-             order by rank_no asc
-             limit {$count}",
-            false
+        $candidateSelection = lottoDistributionSelectCandidates(
+            $drawNo,
+            $count,
+            $lastRankNo,
+            $cycleNo
         );
 
-        if ($candidateResult === false) {
+        if (
+            !isset($candidateSelection['success'])
+            || !$candidateSelection['success']
+        ) {
             throw new RuntimeException(
-                '배분 후보를 조회하지 못했습니다.'
+                isset($candidateSelection['error'])
+                    ? (string) $candidateSelection['error']
+                    : '배분 후보를 조회하지 못했습니다.'
             );
         }
 
-        $candidates = array();
-
-        while ($row = sql_fetch_array($candidateResult)) {
-            $candidates[] = $row;
-        }
-
-        if (count($candidates) !== $count) {
-            throw new RuntimeException(
-                '남은 필터 후보가 요청한 배분 수량보다 적습니다.'
-            );
-        }
+        $candidates = $candidateSelection['candidates'];
+        $cycleNo = (int) $candidateSelection['cycle_no'];
 
         $distributionBatch = sprintf(
             '%d-%d-%s-%s',
@@ -265,6 +251,9 @@ function lottoDistributionDistributeMember(
         foreach ($candidates as $index => $candidate) {
             $lfcId = (int) $candidate['lfc_id'];
             $rankNo = (int) $candidate['rank_no'];
+            $candidateCycle = isset($candidate['_candidate_cycle'])
+                ? (int) $candidate['_candidate_cycle']
+                : $cycleNo;
             $distributionSeq = $index + 1;
             $score = sql_real_escape_string(
                 (string) $candidate['score']
@@ -287,7 +276,7 @@ function lottoDistributionDistributeMember(
                     member_type = '{$memberTypeSql}',
                     lfc_id = '{$lfcId}',
                     candidate_rank = '{$rankNo}',
-                    candidate_cycle = '{$cycleNo}',
+                    candidate_cycle = '{$candidateCycle}',
                     num1 = '{$numbers[0]}',
                     num2 = '{$numbers[1]}',
                     num3 = '{$numbers[2]}',
@@ -608,42 +597,26 @@ function lottoDistributionDistributeWeeklyMember(
             );
         }
 
-        $candidateResult = sql_query(
-            "select
-                lfc_id,
-                rank_no,
-                num1,
-                num2,
-                num3,
-                num4,
-                num5,
-                num6,
-                score
-             from l_filter_candidate
-             where draw_no = '{$drawNo}'
-               and rank_no > '{$lastRankNo}'
-             order by rank_no asc
-             limit {$count}",
-            false
+        $candidateSelection = lottoDistributionSelectCandidates(
+            $drawNo,
+            $count,
+            $lastRankNo,
+            $cycleNo
         );
 
-        if ($candidateResult === false) {
+        if (
+            !isset($candidateSelection['success'])
+            || !$candidateSelection['success']
+        ) {
             throw new RuntimeException(
-                '주간 배분 후보를 조회하지 못했습니다.'
+                isset($candidateSelection['error'])
+                    ? (string) $candidateSelection['error']
+                    : '배분 후보를 조회하지 못했습니다.'
             );
         }
 
-        $candidates = array();
-
-        while ($row = sql_fetch_array($candidateResult)) {
-            $candidates[] = $row;
-        }
-
-        if (count($candidates) !== $count) {
-            throw new RuntimeException(
-                '남은 필터 후보가 요청한 주간 배분 수량보다 적습니다.'
-            );
-        }
+        $candidates = $candidateSelection['candidates'];
+        $cycleNo = (int) $candidateSelection['cycle_no'];
 
         $distributionBatch = sprintf(
             '%d-weekly-%s-%s',
@@ -661,6 +634,9 @@ function lottoDistributionDistributeWeeklyMember(
         foreach ($candidates as $index => $candidate) {
             $lfcId = (int) $candidate['lfc_id'];
             $rankNo = (int) $candidate['rank_no'];
+            $candidateCycle = isset($candidate['_candidate_cycle'])
+                ? (int) $candidate['_candidate_cycle']
+                : $cycleNo;
             $distributionSeq = $index + 1;
 
             $score = sql_real_escape_string(
@@ -684,7 +660,7 @@ function lottoDistributionDistributeWeeklyMember(
                     member_type = '{$memberTypeSql}',
                     lfc_id = '{$lfcId}',
                     candidate_rank = '{$rankNo}',
-                    candidate_cycle = '{$cycleNo}',
+                    candidate_cycle = '{$candidateCycle}',
                     num1 = '{$numbers[0]}',
                     num2 = '{$numbers[1]}',
                     num3 = '{$numbers[2]}',
