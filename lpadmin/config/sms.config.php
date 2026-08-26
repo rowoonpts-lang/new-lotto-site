@@ -33,15 +33,7 @@ $combination_draw_no = isset($combination_draw_row['draw_no'])
     ? (int) $combination_draw_row['draw_no']
     : 0;
 
-$winner_draw_row = sql_fetch(
-    "select max(draw_no) as draw_no
-       from g5_lotto_result",
-    false
-);
-
-$winner_draw_no = isset($winner_draw_row['draw_no'])
-    ? (int) $winner_draw_row['draw_no']
-    : 0;
+$winner_draw_no = $combination_draw_no;
 
 $token = lottoConfigTokenCreate();
 
