@@ -40,7 +40,26 @@
                 exit;
         }
 
+        $member_token = lottoMemberTokenCreate();
+
+        $current_run = sql_fetch(
+                "select draw_no
+                   from l_filter_run
+                  where status = 'filtered'
+                    and candidate_count > 0
+                  order by draw_no desc
+                  limit 1",
+                false
+        );
+        $current_draw_no = isset($current_run['draw_no'])
+                ? (int) $current_run['draw_no']
+                : 0;
+
 	$member_turns = array();
+
+        if ($current_draw_no > 0) {
+                $member_turns[] = $current_draw_no;
+        }
 
 	$turn_result = sql_query(
 		"select distinct draw_no
@@ -53,7 +72,7 @@
 	while ($turn_row = sql_fetch_array($turn_result)) {
 		$draw_no = (int) $turn_row['draw_no'];
 
-		if ($draw_no > 0) {
+		if ($draw_no > 0 && !in_array($draw_no, $member_turns, true)) {
 			$member_turns[] = $draw_no;
 		}
 	}
@@ -80,7 +99,7 @@
 				<?php include_once("./member.head.php");?>
 				<!-- /.card-header -->
 				<!-- form start -->
-				<div class="row">
+				<div class="row align-items-start">
 					<div class="col-2" style="padding:10px 20px 0px">
 						<form id="turnForm">
 							<input type="hidden" name="mb_id" value="<?=base64_encode($mb_id)?>">
@@ -98,6 +117,27 @@
 						4등 당첨 : <?=number_format($row['lucky4'])?> /
 						5등 당첨 : <?=number_format($row['lucky5'])?>
 					</div>
+                                        <div class="col-4" style="padding:10px 20px 0px">
+                                                <div class="d-flex justify-content-end">
+                                                        <form method="post"
+                                                              action="pop.success.action.php"
+                                                              class="mr-2"
+                                                              onsubmit="return confirm('회원정보의 로또 배분 수량만큼 당회차 조합을 부여하시겠습니까?');">
+                                                                <input type="hidden" name="token" value="<?=htmlspecialchars($member_token, ENT_QUOTES, 'UTF-8')?>">
+                                                                <input type="hidden" name="mb_id" value="<?=htmlspecialchars($mb_id, ENT_QUOTES, 'UTF-8')?>">
+                                                                <input type="hidden" name="action" value="assign">
+                                                                <button type="submit" class="btn btn-primary btn-sm">당회차 부여하기</button>
+                                                        </form>
+                                                        <form method="post"
+                                                              action="pop.success.action.php"
+                                                              onsubmit="return confirm('이 회원의 당회차 정규 배분을 회수하시겠습니까? 회수하면 해당 조합은 문자 발송 대상에서도 제외됩니다.');">
+                                                                <input type="hidden" name="token" value="<?=htmlspecialchars($member_token, ENT_QUOTES, 'UTF-8')?>">
+                                                                <input type="hidden" name="mb_id" value="<?=htmlspecialchars($mb_id, ENT_QUOTES, 'UTF-8')?>">
+                                                                <input type="hidden" name="action" value="revoke">
+                                                                <button type="submit" class="btn btn-danger btn-sm">당회차 회수하기</button>
+                                                        </form>
+                                                </div>
+                                        </div>
 				</div>
 
 					<div class="row">
