@@ -60,10 +60,54 @@ function lottoDistributionHasExcessiveOverlap(
 }
 
 /**
+ * 같은 배분 묶음에서 특정 번호가 지나치게 반복되는지 검사한다.
+ *
+ * @param array $candidate
+ * @param array $selectedCandidates
+ * @param int $maxFrequency
+ * @return bool
+ */
+function lottoDistributionHasExcessiveNumberFrequency(
+    array $candidate,
+    array $selectedCandidates,
+    $maxFrequency
+) {
+    $maxFrequency = max(1, (int) $maxFrequency);
+    $frequency = array();
+
+    foreach ($selectedCandidates as $selectedCandidate) {
+        foreach (
+            lottoDistributionCandidateNumbers($selectedCandidate)
+            as $number
+        ) {
+            if (!isset($frequency[$number])) {
+                $frequency[$number] = 0;
+            }
+
+            $frequency[$number]++;
+        }
+    }
+
+    foreach (lottoDistributionCandidateNumbers($candidate) as $number) {
+        $currentFrequency = isset($frequency[$number])
+            ? (int) $frequency[$number]
+            : 0;
+
+        if ($currentFrequency + 1 > $maxFrequency) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * 현재 배분 커서부터 필요한 수량만큼 필터 후보를 가져온다.
  *
  * - rank_no 순서를 유지한다.
  * - 같은 배분 묶음 안에서 서로 4개 이상 번호가 겹치는 후보는 건너뛴다.
+ * - 특정 번호가 전체 요청 수량의 40%를 초과해 반복되지 않게 한다.
+ *   단, 작은 묶음의 선택 가능성을 위해 최소 허용 횟수는 3회다.
  * - 후보 끝에 도달하면 현재 커서 이전 구간을 한 번만 이어서 확인한다.
  * - 같은 조합을 한 묶음 안에서 다시 사용하는 순환은 허용하지 않는다.
  * - 반환되는 각 후보에는 _candidate_cycle 값이 추가된다.
@@ -91,6 +135,11 @@ function lottoDistributionSelectCandidates(
             'error' => '배분 후보 조회 입력값이 올바르지 않습니다.',
         );
     }
+
+    $maxNumberFrequency = max(
+        3,
+        (int) ceil($count * 0.4)
+    );
 
     $candidates = array();
     $originalLastRankNo = $lastRankNo;
@@ -148,6 +197,16 @@ function lottoDistributionSelectCandidates(
                     $row,
                     $candidates,
                     3
+                )
+            ) {
+                continue;
+            }
+
+            if (
+                lottoDistributionHasExcessiveNumberFrequency(
+                    $row,
+                    $candidates,
+                    $maxNumberFrequency
                 )
             ) {
                 continue;
