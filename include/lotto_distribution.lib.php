@@ -821,8 +821,7 @@ function lottoDistributionRunWeeklyPaid(
         "select
             lfr_id,
             status,
-            candidate_count,
-            distributed_at
+            candidate_count
          from l_filter_run
          where draw_no = '{$drawNo}'
          limit 1",
@@ -1023,22 +1022,6 @@ function lottoDistributionRunWeeklyPaid(
                 'start_rank_no' => (int) $result['start_rank_no'],
                 'end_rank_no' => (int) $result['end_rank_no'],
             );
-        }
-
-        if (!$dryRun) {
-            $completeResult = sql_query(
-                "update l_filter_run
-                 set distributed_at = now()
-                 where draw_no = '{$drawNo}'
-                   and distributed_at is null",
-                false
-            );
-
-            if ($completeResult === false) {
-                throw new RuntimeException(
-                    '주간 배분 완료 시간을 저장하지 못했습니다.'
-                );
-            }
         }
 
         return array(
