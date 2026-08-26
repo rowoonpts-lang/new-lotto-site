@@ -414,58 +414,68 @@ try {
      * 이미 queued/sent 상태인 문자는 재등록하지 않는다.
      */
     if ($memberCombinationCount > 0) {
-        $smsConfig = lottoSmsGetConfig();
+        try {
+            $smsConfig = lottoSmsGetConfig();
 
-        $smsSender = isset($smsConfig['sender_phone'])
-            ? lottoSmsNormalizePhone($smsConfig['sender_phone'])
-            : '';
+            $smsSender = isset($smsConfig['sender_phone'])
+                ? lottoSmsNormalizePhone($smsConfig['sender_phone'])
+                : '';
 
-        if ($smsSender === '') {
-            throw new RuntimeException(
-                'SMS 관리에 발신번호가 설정되어 있지 않습니다.'
+            if ($smsSender === '') {
+                $response['winner_sms_queue'] = array(
+                    'success' => false,
+                    'status' => 'skipped',
+                    'draw_no' => $sourceDrawNo,
+                    'error' => 'SMS 관리에 발신번호가 설정되어 있지 않습니다.',
+                );
+
+                $response['winner_sms_sync'] = array(
+                    'success' => false,
+                    'status' => 'skipped',
+                    'draw_no' => $sourceDrawNo,
+                    'error' => '발신번호가 없어 문자 결과 동기화를 건너뜁니다.',
+                );
+            } else {
+                $smsQueue = lottoSmsQueuePendingWinners(
+                    $sourceDrawNo,
+                    $smsSender
+                );
+
+                $response['winner_sms_queue'] = $smsQueue;
+
+                if (
+                    isset($smsQueue['success'])
+                    && $smsQueue['success']
+                ) {
+                    $smsSync = lottoSmsSyncWinnerResults(
+                        $sourceDrawNo
+                    );
+
+                    $response['winner_sms_sync'] = $smsSync;
+                } else {
+                    $response['winner_sms_sync'] = array(
+                        'success' => false,
+                        'status' => 'skipped',
+                        'draw_no' => $sourceDrawNo,
+                        'error' => '문자 큐 등록 실패로 결과 동기화를 건너뜁니다.',
+                    );
+                }
+            }
+        } catch (Throwable $smsError) {
+            $response['winner_sms_queue'] = array(
+                'success' => false,
+                'status' => 'failed',
+                'draw_no' => $sourceDrawNo,
+                'error' => $smsError->getMessage(),
+            );
+
+            $response['winner_sms_sync'] = array(
+                'success' => false,
+                'status' => 'skipped',
+                'draw_no' => $sourceDrawNo,
+                'error' => '문자 처리 오류로 결과 동기화를 건너뜁니다.',
             );
         }
-
-        $smsQueue = lottoSmsQueuePendingWinners(
-            $sourceDrawNo,
-            $smsSender
-        );
-
-        if (
-            !isset($smsQueue['success'])
-            || !$smsQueue['success']
-        ) {
-            throw new RuntimeException(
-                '당첨문자 큐 등록 실패: '
-                . (
-                    isset($smsQueue['error'])
-                        ? $smsQueue['error']
-                        : '알 수 없는 오류'
-                )
-            );
-        }
-
-        $response['winner_sms_queue'] = $smsQueue;
-
-        $smsSync = lottoSmsSyncWinnerResults(
-            $sourceDrawNo
-        );
-
-        if (
-            !isset($smsSync['success'])
-            || !$smsSync['success']
-        ) {
-            throw new RuntimeException(
-                '당첨문자 결과 동기화 실패: '
-                . (
-                    isset($smsSync['error'])
-                        ? $smsSync['error']
-                        : '알 수 없는 오류'
-                )
-            );
-        }
-
-        $response['winner_sms_sync'] = $smsSync;
     } else {
         $response['winner_sms_queue'] = array(
             'status' => 'skipped',
