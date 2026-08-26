@@ -95,6 +95,7 @@ $job = isset($_GET['job'])
 
 $allowedJobs = array(
     'health',
+    'result',
     'recover',
     'weekly',
 );
@@ -140,12 +141,36 @@ if ($job === 'health') {
 }
 
 /*
+ * 정상 result 작업은 토요일/일요일에만 실행한다.
+ * 정확한 실행 시각은 GitHub Actions 스케줄에서 관리한다.
+ *
  * 정상 weekly 작업은 일요일에만 실행한다.
  * recover는 장애 복구용이라 요일 제한을 적용하지 않는다.
  */
+$weekDay = (int) $now->format('w');
+
+if (
+    $job === 'result'
+    && $weekDay !== 6
+    && $weekDay !== 0
+) {
+    lottoCronRespond(
+        200,
+        array(
+            'success' => true,
+            'status' => 'skipped',
+            'job' => 'result',
+            'message' => '토요일 또는 일요일이 아니므로 실행하지 않았습니다.',
+            'server_time' => $now->format(
+                'Y-m-d H:i:s'
+            ),
+        )
+    );
+}
+
 if (
     $job === 'weekly'
-    && (int) $now->format('w') !== 0
+    && $weekDay !== 0
 ) {
     lottoCronRespond(
         200,
@@ -376,6 +401,30 @@ try {
             'draw_no' => $sourceDrawNo,
             'combination_count' => 0,
             'message' => '회원 배분 조합이 없어 결과 계산을 건너뜁니다.',
+        );
+    }
+
+    /*
+     * result 작업은 공식 결과 저장과 회원 당첨결과 계산까지만 처리한다.
+     *
+     * 토요일 21:00 / 21:30 / 22:00 및
+     * 일요일 10:00 재시도에서 사용한다.
+     *
+     * 다음 회차 필터와 회원 배분은 일요일 weekly 작업에서만 처리한다.
+     */
+    if ($job === 'result') {
+        $response['success'] = true;
+        $response['status'] = 'completed';
+        $response['finished_at'] = (
+            new DateTimeImmutable(
+                'now',
+                new DateTimeZone('Asia/Seoul')
+            )
+        )->format('Y-m-d H:i:s');
+
+        lottoCronRespond(
+            200,
+            $response
         );
     }
 
