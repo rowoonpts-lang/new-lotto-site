@@ -5,6 +5,7 @@ include_once G5_PATH . '/include/lotto_result.lib.php';
 include_once G5_PATH . '/include/lotto_filter.lib.php';
 include_once G5_PATH . '/include/lotto_member_result.lib.php';
 include_once G5_PATH . '/include/lotto_distribution.lib.php';
+include_once G5_PATH . '/include/lotto_sms.lib.php';
 
 date_default_timezone_set('Asia/Seoul');
 
@@ -236,6 +237,8 @@ $response = array(
     'started_at' => $now->format('Y-m-d H:i:s'),
     'result' => null,
     'member_result' => null,
+    'winner_sms_queue' => null,
+    'winner_sms_sync' => null,
     'filter' => null,
     'distribution' => null,
 );
@@ -405,6 +408,79 @@ try {
     }
 
     /*
+     * 3. 당첨회원 SMS 처리
+     *
+     * 관리자 SMS 설정의 발신번호를 사용한다.
+     * 이미 queued/sent 상태인 문자는 재등록하지 않는다.
+     */
+    if ($memberCombinationCount > 0) {
+        $smsConfig = lottoSmsGetConfig();
+
+        $smsSender = isset($smsConfig['sender_phone'])
+            ? lottoSmsNormalizePhone($smsConfig['sender_phone'])
+            : '';
+
+        if ($smsSender === '') {
+            throw new RuntimeException(
+                'SMS 관리에 발신번호가 설정되어 있지 않습니다.'
+            );
+        }
+
+        $smsQueue = lottoSmsQueuePendingWinners(
+            $sourceDrawNo,
+            $smsSender
+        );
+
+        if (
+            !isset($smsQueue['success'])
+            || !$smsQueue['success']
+        ) {
+            throw new RuntimeException(
+                '당첨문자 큐 등록 실패: '
+                . (
+                    isset($smsQueue['error'])
+                        ? $smsQueue['error']
+                        : '알 수 없는 오류'
+                )
+            );
+        }
+
+        $response['winner_sms_queue'] = $smsQueue;
+
+        $smsSync = lottoSmsSyncWinnerResults(
+            $sourceDrawNo
+        );
+
+        if (
+            !isset($smsSync['success'])
+            || !$smsSync['success']
+        ) {
+            throw new RuntimeException(
+                '당첨문자 결과 동기화 실패: '
+                . (
+                    isset($smsSync['error'])
+                        ? $smsSync['error']
+                        : '알 수 없는 오류'
+                )
+            );
+        }
+
+        $response['winner_sms_sync'] = $smsSync;
+    } else {
+        $response['winner_sms_queue'] = array(
+            'status' => 'skipped',
+            'draw_no' => $sourceDrawNo,
+            'message' => '회원 배분 조합이 없어 문자 큐 등록을 건너뜁니다.',
+        );
+
+        $response['winner_sms_sync'] = array(
+            'status' => 'skipped',
+            'draw_no' => $sourceDrawNo,
+            'message' => '회원 배분 조합이 없어 문자 결과 동기화를 건너뜁니다.',
+        );
+    }
+
+    /*
      * result 작업은 공식 결과 저장과 회원 당첨결과 계산까지만 처리한다.
      *
      * 토요일 21:00 / 21:30 / 22:00 및
@@ -429,7 +505,7 @@ try {
     }
 
     /*
-     * 3. 최신 당첨 회차의 다음 회차 필터 생성
+     * 4. 최신 당첨 회차의 다음 회차 필터 생성
      */
     $targetDrawNo = $sourceDrawNo + 1;
 
