@@ -1,0 +1,197 @@
+name: Lotto Production Cron
+
+on:
+  schedule:
+    # GitHub Actions cron uses UTC.
+    # KST Saturday 21:00
+    - cron: '0 12 * * 6'
+
+    # KST Saturday 21:30
+    - cron: '30 12 * * 6'
+
+    # KST Saturday 22:00
+    - cron: '0 13 * * 6'
+
+    # KST Sunday 10:00
+    - cron: '0 1 * * 0'
+
+    # KST Sunday 22:00
+    - cron: '0 13 * * 0'
+
+  workflow_dispatch:
+    inputs:
+      job:
+        description: Lotto cron job
+        required: true
+        default: health
+        type: choice
+        options:
+          - health
+          - result
+          - weekly
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lotto-production-cron
+  cancel-in-progress: false
+
+jobs:
+  run-cron:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Resolve cron job
+        id: resolve
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          MANUAL_JOB: ${{ inputs.job }}
+        run: |
+          set -euo pipefail
+
+          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
+            JOB="${MANUAL_JOB}"
+          elif [ "${EVENT_SCHEDULE}" = "0 13 * * 0" ]; then
+            JOB="weekly"
+          else
+            JOB="result"
+          fi
+
+          case "${JOB}" in
+            health|result|weekly)
+              ;;
+            *)
+              echo "Unsupported job: ${JOB}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "job=${JOB}" >> "${GITHUB_OUTPUT}"
+          echo "Resolved job: ${JOB}"
+
+      - name: Call lotto cron
+        shell: bash
+        env:
+          LOTTO_CRON_URL: ${{ secrets.LOTTO_CRON_URL }}
+          LOTTO_CRON_TOKEN: ${{ secrets.LOTTO_CRON_TOKEN }}
+          LOTTO_JOB: ${{ steps.resolve.outputs.job }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${LOTTO_CRON_URL}" ]; then
+            echo "LOTTO_CRON_URL secret is missing." >&2
+            exit 1
+          fi
+
+          if [ -z "${LOTTO_CRON_TOKEN}" ]; then
+            echo "LOTTO_CRON_TOKEN secret is missing." >&2
+            exit 1
+          fi
+
+          call_cron() {
+            local attempt="$1"
+            local response_file
+            local http_code
+            local curl_exit
+            local status
+            local success
+
+            response_file="$(mktemp)"
+            curl_exit=0
+
+            http_code="$(
+              curl \
+                --silent \
+                --show-error \
+                --output "${response_file}" \
+                --write-out '%{http_code}' \
+                --connect-timeout 30 \
+                --max-time 1200 \
+                --request POST \
+                --data-urlencode "token=${LOTTO_CRON_TOKEN}" \
+                "${LOTTO_CRON_URL}?job=${LOTTO_JOB}"
+            )" || curl_exit=$?
+
+            echo "Attempt: ${attempt}"
+            echo "HTTP code: ${http_code:-000}"
+            echo "Response:"
+            cat "${response_file}" || true
+            echo
+
+            if [ "${curl_exit}" -ne 0 ]; then
+              echo "curl exit code: ${curl_exit}" >&2
+              rm -f "${response_file}"
+              return 2
+            fi
+
+            status="$(
+              python3 -c 'import json,sys; data=json.load(open(sys.argv[1], encoding="utf-8")); print(data.get("status", ""))' "${response_file}" 2>/dev/null || true
+            )"
+
+            success="$(
+              python3 -c 'import json,sys; data=json.load(open(sys.argv[1], encoding="utf-8")); print("true" if data.get("success") is True else "false")' "${response_file}" 2>/dev/null || true
+            )"
+
+            rm -f "${response_file}"
+
+            if \
+              [ "${http_code}" = "200" ] \
+              && [ "${success}" = "true" ] \
+              && {
+                [ "${status}" = "completed" ] \
+                || [ "${status}" = "ok" ];
+              }
+            then
+              return 0
+            fi
+
+            if [ "${status}" = "already_running" ]; then
+              return 2
+            fi
+
+            return 1
+          }
+
+          MAX_ATTEMPTS=1
+          WAIT_SECONDS=0
+
+          if [ "${LOTTO_JOB}" = "weekly" ]; then
+            MAX_ATTEMPTS=3
+            WAIT_SECONDS=180
+          fi
+
+          attempt=1
+
+          while [ "${attempt}" -le "${MAX_ATTEMPTS}" ]; do
+            set +e
+            call_cron "${attempt}"
+            result=$?
+            set -e
+
+            if [ "${result}" -eq 0 ]; then
+              echo "Lotto cron completed successfully."
+              exit 0
+            fi
+
+            if \
+              [ "${LOTTO_JOB}" = "weekly" ] \
+              && [ "${result}" -eq 2 ] \
+              && [ "${attempt}" -lt "${MAX_ATTEMPTS}" ]
+            then
+              echo "Weekly job is still running or the HTTP connection ended."
+              echo "Waiting ${WAIT_SECONDS} seconds before checking again."
+              sleep "${WAIT_SECONDS}"
+              attempt=$((attempt + 1))
+              continue
+            fi
+
+            echo "Lotto cron failed." >&2
+            exit 1
+          done
+
+          echo "Weekly cron did not confirm completion." >&2
+          exit 1
