@@ -6,3 +6,13 @@ data/cache/*
 
 # Track documented database schema files
 !docs/database/*.sql
+
+# Local lotto runtime secrets
+data/lotto_card_secret.php
+data/lotto_cron_config.php
+
+# Local runtime logs
+data/log/
+
+# Local import source files
+data/import/
