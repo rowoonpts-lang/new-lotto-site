@@ -343,8 +343,14 @@ function lottoMemberResultProcessDraw($drawNo)
                     rank5_count = '" . (int) $summary['rank5_count'] . "',
                     best_rank = {$bestRankSql},
                     result_checked_at = now(),
-                    winner_sms_required = 0,
-                    winner_sms_status = 'not_required'
+                    winner_sms_required = case
+                        when {$bestRankSql} is not null then 1
+                        else 0
+                    end,
+                    winner_sms_status = case
+                        when {$bestRankSql} is not null then 'pending'
+                        else 'not_required'
+                    end
                  on duplicate key update
                     member_type = values(member_type),
                     combination_count = values(combination_count),
@@ -354,9 +360,7 @@ function lottoMemberResultProcessDraw($drawNo)
                     rank4_count = values(rank4_count),
                     rank5_count = values(rank5_count),
                     best_rank = values(best_rank),
-                    result_checked_at = values(result_checked_at),
-                    winner_sms_required = 0,
-                    winner_sms_status = 'not_required'",
+                    result_checked_at = values(result_checked_at)",
                 false
             );
 
@@ -374,7 +378,6 @@ function lottoMemberResultProcessDraw($drawNo)
              set
                 status = 'completed',
                 result_checked_at = now(),
-                winner_sms_completed_at = null,
                 last_error = null
              where draw_no = '{$drawNo}'",
             false
