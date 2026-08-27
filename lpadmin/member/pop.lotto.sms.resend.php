@@ -110,7 +110,7 @@ if (!empty($rows)) {
 
     $message = lottoSmsBuildCombinationMessage(
         $drawNo,
-        '로또조합',
+        '추천번호',
         $rows
     );
 }
@@ -121,7 +121,7 @@ if (!empty($rows)) {
     <div class="container-fluid">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">로또 전체 조합 재발송 확인</h3>
+                <h3 class="card-title">전체 추천번호 재발송 확인</h3>
             </div>
 
             <div class="card-body">
