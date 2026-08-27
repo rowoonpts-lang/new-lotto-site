@@ -85,25 +85,17 @@ if ($errorMessage === '') {
 
 if ($errorMessage === '' && !empty($rows)) {
     $paidMemberTypes = fnGetTypePre();
-    $currentMemberType = trim(
-        (string) $rows[0]['mb_type']
-    );
+    $currentMemberType = trim((string) $rows[0]['mb_type']);
 
-    if (!in_array(
-        $currentMemberType,
-        $paidMemberTypes,
-        true
-    )) {
-        $errorMessage =
-            '유료회원만 조합 문자를 재발송할 수 있습니다.';
+    if (!in_array($currentMemberType, $paidMemberTypes, true)) {
+        $errorMessage = '유료회원만 조합 문자를 재발송할 수 있습니다.';
         $rows = array();
     }
 }
 
 if ($errorMessage === '' && !empty($rows)) {
     if (trim((string) $rows[0]['mb_leave_date']) !== '') {
-        $errorMessage =
-            '탈퇴 회원에게는 조합 문자를 재발송할 수 없습니다.';
+        $errorMessage = '탈퇴 회원에게는 조합 문자를 재발송할 수 없습니다.';
         $rows = array();
     }
 }
@@ -128,125 +120,56 @@ if (!empty($rows)) {
 <section class="content">
     <div class="container-fluid">
         <div class="card card-primary">
-
             <div class="card-header">
-                <h3 class="card-title">
-                    로또 전체 조합 재발송 확인
-                </h3>
+                <h3 class="card-title">로또 전체 조합 재발송 확인</h3>
             </div>
 
             <div class="card-body">
-
                 <?php if ($errorMessage !== '') { ?>
-
                     <div class="alert alert-danger">
-                        <?=htmlspecialchars(
-                            $errorMessage,
-                            ENT_QUOTES,
-                            'UTF-8'
-                        )?>
+                        <?=htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8')?>
                     </div>
-
                 <?php } else { ?>
-
                     <div class="form-group">
                         <label>회원</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="<?=htmlspecialchars(
-                                $mbName,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            )?>"
-                            readonly
-                        >
+                        <input type="text" class="form-control"
+                               value="<?=htmlspecialchars($mbName, ENT_QUOTES, 'UTF-8')?>" readonly>
                     </div>
 
                     <div class="form-group">
                         <label>회차</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="<?=(int) $drawNo?> 회차"
-                            readonly
-                        >
+                        <input type="text" class="form-control"
+                               value="<?=(int) $drawNo?> 회차" readonly>
                     </div>
 
                     <div class="form-group">
                         <label>전체 조합 수</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="<?=count($rows)?> 조합"
-                            readonly
-                        >
+                        <input type="text" class="form-control"
+                               value="<?=count($rows)?> 조합" readonly>
                     </div>
 
                     <div class="form-group">
                         <label>휴대폰번호</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            value="<?=htmlspecialchars(
-                                $mbHp,
-                                ENT_QUOTES,
-                                'UTF-8'
-                            )?>"
-                            readonly
-                        >
+                        <input type="text" class="form-control"
+                               value="<?=htmlspecialchars($mbHp, ENT_QUOTES, 'UTF-8')?>" readonly>
                     </div>
 
                     <div class="form-group">
                         <label>문자내용</label>
-
-                        <textarea
-                            id="sms_content"
-                            class="form-control"
-                            rows="16"
-                        ><?=htmlspecialchars(
-                            $message,
-                            ENT_QUOTES,
-                            'UTF-8'
-                        )?></textarea>
-
+                        <textarea id="sms_content" class="form-control" rows="16"><?=htmlspecialchars($message, ENT_QUOTES, 'UTF-8')?></textarea>
                         <small class="form-text text-muted">
-                            선택한 회차의 전체 배분번호입니다.
-                            기존 배분번호는 변경하지 않습니다.
+                            선택한 회차의 전체 배분번호입니다. 기존 배분번호는 변경하지 않습니다.
                         </small>
                     </div>
-
                 <?php } ?>
-
             </div>
 
             <div class="card-footer">
-
-                <?php if (
-                    $errorMessage === ''
-                    && !empty($rows)
-                ) { ?>
-
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onClick="fnSmsSend();"
-                    >
-                        발송
-                    </button>
-
+                <?php if ($errorMessage === '' && !empty($rows)) { ?>
+                    <button type="button" class="btn btn-primary" onClick="fnSmsSend();">발송</button>
                 <?php } ?>
-
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    onClick="window.close();"
-                >
-                    닫기
-                </button>
-
+                <button type="button" class="btn btn-secondary" onClick="window.close();">닫기</button>
             </div>
-
         </div>
     </div>
 </section>
@@ -276,20 +199,15 @@ function fnSmsSend(){
                 alert(
                     result && result.message
                         ? result.message
-                        : "문자 재발송 전 검증에 실패했습니다."
+                        : "문자 재발송에 실패했습니다."
                 );
                 return;
             }
 
-            alert(
-                result.message
-                + "\n현재 개발환경에서는 실제 SMS를 발송하지 않습니다."
-            );
+            alert(result.message);
         },
         error: function(){
-            alert(
-                "문자 재발송 전 서버 검증 중 오류가 발생했습니다."
-            );
+            alert("문자 재발송 처리 중 오류가 발생했습니다.");
         }
     });
 
