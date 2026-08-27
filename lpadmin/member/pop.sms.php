@@ -126,7 +126,9 @@
 					</div>
 				</div>
 				<!-- form start -->
-				<form name="frm" id="frm" role="form" autocomplete="off" action="sms.udpate.php" onSubmit="return fnSubmit();">
+				<form name="frm" id="frm" role="form" autocomplete="off" method="post" action="sms.udpate.php" onSubmit="return fnSubmit();">
+				<input type="hidden" name="token" value="<?=htmlspecialchars(lottoMemberTokenCreate(), ENT_QUOTES, 'UTF-8')?>">
+				<input type="hidden" name="mb_id" value="<?=htmlspecialchars(base64_encode($mb_id), ENT_QUOTES, 'UTF-8')?>">
 				<input type="hidden" name="mb_hp" value="<?=$row['mb_hp']?>">
 					<div class="row">
 						<div class="col-md-4 col-4">
