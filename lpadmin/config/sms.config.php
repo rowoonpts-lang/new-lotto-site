@@ -426,7 +426,7 @@ function sms_config_html($value)
 
                     <div class="card-header">
                         <h3 class="card-title">
-                            당첨 결과 발송 문구
+                            결과 발송 문구
                         </h3>
                     </div>
 
@@ -453,13 +453,15 @@ function sms_config_html($value)
                                     <label>자동 발송 내용</label>
 
                                     <div class="sms-system-example">
-                                        <?=number_format($winner_draw_no)?>회 당첨 결과<br>
-                                        최고 4등 당첨
+                                        <?=number_format($winner_draw_no)?>회 결과<br>
+                                        2등 1개<br>
+                                        4등 3개<br>
+                                        5등 7개
                                     </div>
 
                                     <div class="sms-auto-info">
-                                        회차와 당첨등수는 자동 생성되며
-                                        관리자가 수정할 수 없습니다.
+                                        회차와 1~5등 결과 수량은 자동 생성되며
+                                        0개인 등수는 표시하지 않습니다.
                                     </div>
                                 </div>
 
@@ -565,7 +567,10 @@ function sms_config_html($value)
         ).textContent = createMessage(
             getValue('winner_header'),
             <?=json_encode(
-                $winner_draw_no . "회 당첨 결과\n최고 4등 당첨",
+                $winner_draw_no . "회 결과\n"
+                . "2등 1개\n"
+                . "4등 3개\n"
+                . "5등 7개",
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             )?>,
             getValue('winner_footer')
