@@ -2,6 +2,7 @@
 
 include_once("_common.php");
 include_once G5_PATH . "/include/lotto_sms.lib.php";
+include_once G5_PATH . "/include/lotto_sms_split.lib.php";
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -170,7 +171,7 @@ if (strlen($sender) < 8 || strlen($sender) > 15) {
     lottoSmsPrepareResponse(false, '설정관리의 문자 발신번호를 확인해주세요.');
 }
 
-$queued = lottoSmsQueueOShot(
+$queued = lottoSmsQueueOShotWithSplit(
     $groupId,
     $sender,
     $receiver,
@@ -188,9 +189,21 @@ if (empty($queued['success'])) {
 }
 
 $status = isset($queued['status']) ? (string) $queued['status'] : '';
+$partCount = isset($queued['part_count'])
+    ? max(1, (int) $queued['part_count'])
+    : 1;
 
 if ($status === 'already_queued') {
     lottoSmsPrepareResponse(true, '이미 OShot 문자 큐에 등록되어 있습니다.');
+}
+
+if ($partCount > 1) {
+    lottoSmsPrepareResponse(
+        true,
+        'LMS 최대 길이를 초과하여 '
+        . $partCount
+        . '통으로 나누어 OShot 문자 큐에 등록했습니다.'
+    );
 }
 
 lottoSmsPrepareResponse(true, 'OShot 문자 큐에 등록했습니다.');
