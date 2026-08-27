@@ -130,7 +130,7 @@
                                                         </form>
                                                         <form method="post"
                                                               action="pop.success.action.php"
-                                                              onsubmit="return confirm('이 회원의 당회차 정규 배분을 회수하시겠습니까? 회수하면 해당 조합은 문자 발송 대상에서도 제외됩니다.');">
+                                                              onsubmit="return confirm('이 회원의 당회차 정규 조합과 추가 조합을 모두 회수하시겠습니까? 회수하면 해당 조합은 문자 발송 대상에서도 제외됩니다.');">
                                                                 <input type="hidden" name="token" value="<?=htmlspecialchars($member_token, ENT_QUOTES, 'UTF-8')?>">
                                                                 <input type="hidden" name="mb_id" value="<?=htmlspecialchars($mb_id, ENT_QUOTES, 'UTF-8')?>">
                                                                 <input type="hidden" name="action" value="revoke">

@@ -151,15 +151,30 @@ try {
     $rows = sql_fetch(
         "select
             count(*) as cnt,
-            sum(case when sms_status = 'sent' then 1 else 0 end) as sent_cnt
+            sum(
+                case
+                    when distribution_type = 'weekly' then 1
+                    else 0
+                end
+            ) as weekly_cnt,
+            sum(
+                case
+                    when distribution_type = 'weekly'
+                     and sms_status = 'sent' then 1
+                    else 0
+                end
+            ) as sent_cnt
          from l_member_combination
          where draw_no = '{$drawNo}'
            and mb_id = '{$mbIdSql}'
-           and distribution_type = 'weekly'",
+           and distribution_type in ('weekly', 'manual')",
         false
     );
 
     $revokeCount = isset($rows['cnt']) ? (int) $rows['cnt'] : 0;
+    $weeklyCount = isset($rows['weekly_cnt'])
+        ? (int) $rows['weekly_cnt']
+        : 0;
     $sentCount = isset($rows['sent_cnt']) ? (int) $rows['sent_cnt'] : 0;
 
     if ($revokeCount < 1) {
@@ -174,7 +189,7 @@ try {
         "delete from l_member_combination
          where draw_no = '{$drawNo}'
            and mb_id = '{$mbIdSql}'
-           and distribution_type = 'weekly'",
+           and distribution_type in ('weekly', 'manual')",
         false
     ) === false) {
         throw new RuntimeException('당회차 배분 조합 회수에 실패했습니다.');
@@ -183,7 +198,7 @@ try {
     if (sql_query(
         "update g5_member_etc
          set use_num = case
-                when recent_turn = '{$drawNo}' then greatest(0, use_num - '{$revokeCount}')
+                when recent_turn = '{$drawNo}' then greatest(0, use_num - '{$weeklyCount}')
                 else use_num
              end
          where mb_id = '{$mbIdSql}'",
