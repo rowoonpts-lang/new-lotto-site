@@ -280,17 +280,39 @@ function lottoSmsQueueOShot(
         false
     );
 
-    if (isset($existing['MsgID']) && (int) $existing['MsgID'] > 0) {
-        return array(
-            'success' => true,
-            'status' => 'already_queued',
-            'msg_id' => (int) $existing['MsgID'],
-        );
-    }
-
     $sendType = lottoSmsGetMessageBytes($message) > 90
         ? 'LMS'
         : 'SMS';
+
+    if (isset($existing['MsgID']) && (int) $existing['MsgID'] > 0) {
+        $existingMsgId = (int) $existing['MsgID'];
+
+        if (
+            !empty($history)
+            && !lottoSmsRecordHistory(
+                $existingMsgId,
+                $groupId,
+                $sender,
+                $receiver,
+                $message,
+                $subject,
+                $sendType,
+                $history
+            )
+        ) {
+            return array(
+                'success' => false,
+                'status' => 'history_failed',
+                'error' => '기존 문자 발송내역 저장에 실패했습니다.',
+            );
+        }
+
+        return array(
+            'success' => true,
+            'status' => 'already_queued',
+            'msg_id' => $existingMsgId,
+        );
+    }
 
     $senderSql = sql_real_escape_string($sender);
     $messageSql = sql_real_escape_string($message);
@@ -467,7 +489,12 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
                 $sender,
                 $receiver,
                 $message,
-                '결과'
+                '결과',
+                array(
+                    'mb_id' => $mbId,
+                    'sender_mb_id' => '',
+                    'send_category' => 'winner',
+                )
             );
 
             if (!$queued['success']) {

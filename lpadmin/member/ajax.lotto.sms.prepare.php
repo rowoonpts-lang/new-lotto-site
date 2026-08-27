@@ -176,7 +176,12 @@ $queued = lottoSmsQueueOShotWithSplit(
     $sender,
     $receiver,
     $smsContent,
-    '추천번호'
+    '추천번호',
+    array(
+        'mb_id' => $targetMbId,
+        'sender_mb_id' => $loginMbId,
+        'send_category' => 'combination',
+    )
 );
 
 if (empty($queued['success'])) {

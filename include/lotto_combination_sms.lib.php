@@ -213,7 +213,12 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
             $sender,
             $receiver,
             $message,
-            '추천번호'
+            '추천번호',
+            array(
+                'mb_id' => $mbId,
+                'sender_mb_id' => '',
+                'send_category' => 'combination',
+            )
         );
 
         if (empty($queued['success'])) {
