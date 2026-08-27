@@ -95,7 +95,7 @@ if (!empty($rows)) {
     $mbName = (string) $rows[0]['mb_name'];
     $mbHp = (string) $rows[0]['mb_hp'];
 
-    $message = lottoSmsBuildCombinationMessage($drawNo, '추가조합', $rows);
+    $message = lottoSmsBuildCombinationMessage($drawNo, '추천번호', $rows);
 }
 ?>
 
@@ -204,14 +204,14 @@ function fnSmsSend(){
         },
         success: function(result){
             if(!result || result.success !== true){
-                alert(result && result.message ? result.message : "문자 발송 전 검증에 실패했습니다.");
+                alert(result && result.message ? result.message : "문자 발송에 실패했습니다.");
                 return;
             }
 
-            alert(result.message + "\n현재 개발환경에서는 실제 SMS를 발송하지 않습니다.");
+            alert(result.message);
         },
         error: function(){
-            alert("문자 발송 전 서버 검증 중 오류가 발생했습니다.");
+            alert("문자 발송 처리 중 오류가 발생했습니다.");
         }
     });
 
