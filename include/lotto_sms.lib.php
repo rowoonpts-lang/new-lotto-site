@@ -88,21 +88,45 @@ function lottoSmsBuildCombinationMessage($drawNo, $title, $rows)
         $config['combination_footer'],
     ));
 }
+
 function lottoSmsNormalizePhone($phone)
 {
     return preg_replace('/[^0-9]/', '', (string) $phone);
 }
 
-function lottoSmsBuildWinnerMessage($drawNo, $bestRank)
+function lottoSmsGetMessageBytes($message)
+{
+    $message = (string) $message;
+    $chars = preg_split('//u', $message, -1, PREG_SPLIT_NO_EMPTY);
+
+    if ($chars === false) {
+        return strlen($message);
+    }
+
+    $bytes = 0;
+
+    foreach ($chars as $char) {
+        $bytes += strlen($char) === 1 ? 1 : 2;
+    }
+
+    return $bytes;
+}
+
+function lottoSmsBuildWinnerMessage($drawNo, $rankCounts)
 {
     $drawNo = (int) $drawNo;
-    $bestRank = (int) $bestRank;
+    $body = $drawNo . '회 결과';
 
-    $body = $drawNo
-        . "회 당첨 결과\n"
-        . '최고 '
-        . $bestRank
-        . '등 당첨';
+    for ($rank = 1; $rank <= 5; $rank++) {
+        $key = 'rank' . $rank . '_count';
+        $count = isset($rankCounts[$key])
+            ? max(0, (int) $rankCounts[$key])
+            : 0;
+
+        if ($count > 0) {
+            $body .= "\n" . $rank . '등 ' . $count . '개';
+        }
+    }
 
     $config = lottoSmsGetConfig();
 
@@ -199,15 +223,20 @@ function lottoSmsQueueOShot(
         );
     }
 
+    $sendType = lottoSmsGetMessageBytes($message) > 90
+        ? 'LMS'
+        : 'SMS';
+
     $senderSql = sql_real_escape_string($sender);
     $messageSql = sql_real_escape_string($message);
     $subjectSql = sql_real_escape_string($subject);
+    $sendTypeSql = sql_real_escape_string($sendType);
 
     $insert = sql_query(
         "insert into OShotMSG
          set
             MsgGroupID = '{$groupIdSql}',
-            SendType = 'SMS',
+            SendType = '{$sendTypeSql}',
             Sender = '{$senderSql}',
             Receiver = '{$receiverSql}',
             Subject = '{$subjectSql}',
@@ -229,6 +258,7 @@ function lottoSmsQueueOShot(
         'success' => true,
         'status' => 'queued',
         'msg_id' => (int) sql_insert_id(),
+        'send_type' => $sendType,
     );
 }
 
@@ -261,7 +291,7 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
         return array(
             'success' => false,
             'status' => 'already_running',
-            'error' => '같은 회차의 당첨 문자 작업이 실행 중입니다.',
+            'error' => '같은 회차의 결과 문자 작업이 실행 중입니다.',
         );
     }
 
@@ -273,7 +303,11 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
         $result = sql_query(
             "select
                 d.mb_id,
-                d.best_rank,
+                d.rank1_count,
+                d.rank2_count,
+                d.rank3_count,
+                d.rank4_count,
+                d.rank5_count,
                 m.mb_hp
              from l_member_draw d
              inner join g5_member m
@@ -287,13 +321,12 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
 
         if ($result === false) {
             throw new RuntimeException(
-                '당첨 문자 대상 조회에 실패했습니다.'
+                '결과 문자 대상 조회에 실패했습니다.'
             );
         }
 
         while ($row = sql_fetch_array($result)) {
             $mbId = (string) $row['mb_id'];
-            $bestRank = (int) $row['best_rank'];
             $receiver = lottoSmsNormalizePhone($row['mb_hp']);
 
             if (strlen($receiver) < 10 || strlen($receiver) > 15) {
@@ -320,14 +353,15 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
 
             $message = lottoSmsBuildWinnerMessage(
                 $drawNo,
-                $bestRank
+                $row
             );
 
             $queued = lottoSmsQueueOShot(
                 $groupId,
                 $sender,
                 $receiver,
-                $message
+                $message,
+                '결과'
             );
 
             if (!$queued['success']) {
@@ -375,7 +409,7 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
 
             if ($updated === false) {
                 throw new RuntimeException(
-                    '당첨 문자 큐 상태 저장에 실패했습니다.'
+                    '결과 문자 큐 상태 저장에 실패했습니다.'
                 );
             }
 
