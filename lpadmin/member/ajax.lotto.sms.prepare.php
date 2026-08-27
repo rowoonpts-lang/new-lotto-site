@@ -174,7 +174,8 @@ $queued = lottoSmsQueueOShot(
     $groupId,
     $sender,
     $receiver,
-    $smsContent
+    $smsContent,
+    '추천번호'
 );
 
 if (empty($queued['success'])) {
