@@ -203,7 +203,7 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
 
         $message = lottoSmsBuildCombinationMessage(
             $drawNo,
-            '로또조합',
+            '추천번호',
             $rows
         );
 
@@ -211,7 +211,8 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
             lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId),
             $sender,
             $receiver,
-            $message
+            $message,
+            '추천번호'
         );
 
         if (empty($queued['success'])) {
