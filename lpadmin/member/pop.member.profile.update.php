@@ -171,24 +171,12 @@ if (!empty($duplicate_hp['mb_id'])) {
     exit;
 }
 
-$current_mb_hp = isset($target['mb_hp'])
-    ? trim((string) $target['mb_hp'])
-    : '';
-
-if ($mb_hp !== $current_mb_hp) {
-    if (!function_exists('setMemberInfo')) {
-        alert('회원 연락처 연동 기능을 불러올 수 없어 휴대폰번호를 변경할 수 없습니다.');
-        exit;
-    }
-
-    setMemberInfo($mb_id, '', $mb_hp);
-}
-
 $mb_name_sql = sql_real_escape_string($mb_name);
 $mb_type_sql = sql_real_escape_string($mb_type);
 
 $member_set = array(
     "mb_name = '{$mb_name_sql}'",
+    "mb_hp = '{$mb_hp_sql}'",
     "mb_type = '{$mb_type_sql}'",
 );
 
