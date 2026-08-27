@@ -24,3 +24,6 @@ data/lotto_card_secret.php
 
 # Lotto scheduler secret
 data/lotto_cron_config.php
+
+# Local temporary analysis files
+data/tmp/
