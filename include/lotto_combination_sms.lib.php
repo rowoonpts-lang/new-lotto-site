@@ -5,6 +5,7 @@ if (!defined('_GNUBOARD_')) {
 }
 
 include_once G5_PATH . '/include/lotto_sms.lib.php';
+include_once G5_PATH . '/include/lotto_sms_split.lib.php';
 
 function lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId)
 {
@@ -207,7 +208,7 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
             $rows
         );
 
-        $queued = lottoSmsQueueOShot(
+        $queued = lottoSmsQueueOShotWithSplit(
             lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId),
             $sender,
             $receiver,
