@@ -133,7 +133,12 @@ $queued = lottoSmsQueueOShotWithSplit(
     $sender,
     $receiver,
     $message,
-    '상담문자'
+    '상담문자',
+    array(
+        'mb_id' => $targetMbId,
+        'sender_mb_id' => $loginMbId,
+        'send_category' => 'consultation',
+    )
 );
 
 if (empty($queued['success'])) {

@@ -144,12 +144,77 @@ function lottoSmsBuildWinnerGroupId($drawNo, $mbId)
         . substr(sha1((string) $mbId), 0, 12);
 }
 
+function lottoSmsRecordHistory(
+    $msgId,
+    $groupId,
+    $sender,
+    $receiver,
+    $message,
+    $subject,
+    $sendType,
+    array $history = array()
+) {
+    if (empty($history)) {
+        return true;
+    }
+
+    $msgId = (int) $msgId;
+
+    if ($msgId < 1) {
+        return false;
+    }
+
+    $mbId = isset($history['mb_id'])
+        ? trim((string) $history['mb_id'])
+        : '';
+
+    $senderMbId = isset($history['sender_mb_id'])
+        ? trim((string) $history['sender_mb_id'])
+        : '';
+
+    $sendCategory = isset($history['send_category'])
+        ? trim((string) $history['send_category'])
+        : '';
+
+    $mbIdSql = sql_real_escape_string($mbId);
+    $senderMbIdSql = sql_real_escape_string($senderMbId);
+    $receiverSql = sql_real_escape_string($receiver);
+    $senderSql = sql_real_escape_string($sender);
+    $sendTypeSql = sql_real_escape_string($sendType);
+    $sendCategorySql = sql_real_escape_string($sendCategory);
+    $subjectSql = sql_real_escape_string($subject);
+    $messageSql = sql_real_escape_string($message);
+    $groupIdSql = sql_real_escape_string($groupId);
+
+    return sql_query(
+        "insert into l_sms_history
+         set
+            mb_id = '{$mbIdSql}',
+            sender_mb_id = '{$senderMbIdSql}',
+            receiver_phone = '{$receiverSql}',
+            sender_phone = '{$senderSql}',
+            send_type = '{$sendTypeSql}',
+            send_category = '{$sendCategorySql}',
+            subject = '{$subjectSql}',
+            message = '{$messageSql}',
+            oshot_msg_id = '{$msgId}',
+            oshot_group_id = '{$groupIdSql}',
+            send_status = 'queued',
+            queued_at = now(),
+            updated_at = now()
+         on duplicate key update
+            updated_at = now()",
+        false
+    ) !== false;
+}
+
 function lottoSmsQueueOShot(
     $groupId,
     $sender,
     $receiver,
     $message,
-    $subject = ''
+    $subject = '',
+    array $history = array()
 ) {
     $groupId = trim((string) $groupId);
     $sender = lottoSmsNormalizePhone($sender);
@@ -232,6 +297,14 @@ function lottoSmsQueueOShot(
     $subjectSql = sql_real_escape_string($subject);
     $sendTypeSql = sql_real_escape_string($sendType);
 
+    if (sql_query('start transaction', false) === false) {
+        return array(
+            'success' => false,
+            'status' => 'transaction_failed',
+            'error' => '문자 발송 처리를 시작하지 못했습니다.',
+        );
+    }
+
     $insert = sql_query(
         "insert into OShotMSG
          set
@@ -247,6 +320,8 @@ function lottoSmsQueueOShot(
     );
 
     if ($insert === false) {
+        sql_query('rollback', false);
+
         return array(
             'success' => false,
             'status' => 'queue_failed',
@@ -254,10 +329,41 @@ function lottoSmsQueueOShot(
         );
     }
 
+    $msgId = (int) sql_insert_id();
+
+    if (!lottoSmsRecordHistory(
+        $msgId,
+        $groupId,
+        $sender,
+        $receiver,
+        $message,
+        $subject,
+        $sendType,
+        $history
+    )) {
+        sql_query('rollback', false);
+
+        return array(
+            'success' => false,
+            'status' => 'history_failed',
+            'error' => '문자 발송이력 저장에 실패하여 문자 큐 등록을 취소했습니다.',
+        );
+    }
+
+    if (sql_query('commit', false) === false) {
+        sql_query('rollback', false);
+
+        return array(
+            'success' => false,
+            'status' => 'commit_failed',
+            'error' => '문자 발송정보 저장을 완료하지 못했습니다.',
+        );
+    }
+
     return array(
         'success' => true,
         'status' => 'queued',
-        'msg_id' => (int) sql_insert_id(),
+        'msg_id' => $msgId,
         'send_type' => $sendType,
     );
 }

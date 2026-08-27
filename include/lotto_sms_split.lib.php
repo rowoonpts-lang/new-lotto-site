@@ -143,7 +143,8 @@ function lottoSmsQueueOShotWithSplit(
     $sender,
     $receiver,
     $message,
-    $subject = ''
+    $subject = '',
+    array $history = array()
 ) {
     $split = lottoSmsSplitLmsMessage($message, $subject, 2000);
 
@@ -170,7 +171,8 @@ function lottoSmsQueueOShotWithSplit(
             $sender,
             $receiver,
             $messages[0],
-            $subject
+            $subject,
+            $history
         );
         $queued['part_count'] = 1;
         $queued['msg_ids'] = isset($queued['msg_id'])
@@ -198,7 +200,8 @@ function lottoSmsQueueOShotWithSplit(
             $sender,
             $receiver,
             $partMessage,
-            $partSubject
+            $partSubject,
+            $history
         );
 
         if (empty($queued['success'])) {

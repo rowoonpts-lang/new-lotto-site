@@ -190,14 +190,14 @@
 									<tbody>
 									</tbody>
 									<?php
-										$sql_common = " from msg_cust_log ";
-										$sql_search = " where 1=1 and phone_no = '{$row['mb_hp']}' ";
-										$sql_order = " order by send_time desc ";
+										$sql_common = " from l_sms_history h left join OShotMSG o on o.MsgID = h.oshot_msg_id ";
+										$sql_search = " where h.mb_id = '{$safe_mb_id}' ";
+										$sql_order = " order by h.queued_at desc, h.lsh_id desc ";
 
-										$sql2 = " select count(distinct idx) as cnt {$sql_common} {$sql_search} {$sql_order} ";
+										$sql2 = " select count(*) as cnt {$sql_common} {$sql_search} ";
 
 										$row2 = sql_fetch($sql2);
-										$total_count = $row2['cnt'];
+										$total_count = isset($row2['cnt']) ? (int) $row2['cnt'] : 0;
 
 
 										$rows = 10;
@@ -208,29 +208,43 @@
 
 										$limit = " limit {$from_record}, {$rows} ";
 
-										$sql2 = "select * {$sql_common} {$sql_search} {$sql_order} {$limit}";
+										$sql2 = "select h.*, o.SendResult as oshot_send_result, o.ResultMsg as oshot_result_message, o.SendDT as oshot_send_dt {$sql_common} {$sql_search} {$sql_order} {$limit}";
 										$result2 = sql_query($sql2);
 										for($i=0; $row2 = sql_fetch_array($result2); $i++){
 									?>
 									<tr>
 										<td><?=$total_count-($page-1)*$rows-$i?></td>
-										<td><?=$row2['msg_type']?></td>
-										<td style="text-align:left"><?=nl2br($row2['message'])?></td>
-										<td><?=$row2['send_time']?></td>
+										<td><?=htmlspecialchars((string) $row2['send_type'], ENT_QUOTES, 'UTF-8')?></td>
+										<td style="text-align:left"><?=nl2br(htmlspecialchars((string) $row2['message'], ENT_QUOTES, 'UTF-8'))?></td>
+										<td><?=htmlspecialchars((string) $row2['queued_at'], ENT_QUOTES, 'UTF-8')?></td>
 										<td>
 											<?php
-												//$rt = getSmsResult($row2['table_name'], $row2['msg_id']);
-												$rt = $row2['etc'];
-												if($rt == "0"){
-													echo "성공";
-												}else if($rt == ""){
-													echo "전송중";
-												}else{
-													echo "실패";
+												$status = isset($row2['send_status'])
+													? trim((string) $row2['send_status'])
+													: '';
+												$oshotSendResult = isset($row2['oshot_send_result'])
+													&& $row2['oshot_send_result'] !== ''
+													? (int) $row2['oshot_send_result']
+													: null;
+
+												if ($oshotSendResult === 6) {
+													echo '발송완료';
+												} elseif ($oshotSendResult === 1) {
+													echo '발송요청완료';
+												} elseif ($oshotSendResult !== null && $oshotSendResult >= 95 && $oshotSendResult <= 99) {
+													echo '결과확인중';
+												} elseif ($oshotSendResult !== null && $oshotSendResult > 1) {
+													echo '발송실패';
+												} elseif ($status === 'sent') {
+													echo '발송완료';
+												} elseif ($status === 'failed') {
+													echo '발송실패';
+												} else {
+													echo '발송대기';
 												}
 											?>
 										</td>
-										<td><button type="button" class="btn btn-primary" onClick="fnSmsReSend('<?=$row2['idx']?>')">재전송</button></td>
+										<td>-</td>
 									</tr>
 									<?php 	}?>
 									<?php if($total_count < 1){?>
