@@ -249,7 +249,6 @@ $distribution_day_columns = array(
     'wed' => 'num_wed',
     'thur' => 'num_thur',
     'fri' => 'num_fri',
-    'sat' => 'num_sat',
 );
 
 $distribution_day = 'thur';
@@ -289,7 +288,6 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 								<option value="wed" <?=$distribution_day === 'wed' ? 'selected' : ''?>>수요일</option>
 								<option value="thur" <?=$distribution_day === 'thur' ? 'selected' : ''?>>목요일</option>
 								<option value="fri" <?=$distribution_day === 'fri' ? 'selected' : ''?>>금요일</option>
-								<option value="sat" <?=$distribution_day === 'sat' ? 'selected' : ''?>>토요일</option>
 							</select>
 						</div>
 

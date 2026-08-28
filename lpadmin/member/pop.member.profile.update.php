@@ -48,7 +48,6 @@ $distribution_days = array(
     'wed' => 'num_wed',
     'thur' => 'num_thur',
     'fri' => 'num_fri',
-    'sat' => 'num_sat',
 );
 
 if ($mb_id === '' || $mb_name === '' || $mb_hp === '') {
