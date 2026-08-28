@@ -330,8 +330,8 @@ function lottoDistributionDistributeMember(
              set
                 use_num = case
                     when recent_turn = '{$drawNo}'
-                        then use_num + '{$count}'
-                    else '{$count}'
+                        then use_num
+                    else 0
                 end,
                 recent_auto_date = '{$today}',
                 recent_auto_datetime = now(),
@@ -342,7 +342,7 @@ function lottoDistributionDistributeMember(
 
         if ($usageUpdate === false) {
             throw new RuntimeException(
-                '회원 배분 사용량 저장에 실패했습니다.'
+                '회원 배분 상태 저장에 실패했습니다.'
             );
         }
 
@@ -715,8 +715,8 @@ function lottoDistributionDistributeWeeklyMember(
              set
                 use_num = case
                     when recent_turn = '{$drawNo}'
-                        then use_num + '{$count}'
-                    else '{$count}'
+                        then use_num
+                    else 0
                 end,
                 recent_auto_date = '{$today}',
                 recent_auto_datetime = now(),
@@ -727,7 +727,7 @@ function lottoDistributionDistributeWeeklyMember(
 
         if ($usageUpdate === false) {
             throw new RuntimeException(
-                '회원 주간 배분 사용량 저장에 실패했습니다.'
+                '회원 주간 배분 상태 저장에 실패했습니다.'
             );
         }
 

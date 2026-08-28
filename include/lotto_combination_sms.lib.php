@@ -208,8 +208,11 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
             $rows
         );
 
+        $usageGroupId =
+            lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId);
+
         $queued = lottoSmsQueueOShotWithSplit(
-            lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId),
+            $usageGroupId,
             $sender,
             $receiver,
             $message,
@@ -218,6 +221,9 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
                 'mb_id' => $mbId,
                 'sender_mb_id' => '',
                 'send_category' => 'combination',
+                'usage_group_id' => $usageGroupId,
+                'draw_no' => $drawNo,
+                'combination_count' => $count,
             )
         );
 

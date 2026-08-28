@@ -176,6 +176,18 @@ function lottoSmsRecordHistory(
         ? trim((string) $history['send_category'])
         : '';
 
+    $usageGroupId = isset($history['usage_group_id'])
+        ? trim((string) $history['usage_group_id'])
+        : '';
+
+    $drawNo = isset($history['draw_no'])
+        ? max(0, (int) $history['draw_no'])
+        : 0;
+
+    $combinationCount = isset($history['combination_count'])
+        ? max(0, (int) $history['combination_count'])
+        : 0;
+
     $mbIdSql = sql_real_escape_string($mbId);
     $senderMbIdSql = sql_real_escape_string($senderMbId);
     $receiverSql = sql_real_escape_string($receiver);
@@ -185,6 +197,7 @@ function lottoSmsRecordHistory(
     $subjectSql = sql_real_escape_string($subject);
     $messageSql = sql_real_escape_string($message);
     $groupIdSql = sql_real_escape_string($groupId);
+    $usageGroupIdSql = sql_real_escape_string($usageGroupId);
 
     return sql_query(
         "insert into l_sms_history
@@ -199,6 +212,9 @@ function lottoSmsRecordHistory(
             message = '{$messageSql}',
             oshot_msg_id = '{$msgId}',
             oshot_group_id = '{$groupIdSql}',
+            usage_group_id = '{$usageGroupIdSql}',
+            draw_no = " . ($drawNo > 0 ? "'{$drawNo}'" : "null") . ",
+            combination_count = '{$combinationCount}',
             send_status = 'queued',
             queued_at = now(),
             updated_at = now()
@@ -779,5 +795,290 @@ function lottoSmsSyncWinnerResults($drawNo)
         'failed_count' => $failedCount,
         'missing_count' => $missingCount,
         'remaining_count' => $remainingCount,
+    );
+}
+function lottoSmsSyncCombinationResults()
+{
+    $tableRow = sql_fetch(
+        "show tables like 'OShotMSG'",
+        false
+    );
+
+    if (!$tableRow || count($tableRow) < 1) {
+        return array(
+            'success' => false,
+            'status' => 'oshot_table_missing',
+            'error' => 'OShotMSG 테이블이 없습니다.',
+        );
+    }
+
+    $result = sql_query(
+        "select usage_group_id
+           from l_sms_history
+          where send_category = 'combination'
+            and usage_group_id <> ''
+            and combination_count > 0
+            and usage_applied_at is null
+            and send_status = 'queued'
+          group by usage_group_id
+          order by min(lsh_id) asc",
+        false
+    );
+
+    if ($result === false) {
+        return array(
+            'success' => false,
+            'status' => 'history_query_failed',
+            'error' => '추천번호 문자 결과 대상을 조회하지 못했습니다.',
+        );
+    }
+
+    $waitingCount = 0;
+    $sentCount = 0;
+    $failedCount = 0;
+
+    while ($group = sql_fetch_array($result)) {
+        $usageGroupId = trim((string) $group['usage_group_id']);
+
+        if ($usageGroupId === '') {
+            continue;
+        }
+
+        $usageGroupIdSql = sql_real_escape_string($usageGroupId);
+
+        $historyResult = sql_query(
+            "select
+                h.lsh_id,
+                h.mb_id,
+                h.draw_no,
+                h.combination_count,
+                h.oshot_msg_id,
+                o.SendResult,
+                o.SendDT,
+                o.ResultMsg
+             from l_sms_history h
+             left join OShotMSG o
+               on o.MsgID = h.oshot_msg_id
+             where h.usage_group_id = '{$usageGroupIdSql}'
+             order by h.lsh_id asc",
+            false
+        );
+
+        if ($historyResult === false) {
+            return array(
+                'success' => false,
+                'status' => 'group_query_failed',
+                'error' => '추천번호 문자 묶음 조회에 실패했습니다.',
+            );
+        }
+
+        $rows = array();
+        $allSent = true;
+        $hasWaiting = false;
+        $hasFailure = false;
+        $resultMessage = '';
+
+        while ($history = sql_fetch_array($historyResult)) {
+            $rows[] = $history;
+
+            if (
+                !isset($history['SendResult'])
+                || $history['SendResult'] === ''
+            ) {
+                $hasWaiting = true;
+                $allSent = false;
+                continue;
+            }
+
+            $sendResult = (int) $history['SendResult'];
+
+            if (
+                $sendResult === 0
+                || $sendResult === 1
+                || ($sendResult >= 95 && $sendResult <= 99)
+            ) {
+                $hasWaiting = true;
+                $allSent = false;
+                continue;
+            }
+
+            if ($sendResult !== 6) {
+                $hasFailure = true;
+                $allSent = false;
+
+                $resultMessage = isset($history['ResultMsg'])
+                    ? trim((string) $history['ResultMsg'])
+                    : '';
+
+                if ($resultMessage === '') {
+                    $resultMessage =
+                        'OShot SendResult ' . $sendResult;
+                }
+            }
+        }
+
+        if (empty($rows)) {
+            continue;
+        }
+
+        if ($hasFailure) {
+            sql_query(
+                "update l_sms_history
+                    set
+                        send_status = 'failed',
+                        result_message = '"
+                . sql_real_escape_string($resultMessage)
+                . "',
+                        updated_at = now()
+                  where usage_group_id = '{$usageGroupIdSql}'",
+                false
+            );
+
+            $failedCount++;
+            continue;
+        }
+
+        if ($hasWaiting || !$allSent) {
+            $waitingCount++;
+            continue;
+        }
+
+        $first = $rows[0];
+
+        $mbId = trim((string) $first['mb_id']);
+        $drawNo = (int) $first['draw_no'];
+        $combinationCount = (int) $first['combination_count'];
+
+        if (
+            $mbId === ''
+            || $drawNo < 1
+            || $combinationCount < 1
+        ) {
+            $failedCount++;
+            continue;
+        }
+
+        $mbIdSql = sql_real_escape_string($mbId);
+
+        $memberEtc = sql_fetch(
+            "select mb_id
+               from g5_member_etc
+              where mb_id = '{$mbIdSql}'
+              limit 1",
+            false
+        );
+
+        if (empty($memberEtc['mb_id'])) {
+            return array(
+                'success' => false,
+                'status' => 'member_usage_missing',
+                'error' => $mbId
+                    . ': 회원 로또 배분 정보를 찾을 수 없습니다.',
+            );
+        }
+
+        if (sql_query('start transaction', false) === false) {
+            return array(
+                'success' => false,
+                'status' => 'transaction_failed',
+                'error' => '추천번호 문자 성공 반영을 시작하지 못했습니다.',
+            );
+        }
+
+        $locked = sql_fetch(
+            "select
+                lsh_id,
+                usage_applied_at
+             from l_sms_history
+             where usage_group_id = '{$usageGroupIdSql}'
+               and combination_count > 0
+             order by lsh_id asc
+             limit 1
+             for update",
+            false
+        );
+
+        if (
+            !isset($locked['lsh_id'])
+            || (int) $locked['lsh_id'] < 1
+        ) {
+            sql_query('rollback', false);
+            $failedCount++;
+            continue;
+        }
+
+        if (
+            isset($locked['usage_applied_at'])
+            && trim((string) $locked['usage_applied_at']) !== ''
+        ) {
+            sql_query('commit', false);
+            continue;
+        }
+
+        $usageUpdated = sql_query(
+            "update g5_member_etc
+                set
+                    use_num = case
+                        when recent_turn = '{$drawNo}'
+                            then use_num + '{$combinationCount}'
+                        else '{$combinationCount}'
+                    end,
+                    recent_turn = '{$drawNo}'
+              where mb_id = '{$mbIdSql}'",
+            false
+        );
+
+        if ($usageUpdated === false) {
+            sql_query('rollback', false);
+
+            return array(
+                'success' => false,
+                'status' => 'usage_update_failed',
+                'error' => '회원 문자 발송 조합 수 반영에 실패했습니다.',
+            );
+        }
+
+        $historyUpdated = sql_query(
+            "update l_sms_history
+                set
+                    send_status = 'sent',
+                    send_result = 6,
+                    sent_at = coalesce(sent_at, now()),
+                    usage_applied_at = now(),
+                    result_message = '',
+                    updated_at = now()
+              where usage_group_id = '{$usageGroupIdSql}'",
+            false
+        );
+
+        if ($historyUpdated === false) {
+            sql_query('rollback', false);
+
+            return array(
+                'success' => false,
+                'status' => 'history_update_failed',
+                'error' => '추천번호 문자 성공 이력 저장에 실패했습니다.',
+            );
+        }
+
+        if (sql_query('commit', false) === false) {
+            sql_query('rollback', false);
+
+            return array(
+                'success' => false,
+                'status' => 'commit_failed',
+                'error' => '추천번호 문자 성공 반영을 완료하지 못했습니다.',
+            );
+        }
+
+        $sentCount++;
+    }
+
+    return array(
+        'success' => true,
+        'status' => 'completed',
+        'waiting_count' => $waitingCount,
+        'sent_count' => $sentCount,
+        'failed_count' => $failedCount,
     );
 }

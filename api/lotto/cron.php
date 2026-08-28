@@ -96,6 +96,7 @@ $job = isset($_GET['job'])
 
 $allowedJobs = array(
     'health',
+    'sms_sync',
     'result',
     'recover',
     'weekly',
@@ -116,6 +117,15 @@ $now = new DateTimeImmutable(
     'now',
     new DateTimeZone('Asia/Seoul')
 );
+
+if ($job === 'sms_sync') {
+    $smsSync = lottoSmsSyncCombinationResults();
+
+    lottoCronRespond(
+        !empty($smsSync['success']) ? 200 : 500,
+        $smsSync
+    );
+}
 
 if ($job === 'health') {
     $dbCheck = sql_fetch(

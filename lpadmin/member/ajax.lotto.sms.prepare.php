@@ -71,6 +71,7 @@ if ($sendType === 'manual') {
     $target = sql_fetch(
         "select
             a.mb_id,
+            a.draw_no,
             a.distribution_type,
             b.mb_name,
             b.mb_hp,
@@ -93,6 +94,29 @@ if ($sendType === 'manual') {
     }
 
     $targetMbId = trim((string) $target['mb_id']);
+    $drawNo = isset($target['draw_no'])
+        ? (int) $target['draw_no']
+        : 0;
+
+    $manualCountRow = sql_fetch(
+        "select count(*) as cnt
+           from l_member_combination
+          where distribution_batch = '{$batchSql}'
+            and distribution_type = 'manual'",
+        false
+    );
+
+    $manualCombinationCount = isset($manualCountRow['cnt'])
+        ? max(0, (int) $manualCountRow['cnt'])
+        : 0;
+
+    if ($drawNo < 1 || $manualCombinationCount < 1) {
+        lottoSmsPrepareResponse(
+            false,
+            '추가발송 조합 회차 또는 수량을 확인할 수 없습니다.'
+        );
+    }
+
     $groupId = 'LM' . substr(sha1($batch), 0, 16);
 } else {
     $targetMbId = isset($_POST['mb_id'])
@@ -181,6 +205,15 @@ $queued = lottoSmsQueueOShotWithSplit(
         'mb_id' => $targetMbId,
         'sender_mb_id' => $loginMbId,
         'send_category' => 'combination',
+        'usage_group_id' => $sendType === 'manual'
+            ? $groupId
+            : '',
+        'draw_no' => $sendType === 'manual'
+            ? $drawNo
+            : 0,
+        'combination_count' => $sendType === 'manual'
+            ? $manualCombinationCount
+            : 0,
     )
 );
 

@@ -6,6 +6,11 @@ on:
     # KST Monday-Friday 10:00 - combination SMS
     - cron: '0 1 * * 1-5'
 
+    # KST Monday-Friday 10:10 / 10:20 / 10:30 - SMS result sync
+    - cron: '10 1 * * 1-5'
+    - cron: '20 1 * * 1-5'
+    - cron: '30 1 * * 1-5'
+
     # KST Saturday 21:00
     - cron: '0 12 * * 6'
 
@@ -31,6 +36,7 @@ on:
         options:
           - health
           - sms
+          - sms_sync
           - result
           - weekly
 
@@ -61,6 +67,12 @@ jobs:
             JOB="${MANUAL_JOB}"
           elif [ "${EVENT_SCHEDULE}" = "0 1 * * 1-5" ]; then
             JOB="sms"
+          elif \
+            [ "${EVENT_SCHEDULE}" = "10 1 * * 1-5" ] \
+            || [ "${EVENT_SCHEDULE}" = "20 1 * * 1-5" ] \
+            || [ "${EVENT_SCHEDULE}" = "30 1 * * 1-5" ]
+          then
+            JOB="sms_sync"
           elif [ "${EVENT_SCHEDULE}" = "0 13 * * 0" ]; then
             JOB="weekly"
           else
@@ -68,7 +80,7 @@ jobs:
           fi
 
           case "${JOB}" in
-            health|sms|result|weekly)
+            health|sms|sms_sync|result|weekly)
               ;;
             *)
               echo "Unsupported job: ${JOB}" >&2

@@ -363,6 +363,7 @@ function fnCreateNumber(){
             url: "ajax.create.number.php",
             data: {
                     mb_id: $("#mb_id").val(),
+                    draw_no: <?= (int) getTurn() ?>,
                     cnt: count
             },
             cache: false,

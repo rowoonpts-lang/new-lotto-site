@@ -29,18 +29,6 @@
 	$sql = "select * from g5_member_etc where 1=1 and mb_id = '{$mb_id}'";
 	$row = sql_fetch($sql);
 	
-	$weekTotal = $row[num_mon]+$row[num_tue]+$row[num_wed]+$row[num_thur]+$row[num_fri]+$row[num_sat];
-	if($weekTotal >= $left_num ){
-		
-		if($left_num > 0){
-			$common_sql .= " , use_num = '".($weekTotal-$left_num)."' ";
-		}else{
-			$common_sql .= " , use_num = '{$weekTotal}' ";
-		}
-	}else{
-		$common_sql .= " , use_num = '0' ";
-	}
-	
 
 	sql_query("alter table `g5_member_etc` add column `free_num_qty` int NOT NULL");
 	sql_query("alter table `g5_member_etc` add column `free_num_date` varchar(50) NOT NULL");
