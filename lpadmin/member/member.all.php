@@ -197,6 +197,25 @@
     font-weight: 700;
     line-height: 1.4;
 }
+
+.member-hold-row > td {
+    background-color: #fff7d6 !important;
+}
+
+.member-hold-row:hover > td {
+    background-color: #ffefb0 !important;
+}
+
+.member-hold-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #ffc107;
+    color: #212529;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+}
 </style>
 
 <div class="card card-default">
@@ -456,8 +475,18 @@
                                     $is_left_member = trim(
                                             (string)($row['mb_leave_date'] ?? '')
                                     ) !== '';
+
+                                    $is_hold_member =
+                                            !$is_left_member
+                                            && (int) ($row['left_day'] ?? 0) > 0;
                             ?>
-				<tr<?=$is_left_member ? ' class="member-left-row"' : ''?>>
+				<tr<?php
+				    if ($is_left_member) {
+				        echo ' class="member-left-row"';
+				    } elseif ($is_hold_member) {
+				        echo ' class="member-hold-row"';
+				    }
+				?>>
 					<td><input type="checkbox" name="chk[]" value="<?=$row['mb_id']?>"></td>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['mb_code']?></td>
@@ -471,13 +500,7 @@
 					</td>
 					<td><?=$row['mb_id']?></td>
 					<td>
-						<?php
-							if($row['left_day'] > 0){
-								echo "일시정지";
-							}else{
-								echo $row['mb_type'];
-							}
-						?>
+					        <?=$row['mb_type']?>
 					</td>
 					<td>
 						<?php
@@ -545,10 +568,40 @@
 						<?php
 							$paid_start = isset($row['start_date']) ? trim((string) $row['start_date']) : '';
 							$paid_end = isset($row['end_date']) ? trim((string) $row['end_date']) : '';
+
+							if ($is_hold_member) {
+							        $paid_start = isset($row['stop_start_date'])
+							                ? trim((string) $row['stop_start_date'])
+							                : '';
+
+							        $hold_datetime = isset($row['hold_datetime'])
+							                ? trim((string) $row['hold_datetime'])
+							                : '';
+
+							        $left_day = isset($row['left_day'])
+							                ? (int) $row['left_day']
+							                : 0;
+
+							        if ($hold_datetime !== '' && $left_day > 0) {
+							                $hold_date = substr($hold_datetime, 0, 10);
+							                $hold_timestamp = strtotime($hold_date);
+
+							                if ($hold_timestamp !== false) {
+							                        $paid_end = date(
+							                                'Y-m-d',
+							                                strtotime(
+							                                        '+'.$left_day.' day',
+							                                        $hold_timestamp
+							                                )
+							                        );
+							                }
+							        }
+							}
+
 							if ($paid_start !== '' && $paid_start !== '0000-00-00' && $paid_end !== '' && $paid_end !== '0000-00-00') {
-								echo htmlspecialchars($paid_start, ENT_QUOTES).'<br>~ '.htmlspecialchars($paid_end, ENT_QUOTES);
+							        echo htmlspecialchars($paid_start, ENT_QUOTES).'<br>~ '.htmlspecialchars($paid_end, ENT_QUOTES);
 							} else {
-								echo '-';
+							        echo '-';
 							}
 						?>
 					</td>
@@ -556,8 +609,8 @@
 					<td>
                                             <?php if ($is_left_member) { ?>
                                                     <strong class="member-left-status">탈퇴</strong>
-                                            <?php } else if ((int) $row['left_day'] > 0) { ?>
-                                                    <span class="badge badge-warning">일시정지</span>
+                                            <?php } else if ($is_hold_member) { ?>
+                                                    <strong class="member-hold-status">일시정지</strong>
                                             <?php } else if ($row['recent_select']) { ?>
                                                     <?=$row['recent_select']?>
                                             <?php } ?>

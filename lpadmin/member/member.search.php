@@ -59,6 +59,27 @@
 
 ?>
 
+<style>
+.member-hold-row > td {
+    background-color: #fff7d6 !important;
+}
+
+.member-hold-row:hover > td {
+    background-color: #ffefb0 !important;
+}
+
+.member-hold-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: #ffc107;
+    color: #212529;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+</style>
+
 <div class="card card-default">
 	<div class="card-body">
 		<div class="col-12">
@@ -119,8 +140,12 @@
 				</tr>
 				</thead>
 				<tbody>
-				<?php for($i=0; $row = sql_fetch_array($result); $i++){?>
-				<tr>
+				<?php
+				for($i=0; $row = sql_fetch_array($result); $i++){
+				        $is_hold_member =
+				                (int) ($row['left_day'] ?? 0) > 0;
+				?>
+				<tr<?=$is_hold_member ? ' class="member-hold-row"' : ''?>>
 					<td><?=$total_count-($page-1)*$rows-$i?></td>
 					<td><?=$row['mb_code']?></td>
 					<td>
@@ -133,13 +158,7 @@
 					</td>
 					<td><?=$row['mb_id']?></td>
 					<td>
-						<?php
-							if($row['left_day'] > 0){
-								echo "일시정지";
-							}else{
-								echo $row['mb_type'];
-							}
-						?>
+					        <?=$row['mb_type']?>
 					</td>
 					<td>
 						<?php
@@ -177,8 +196,8 @@
 					</td>
 					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-                                               <?php if ((int) $row['left_day'] > 0) { ?>
-                                                       <span class="badge badge-warning">일시정지</span>
+                                               <?php if ($is_hold_member) { ?>
+                                                       <strong class="member-hold-status">일시정지</strong>
                                                <?php } else if ($row['recent_select']) { ?>
                                                        <?=$row['recent_select']?>
                                                <?php } ?>
