@@ -152,11 +152,9 @@
 					</td>
 					<td>
 						<?php
-							$tot_num = 0;
 							$tot_text = "";
-							$tot_num = $row['num_mon']+$row['num_tue']+$row['num_wed']+$row['num_thur']+$row['num_fri']+$row['num_sat'];
-							$totAry = array('num_mon','num_tue','num_wed','num_thur','num_fri','num_sat');
-							$totAryKor = array('월','화','수','목','금','토');
+							$totAry = array('num_mon','num_tue','num_wed','num_thur','num_fri');
+							$totAryKor = array('월','화','수','목','금');
 							for($k=0; $k < count($totAry); $k++){
 								if($row[$totAry[$k]] > 0){
 									if($tot_text){$tot_text.= " / ";}
@@ -165,7 +163,6 @@
 							}
 							
 						?>
-						남은조합 : <?=($tot_num-$row['use_num'])?><br>
 						<?=$tot_text?>
 					</td>
 					<td><?=$row['mb_datetime']?><br><?=$row['mb_today_login']?></td>
