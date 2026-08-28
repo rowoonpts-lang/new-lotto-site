@@ -221,53 +221,19 @@
 											</thead>
 											<tbody>
 											<tr>
-												<td><input type="text" class="form-control" id="num_mon" name="num_mon" placeholder="" maxlength="2" value="<?=$row[num_mon]?>" onChange="fnCalcDay()"></td>
-												<td><input type="text" class="form-control" id="num_tue" name="num_tue" placeholder="" maxlength="2" value="<?=$row[num_tue]?>" onChange="fnCalcDay()"></td>
-												<td><input type="text" class="form-control" id="num_wed" name="num_wed" placeholder="" maxlength="2" value="<?=$row[num_wed]?>" onChange="fnCalcDay()"></td>
-												<td><input type="text" class="form-control" id="num_thur" name="num_thur" placeholder="" maxlength="2" value="<?=$row[num_thur]?>" onChange="fnCalcDay()"></td>
-												<td><input type="text" class="form-control" id="num_fri" name="num_fri" placeholder="" maxlength="2" value="<?=$row[num_fri]?>" onChange="fnCalcDay()"></td>
-												<td><input type="text" class="form-control" id="num_sat" name="num_sat" placeholder="" maxlength="2" value="<?=$row[num_sat]?>" onChange="fnCalcDay()"></td>
+												<td><input type="text" class="form-control" id="num_mon" name="num_mon" placeholder="" maxlength="2" value="<?=$row[num_mon]?>"></td>
+												<td><input type="text" class="form-control" id="num_tue" name="num_tue" placeholder="" maxlength="2" value="<?=$row[num_tue]?>"></td>
+												<td><input type="text" class="form-control" id="num_wed" name="num_wed" placeholder="" maxlength="2" value="<?=$row[num_wed]?>"></td>
+												<td><input type="text" class="form-control" id="num_thur" name="num_thur" placeholder="" maxlength="2" value="<?=$row[num_thur]?>"></td>
+												<td><input type="text" class="form-control" id="num_fri" name="num_fri" placeholder="" maxlength="2" value="<?=$row[num_fri]?>"></td>
+												<td><input type="text" class="form-control" id="num_sat" name="num_sat" placeholder="" maxlength="2" value="<?=$row[num_sat]?>"></td>
 											</tr>
 											</tbody>
 											</table>
 										</div>
 									</div>
 								</div>
-								<script>
-								function fnCalcDay(){
-									var totDay = 0;
-									totDay = parseInt($("#num_mon").val()*1)+parseInt($("#num_tue").val()*1)+parseInt($("#num_wed").val()*1)+parseInt($("#num_thur").val()*1)+parseInt($("#num_fri").val()*1)+parseInt($("#num_sat").val()*1);
-									$("#left_num").val(totDay);
-								}
-								</script>
-								<?php
-									// 남은 조합수
-									$sql2 = "select * from g5_member_etc where 1=1 and mb_id = '{$mb_id}'";
-									$row2 = sql_fetch($sql2);
-									$weekTotal = $row2[num_mon]+$row2[num_tue]+$row2[num_wed]+$row2[num_thur]+$row2[num_fri]+$row2[num_sat];
-									$leftNum = $weekTotal - $row2[use_num];
-								?>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-3">
-											<label for="mb_hp">남은조합수</label>
-										</div>
-										<div class="col-9">
-											<input type="text" class="form-control" id="left_num" name="left_num" value="<?=$leftNum?>">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-3">
-											<label for="mb_hp">이번주조합</label>
-										</div>
-										<div class="col-9">
-											
-											총 조합 <?=$weekTotal?>개 중 <?=$row2[use_num]?>개를 사용하였습니다.
-										</div>
-									</div>
-								</div>
+								
 								<div class="form-group">
 									<div class="row">
 										<div class="col-3">

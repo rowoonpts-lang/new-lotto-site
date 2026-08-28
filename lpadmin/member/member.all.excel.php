@@ -20,7 +20,6 @@ header( "Content-Description: PHP4 Generated Data" );
 	<th>종료등급</th>
 	<th>남은기간</th>
 	<th>요일</th>
-	<th>남은조합</th>
 	<th>가입일</th>
 	<th>최근접속일</th>
 	<th>약관동의</th>
@@ -123,11 +122,9 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 	</td>
 	<td>
 		<?php
-			$tot_num = 0;
 			$tot_text = "";
-			$tot_num = $row['num_mon']+$row['num_tue']+$row['num_wed']+$row['num_thur']+$row['num_fri']+$row['num_sat'];
-			$totAry = array('num_mon','num_tue','num_wed','num_thur','num_fri','num_sat');
-			$totAryKor = array('월','화','수','목','금','토');
+			$totAry = array('num_mon','num_tue','num_wed','num_thur','num_fri');
+			$totAryKor = array('월','화','수','목','금');
 			for($k=0; $k < count($totAry); $k++){
 				if($row[$totAry[$k]] > 0){
 					if($tot_text){$tot_text.= " / ";}
@@ -138,7 +135,6 @@ for($i=1; $row=sql_fetch_array($result); $i++){
 		?>
 		<?=$tot_text?>
 	</td>
-	<td><?=($tot_num-$row[use_num])?></td>
 	<td><?=$row[mb_datetime]?></td>
 	<td><?=$row[mb_today_login]?></td>
 	<td>
