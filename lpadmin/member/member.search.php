@@ -177,9 +177,11 @@
 					</td>
 					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
 					<td>
-						<?php if($row['recent_select']){?>
-							<?=$row['recent_select']?>
-						<?php }?>
+                                               <?php if ((int) $row['left_day'] > 0) { ?>
+                                                       <span class="badge badge-warning">일시정지</span>
+                                               <?php } else if ($row['recent_select']) { ?>
+                                                       <?=$row['recent_select']?>
+                                               <?php } ?>
 					</td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">회원정보</button></td>
 				</tr>

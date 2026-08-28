@@ -270,4 +270,5 @@ alert(
     G5_LADMIN_URL
     .'/member/pop.member.php?mb_id='
     .urlencode(base64_encode($mb_id))
+    .'&refresh_parent=1'
 );

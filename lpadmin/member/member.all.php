@@ -556,6 +556,8 @@
 					<td>
                                             <?php if ($is_left_member) { ?>
                                                     <strong class="member-left-status">탈퇴</strong>
+                                            <?php } else if ((int) $row['left_day'] > 0) { ?>
+                                                    <span class="badge badge-warning">일시정지</span>
                                             <?php } else if ($row['recent_select']) { ?>
                                                     <?=$row['recent_select']?>
                                             <?php } ?>
