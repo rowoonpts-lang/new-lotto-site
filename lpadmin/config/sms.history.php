@@ -153,6 +153,20 @@ function sms_history_category_text($category)
     line-height: 1.5;
 }
 
+.sms-history-message-toggle {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.sms-history-message-toggle.is-expanded {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+}
+
 .sms-history-phone,
 .sms-history-date {
     white-space: nowrap;
@@ -256,11 +270,17 @@ function sms_history_category_text($category)
                                     </td>
 
                                     <td class="sms-history-message">
-                                        <?=nl2br(
-                                            sms_history_html(
-                                                $history['message']
-                                            )
-                                        )?>
+                                        <div
+                                            class="sms-history-message-toggle"
+                                            onclick="this.classList.toggle('is-expanded')"
+                                            title="클릭하여 전체 내용 보기"
+                                        >
+                                            <?=nl2br(
+                                                sms_history_html(
+                                                    $history['message']
+                                                )
+                                            )?>
+                                        </div>
                                     </td>
 
                                     <td class="sms-history-date">

@@ -173,6 +173,25 @@
 								<button type="submit" class="btn btn-primary">보내기</button>
 							</div>
 						</div>
+<style>
+.sms-message-toggle {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+	white-space: normal;
+	word-break: break-word;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.sms-message-toggle.is-expanded {
+	display: block;
+	overflow: visible;
+	-webkit-line-clamp: unset;
+}
+</style>
+
 						<div class="col-md-8 col-8">
 							<div class="card-body">
 								<div class="form-group">
@@ -215,7 +234,11 @@
 									<tr>
 										<td><?=$total_count-($page-1)*$rows-$i?></td>
 										<td><?=htmlspecialchars((string) $row2['send_type'], ENT_QUOTES, 'UTF-8')?></td>
-										<td style="text-align:left"><?=nl2br(htmlspecialchars((string) $row2['message'], ENT_QUOTES, 'UTF-8'))?></td>
+										<td style="text-align:left">
+											<div class="sms-message-toggle" onclick="this.classList.toggle('is-expanded')" title="클릭하여 전체 내용 보기">
+												<?=nl2br(htmlspecialchars((string) $row2['message'], ENT_QUOTES, 'UTF-8'))?>
+											</div>
+										</td>
 										<td><?=htmlspecialchars((string) $row2['queued_at'], ENT_QUOTES, 'UTF-8')?></td>
 										<td>
 											<?php
