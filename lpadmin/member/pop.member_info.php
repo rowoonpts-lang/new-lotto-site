@@ -202,39 +202,53 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-3">
-											<label for="mb_hp">요일선택</label>
-										</div>
-										<div class="col-9">
-											<table class="table table-hover text-nowrap text-sm">
-											<thead>
-											<tr>
-												<th>월</th>
-												<th>화</th>
-												<th>수</th>
-												<th>목</th>
-												<th>금</th>
-												<th>토</th>
-											</tr>
-											</thead>
-											<tbody>
-											<tr>
-												<td><input type="text" class="form-control" id="num_mon" name="num_mon" placeholder="" maxlength="2" value="<?=$row[num_mon]?>"></td>
-												<td><input type="text" class="form-control" id="num_tue" name="num_tue" placeholder="" maxlength="2" value="<?=$row[num_tue]?>"></td>
-												<td><input type="text" class="form-control" id="num_wed" name="num_wed" placeholder="" maxlength="2" value="<?=$row[num_wed]?>"></td>
-												<td><input type="text" class="form-control" id="num_thur" name="num_thur" placeholder="" maxlength="2" value="<?=$row[num_thur]?>"></td>
-												<td><input type="text" class="form-control" id="num_fri" name="num_fri" placeholder="" maxlength="2" value="<?=$row[num_fri]?>"></td>
-												<td><input type="text" class="form-control" id="num_sat" name="num_sat" placeholder="" maxlength="2" value="<?=$row[num_sat]?>"></td>
-											</tr>
-											</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								
-								<div class="form-group">
+                                                        <?php
+                                                        $distribution_day_columns = array(
+                                                            'mon' => 'num_mon',
+                                                            'tue' => 'num_tue',
+                                                            'wed' => 'num_wed',
+                                                            'thur' => 'num_thur',
+                                                            'fri' => 'num_fri',
+                                                        );
+
+                                                        $distribution_day = 'thur';
+                                                        $distribution_qty = 20;
+
+                                                        foreach ($distribution_day_columns as $day_key => $column_name) {
+                                                            $day_qty = isset($row[$column_name])
+                                                                ? (int) $row[$column_name]
+                                                                : 0;
+
+                                                            if ($day_qty > 0) {
+                                                                $distribution_day = $day_key;
+                                                                $distribution_qty = $day_qty;
+                                                                break;
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-3">
+                                                                    <label for="distribution_day">요일선택</label>
+                                                                </div>
+                                                                <div class="col-4">
+                                                                    <select class="form-control" id="distribution_day" name="distribution_day">
+                                                                        <option value="mon" <?=$distribution_day === 'mon' ? 'selected' : ''?>>월요일</option>
+                                                                        <option value="tue" <?=$distribution_day === 'tue' ? 'selected' : ''?>>화요일</option>
+                                                                        <option value="wed" <?=$distribution_day === 'wed' ? 'selected' : ''?>>수요일</option>
+                                                                        <option value="thur" <?=$distribution_day === 'thur' ? 'selected' : ''?>>목요일</option>
+                                                                        <option value="fri" <?=$distribution_day === 'fri' ? 'selected' : ''?>>금요일</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <label for="distribution_qty">배분수량</label>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <input type="number" class="form-control" id="distribution_qty" name="distribution_qty" min="1" value="<?=(int) $distribution_qty?>" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
 									<div class="row">
 										<div class="col-3">
 											<label for="dr_num">추가발송</label>

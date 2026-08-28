@@ -2,6 +2,43 @@
 	include_once("_common.php");
 	include_once(G5_LADMIN_PATH."/head.sub.php");
 
+	$distribution_day = isset($_POST['distribution_day'])
+		? trim((string) $_POST['distribution_day'])
+		: 'thur';
+
+	$distribution_qty = isset($_POST['distribution_qty'])
+		? (int) $_POST['distribution_qty']
+		: 20;
+
+	$distribution_days = array(
+		'mon' => 'num_mon',
+		'tue' => 'num_tue',
+		'wed' => 'num_wed',
+		'thur' => 'num_thur',
+		'fri' => 'num_fri',
+	);
+
+	if (!isset($distribution_days[$distribution_day])) {
+		alert("로또 배분 요일이 올바르지 않습니다.");
+		exit;
+	}
+
+	if ($distribution_qty < 1) {
+		alert("로또 배분 수량은 1개 이상이어야 합니다.");
+		exit;
+	}
+
+	$distribution_values = array(
+		'num_mon' => 0,
+		'num_tue' => 0,
+		'num_wed' => 0,
+		'num_thur' => 0,
+		'num_fri' => 0,
+		'num_sat' => 0,
+	);
+
+	$distribution_values[$distribution_days[$distribution_day]] = $distribution_qty;
+
 	if($mb_id != $mb_id_temp || $mb_hp != $mb_hp_temp){
 
 		if($mb_hp != $mb_hp_temp){
@@ -35,12 +72,12 @@
 
 	$sql = "
 				update g5_member_etc set
-					  num_mon = '{$num_mon}'
-					, num_tue = '{$num_tue}'
-					, num_wed = '{$num_wed}'
-					, num_thur = '{$num_thur}'
-					, num_fri = '{$num_fri}'
-					, num_sat = '{$num_sat}'
+					  num_mon = '{$distribution_values['num_mon']}'
+					, num_tue = '{$distribution_values['num_tue']}'
+					, num_wed = '{$distribution_values['num_wed']}'
+					, num_thur = '{$distribution_values['num_thur']}'
+					, num_fri = '{$distribution_values['num_fri']}'
+					, num_sat = '{$distribution_values['num_sat']}'
 					, free_num_qty = '{$free_num_qty}'
 					, free_num_date = '{$free_num_date}'
 					{$common_sql}
