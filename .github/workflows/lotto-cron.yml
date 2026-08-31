@@ -3,28 +3,30 @@ name: Lotto Production Cron
 on:
   schedule:
     # GitHub Actions cron uses UTC.
-    # KST Monday-Friday 10:00 - combination SMS
-    - cron: '0 1 * * 1-5'
+    #
+    # KST Saturday 20:55
+    - cron: '55 11 * * 6'
 
-    # KST Monday-Friday 10:10 / 10:20 / 10:30 - SMS result sync
-    - cron: '10 1 * * 1-5'
-    - cron: '20 1 * * 1-5'
-    - cron: '30 1 * * 1-5'
+    # KST Saturday 21:00 ~ 21:55 every 5 minutes
+    - cron: '*/5 12 * * 6'
 
-    # KST Saturday 21:00
-    - cron: '0 12 * * 6'
-
-    # KST Saturday 21:30
-    - cron: '30 12 * * 6'
-
-    # KST Saturday 22:00
-    - cron: '0 13 * * 6'
-
-    # KST Sunday 10:00
+    # KST Sunday 09:00 / 09:30 / 10:00 / 10:30
+    #
+    # Saturday detailed result delay recovery:
+    # result -> member result -> winner SMS
+    # -> next draw filter -> weekly distribution
+    # -> weekday OShot reservations.
+    - cron: '0 0 * * 0'
+    - cron: '30 0 * * 0'
     - cron: '0 1 * * 0'
+    - cron: '30 1 * * 0'
 
-    # KST Sunday 22:00
-    - cron: '0 13 * * 0'
+    # KST Monday-Friday 11:00 / 13:00
+    #
+    # Combination SMS is already reserved in OShot for 10:00.
+    # These schedules only synchronize delivery results/history.
+    - cron: '0 2 * * 1-5'
+    - cron: '0 4 * * 1-5'
 
   workflow_dispatch:
     inputs:
@@ -65,18 +67,30 @@ jobs:
 
           if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
             JOB="${MANUAL_JOB}"
-          elif [ "${EVENT_SCHEDULE}" = "0 1 * * 1-5" ]; then
-            JOB="sms"
+
           elif \
-            [ "${EVENT_SCHEDULE}" = "10 1 * * 1-5" ] \
-            || [ "${EVENT_SCHEDULE}" = "20 1 * * 1-5" ] \
-            || [ "${EVENT_SCHEDULE}" = "30 1 * * 1-5" ]
+            [ "${EVENT_SCHEDULE}" = "55 11 * * 6" ] \
+            || [ "${EVENT_SCHEDULE}" = "*/5 12 * * 6" ]
+          then
+            JOB="result"
+
+          elif \
+            [ "${EVENT_SCHEDULE}" = "0 0 * * 0" ] \
+            || [ "${EVENT_SCHEDULE}" = "30 0 * * 0" ] \
+            || [ "${EVENT_SCHEDULE}" = "0 1 * * 0" ] \
+            || [ "${EVENT_SCHEDULE}" = "30 1 * * 0" ]
+          then
+            JOB="weekly"
+
+          elif \
+            [ "${EVENT_SCHEDULE}" = "0 2 * * 1-5" ] \
+            || [ "${EVENT_SCHEDULE}" = "0 4 * * 1-5" ]
           then
             JOB="sms_sync"
-          elif [ "${EVENT_SCHEDULE}" = "0 13 * * 0" ]; then
-            JOB="weekly"
+
           else
-            JOB="result"
+            echo "Unknown schedule: ${EVENT_SCHEDULE}" >&2
+            exit 1
           fi
 
           case "${JOB}" in
@@ -114,15 +128,19 @@ jobs:
             if [ "${LOTTO_JOB}" = "sms" ]; then
               case "${LOTTO_CRON_URL}" in
                 */cron.php)
-                  printf '%s\n' "${LOTTO_CRON_URL%/cron.php}/combination_sms.php"
+                  printf '%s\n' \
+                    "${LOTTO_CRON_URL%/cron.php}/combination_sms.php"
                   ;;
                 *)
-                  echo "LOTTO_CRON_URL must end with /cron.php for sms job." >&2
+                  echo \
+                    "LOTTO_CRON_URL must end with /cron.php for sms job." \
+                    >&2
                   return 1
                   ;;
               esac
             else
-              printf '%s\n' "${LOTTO_CRON_URL}?job=${LOTTO_JOB}"
+              printf '%s\n' \
+                "${LOTTO_CRON_URL}?job=${LOTTO_JOB}"
             fi
           }
 
@@ -166,11 +184,17 @@ jobs:
             fi
 
             status="$(
-              python3 -c 'import json,sys; data=json.load(open(sys.argv[1], encoding="utf-8")); print(data.get("status", ""))' "${response_file}" 2>/dev/null || true
+              python3 -c \
+                'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); print(d.get("status",""))' \
+                "${response_file}" \
+                2>/dev/null || true
             )"
 
             success="$(
-              python3 -c 'import json,sys; data=json.load(open(sys.argv[1], encoding="utf-8")); print("true" if data.get("success") is True else "false")' "${response_file}" 2>/dev/null || true
+              python3 -c \
+                'import json,sys; d=json.load(open(sys.argv[1],encoding="utf-8")); print("true" if d.get("success") is True else "false")' \
+                "${response_file}" \
+                2>/dev/null || true
             )"
 
             rm -f "${response_file}"
@@ -181,7 +205,7 @@ jobs:
               && {
                 [ "${status}" = "completed" ] \
                 || [ "${status}" = "ok" ] \
-                || [ "${status}" = "skipped" ];
+                || [ "${status}" = "pending_official_result" ];
               }
             then
               return 0
@@ -220,8 +244,10 @@ jobs:
               && [ "${result}" -eq 2 ] \
               && [ "${attempt}" -lt "${MAX_ATTEMPTS}" ]
             then
-              echo "Weekly job is still running or the HTTP connection ended."
-              echo "Waiting ${WAIT_SECONDS} seconds before checking again."
+              echo \
+                "Weekly job is still running or the HTTP connection ended."
+              echo \
+                "Waiting ${WAIT_SECONDS} seconds before checking again."
               sleep "${WAIT_SECONDS}"
               attempt=$((attempt + 1))
               continue
