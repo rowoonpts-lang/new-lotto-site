@@ -2015,4 +2015,3 @@ function lottoCombinationScheduleApplyCurrent(
         );
     }
 }
-

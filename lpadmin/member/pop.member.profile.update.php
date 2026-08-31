@@ -310,12 +310,20 @@ if (
                 );
         }
 
-        sql_query(
+        $restore_result = sql_query(
             "update g5_member_etc
                 set " . implode(', ', $restore_set) . "
               where mb_id = '{$mb_id_sql}'",
             false
         );
+
+        if ($restore_result === false) {
+            alert(
+                '바로적용에 실패했고 기존 로또 배분 요일/수량 복구도 실패했습니다. '
+                . '관리자가 회원 배분 설정을 확인해야 합니다.'
+            );
+            exit;
+        }
 
         alert(
             '바로적용에 실패하여 로또 배분 요일/수량 변경을 되돌렸습니다. '
