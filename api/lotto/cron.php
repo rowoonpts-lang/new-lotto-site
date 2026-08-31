@@ -155,8 +155,9 @@ if ($job === 'health') {
  * 정상 result 작업은 토요일/일요일에만 실행한다.
  * 정확한 실행 시각은 GitHub Actions 스케줄에서 관리한다.
  *
- * 정상 weekly 작업은 일요일에만 실행한다.
- * recover는 장애 복구용이라 요일 제한을 적용하지 않는다.
+ * weekly 작업은 스케줄러 지연에 대비해 현재 요일로 제한하지 않는다.
+ * 실제 배분 주간은 최신 당첨일을 기준으로 계산한다.
+ * recover는 장애 복구용이다.
  */
 $weekDay = (int) $now->format('w');
 
@@ -172,24 +173,6 @@ if (
             'status' => 'skipped',
             'job' => 'result',
             'message' => '토요일 또는 일요일이 아니므로 실행하지 않았습니다.',
-            'server_time' => $now->format(
-                'Y-m-d H:i:s'
-            ),
-        )
-    );
-}
-
-if (
-    $job === 'weekly'
-    && $weekDay !== 0
-) {
-    lottoCronRespond(
-        200,
-        array(
-            'success' => true,
-            'status' => 'skipped',
-            'job' => 'weekly',
-            'message' => '일요일이 아니므로 실행하지 않았습니다.',
             'server_time' => $now->format(
                 'Y-m-d H:i:s'
             ),
@@ -341,6 +324,36 @@ try {
             '저장된 최신 당첨 회차를 확인하지 못했습니다.'
         );
     }
+
+    $sourceDrawDate = isset($latest['draw_date'])
+        ? trim((string) $latest['draw_date'])
+        : '';
+
+    $sourceDrawDateObject = DateTimeImmutable::createFromFormat(
+        '!Y-m-d',
+        $sourceDrawDate,
+        new DateTimeZone('Asia/Seoul')
+    );
+
+    if (
+        !$sourceDrawDateObject
+        || $sourceDrawDateObject->format('Y-m-d')
+            !== $sourceDrawDate
+    ) {
+        throw new RuntimeException(
+            '저장된 최신 당첨일을 확인하지 못했습니다.'
+        );
+    }
+
+    /*
+     * 주간 배분 기준일은 실제 요청 도착 시각이 아니라
+     * 최신 추첨일의 다음 날(일요일)을 사용한다.
+     *
+     * GitHub Actions 또는 외부 스케줄러가 늦게 호출되더라도
+     * 올바른 월~금 주간으로 배분하기 위한 기준이다.
+     */
+    $weeklyBaseDate = $sourceDrawDateObject
+        ->modify('+1 day');
 
     if (
         $job === 'recover'
@@ -631,7 +644,7 @@ try {
     if ($job === 'weekly') {
         $distributionResult = lottoDistributionRunWeeklyPaid(
             $targetDrawNo,
-            $now,
+            $weeklyBaseDate,
             false,
             'cron'
         );
