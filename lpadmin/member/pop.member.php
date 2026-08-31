@@ -308,6 +308,26 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 						</div>
 					</div>
 
+					<div class="row distribution-setting-column">
+						<div class="col-md-12 mb-3">
+							<div class="form-check">
+								<input type="checkbox"
+									   class="form-check-input"
+									   id="profile_distribution_apply_now"
+									   name="distribution_apply_now"
+									   value="1">
+								<label class="form-check-label"
+									   for="profile_distribution_apply_now">
+									<strong>바로적용</strong>
+									- 현재 회차의 아직 발송되지 않은 번호부터 새 요일/수량으로 적용
+								</label>
+							</div>
+							<small class="form-text text-muted">
+								이미 발송이 시작된 현재 회차 문자는 중복발송 방지를 위해 바로적용되지 않습니다.
+							</small>
+						</div>
+					</div>
+
 					<div class="row" id="free_distribution_setting_row">
 						<div class="col-md-6 mb-3">
 							<label for="profile_free_num_date">무료회원 조합 종료일</label>

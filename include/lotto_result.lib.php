@@ -325,13 +325,68 @@ function lotto_result_validate_item($item, $expected_draw)
         throw new RuntimeException('추첨일 값이 올바르지 않습니다.');
     }
 
+    $rankWinners = array();
+    $rankAmounts = array();
+
     for ($rank = 1; $rank <= 5; $rank++) {
-        if ((int) $item['rnk' . $rank . 'WnNope'] < 0) {
-            throw new RuntimeException($rank . '등 당첨자 수가 올바르지 않습니다.');
+        $winnerCount = (int) $item[
+            'rnk' . $rank . 'WnNope'
+        ];
+
+        $winnerAmount = (int) $item[
+            'rnk' . $rank . 'WnAmt'
+        ];
+
+        if ($winnerCount < 0) {
+            throw new RuntimeException(
+                $rank . '등 당첨자 수가 올바르지 않습니다.'
+            );
         }
 
-        if ((int) $item['rnk' . $rank . 'WnAmt'] < 0) {
-            throw new RuntimeException($rank . '등 당첨금이 올바르지 않습니다.');
+        if ($winnerAmount < 0) {
+            throw new RuntimeException(
+                $rank . '등 당첨금이 올바르지 않습니다.'
+            );
+        }
+
+        $rankWinners[$rank] = $winnerCount;
+        $rankAmounts[$rank] = $winnerAmount;
+    }
+
+    /*
+     * 추첨 직후에는 당첨번호가 먼저 공개되고
+     * 당첨자 수/당첨금 상세정보가 늦게 반영될 수 있다.
+     *
+     * 3~5등은 정상 회차에서 충분한 당첨자가 발생하는
+     * 구간이므로 이 값들이 모두 확정되기 전에는
+     * 공식 결과 완료로 인정하지 않는다.
+     *
+     * 1~2등은 이론적으로 당첨자가 없을 수 있으므로
+     * 단순히 당첨자 수 > 0을 강제하지 않는다.
+     */
+    for ($rank = 3; $rank <= 5; $rank++) {
+        if (
+            $rankWinners[$rank] < 1
+            || $rankAmounts[$rank] < 1
+        ) {
+            throw new RuntimeException(
+                '공식 당첨 상세정보가 아직 확정되지 않았습니다.'
+            );
+        }
+    }
+
+    /*
+     * 1~2등은 당첨자가 존재하는 경우 반드시
+     * 당첨금액도 확정되어 있어야 한다.
+     */
+    for ($rank = 1; $rank <= 2; $rank++) {
+        if (
+            $rankWinners[$rank] > 0
+            && $rankAmounts[$rank] < 1
+        ) {
+            throw new RuntimeException(
+                '공식 당첨 상세정보가 아직 확정되지 않았습니다.'
+            );
         }
     }
 

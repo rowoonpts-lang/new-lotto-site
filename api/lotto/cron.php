@@ -6,6 +6,7 @@ include_once G5_PATH . '/include/lotto_filter.lib.php';
 include_once G5_PATH . '/include/lotto_member_result.lib.php';
 include_once G5_PATH . '/include/lotto_distribution.lib.php';
 include_once G5_PATH . '/include/lotto_sms.lib.php';
+include_once G5_PATH . '/include/lotto_combination_schedule.lib.php';
 
 date_default_timezone_set('Asia/Seoul');
 
@@ -152,31 +153,59 @@ if ($job === 'health') {
 }
 
 /*
- * 정상 result 작업은 토요일/일요일에만 실행한다.
- * 정확한 실행 시각은 GitHub Actions 스케줄에서 관리한다.
+ * 자동작업의 성공 여부는 요청이 도착한 요일이 아니라
+ * 실제 회차와 저장 상태로 판단한다.
  *
- * weekly 작업은 스케줄러 지연에 대비해 현재 요일로 제한하지 않는다.
- * 실제 배분 주간은 최신 당첨일을 기준으로 계산한다.
- * recover는 장애 복구용이다.
+ * 스케줄러가 지연되어 월요일에 도착하더라도
+ * 결과 저장/필터/배분 복구 자체는 가능해야 한다.
+ *
+ * 단, 당첨문자는 고객에게 늦은 시간 또는 지나치게
+ * 늦은 날짜에 발송되지 않도록 별도의 시간 정책을 적용한다.
  */
 $weekDay = (int) $now->format('w');
 
-if (
-    $job === 'result'
-    && $weekDay !== 6
-    && $weekDay !== 0
+function lottoCronWinnerSmsPolicy(
+    DateTimeImmutable $now
 ) {
-    lottoCronRespond(
-        200,
-        array(
-            'success' => true,
-            'status' => 'skipped',
-            'job' => 'result',
-            'message' => '토요일 또는 일요일이 아니므로 실행하지 않았습니다.',
-            'server_time' => $now->format(
-                'Y-m-d H:i:s'
-            ),
-        )
+    $weekDay = (int) $now->format('w');
+    $time = (int) $now->format('Hi');
+
+    /*
+     * 토요일:
+     * 20:55부터 결과 상세정보 확인을 시작하고
+     * 22:00가 되면 신규 당첨문자 자동발송을 중단한다.
+     */
+    if (
+        $weekDay === 6
+        && $time >= 2055
+        && $time < 2200
+    ) {
+        return array(
+            'allowed' => true,
+            'reason' => 'saturday_result_window',
+        );
+    }
+
+    /*
+     * 토요일 22시까지 상세결과가 확정되지 않은 경우
+     * 일요일 오전으로 넘긴다.
+     *
+     * 일요일은 오전 09:00 이후에만 자동 발송한다.
+     */
+    if (
+        $weekDay === 0
+        && $time >= 900
+        && $time < 2000
+    ) {
+        return array(
+            'allowed' => true,
+            'reason' => 'sunday_recovery_window',
+        );
+    }
+
+    return array(
+        'allowed' => false,
+        'reason' => 'outside_winner_sms_window',
     );
 }
 
@@ -234,6 +263,7 @@ $response = array(
     'winner_sms_sync' => null,
     'filter' => null,
     'distribution' => null,
+    'combination_sms_schedule' => null,
 );
 
 try {
@@ -438,13 +468,44 @@ try {
      */
     if ($memberCombinationCount > 0) {
         try {
-            $smsConfig = lottoSmsGetConfig();
+            $winnerSmsPolicy =
+                lottoCronWinnerSmsPolicy($now);
 
-            $smsSender = isset($smsConfig['sender_phone'])
-                ? lottoSmsNormalizePhone($smsConfig['sender_phone'])
-                : '';
+            if (
+                empty($winnerSmsPolicy['allowed'])
+            ) {
+                $response['winner_sms_queue'] = array(
+                    'success' => true,
+                    'status' => 'deferred',
+                    'draw_no' => $sourceDrawNo,
+                    'reason' => isset(
+                        $winnerSmsPolicy['reason']
+                    )
+                        ? $winnerSmsPolicy['reason']
+                        : 'outside_winner_sms_window',
+                    'message' =>
+                        '당첨문자 자동발송 허용시간이 아니므로 발송하지 않았습니다.',
+                );
 
-            if ($smsSender === '') {
+                $response['winner_sms_sync'] = array(
+                    'success' => true,
+                    'status' => 'deferred',
+                    'draw_no' => $sourceDrawNo,
+                    'message' =>
+                        '당첨문자가 발송되지 않아 결과 동기화를 건너뜁니다.',
+                );
+            } else {
+                $smsConfig = lottoSmsGetConfig();
+
+                $smsSender = isset(
+                    $smsConfig['sender_phone']
+                )
+                    ? lottoSmsNormalizePhone(
+                        $smsConfig['sender_phone']
+                    )
+                    : '';
+
+                if ($smsSender === '') {
                 $response['winner_sms_queue'] = array(
                     'success' => false,
                     'status' => 'skipped',
@@ -484,6 +545,7 @@ try {
                     );
                 }
             }
+        }
         } catch (Throwable $smsError) {
             $response['winner_sms_queue'] = array(
                 'success' => false,
@@ -679,6 +741,43 @@ try {
             'saturday' => 'excluded',
             'free_member' => 'excluded',
         );
+
+        /*
+         * 주간 배분이 끝나는 즉시 회원별 선택 요일 10:00으로
+         * OShot 예약문자를 미리 등록한다.
+         *
+         * 외부 스케줄러가 평일 10시에 지연되더라도
+         * OShot 자체 예약시간으로 발송되도록 한다.
+         */
+        $scheduleResult = lottoCombinationScheduleQueueDraw(
+            $targetDrawNo,
+            new DateTimeImmutable(
+                'now',
+                new DateTimeZone('Asia/Seoul')
+            )
+        );
+
+        if (
+            !isset($scheduleResult['success'])
+            || !$scheduleResult['success']
+        ) {
+            throw new RuntimeException(
+                '주간 조합문자 예약 실패: '
+                . (
+                    isset($scheduleResult['error'])
+                        ? $scheduleResult['error']
+                        : implode(
+                            ', ',
+                            isset($scheduleResult['errors'])
+                                ? $scheduleResult['errors']
+                                : array()
+                        )
+                )
+            );
+        }
+
+        $response['combination_sms_schedule'] =
+            $scheduleResult;
     }
 
     $response['success'] = true;
@@ -690,9 +789,25 @@ try {
         )
     )->format('Y-m-d H:i:s');
 } catch (Throwable $e) {
-    $response['success'] = false;
-    $response['status'] = 'failed';
-    $response['message'] = $e->getMessage();
+    if (
+        $e->getMessage()
+        === '공식 당첨 상세정보가 아직 확정되지 않았습니다.'
+    ) {
+        $response['success'] = true;
+        $response['status'] = 'pending_official_result';
+        $response['message'] =
+            '동행복권 공식 당첨 상세정보 업데이트를 기다리고 있습니다.';
+        $response['finished_at'] = (
+            new DateTimeImmutable(
+                'now',
+                new DateTimeZone('Asia/Seoul')
+            )
+        )->format('Y-m-d H:i:s');
+    } else {
+        $response['success'] = false;
+        $response['status'] = 'failed';
+        $response['message'] = $e->getMessage();
+    }
 } finally {
     if ($lockAcquired) {
         sql_fetch(
