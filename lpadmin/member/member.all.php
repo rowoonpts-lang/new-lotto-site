@@ -16,8 +16,14 @@
 		: '';
 	$sch_text = isset($_GET['sch_text']) ? trim((string) $_GET['sch_text']) : '';
 	$sch_mb_type = isset($_GET['sch_mb_type']) ? trim((string) $_GET['sch_mb_type']) : '';
-	$sch_mb_db = isset($_GET['sch_mb_db']) ? trim((string) $_GET['sch_mb_db']) : '';
+	$sch_recent_win_rank = isset($_GET['sch_recent_win_rank'])
+		? trim((string) $_GET['sch_recent_win_rank'])
+		: '';
 	$sch_mb_status = isset($_GET['sch_mb_status']) ? trim((string) $_GET['sch_mb_status']) : '';
+
+	if (!in_array($sch_recent_win_rank, array('', '1', '2', '3', '4', '5'), true)) {
+		$sch_recent_win_rank = '';
+	}
 	$sch_staff_mb_id = isset($_GET['sch_staff_mb_id']) ? trim((string) $_GET['sch_staff_mb_id']) : '';
 	$start_date = isset($_GET['start_date']) ? trim((string) $_GET['start_date']) : '';
 	$end_date = isset($_GET['end_date']) ? trim((string) $_GET['end_date']) : '';
@@ -34,7 +40,6 @@
 
 	$sch_text_sql = sql_real_escape_string($sch_text);
 	$sch_mb_type_sql = sql_real_escape_string($sch_mb_type);
-	$sch_mb_db_sql = sql_real_escape_string($sch_mb_db);
 	$sch_mb_status_sql = sql_real_escape_string($sch_mb_status);
 	$sch_staff_mb_id_sql = sql_real_escape_string($sch_staff_mb_id);
 	$start_date_sql = sql_real_escape_string($start_date);
@@ -52,6 +57,17 @@
 
 	$can_view_all = lottoCanViewAllMembers($login_level);
 
+	$recent_draw_row = sql_fetch(
+		"select max(draw_no) as draw_no
+		   from l_result_job
+		  where status = 'completed'",
+		false
+	);
+
+	$recent_draw_no = isset($recent_draw_row['draw_no'])
+		? (int) $recent_draw_row['draw_no']
+		: 0;
+
 	$sql_common = "
 		from g5_member a
 		inner join g5_member_etc b
@@ -60,6 +76,21 @@
 			on c.mb_id = a.mb_id
 		left join g5_member d
 			on d.mb_id = c.staff_mb_id
+		left join (
+			select
+				mb_id,
+				draw_no,
+				sum(rank1_count) as rank1_count,
+				sum(rank2_count) as rank2_count,
+				sum(rank3_count) as rank3_count,
+				sum(rank4_count) as rank4_count,
+				sum(rank5_count) as rank5_count,
+				min(best_rank) as best_rank
+			from l_member_draw
+			where draw_no = '{$recent_draw_no}'
+			group by mb_id, draw_no
+		) e
+			on e.mb_id = a.mb_id
 	";
 
 	$sql_search = "
@@ -116,8 +147,9 @@
 		$sql_search .= " and c.staff_mb_id = '{$sch_staff_mb_id_sql}' ";
 	}
 
-	if($sch_mb_db){
-		$sql_search .= " and b.mb_db = '{$sch_mb_db_sql}' ";
+	if ($sch_recent_win_rank !== '') {
+		$rank_column = 'rank' . (int) $sch_recent_win_rank . '_count';
+		$sql_search .= " and coalesce(e.{$rank_column}, 0) > 0 ";
 	}
 
 	if($start_date){
@@ -149,7 +181,13 @@
 			a.*,
 			b.*,
 			c.staff_mb_id,
-			d.mb_name as staff_name
+			d.mb_name as staff_name,
+			e.draw_no as recent_draw_no,
+			e.rank1_count as recent_rank1_count,
+			e.rank2_count as recent_rank2_count,
+			e.rank3_count as recent_rank3_count,
+			e.rank4_count as recent_rank4_count,
+			e.rank5_count as recent_rank5_count
 		{$sql_common}
 		{$sql_search}
 		{$sql_order}
@@ -303,17 +341,11 @@
 					</select>
 				</div>
 				<div class="col-md-1">
-					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_mb_db" aria-hidden="true">
-						<option selected="selected" value="">DB경로</option>
-						<?php
-						$sql_db = "select distinct mb_db from g5_member_etc where 1=1 and mb_db not in ('','기타','통화중') order by mb_db asc";
-						$result_db = sql_query($sql_db);
-						for($i=0; $row_db = sql_fetch_array($result_db); $i++){
-						?>
-						<option value="<?=$row_db['mb_db']?>" <?php if($sch_mb_db == $row_db['mb_db']){echo "selected";}?>><?=$row_db['mb_db']?></option>
-						<?php
-						}
-						?>
+					<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" name="sch_recent_win_rank" aria-hidden="true">
+						<option value="">최근당첨 전체</option>
+						<?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+						<option value="<?=$rank?>" <?php if($sch_recent_win_rank === (string) $rank){echo "selected";}?>><?=$rank?>등</option>
+						<?php } ?>
 					</select>
 				</div>
 				<div class="col-md-1">
@@ -462,7 +494,7 @@
 					<th>요일/조합</th>
 					<th>가입일/최근접속일</th>
 					<th>유료기간</th>
-					<th>디비경로</th>
+					<th>최근 당첨</th>
 					<th>상태</th>
 					<th>회원정보</th>
 					<th>탈퇴/삭제</th>
@@ -605,7 +637,41 @@
 							}
 						?>
 					</td>
-					<td><?=str_replace("homepage","home",$row['mb_db'])?></td>
+					<td>
+						<?php
+						$member_recent_draw_no =
+							isset($row['recent_draw_no'])
+								? (int) $row['recent_draw_no']
+								: 0;
+
+						if ($member_recent_draw_no < 1) {
+							echo '-';
+						} else {
+							$recent_win_text = array();
+
+							for ($rank = 1; $rank <= 5; $rank++) {
+								$count_key =
+									'recent_rank' . $rank . '_count';
+								$rank_count = isset($row[$count_key])
+									? (int) $row[$count_key]
+									: 0;
+
+								if ($rank_count > 0) {
+									$recent_win_text[] =
+										$rank . '등 ' . $rank_count . '건';
+								}
+							}
+
+							echo $member_recent_draw_no . '회<br>';
+
+							if (count($recent_win_text) > 0) {
+								echo implode('<br>', $recent_win_text);
+							} else {
+								echo '미당첨';
+							}
+						}
+						?>
+					</td>
 					<td>
                                             <?php if ($is_left_member) { ?>
                                                     <strong class="member-left-status">탈퇴</strong>
@@ -639,7 +705,7 @@
 				."&start_date=".urlencode($start_date)
 				."&end_date=".urlencode($end_date)
 				."&sch_mb_status=".urlencode($sch_mb_status)
-				."&sch_mb_db=".urlencode($sch_mb_db)
+				."&sch_recent_win_rank=".urlencode($sch_recent_win_rank)
 				."&rows=".urlencode((string) $rows);
 					echo get_paging(G5_IS_MOBILE ? $config['cf_mobile_pages'] : $config['cf_write_pages'], $page, $total_page, '?'.$qstr.'&amp;page=');
 				?>
