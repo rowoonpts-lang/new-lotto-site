@@ -67,13 +67,25 @@ function lottoSmsBuildCombinationMessage($drawNo, $title, $rows)
     $total = count($rows);
 
     foreach ($rows as $index => $row) {
-        $body .= ($index + 1) . '. ';
-        $body .= (int) $row['num1'] . ',';
-        $body .= (int) $row['num2'] . ',';
-        $body .= (int) $row['num3'] . ',';
-        $body .= (int) $row['num4'] . ',';
-        $body .= (int) $row['num5'] . ',';
-        $body .= (int) $row['num6'];
+        $numbers = array(
+            (int) $row['num1'],
+            (int) $row['num2'],
+            (int) $row['num3'],
+            (int) $row['num4'],
+            (int) $row['num5'],
+            (int) $row['num6'],
+        );
+
+        $formattedNumbers = array_map(
+            function ($number) {
+                return sprintf('%02d', $number);
+            },
+            $numbers
+        );
+
+        $body .= ($index + 1)
+            . '번: '
+            . implode(' ', $formattedNumbers);
 
         if ($index < $total - 1) {
             $body .= "\n";
