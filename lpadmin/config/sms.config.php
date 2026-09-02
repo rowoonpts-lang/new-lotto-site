@@ -558,8 +558,11 @@ function sms_config_html($value)
             getValue('combination_header'),
             <?=json_encode(
                 $combination_draw_no . "회 추천번호\n"
-                . "1. 1, 5, 12, 20, 31, 42\n"
-                . "2. 3, 8, 14, 22, 33, 41",
+                . "1번: 03 08 14 21 32 41\n"
+                . "2번: 01 11 19 27 35 44\n"
+                . "3번: 05 09 16 23 34 42\n"
+                . "4번: 02 12 18 29 36 45\n"
+                . "5번: 07 13 20 26 31 40",
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             )?>,
             getValue('combination_footer')
