@@ -365,8 +365,11 @@ function sms_config_html($value)
 
                                     <div class="sms-system-example">
                                         <?=number_format($combination_draw_no)?>회 추천번호<br>
-                                        1. 1, 5, 12, 20, 31, 42<br>
-                                        2. 3, 8, 14, 22, 33, 41
+                                        1번: 03 08 14 21 32 41<br>
+                                        2번: 01 11 19 27 35 44<br>
+                                        3번: 05 09 16 23 34 42<br>
+                                        4번: 02 12 18 29 36 45<br>
+                                        5번: 07 13 20 26 31 40
                                     </div>
 
                                     <div class="sms-auto-info">
