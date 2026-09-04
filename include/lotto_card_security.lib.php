@@ -22,7 +22,7 @@ function lottoCardGetSecretConfig()
 
     if (
         $key === false
-        || strlen($key) !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES
+        || strlen($key) !== 32
     ) {
         throw new RuntimeException('카드정보 암호화 키 길이가 올바르지 않습니다.');
     }
@@ -35,6 +35,15 @@ function lottoCardGetSecretConfig()
 
 function lottoCardEncryptPayload(array $payload)
 {
+    if (
+        !function_exists('openssl_encrypt')
+        || !function_exists('random_bytes')
+    ) {
+        throw new RuntimeException(
+            '카드정보 암호화 기능을 사용할 수 없습니다.'
+        );
+    }
+
     $secret = lottoCardGetSecretConfig();
 
     $json = json_encode(
@@ -43,50 +52,76 @@ function lottoCardEncryptPayload(array $payload)
     );
 
     if ($json === false) {
-        throw new RuntimeException('카드정보 암호화 데이터를 만들 수 없습니다.');
+        throw new RuntimeException(
+            '카드정보 암호화 데이터를 만들 수 없습니다.'
+        );
     }
 
-    $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-    $ciphertext = sodium_crypto_secretbox(
+    $iv = random_bytes(12);
+    $tag = '';
+
+    $ciphertext = openssl_encrypt(
         $json,
-        $nonce,
-        $secret['key']
+        'aes-256-gcm',
+        $secret['key'],
+        OPENSSL_RAW_DATA,
+        $iv,
+        $tag,
+        '',
+        16
     );
 
+    if ($ciphertext === false || strlen($tag) !== 16) {
+        throw new RuntimeException('카드정보 암호화에 실패했습니다.');
+    }
+
     return array(
-        'payload' => base64_encode($nonce.$ciphertext),
+        'payload' => 'gcm1:'.base64_encode(
+            $iv.$tag.$ciphertext
+        ),
         'key_version' => $secret['version'],
     );
 }
 
 function lottoCardDecryptPayload($encryptedPayload)
 {
-    $secret = lottoCardGetSecretConfig();
-
-    $decoded = base64_decode((string) $encryptedPayload, true);
-
-    if (
-        $decoded === false
-        || strlen($decoded) <= SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
-    ) {
-        throw new RuntimeException('암호화된 카드정보 형식이 올바르지 않습니다.');
+    if (!function_exists('openssl_decrypt')) {
+        throw new RuntimeException(
+            '카드정보 복호화 기능을 사용할 수 없습니다.'
+        );
     }
 
-    $nonce = substr(
-        $decoded,
-        0,
-        SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
+    $secret = lottoCardGetSecretConfig();
+    $encryptedPayload = trim((string) $encryptedPayload);
+
+    if (strpos($encryptedPayload, 'gcm1:') !== 0) {
+        throw new RuntimeException(
+            '암호화된 카드정보 형식이 올바르지 않습니다.'
+        );
+    }
+
+    $decoded = base64_decode(
+        substr($encryptedPayload, 5),
+        true
     );
 
-    $ciphertext = substr(
-        $decoded,
-        SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
-    );
+    if ($decoded === false || strlen($decoded) <= 28) {
+        throw new RuntimeException(
+            '암호화된 카드정보 형식이 올바르지 않습니다.'
+        );
+    }
 
-    $json = sodium_crypto_secretbox_open(
+    $iv = substr($decoded, 0, 12);
+    $tag = substr($decoded, 12, 16);
+    $ciphertext = substr($decoded, 28);
+
+    $json = openssl_decrypt(
         $ciphertext,
-        $nonce,
-        $secret['key']
+        'aes-256-gcm',
+        $secret['key'],
+        OPENSSL_RAW_DATA,
+        $iv,
+        $tag
     );
 
     if ($json === false) {
@@ -96,7 +131,9 @@ function lottoCardDecryptPayload($encryptedPayload)
     $payload = json_decode($json, true);
 
     if (!is_array($payload)) {
-        throw new RuntimeException('복호화된 카드정보가 올바르지 않습니다.');
+        throw new RuntimeException(
+            '복호화된 카드정보가 올바르지 않습니다.'
+        );
     }
 
     return $payload;
