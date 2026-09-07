@@ -182,6 +182,7 @@
 			b.*,
 			c.staff_mb_id,
 			d.mb_name as staff_name,
+			d.mb_level as staff_level,
 			e.draw_no as recent_draw_no,
 			e.rank1_count as recent_rank1_count,
 			e.rank2_count as recent_rank2_count,
@@ -194,25 +195,92 @@
 		{$limit}";
 	$result = sql_query($sql);
 
-	$assignment_staff_rows = array();
+$assignment_staff_rows = array();
 
-	if ($can_view_all) {
-		$assignment_staff_result = sql_query(
-			"select mb_id, mb_name, mb_level
-			   from g5_member
-			  where mb_level in (
-				".LOTTO_ROLE_STAFF1.",
-				".LOTTO_ROLE_STAFF2.",
-				".LOTTO_ROLE_TEAM_LEADER."
-			  )
-			  order by mb_level desc, mb_name asc, mb_id asc",
-			false
-		);
+if ($can_view_all) {
+    $assignment_staff_result = sql_query(
+        "select mb_id, mb_name, mb_level
+           from g5_member
+          where mb_level in (
+                ".LOTTO_ROLE_STAFF1.",
+                ".LOTTO_ROLE_STAFF2.",
+                ".LOTTO_ROLE_TEAM_LEADER."
+          )
+          order by mb_level desc, mb_name asc, mb_id asc",
+        false
+    );
 
-		while ($assignment_staff_row = sql_fetch_array($assignment_staff_result)) {
-			$assignment_staff_rows[] = $assignment_staff_row;
-		}
-	}
+    while (
+        $assignment_staff_row =
+            sql_fetch_array($assignment_staff_result)
+    ) {
+        $assignment_staff_rows[] = $assignment_staff_row;
+    }
+} elseif (
+    in_array(
+        $login_level,
+        array(
+            LOTTO_ROLE_STAFF2,
+            LOTTO_ROLE_TEAM_LEADER,
+        ),
+        true
+    )
+) {
+    $login_mb_id_sql = sql_real_escape_string($login_mb_id);
+
+    if ($login_level === LOTTO_ROLE_TEAM_LEADER) {
+        $assignment_staff_result = sql_query(
+            "select mb_id,
+                    mb_name,
+                    mb_level
+               from g5_member
+              where (
+                    mb_id = '{$login_mb_id_sql}'
+                    and mb_level = ".LOTTO_ROLE_TEAM_LEADER."
+              )
+                 or mb_level in (
+                    ".LOTTO_ROLE_STAFF2.",
+                    ".LOTTO_ROLE_STAFF1."
+                 )
+              order by
+                    case
+                        when mb_id = '{$login_mb_id_sql}' then 0
+                        when mb_level = ".LOTTO_ROLE_STAFF2." then 1
+                        else 2
+                    end,
+                    mb_name asc,
+                    mb_id asc",
+            false
+        );
+    } else {
+        $assignment_staff_result = sql_query(
+            "select mb_id,
+                    mb_name,
+                    mb_level
+               from g5_member
+              where (
+                    mb_id = '{$login_mb_id_sql}'
+                    and mb_level = ".LOTTO_ROLE_STAFF2."
+              )
+                 or mb_level = ".LOTTO_ROLE_STAFF1."
+              order by
+                    case
+                        when mb_id = '{$login_mb_id_sql}' then 0
+                        else 1
+                    end,
+                    mb_name asc,
+                    mb_id asc",
+            false
+        );
+    }
+
+    while (
+        $assignment_staff_row =
+            sql_fetch_array($assignment_staff_result)
+    ) {
+        $assignment_staff_rows[] = $assignment_staff_row;
+    }
+}
 
 ?>
 
@@ -543,7 +611,19 @@
 						$staff_name = isset($row['staff_name'])
 							? trim((string) $row['staff_name'])
 							: '';
-						?>
+
+                                            $can_hierarchy_assign =
+                                                    !$can_view_all
+                                                    && in_array(
+                                                            $login_level,
+                                                            array(
+                                                                    LOTTO_ROLE_STAFF2,
+                                                                    LOTTO_ROLE_TEAM_LEADER
+                                                            ),
+                                                            true
+                                                    )
+                                                    && count($assignment_staff_rows) > 0;
+                                            ?>
 
 						<?php if ($can_view_all) { ?>
 						<select
@@ -561,10 +641,71 @@
 							</option>
 							<?php } ?>
 						</select>
+
+						<?php } elseif ($can_hierarchy_assign) { ?>
+
+						<select
+                                                    class="form-control form-control-sm member-staff-select"
+                                                    data-mb-id="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>"
+                                                    data-original-value="<?=htmlspecialchars($current_staff_mb_id, ENT_QUOTES)?>"
+                                            >
+                                                    <?php
+                                                    $current_staff_in_candidates = false;
+
+                                                    foreach (
+                                                            $assignment_staff_rows
+                                                            as $assignment_staff_row
+                                                    ) {
+                                                            if (
+                                                                    $current_staff_mb_id
+                                                                    === (string) $assignment_staff_row['mb_id']
+                                                            ) {
+                                                                    $current_staff_in_candidates = true;
+                                                                    break;
+                                                            }
+                                                    }
+                                                    ?>
+
+                                                    <?php if (
+                                                            $current_staff_mb_id !== ''
+                                                            && !$current_staff_in_candidates
+                                                    ) { ?>
+                                                    <option
+                                                            value="<?=htmlspecialchars($current_staff_mb_id, ENT_QUOTES)?>"
+                                                            selected
+                                                    >
+                                                            <?=htmlspecialchars($staff_name, ENT_QUOTES)?>
+                                                    </option>
+                                                    <?php } ?>
+
+                                                    <?php foreach (
+                                                            $assignment_staff_rows
+                                                            as $assignment_staff_row
+                                                    ) { ?>
+                                                    <option
+                                                            value="<?=htmlspecialchars(
+                                                                    (string) $assignment_staff_row['mb_id'],
+                                                                    ENT_QUOTES
+                                                            )?>"
+                                                            <?=$current_staff_mb_id
+                                                                    === (string) $assignment_staff_row['mb_id']
+                                                                            ? 'selected'
+                                                                            : ''?>
+                                                    >
+                                                            <?=htmlspecialchars(
+                                                                    (string) $assignment_staff_row['mb_name'],
+                                                                    ENT_QUOTES
+                                                            )?>
+                                                    </option>
+                                                    <?php } ?>
+                                            </select>
+
 						<?php } else { ?>
+
 						<?=($staff_name !== ''
 							? htmlspecialchars($staff_name, ENT_QUOTES)
 							: '-')?>
+
 						<?php } ?>
 					</td>
 					<td>

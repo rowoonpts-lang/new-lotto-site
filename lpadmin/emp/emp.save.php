@@ -300,7 +300,6 @@ if ($mb_no > 0) {
                                 created_at = now(),
                                 updated_at = now()
                          on duplicate key update
-                                parent_mb_id = values(parent_mb_id),
                                 created_by = values(created_by),
                                 updated_at = now()",
                         false

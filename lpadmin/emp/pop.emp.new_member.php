@@ -86,11 +86,7 @@ if ($isEdit) {
                 "select m.mb_id,
                         m.mb_name,
                         m.mb_level,
-                        r.parent_mb_id,
-                        p.mb_name as parent_name
                    from g5_member m
-                   left join l_staff_relation r on r.child_mb_id = m.mb_id
-                   left join g5_member p on p.mb_id = r.parent_mb_id
                   where m.mb_id != '{$mbIdSql}'
                     and m.mb_level in (".LOTTO_ROLE_STAFF1.", ".LOTTO_ROLE_STAFF2.")
                   order by m.mb_level desc, m.mb_name asc, m.mb_id asc",
@@ -236,8 +232,6 @@ if ($isEdit) {
                                                                                 $candidateId = (string) $candidate['mb_id'];
                                                                                 $candidateLevel = (int) $candidate['mb_level'];
                                                                                 $candidateName = trim((string) $candidate['mb_name']);
-                                                                                $candidateParentId = trim((string) ($candidate['parent_mb_id'] ?? ''));
-                                                                                $candidateParentName = trim((string) ($candidate['parent_name'] ?? ''));
                                                                                 $isSelected = in_array($candidateId, $selectedChildIds, true);
                                                                                 $roleLabel = lottoGetAdminRoleName($candidateLevel);
                                                                         ?>
@@ -257,20 +251,6 @@ if ($isEdit) {
                                                                                         ENT_QUOTES
                                                                                 )?>
 
-                                                                                <?php if (
-                                                                                        $candidateParentId !== ''
-                                                                                        && $candidateParentId !== $mb_id
-                                                                                ) { ?>
-                                                                                <small class="text-muted ml-1">
-                                                                                        현재 상위:
-                                                                                        <?=htmlspecialchars(
-                                                                                                $candidateParentName !== ''
-                                                                                                        ? $candidateParentName
-                                                                                                        : $candidateParentId,
-                                                                                                ENT_QUOTES
-                                                                                        )?>
-                                                                                </small>
-                                                                                <?php } ?>
                                                                         </label>
                                                                         <?php } ?>
                                                                         <?php } else { ?>

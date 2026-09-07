@@ -45,6 +45,13 @@
 		false
 	);
 
+	$assigned_staff_mb_id = isset($assignment['staff_mb_id'])
+		? trim((string) $assignment['staff_mb_id'])
+		: '';
+
+	$assigned_staff_mb_id_sql =
+		sql_real_escape_string($assigned_staff_mb_id);
+
 	$login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
 	$login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
 	$can_view_all = lottoCanViewAllMembers($login_level);
@@ -92,6 +99,7 @@
 	$sql = "insert into l_memo set
 				mb_id = '{$mb_id_sql}',
 				from_mb_id = '".sql_real_escape_string($login_mb_id)."',
+				staff_mb_id = '{$assigned_staff_mb_id_sql}',
 				lm_memo_type = '{$recent_select_sql}',
 				lm_memo = '{$recent_memo_sql}',
 				lm_misu = '',

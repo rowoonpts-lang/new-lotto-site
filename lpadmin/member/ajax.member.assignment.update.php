@@ -12,7 +12,18 @@ $loginLevel = isset($member['mb_level'])
     ? (int) $member['mb_level']
     : 0;
 
-if (!lottoCanViewAllMembers($loginLevel)) {
+$canViewAll = lottoCanViewAllMembers($loginLevel);
+
+$canHierarchyAssign = in_array(
+    $loginLevel,
+    array(
+        LOTTO_ROLE_STAFF2,
+        LOTTO_ROLE_TEAM_LEADER,
+    ),
+    true
+);
+
+if (!$canViewAll && !$canHierarchyAssign) {
     echo json_encode(array(
         'success' => false,
         'message' => '담당자 변경 권한이 없습니다.',
@@ -55,6 +66,21 @@ if ($targetMbId === '') {
     exit;
 }
 
+if (
+    !$canViewAll
+    && !lottoCanViewMember(
+        $loginMbId,
+        $loginLevel,
+        $targetMbId
+    )
+) {
+    echo json_encode(array(
+        'success' => false,
+        'message' => '접근 권한이 없는 회원입니다.',
+    ));
+    exit;
+}
+
 $targetMbIdSql = sql_real_escape_string($targetMbId);
 
 $targetMember = sql_fetch(
@@ -75,10 +101,61 @@ if (empty($targetMember['mb_id'])) {
     exit;
 }
 
+$currentAssignment = sql_fetch(
+    "select a.staff_mb_id,
+            s.mb_name as staff_name,
+            s.mb_level as staff_level
+       from l_member_assignment a
+       left join g5_member s
+         on s.mb_id = a.staff_mb_id
+      where a.mb_id = '{$targetMbIdSql}'
+      limit 1",
+    false
+);
+
+$currentStaffMbId = isset($currentAssignment['staff_mb_id'])
+    ? trim((string) $currentAssignment['staff_mb_id'])
+    : '';
+
+$currentStaffName = isset($currentAssignment['staff_name'])
+    ? trim((string) $currentAssignment['staff_name'])
+    : '';
+
+$currentStaffLevel = isset($currentAssignment['staff_level'])
+    ? (int) $currentAssignment['staff_level']
+    : 0;
+
 if ($staffMbId === '') {
+    if (!$canViewAll) {
+        echo json_encode(array(
+            'success' => false,
+            'message' => '담당자를 미배정으로 변경할 권한이 없습니다.',
+        ));
+        exit;
+    }
+
     sql_query(
         "delete from l_member_assignment
           where mb_id = '{$targetMbIdSql}'"
+    );
+
+    $changeMemo = (
+        ($currentStaffName !== '' ? $currentStaffName : '-')
+        . ' → 미배정'
+    );
+
+    sql_query(
+        "insert into l_memo set
+            mb_id = '{$targetMbIdSql}',
+            from_mb_id = '" . sql_real_escape_string($loginMbId) . "',
+            staff_mb_id = '',
+            lm_memo_type = '담당자변경',
+            lm_memo = '" . sql_real_escape_string($changeMemo) . "',
+            lm_misu = '',
+            lm_alarm_type = '',
+            lm_alarm_date = '',
+            lm_datetime = now()",
+        false
     );
 
     fnSetLog(
@@ -93,6 +170,70 @@ if ($staffMbId === '') {
         'staff_name' => '-',
     ));
     exit;
+}
+
+if (!$canViewAll) {
+    $requestedStaffMbIdSql =
+        sql_real_escape_string($staffMbId);
+
+    $requestedStaff = sql_fetch(
+        "select mb_id,
+                mb_level
+           from g5_member
+          where mb_id = '{$requestedStaffMbIdSql}'
+          limit 1",
+        false
+    );
+
+    $requestedLevel = isset($requestedStaff['mb_level'])
+        ? (int) $requestedStaff['mb_level']
+        : 0;
+
+    $allowedStaff = false;
+
+    if ($loginLevel === LOTTO_ROLE_TEAM_LEADER) {
+        if (
+            $staffMbId === $loginMbId
+            && $requestedLevel === LOTTO_ROLE_TEAM_LEADER
+        ) {
+            $allowedStaff = true;
+        } elseif (
+            in_array(
+                $requestedLevel,
+                array(
+                    LOTTO_ROLE_STAFF1,
+                    LOTTO_ROLE_STAFF2,
+                ),
+                true
+            )
+        ) {
+            $allowedStaff = true;
+        }
+    }
+
+    if ($loginLevel === LOTTO_ROLE_STAFF2) {
+        if (
+            $staffMbId === $loginMbId
+            && $requestedLevel === LOTTO_ROLE_STAFF2
+        ) {
+            $allowedStaff = true;
+        } elseif (
+            $requestedLevel === LOTTO_ROLE_STAFF1
+        ) {
+            $allowedStaff = true;
+        }
+    }
+
+    if (
+        empty($requestedStaff['mb_id'])
+        || !$allowedStaff
+    ) {
+        echo json_encode(array(
+            'success' => false,
+            'message' => '지정할 수 없는 담당자입니다.',
+        ));
+        exit;
+    }
 }
 
 $staffMbIdSql = sql_real_escape_string($staffMbId);
@@ -138,11 +279,35 @@ sql_query(
         updated_at = now()"
 );
 
+$newStaffName = (string) $staffMember['mb_name'];
+
+if ($currentStaffMbId !== $staffMbId) {
+    $changeMemo = (
+        ($currentStaffName !== '' ? $currentStaffName : '-')
+        . ' → '
+        . $newStaffName
+    );
+
+    sql_query(
+        "insert into l_memo set
+            mb_id = '{$targetMbIdSql}',
+            from_mb_id = '" . sql_real_escape_string($loginMbId) . "',
+            staff_mb_id = '" . sql_real_escape_string($staffMbId) . "',
+            lm_memo_type = '담당자변경',
+            lm_memo = '" . sql_real_escape_string($changeMemo) . "',
+            lm_misu = '',
+            lm_alarm_type = '',
+            lm_alarm_date = '',
+            lm_datetime = now()",
+        false
+    );
+}
+
 fnSetLog(
     $loginMbId,
     $targetMbId
         . '님의 담당자를 '
-        . (string) $staffMember['mb_name']
+        . $newStaffName
         . '('
         . $staffMbId
         . ')님으로 변경하였습니다.'

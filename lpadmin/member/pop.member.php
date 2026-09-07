@@ -32,7 +32,9 @@
 	}
 
 	$assignment = sql_fetch(
-		"select c.staff_mb_id, d.mb_name as staff_name
+		"select c.staff_mb_id,
+                d.mb_name as staff_name,
+                d.mb_level as staff_level
 		   from l_member_assignment c
 		   left join g5_member d on d.mb_id = c.staff_mb_id
 		  where c.mb_id = '{$mb_id_sql}'
@@ -73,7 +75,14 @@
 	$from_record = ($page - 1) * $rows;
 
 	$history_result = sql_query(
-		"select a.*, b.mb_type
+		"select a.*,
+                b.mb_type,
+                (
+                    select hs.mb_name
+                      from g5_member hs
+                     where hs.mb_id = a.staff_mb_id
+                     limit 1
+                ) as history_staff_name
 		   {$sql_common}
 		   {$sql_search}
 		   {$sql_order}
@@ -84,7 +93,110 @@
 		? trim((string) $assignment['staff_name'])
 		: '-';
 
-	$start_date = isset($row['start_date']) ? (string) $row['start_date'] : '';
+    $assigned_staff_mb_id = isset($assignment['staff_mb_id'])
+        ? trim((string) $assignment['staff_mb_id'])
+        : '';
+
+    $assignment_staff_rows = array();
+
+    if ($can_view_all) {
+        $assignment_staff_result = sql_query(
+            "select mb_id, mb_name, mb_level
+               from g5_member
+              where mb_level in (
+                    ".LOTTO_ROLE_STAFF1.",
+                    ".LOTTO_ROLE_STAFF2.",
+                    ".LOTTO_ROLE_TEAM_LEADER."
+              )
+              order by mb_level desc, mb_name asc, mb_id asc",
+            false
+        );
+
+        while (
+            $assignment_staff_row =
+                sql_fetch_array($assignment_staff_result)
+        ) {
+            $assignment_staff_rows[] = $assignment_staff_row;
+        }
+    } elseif (
+        in_array(
+            $login_level,
+            array(
+                LOTTO_ROLE_STAFF2,
+                LOTTO_ROLE_TEAM_LEADER,
+            ),
+            true
+        )
+    ) {
+        $login_mb_id_sql = sql_real_escape_string($login_mb_id);
+
+        if ($login_level === LOTTO_ROLE_TEAM_LEADER) {
+            $assignment_staff_result = sql_query(
+                "select mb_id,
+                        mb_name,
+                        mb_level
+                   from g5_member
+                  where (
+                        mb_id = '{$login_mb_id_sql}'
+                        and mb_level = ".LOTTO_ROLE_TEAM_LEADER."
+                  )
+                     or mb_level in (
+                        ".LOTTO_ROLE_STAFF2.",
+                        ".LOTTO_ROLE_STAFF1."
+                     )
+                  order by
+                        case
+                            when mb_id = '{$login_mb_id_sql}' then 0
+                            when mb_level = ".LOTTO_ROLE_STAFF2." then 1
+                            else 2
+                        end,
+                        mb_name asc,
+                        mb_id asc",
+                false
+            );
+        } else {
+            $assignment_staff_result = sql_query(
+                "select mb_id,
+                        mb_name,
+                        mb_level
+                   from g5_member
+                  where (
+                        mb_id = '{$login_mb_id_sql}'
+                        and mb_level = ".LOTTO_ROLE_STAFF2."
+                  )
+                     or mb_level = ".LOTTO_ROLE_STAFF1."
+                  order by
+                        case
+                            when mb_id = '{$login_mb_id_sql}' then 0
+                            else 1
+                        end,
+                        mb_name asc,
+                        mb_id asc",
+                false
+            );
+        }
+
+        while (
+            $assignment_staff_row =
+                sql_fetch_array($assignment_staff_result)
+        ) {
+            $assignment_staff_rows[] = $assignment_staff_row;
+        }
+    }
+
+    $can_hierarchy_assign =
+        !$can_view_all
+        && in_array(
+            $login_level,
+            array(
+                LOTTO_ROLE_STAFF2,
+                LOTTO_ROLE_TEAM_LEADER,
+            ),
+            true
+        )
+        && count($assignment_staff_rows) > 0;
+
+    $start_date = isset($row['start_date']) ? (string) $row['start_date'] : '';
 	$end_date = isset($row['end_date']) ? (string) $row['end_date'] : '';
 	$start_date_value = ($start_date !== '' && $start_date !== '0000-00-00') ? $start_date : '';
 	$end_date_value = ($end_date !== '' && $end_date !== '0000-00-00') ? $end_date : '';
@@ -117,6 +229,57 @@ $(function(){
 		'minTime': '09:00'
 	});
 });
+$(document).on(
+    'change',
+    '.member-detail-staff-select',
+    function()
+    {
+        var $select = $(this);
+        var mbId = $select.data('mb-id');
+        var staffMbId = $select.val();
+        var originalValue = $select.attr('data-original-value');
+
+        $select.prop('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            url: './ajax.member.assignment.update.php',
+            data: {
+                mb_id: mbId,
+                staff_mb_id: staffMbId,
+                token: <?=json_encode($member_token)?>
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (!response || response.success !== true) {
+                    alert(
+                        response && response.message
+                            ? response.message
+                            : '담당자 변경에 실패했습니다.'
+                    );
+
+                    $select.val(originalValue);
+                    return;
+                }
+
+                alert(response.message);
+
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.reload();
+                }
+
+                window.location.reload();
+            },
+            error: function() {
+                alert('담당자 변경 중 오류가 발생했습니다.');
+                $select.val(originalValue);
+            },
+            complete: function() {
+                $select.prop('disabled', false);
+            }
+        });
+    }
+);
 </script>
 
 <section class="content member-detail-page">
@@ -462,10 +625,107 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 						<input type="hidden" name="mb_id" value="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>">
 						<input type="hidden" name="alarm_lm_id" value="<?=$alarm_lm_id?>">
 						<div class="card-body">
+                            <div class="form-group">
+                                <label for="member_detail_staff">담당자</label>
+
+                                <?php if ($can_view_all) { ?>
+
+                                <select
+                                    id="member_detail_staff"
+                                    class="form-control member-detail-staff-select"
+                                    data-mb-id="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>"
+                                    data-original-value="<?=htmlspecialchars($assigned_staff_mb_id, ENT_QUOTES)?>"
+                                >
+                                    <option value="">미배정</option>
+
+                                    <?php foreach ($assignment_staff_rows as $assignment_staff_row) { ?>
+                                    <option
+                                        value="<?=htmlspecialchars((string) $assignment_staff_row['mb_id'], ENT_QUOTES)?>"
+                                        <?=$assigned_staff_mb_id === (string) $assignment_staff_row['mb_id'] ? 'selected' : ''?>
+                                    >
+                                        <?=htmlspecialchars((string) $assignment_staff_row['mb_name'], ENT_QUOTES)?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+
+                                <?php } elseif ($can_hierarchy_assign) { ?>
+
+                                <select
+                                    id="member_detail_staff"
+                                    class="form-control member-detail-staff-select"
+                                    data-mb-id="<?=htmlspecialchars((string) $row['mb_id'], ENT_QUOTES)?>"
+                                    data-original-value="<?=htmlspecialchars($assigned_staff_mb_id, ENT_QUOTES)?>"
+                                >
+                                    <?php
+                                    $current_staff_in_candidates = false;
+
+                                    foreach (
+                                        $assignment_staff_rows
+                                        as $assignment_staff_row
+                                    ) {
+                                        if (
+                                            $assigned_staff_mb_id
+                                            === (string) $assignment_staff_row['mb_id']
+                                        ) {
+                                            $current_staff_in_candidates = true;
+                                            break;
+                                        }
+                                    }
+                                    ?>
+
+                                    <?php if (
+                                        $assigned_staff_mb_id !== ''
+                                        && !$current_staff_in_candidates
+                                    ) { ?>
+                                    <option
+                                        value="<?=htmlspecialchars(
+                                            $assigned_staff_mb_id,
+                                            ENT_QUOTES
+                                        )?>"
+                                        selected
+                                    >
+                                        <?=htmlspecialchars(
+                                            $staff_name,
+                                            ENT_QUOTES
+                                        )?>
+                                    </option>
+                                    <?php } ?>
+
+                                    <?php foreach (
+                                        $assignment_staff_rows
+                                        as $assignment_staff_row
+                                    ) { ?>
+                                    <option
+                                        value="<?=htmlspecialchars(
+                                            (string) $assignment_staff_row['mb_id'],
+                                            ENT_QUOTES
+                                        )?>"
+                                        <?=$assigned_staff_mb_id
+                                            === (string) $assignment_staff_row['mb_id']
+                                                ? 'selected'
+                                                : ''?>
+                                    >
+                                        <?=htmlspecialchars(
+                                            (string) $assignment_staff_row['mb_name'],
+                                            ENT_QUOTES
+                                        )?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+
+                                <?php } else { ?>
+
+                                <div class="form-control-plaintext">
+                                    <?=htmlspecialchars($staff_name, ENT_QUOTES)?>
+                                </div>
+
+                                <?php } ?>
+                            </div>
+
 							<div class="form-group">
-								<label for="recent_select">메모선택</label>
+								<label for="recent_select">상태</label>
 								<select id="recent_select" name="recent_select" class="form-control">
-									<option value="">메모선택</option>
+									<option value="">상태 선택</option>
 									<?php
 									$memo_list = fnGetMemoStatus();
 									for ($i = 0; $i < count($memo_list); $i++) {
@@ -534,12 +794,40 @@ foreach ($distribution_day_columns as $day_key => $column_name) {
 							$history_count = 0;
 							while ($history = sql_fetch_array($history_result)) {
 								$history_count++;
-								$from_mb_id = isset($history['from_mb_id']) ? (string) $history['from_mb_id'] : '';
-								$writer_name = isset($member_info[$from_mb_id]) ? (string) $member_info[$from_mb_id] : $from_mb_id;
+
+                                $history_staff_name = '-';
+
+                                if ($history['staff_mb_id'] === null) {
+                                    $from_mb_id = isset($history['from_mb_id'])
+                                        ? (string) $history['from_mb_id']
+                                        : '';
+
+                                    $history_staff_name =
+                                        isset($member_info[$from_mb_id])
+                                            ? (string) $member_info[$from_mb_id]
+                                            : $from_mb_id;
+                                } elseif (
+                                    trim((string) $history['staff_mb_id']) !== ''
+                                ) {
+                                    $history_staff_mb_id =
+                                        trim((string) $history['staff_mb_id']);
+
+                                    $history_staff_name =
+                                        isset($history['history_staff_name'])
+                                        && trim(
+                                            (string) $history['history_staff_name']
+                                        ) !== ''
+                                            ? trim(
+                                                (string) $history['history_staff_name']
+                                            )
+                                            : $history_staff_mb_id;
+                                } else {
+                                    $history_staff_name = '미배정';
+                                }
 							?>
 							<tr>
 								<td><?=htmlspecialchars((string) $history['lm_datetime'], ENT_QUOTES)?></td>
-								<td><?=htmlspecialchars($writer_name, ENT_QUOTES)?></td>
+								<td><?=htmlspecialchars($history_staff_name, ENT_QUOTES)?></td>
 								<td><?=htmlspecialchars((string) $history['lm_memo_type'], ENT_QUOTES)?></td>
 								<td class="text-wrap"><?=nl2br(htmlspecialchars((string) $history['lm_memo'], ENT_QUOTES))?></td>
 								<td>
