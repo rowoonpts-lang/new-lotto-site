@@ -169,6 +169,27 @@ include_once(G5_LADMIN_PATH."/head.php");
                 <td>
                     <?php if ($row['request_status'] === '승인대기') { ?>
                         <?php if ($row['payment_method'] === '무통장') { ?>
+                        <?php
+                        $bank_copy_text =
+                            '담당자 : '.(string) ($row['staff_name'] ?: $row['staff_mb_id'])."\n".
+                            '회원이름 : '.(string) ($row['member_name'] ?: $row['mb_id'])."\n".
+                            '전화번호 : '.(string) $row['member_phone']."\n".
+                            '결제금액 : '.number_format((int) $row['request_amount'])."원\n".
+                            '상품 : '.(string) $row['product_type']."\n".
+                            '내용 :';
+                        ?>
+                        <button type="button"
+                                class="btn btn-success btn-sm btn-block mb-2"
+                                onclick='copyPaymentText(<?=json_encode(
+                                    $bank_copy_text,
+                                    JSON_UNESCAPED_UNICODE
+                                    | JSON_UNESCAPED_SLASHES
+                                    | JSON_HEX_APOS
+                                    | JSON_HEX_QUOT
+                                )?>);'>
+                            텍스트 복사
+                        </button>
+
                         <form method="post" action="<?=G5_LADMIN_URL?>/payment/payment.approval.update.php" class="mb-2" onsubmit="return confirmPaymentApproval();">
                             <input type="hidden" name="lpr_id" value="<?=(int) $row['lpr_id']?>">
                             <button type="submit" class="btn btn-primary btn-sm btn-block">승인완료</button>
@@ -219,6 +240,53 @@ include_once(G5_LADMIN_PATH."/head.php");
 </div>
 
 <script>
+function copyPaymentText(text) {
+    function copyFallback() {
+        var textarea = document.createElement('textarea');
+
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        var copied = false;
+
+        try {
+            copied = document.execCommand('copy');
+        } catch (e) {
+            copied = false;
+        }
+
+        document.body.removeChild(textarea);
+
+        if (copied) {
+            alert('결제 승인요청 내용을 복사했습니다.');
+        } else {
+            alert('텍스트 복사에 실패했습니다.');
+        }
+    }
+
+    if (
+        navigator.clipboard
+        && window.isSecureContext
+    ) {
+        navigator.clipboard.writeText(text)
+            .then(function() {
+                alert('결제 승인요청 내용을 복사했습니다.');
+            })
+            .catch(function() {
+                copyFallback();
+            });
+
+        return;
+    }
+
+    copyFallback();
+}
+
 function openCardPaymentDetail(lprId) {
     var url = '<?=G5_LADMIN_URL?>/payment/payment.card.detail.php?lpr_id=' +
         encodeURIComponent(lprId);

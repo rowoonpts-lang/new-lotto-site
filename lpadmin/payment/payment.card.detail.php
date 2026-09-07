@@ -105,6 +105,24 @@ $card_number_display = trim(
     chunk_split($card_number, 4, ' ')
 );
 
+$installment_display = (int) $request['installment_months'] === 0
+    ? '일시불'
+    : (int) $request['installment_months'].'개월';
+
+$card_copy_text =
+    '담당자 : '.(string) ($request['staff_name'] ?: $request['staff_mb_id'])."\n".
+    '회원이름 : '.(string) ($request['member_name'] ?: $request['mb_id'])."\n".
+    '카드사 : '.(string) $request['card_company']."\n".
+    '카드번호 : '.$card_number_display."\n".
+    '유효기간 : '.$card_expiry."\n".
+    '생년월일 : '.$birth_date."\n".
+    '비 번 : '.$card_password_prefix."\n".
+    '전화번호 : '.(string) $request['member_phone']."\n".
+    '결제금액 : '.number_format((int) $request['request_amount'])."원\n".
+    '할부개월 : '.$installment_display."\n".
+    '상품 : '.(string) $request['product_type']."\n".
+    '내용 :';
+
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');
 
@@ -275,6 +293,18 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
             <div class="card-footer text-right">
 
                 <?php if ((string) $request['request_status'] === '승인대기') { ?>
+                <button type="button"
+                        class="btn btn-success mr-2"
+                        onclick='copyCardPaymentText(<?=json_encode(
+                            $card_copy_text,
+                            JSON_UNESCAPED_UNICODE
+                            | JSON_UNESCAPED_SLASHES
+                            | JSON_HEX_APOS
+                            | JSON_HEX_QUOT
+                        )?>);'>
+                    텍스트 복사
+                </button>
+
                 <form method="post"
                       action="<?=G5_LADMIN_URL?>/payment/payment.approval.update.php"
                       class="d-inline-block mr-2"
@@ -307,3 +337,52 @@ include_once(G5_LADMIN_PATH."/head.sub.php");
 
     </div>
 </section>
+
+<script>
+function copyCardPaymentText(text) {
+    function copyFallback() {
+        var textarea = document.createElement('textarea');
+
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        var copied = false;
+
+        try {
+            copied = document.execCommand('copy');
+        } catch (e) {
+            copied = false;
+        }
+
+        document.body.removeChild(textarea);
+
+        if (copied) {
+            alert('카드 승인요청 내용을 복사했습니다.');
+        } else {
+            alert('텍스트 복사에 실패했습니다.');
+        }
+    }
+
+    if (
+        navigator.clipboard
+        && window.isSecureContext
+    ) {
+        navigator.clipboard.writeText(text)
+            .then(function() {
+                alert('카드 승인요청 내용을 복사했습니다.');
+            })
+            .catch(function() {
+                copyFallback();
+            });
+
+        return;
+    }
+
+    copyFallback();
+}
+</script>
