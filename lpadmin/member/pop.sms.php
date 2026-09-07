@@ -78,7 +78,7 @@
 						</div>
 						<div class="card-body">
 							<div class="row align-items-end">
-								<div class="col-md-3 col-12">
+								<div class="col-md-2 col-12">
 									<label for="lotto_turn">회차</label>
 									<select id="lotto_turn" class="form-control">
 										<?php foreach ($lotto_turns as $draw_no) { ?>
@@ -87,14 +87,22 @@
 									</select>
 								</div>
 
-								<div class="col-md-3 col-12">
+								<div class="col-md-2 col-12">
 									<button
 										type="button"
-										class="btn btn-primary"
+										class="btn btn-primary btn-block"
 										<?php if (empty($lotto_turns)) { ?>disabled<?php } ?>
 										onClick="fnLottoResend();"
 									>전체 조합 재발송</button>
 								</div>
+                                                                <div class="col-md-2 col-12">
+                                                                        <button
+                                                                                type="button"
+                                                                                id="btn_lotto_link_sms"
+                                                                                class="btn btn-success btn-block"
+                                                                                onClick="fnLottoLinkSms();"
+                                                                        >링크문자발송</button>
+                                                                </div>
 
 								<div class="col-md-2 col-12">
 									<label for="lotto_add_count">추가 조합 수</label>
@@ -107,11 +115,11 @@
 									>
 								</div>
 
-								<div class="col-md-3 col-12">
+								<div class="col-md-2 col-12">
 									<button
 										type="button"
 										id="btn_lotto_add"
-										class="btn btn-secondary"
+										class="btn btn-secondary btn-block"
 										<?php if (empty($lotto_turns)) { ?>disabled<?php } ?>
 										onClick="fnLottoAddSend();"
 									>추가 조합 발송</button>
@@ -312,6 +320,45 @@ function fnLottoResend(){
 	);
 
 	return false;
+}
+
+function fnLottoLinkSms(){
+        var $button = $("#btn_lotto_link_sms");
+
+        if(!confirm("회원 전용 추천번호 링크를 문자로 보내시겠습니까?")){
+                return false;
+        }
+
+        $button.prop("disabled", true);
+
+        $.ajax({
+                url: "ajax.lotto.link.sms.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                        mb_id: <?=json_encode($mb_id)?>,
+                        token: <?=json_encode(lottoMemberTokenCreate())?>
+                },
+                success: function(result){
+                        alert(
+                                result && result.message
+                                        ? result.message
+                                        : "링크 문자 처리 결과를 확인할 수 없습니다."
+                        );
+
+                        if(result && result.success === true){
+                                location.reload();
+                        }
+                },
+                error: function(){
+                        alert("링크 문자 발송 중 서버 오류가 발생했습니다.");
+                },
+                complete: function(){
+                        $button.prop("disabled", false);
+                }
+        });
+
+        return false;
 }
 
 function fnLottoAddSend(){
