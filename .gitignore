@@ -27,3 +27,7 @@ data/lotto_cron_config.php
 
 # Local temporary analysis files
 data/tmp/
+
+# Legacy OShot local credentials and runtime logs
+Oneshot2/Oneshot2.conf
+Oneshot2/log/*.log

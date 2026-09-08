@@ -38,10 +38,10 @@ log_folder=/home/r001/public_html/Oneshot2/log
 # address,port,id,pwd 4개가 하나의구성
 #-----------------------------------------------------
 #
-bind_address=2Center.msgagent.com
-bind_port=3000
-bind_id=bk211101
-bind_pwd=qlzpdl1101!
+bind_address=OSHOT_SERVER
+bind_port=PORT
+bind_id=CHANGE_ME
+bind_pwd=CHANGE_ME
 #
 #
 #-----------------------------------------------------
@@ -94,7 +94,7 @@ agent_type=0
 #MYSQL
 db_type=MYSQL
 db_driver=com.mysql.jdbc.Driver
-db_url=jdbc:mysql://1.234.82.78:3306/r001?useUnicode=true&characterEncoding=utf8
+db_url=jdbc:mysql://127.0.0.1:3306/DB_NAME?useUnicode=true&characterEncoding=utf8
 #
 #
 #POSTGRESQL
@@ -129,8 +129,8 @@ db_engine=InnoDB
 # 를 이용해 암호화 해서 입력
 #-----------------------------------------------------
 #
-db_userid=r001
-db_password=rdb001!!
+db_userid=CHANGE_ME
+db_password=CHANGE_ME
 #
 #
 #-----------------------------------------------------
