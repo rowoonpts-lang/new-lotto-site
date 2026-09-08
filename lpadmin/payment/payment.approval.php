@@ -176,7 +176,7 @@ include_once(G5_LADMIN_PATH."/head.php");
                             '전화번호 : '.(string) $row['member_phone']."\n".
                             '결제금액 : '.number_format((int) $row['request_amount'])."원\n".
                             '상품 : '.(string) $row['product_type']."\n".
-                            '내용 :';
+                            '내용 : '.trim((string) $row['request_note']);
                         ?>
                         <button type="button"
                                 class="btn btn-success btn-sm btn-block mb-2"

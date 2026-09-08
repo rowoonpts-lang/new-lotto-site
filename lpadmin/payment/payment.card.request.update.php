@@ -59,6 +59,10 @@ $birth_date = isset($_POST['birth_date'])
     ? preg_replace('/[^0-9]/', '', (string) $_POST['birth_date'])
     : '';
 
+$request_note = isset($_POST['request_note'])
+    ? trim((string) $_POST['request_note'])
+    : '';
+
 if ($lpr_id < 1) {
     alert('결제 승인요청 정보가 올바르지 않습니다.');
     exit;
@@ -210,6 +214,7 @@ if (!$has_secret && $entered_count !== 4) {
 
 $card_company_sql = sql_real_escape_string($card_company);
 $product_type_sql = sql_real_escape_string($product_type);
+$request_note_sql = sql_real_escape_string($request_note);
 
 if (!sql_query(
     "update l_payment_request set
@@ -217,6 +222,7 @@ if (!sql_query(
         installment_months = {$installment_months},
         product_type = '{$product_type_sql}',
         request_amount = {$request_amount},
+        request_note = '{$request_note_sql}',
         request_status = '승인대기',
         rejected_by = '',
         rejected_at = null,

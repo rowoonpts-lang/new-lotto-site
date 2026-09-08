@@ -6,6 +6,7 @@ $product_type = isset($_POST['product_type']) ? trim((string) $_POST['product_ty
 $request_amount_raw = isset($_POST['request_amount']) ? preg_replace('/[^0-9]/', '', (string) $_POST['request_amount']) : '';
 $bank_account_id = isset($_POST['bank_account_id']) ? (int) $_POST['bank_account_id'] : 0;
 $depositor_name = isset($_POST['depositor_name']) ? trim((string) $_POST['depositor_name']) : '';
+$request_note = isset($_POST['request_note']) ? trim((string) $_POST['request_note']) : '';
 
 $login_mb_id = isset($member['mb_id']) ? trim((string) $member['mb_id']) : '';
 $login_level = isset($member['mb_level']) ? (int) $member['mb_level'] : 0;
@@ -107,6 +108,7 @@ $product_type_sql = sql_real_escape_string($product_type);
 $member_phone_sql = sql_real_escape_string((string) $target_member['mb_hp']);
 $bank_account_sql = sql_real_escape_string($bank_account_text);
 $depositor_name_sql = sql_real_escape_string($depositor_name);
+$request_note_sql = sql_real_escape_string($request_note);
 
 $sql = "insert into l_payment_request set
             request_no = '{$request_no_sql}',
@@ -120,6 +122,7 @@ $sql = "insert into l_payment_request set
             member_phone = '{$member_phone_sql}',
             bank_account = '{$bank_account_sql}',
             depositor_name = '{$depositor_name_sql}',
+            request_note = '{$request_note_sql}',
             sms_send = 0,
             created_at = now(),
             updated_at = now()";

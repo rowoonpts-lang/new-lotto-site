@@ -25,6 +25,9 @@ $depositor_name = isset($_POST['depositor_name'])
 $bank_account_id = isset($_POST['bank_account_id'])
     ? (int) $_POST['bank_account_id']
     : 0;
+$request_note = isset($_POST['request_note'])
+    ? trim((string) $_POST['request_note'])
+    : '';
 
 if ($lpr_id < 1) {
     alert('결제 승인요청 정보가 올바르지 않습니다.', G5_LADMIN_URL);
@@ -123,6 +126,7 @@ $bank_account_text = trim(
 $product_type_sql = sql_real_escape_string($product_type);
 $depositor_name_sql = sql_real_escape_string($depositor_name);
 $bank_account_sql = sql_real_escape_string($bank_account_text);
+$request_note_sql = sql_real_escape_string($request_note);
 
 if (!sql_query(
     "update l_payment_request set
@@ -130,6 +134,7 @@ if (!sql_query(
         request_amount = {$request_amount},
         depositor_name = '{$depositor_name_sql}',
         bank_account = '{$bank_account_sql}',
+        request_note = '{$request_note_sql}',
         request_status = '승인대기',
         rejected_by = '',
         rejected_at = null,

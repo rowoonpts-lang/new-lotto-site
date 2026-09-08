@@ -185,6 +185,18 @@ $product_list = fnGetTypePre();
                                                required>
                                     </div>
 
+                                    <div class="form-group mb-3">
+                                        <label for="request_note">내용 / 특이사항</label>
+                                        <textarea class="form-control"
+                                                  id="request_note"
+                                                  name="request_note"
+                                                  rows="3"
+                                                  placeholder="결제 승인 시 전달할 특이사항을 입력하세요."><?=htmlspecialchars(
+                                                      (string) $request['request_note'],
+                                                      ENT_QUOTES
+                                                  )?></textarea>
+                                    </div>
+
                                     <div class="form-group mb-0">
                                         <label for="installment_months">할부</label>
                                         <select class="form-control"

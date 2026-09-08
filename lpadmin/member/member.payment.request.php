@@ -92,6 +92,15 @@ if ($login_mb_id !== '' && !empty($row['mb_id'])) {
                     <input type="text" class="form-control" id="bank_request_amount" name="request_amount" inputmode="numeric" placeholder="0">
                 </div>
             </div>
+
+            <div class="form-group mb-2">
+                <label for="bank_request_note">내용 / 특이사항</label>
+                <textarea class="form-control"
+                          id="bank_request_note"
+                          name="request_note"
+                          rows="2"
+                          placeholder="결제 승인 시 전달할 특이사항을 입력하세요."></textarea>
+            </div>
             <?php if (count($bank_accounts) < 1) { ?>
             <div class="text-danger">사용 가능한 입금계좌가 등록되어 있지 않습니다. 관리자에게 계좌 등록을 요청하세요.</div>
             <?php } ?>
@@ -222,6 +231,15 @@ if ($login_mb_id !== '' && !empty($row['mb_id'])) {
                            placeholder="0">
                 </div>
 
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="card_request_note">내용 / 특이사항</label>
+                <textarea class="form-control"
+                          id="card_request_note"
+                          name="request_note"
+                          rows="2"
+                          placeholder="결제 승인 시 전달할 특이사항을 입력하세요."></textarea>
             </div>
 
             <div class="text-danger text-sm">

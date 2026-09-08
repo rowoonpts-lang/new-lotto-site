@@ -38,6 +38,10 @@ $installment_months = isset($_POST['installment_months'])
     ? (int) $_POST['installment_months']
     : -1;
 
+$request_note = isset($_POST['request_note'])
+    ? trim((string) $_POST['request_note'])
+    : '';
+
 $login_mb_id = isset($member['mb_id'])
     ? trim((string) $member['mb_id'])
     : '';
@@ -174,6 +178,7 @@ $requested_by_sql = sql_real_escape_string($login_mb_id);
 $product_type_sql = sql_real_escape_string($product_type);
 $member_phone_sql = sql_real_escape_string((string) $target_member['mb_hp']);
 $card_company_sql = sql_real_escape_string($card_company);
+$request_note_sql = sql_real_escape_string($request_note);
 $encrypted_payload_sql = sql_real_escape_string((string) $encrypted['payload']);
 $card_last4_sql = sql_real_escape_string(substr($card_number, -4));
 $key_version = (int) $encrypted['key_version'];
@@ -199,6 +204,7 @@ if (!sql_query(
         sms_send = 0,
         card_company = '{$card_company_sql}',
         installment_months = {$installment_months},
+        request_note = '{$request_note_sql}',
         created_at = now(),
         updated_at = now()",
     false

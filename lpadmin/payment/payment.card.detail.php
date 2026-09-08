@@ -121,7 +121,7 @@ $card_copy_text =
     '결제금액 : '.number_format((int) $request['request_amount'])."원\n".
     '할부개월 : '.$installment_display."\n".
     '상품 : '.(string) $request['product_type']."\n".
-    '내용 :';
+    '내용 : '.trim((string) $request['request_note']);
 
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 header('Pragma: no-cache');

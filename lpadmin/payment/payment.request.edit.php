@@ -135,6 +135,15 @@ include_once(G5_LADMIN_PATH."/head.php");
             </div>
 
             <div class="form-group">
+                <label for="request_note">내용 / 특이사항</label>
+                <textarea class="form-control"
+                          id="request_note"
+                          name="request_note"
+                          rows="3"
+                          placeholder="결제 승인 시 전달할 특이사항을 입력하세요."><?=htmlspecialchars((string) $request['request_note'], ENT_QUOTES)?></textarea>
+            </div>
+
+            <div class="form-group">
                 <label for="bank_account_id">입금계좌</label>
                 <select class="form-control" id="bank_account_id" name="bank_account_id" required>
                     <option value="">선택</option>
