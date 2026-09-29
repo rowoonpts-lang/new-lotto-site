@@ -537,11 +537,13 @@ if ($can_view_all) {
 						onClick="fnExcel()"
 					>다운로드</button>
 
+					<?php if ((int) $member['mb_level'] === LOTTO_ROLE_SUPER_ADMIN) { ?>
 					<button
 						class="btn btn-sm btn-danger"
 						type="button"
 						onClick="fnMemberChkDel()"
-					>선택삭제</button>
+					>완전삭제</button>
+					<?php } ?>
 					<?php } ?>
 				</div>
 			</div>
@@ -824,8 +826,18 @@ if ($can_view_all) {
                                     </td>
 					<td><button type="button" class="btn btn-block btn-primary" onclick="fnMemmberMemo('<?=base64_encode($row['mb_id'])?>')">회원정보</button></td>
 					<td>
-						<?php if ((int) $member['mb_level'] >= LOTTO_ROLE_ADMIN) { ?>
-						<button type="button" class="btn btn-block btn-danger" onClick="fnMemberDel('<?=base64_encode($row['mb_id'])?>')">삭제</button>
+						<?php if ((int) $member['mb_level'] === LOTTO_ROLE_SUPER_ADMIN) { ?>
+						<button
+							type="button"
+							class="btn btn-block btn-danger"
+							onClick="fnMemberDel(<?=htmlspecialchars(
+								json_encode(
+									(string) $row['mb_id'],
+									JSON_UNESCAPED_UNICODE
+								),
+								ENT_QUOTES
+							)?>)"
+						>완전삭제</button>
 						<?php } ?>
 					</td>
 				</tr>
@@ -1026,24 +1038,133 @@ $(document).on('change', '.member-staff-select', function(){
 	});
 });
 
-function fnMemberChkDel(){
-	if(confirm("선택하신 회원을 삭제하시겠습니까?")==true){
-		var string = $("form[name=frm_member]").serialize();
-
-		$.ajax({
-			type: "POST",
-			url: "./member.alldel.php",
-			data: string,
-			cache: false,
-			async: false,
-			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-			success: function(data) {
-				location.reload();
-			}
-		});
+function fnHardDeleteMembers(ids)
+{
+	if (!Array.isArray(ids) || ids.length < 1) {
+		alert("완전삭제할 회원을 먼저 선택해주세요.");
 		return false;
 	}
 
+	$.ajax({
+		type: "POST",
+		url: "./member.alldel.php",
+		data: {
+			action: "preview",
+			chk: ids,
+			token: lottoMemberToken
+		},
+		dataType: "json",
+		success: function(response) {
+			if (!response || response.success !== true) {
+				alert(
+					response && response.message
+						? response.message
+						: "완전삭제 대상 확인에 실패했습니다."
+				);
+				return;
+			}
+
+			var boardCount = parseInt(
+				response.board_content_count || 0,
+				10
+			);
+
+			var memberNames = Array.isArray(response.members)
+				? response.members.join(", ")
+				: "";
+
+			var message =
+				"다음 회원을 완전삭제합니다.\n\n"
+				+ memberNames
+				+ "\n\n"
+				+ "회원: "
+				+ (response.member_count || 0)
+				+ "명\n"
+				+ "결제요청: "
+				+ (response.payment_request_count || 0)
+				+ "건\n"
+				+ "매출: "
+				+ (response.sales_count || 0)
+				+ "건\n"
+				+ "문자: "
+				+ (response.sms_count || 0)
+				+ "건\n"
+				+ "상담: "
+				+ (response.memo_count || 0)
+				+ "건\n"
+				+ "로또자료: "
+				+ (response.lotto_count || 0)
+				+ "건\n"
+				+ "게시글/QA: "
+				+ boardCount
+				+ "건";
+
+			if (boardCount > 0) {
+				alert(
+					message
+					+ "\n\n"
+					+ "게시글 또는 QA가 남아 있어 "
+					+ "자동 완전삭제할 수 없습니다."
+				);
+				return;
+			}
+
+			var confirmed = window.prompt(
+				message
+				+ "\n\n"
+				+ "이 작업은 되돌릴 수 없습니다.\n"
+				+ "계속하려면 아래 입력란에 완전삭제라고 입력하세요."
+			);
+
+			if (confirmed !== "완전삭제") {
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "./member.alldel.php",
+				data: {
+					action: "delete",
+					chk: ids,
+					confirm_text: confirmed,
+					token: lottoMemberToken
+				},
+				dataType: "json",
+				success: function(deleteResponse) {
+					if (
+						!deleteResponse
+						|| deleteResponse.success !== true
+					) {
+						alert(
+							deleteResponse
+							&& deleteResponse.message
+								? deleteResponse.message
+								: "회원 완전삭제에 실패했습니다."
+						);
+						return;
+					}
+
+					alert(deleteResponse.message);
+					location.reload();
+				},
+				error: function() {
+					alert("회원 완전삭제 처리 중 오류가 발생했습니다.");
+				}
+			});
+		},
+		error: function() {
+			alert("완전삭제 대상 확인 중 오류가 발생했습니다.");
+		}
+	});
+
+	return false;
+}
+
+function fnMemberChkDel()
+{
+	return fnHardDeleteMembers(
+		fnGetCheckedMemberIds()
+	);
 }
 
 $(document).ready(function(){
@@ -1082,10 +1203,9 @@ function fnExcel(){
 }
 
 
-function fnMemberDel(mb_id){
-	if(confirm("회원을 삭제하시겠습니까?")==true){
-		location.href="./member.del.php?mb_id="+mb_id;
-	}
+function fnMemberDel(mbId)
+{
+	return fnHardDeleteMembers([mbId]);
 }
 </script>
 <?php
