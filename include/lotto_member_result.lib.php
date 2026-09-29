@@ -344,11 +344,17 @@ function lottoMemberResultProcessDraw($drawNo)
                     best_rank = {$bestRankSql},
                     result_checked_at = now(),
                     winner_sms_required = case
-                        when {$bestRankSql} is not null then 1
+                        when {$bestRankSql} is not null
+                             and '{$memberTypeSql}' <> ''
+                             and '{$memberTypeSql}' <> '무료회원'
+                        then 1
                         else 0
                     end,
                     winner_sms_status = case
-                        when {$bestRankSql} is not null then 'pending'
+                        when {$bestRankSql} is not null
+                             and '{$memberTypeSql}' <> ''
+                             and '{$memberTypeSql}' <> '무료회원'
+                        then 'pending'
                         else 'not_required'
                     end
                  on duplicate key update

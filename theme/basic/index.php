@@ -89,7 +89,7 @@ $analysis_total = (int) ($config['cf_lucky_1'] ?? 0)
                             <span><?=get_text($latest_lotto_result['draw_date'])?> 추첨</span>
                         <?php } else { ?>
                             <strong>당첨결과 준비 중</strong>
-                            <span>토요일 21시부터 1시간 간격으로 확인합니다.</span>
+                            <span>토요일 20:55부터 30분 간격으로 확인하며, 미확인 시 일요일 09시에 다시 확인합니다.</span>
                         <?php } ?>
                     </div>
 

@@ -471,6 +471,8 @@ function lottoSmsQueuePendingWinners($drawNo, $sender)
              where d.draw_no = '{$drawNo}'
                and d.winner_sms_required = 1
                and d.winner_sms_status = 'pending'
+               and d.member_type <> ''
+               and d.member_type <> '무료회원'
              order by d.lmd_id asc",
             false
         );
