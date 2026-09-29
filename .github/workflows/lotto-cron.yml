@@ -1,33 +1,6 @@
 name: Lotto Production Cron
 
 on:
-  schedule:
-    # GitHub Actions cron uses UTC.
-    #
-    # KST Saturday 20:55
-    - cron: '55 11 * * 6'
-
-    # KST Saturday 21:00 ~ 21:55 every 5 minutes
-    - cron: '*/5 12 * * 6'
-
-    # KST Sunday 09:00 / 09:30 / 10:00 / 10:30
-    #
-    # Saturday detailed result delay recovery:
-    # result -> member result -> winner SMS
-    # -> next draw filter -> weekly distribution
-    # -> weekday OShot reservations.
-    - cron: '0 0 * * 0'
-    - cron: '30 0 * * 0'
-    - cron: '0 1 * * 0'
-    - cron: '30 1 * * 0'
-
-    # KST Monday-Friday 11:00 / 13:00
-    #
-    # Combination SMS is already reserved in OShot for 10:00.
-    # These schedules only synchronize delivery results/history.
-    - cron: '0 2 * * 1-5'
-    - cron: '0 4 * * 1-5'
-
   workflow_dispatch:
     inputs:
       job:
