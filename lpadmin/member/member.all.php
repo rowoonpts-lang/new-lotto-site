@@ -1086,6 +1086,9 @@ function fnHardDeleteMembers(ids)
 				+ "매출: "
 				+ (response.sales_count || 0)
 				+ "건\n"
+				+ "매출취소: "
+				+ (response.sales_cancel_count || 0)
+				+ "건\n"
 				+ "문자: "
 				+ (response.sms_count || 0)
 				+ "건\n"

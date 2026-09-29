@@ -174,14 +174,42 @@ if ($can_view_all_sales) {
 }
 
 $count_row = sql_fetch(
-    "select count(*) as cnt, coalesce(sum(a.sale_amount), 0) as total_amount
+    "select
+            count(*) as cnt,
+            coalesce(sum(a.sale_amount), 0) as gross_amount,
+            coalesce(sum(coalesce(c.cancelled_amount, 0)), 0) as cancel_amount,
+            coalesce(
+                sum(a.sale_amount - coalesce(c.cancelled_amount, 0)),
+                0
+            ) as net_amount
        from l_sales a
+       left join (
+            select
+                ls_id,
+                sum(cancel_amount) as cancelled_amount
+              from l_sales_cancel
+             group by ls_id
+       ) c on c.ls_id = a.ls_id
        left join g5_member m on m.mb_id = a.mb_id
        left join g5_member s on s.mb_id = a.staff_mb_id
       where {$where_sql}"
 );
-$total_count = isset($count_row['cnt']) ? (int) $count_row['cnt'] : 0;
-$total_amount = isset($count_row['total_amount']) ? (int) $count_row['total_amount'] : 0;
+
+$total_count = isset($count_row['cnt'])
+    ? (int) $count_row['cnt']
+    : 0;
+
+$total_gross_amount = isset($count_row['gross_amount'])
+    ? (int) $count_row['gross_amount']
+    : 0;
+
+$total_cancel_amount = isset($count_row['cancel_amount'])
+    ? (int) $count_row['cancel_amount']
+    : 0;
+
+$total_net_amount = isset($count_row['net_amount'])
+    ? (int) $count_row['net_amount']
+    : 0;
 $total_page = $total_count > 0 ? (int) ceil($total_count / $rows) : 1;
 if ($page > $total_page) {
     $page = $total_page;
@@ -189,13 +217,23 @@ if ($page > $total_page) {
 $from_record = ($page - 1) * $rows;
 
 $sales_result = sql_query(
-    "select a.*,
+    "select
+            a.*,
             m.mb_name as member_name,
             m.mb_code as member_code,
             s.mb_name as staff_name,
             ap.mb_name as approved_by_name,
-            p.request_no
+            p.request_no,
+            p.request_status,
+            coalesce(c.cancelled_amount, 0) as cancelled_amount
        from l_sales a
+       left join (
+            select
+                ls_id,
+                sum(cancel_amount) as cancelled_amount
+              from l_sales_cancel
+             group by ls_id
+       ) c on c.ls_id = a.ls_id
        left join g5_member m on m.mb_id = a.mb_id
        left join g5_member s on s.mb_id = a.staff_mb_id
        left join g5_member ap on ap.mb_id = a.approved_by
@@ -273,11 +311,30 @@ include_once(G5_LADMIN_PATH."/head.php");
             </div>
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3><?=number_format($total_gross_amount)?>원</h3>
+                <p>승인매출합계</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3><?=number_format($total_cancel_amount)?>원</h3>
+                <p>취소합계</p>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-3">
         <div class="small-box bg-success">
             <div class="inner">
-                <h3><?=number_format($total_amount)?>원</h3>
-                <p>조회 매출합계</p>
+                <h3><?=number_format($total_net_amount)?>원</h3>
+                <p>실매출합계</p>
             </div>
         </div>
     </div>
@@ -295,29 +352,99 @@ include_once(G5_LADMIN_PATH."/head.php");
                 <th>담당자</th>
                 <th>결제수단</th>
                 <th>상품</th>
-                <th class="text-right">매출금액</th>
+                <th class="text-right">승인금액</th>
+                <th class="text-right">취소금액</th>
+                <th class="text-right">실매출</th>
+                <th>상태</th>
                 <th>승인자</th>
             </tr>
             </thead>
             <tbody>
             <?php $list_count = 0; ?>
-            <?php while ($row = sql_fetch_array($sales_result)) { $list_count++; ?>
+            <?php while ($row = sql_fetch_array($sales_result)) {
+                $list_count++;
+
+                $sale_amount = (int) $row['sale_amount'];
+                $cancelled_amount = (int) $row['cancelled_amount'];
+                $net_amount = max(
+                    0,
+                    $sale_amount - $cancelled_amount
+                );
+
+                $sale_status = trim(
+                    (string) $row['request_status']
+                );
+
+                if ($sale_status === '') {
+                    $sale_status = '승인완료';
+                }
+
+                $member_payment_url =
+                    G5_LADMIN_URL
+                    . '/member/pop.payment.php?mb_id='
+                    . urlencode(
+                        base64_encode(
+                            (string) $row['mb_id']
+                        )
+                    );
+            ?>
             <tr>
                 <td><?=htmlspecialchars((string) $row['approved_at'], ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['request_no'], ENT_QUOTES)?></td>
                 <td>
-                    <?=htmlspecialchars((string) ($row['member_name'] ?: $row['mb_id']), ENT_QUOTES)?><br>
-                    <small><?=htmlspecialchars((string) ($row['member_code'] ?: $row['mb_id']), ENT_QUOTES)?></small>
+                    <a
+                        href="#"
+                        onclick="window.open(
+                            <?=htmlspecialchars(
+                                json_encode(
+                                    $member_payment_url,
+                                    JSON_UNESCAPED_UNICODE
+                                ),
+                                ENT_QUOTES
+                            )?>,
+                            'member_info',
+                            'width=1400,height=700,top=100,left=200,location=no'
+                        ); return false;"
+                    >
+                        <?=htmlspecialchars(
+                            (string) (
+                                $row['member_name']
+                                ?: $row['mb_id']
+                            ),
+                            ENT_QUOTES
+                        )?>
+                    </a>
+                    <br>
+                    <small>
+                        <?=htmlspecialchars(
+                            (string) (
+                                $row['member_code']
+                                ?: $row['mb_id']
+                            ),
+                            ENT_QUOTES
+                        )?>
+                    </small>
                 </td>
                 <td><?=htmlspecialchars((string) ($row['staff_name'] ?: $row['staff_mb_id']), ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['payment_method'], ENT_QUOTES)?></td>
                 <td><?=htmlspecialchars((string) $row['product_type'], ENT_QUOTES)?></td>
-                <td class="text-right"><?=number_format((int) $row['sale_amount'])?>원</td>
+                <td class="text-right">
+                    <?=number_format($sale_amount)?>원
+                </td>
+                <td class="text-right">
+                    <?=number_format($cancelled_amount)?>원
+                </td>
+                <td class="text-right">
+                    <?=number_format($net_amount)?>원
+                </td>
+                <td>
+                    <?=htmlspecialchars($sale_status, ENT_QUOTES)?>
+                </td>
                 <td><?=htmlspecialchars((string) ($row['approved_by_name'] ?: $row['approved_by']), ENT_QUOTES)?></td>
             </tr>
             <?php } ?>
             <?php if ($list_count < 1) { ?>
-            <tr><td colspan="8" class="text-center">조회된 매출내역이 없습니다.</td></tr>
+            <tr><td colspan="11" class="text-center">조회된 매출내역이 없습니다.</td></tr>
             <?php } ?>
             </tbody>
         </table>

@@ -197,6 +197,11 @@ $salesCount = hardDeleteCount(
     "mb_id in ({$memberInSql})"
 );
 
+$salesCancelCount = hardDeleteCount(
+    'l_sales_cancel',
+    "mb_id in ({$memberInSql})"
+);
+
 $smsCount = hardDeleteCount(
     'l_sms_history',
     "mb_id in ({$memberInSql})
@@ -243,6 +248,7 @@ if ($action === 'preview') {
             'members' => $names,
             'payment_request_count' => $paymentRequestCount,
             'sales_count' => $salesCount,
+            'sales_cancel_count' => $salesCancelCount,
             'sms_count' => $smsCount,
             'memo_count' => $memoCount,
             'lotto_count' => $lottoCount,
@@ -397,6 +403,13 @@ try {
         );
 
         hardDeleteQuery(
+            "delete from l_sales_cancel
+              where lpr_id in ({$paymentRequestInSql})
+                 or mb_id in ({$memberInSql})",
+            '매출 취소이력 삭제에 실패했습니다.'
+        );
+
+        hardDeleteQuery(
             "delete from l_sales
               where lpr_id in ({$paymentRequestInSql})
                  or mb_id in ({$memberInSql})",
@@ -409,6 +422,12 @@ try {
             '결제 승인요청 삭제에 실패했습니다.'
         );
     } else {
+        hardDeleteQuery(
+            "delete from l_sales_cancel
+              where mb_id in ({$memberInSql})",
+            '매출 취소이력 삭제에 실패했습니다.'
+        );
+
         hardDeleteQuery(
             "delete from l_sales
               where mb_id in ({$memberInSql})",
