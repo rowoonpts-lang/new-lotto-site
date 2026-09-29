@@ -78,9 +78,11 @@ $(function(){
 			<div class="card card-primary">
 				<?php include_once("./member.head.php");?>
 				<?php include_once("./member.payment.request.php"); ?>
+				<?php include_once("./member.payment.history.php"); ?>
 				<!-- /.card-header -->
 				<!-- form start -->
 				
+				<?php if ($login_level < LOTTO_ROLE_ADMIN) { ?>
 				<input type="hidden" id="mb_hp_chk" value="0">
 				<input type="hidden" id="mb_id_chk" value="0">
 					<div class="row">
@@ -330,6 +332,7 @@ $(function(){
 					</div>
 					<!-- row 끝-->
 				</div>
+				<?php } ?>
 				<!-- /.card-body -->
 			
 		</div>
