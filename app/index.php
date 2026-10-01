@@ -48,6 +48,16 @@ $memberType = isset($member['mb_type'])
     </section>
 
     <section style="margin-top:20px;padding:20px;border:1px solid #ddd;border-radius:12px;">
+        <strong>로또 데이터 통계</strong>
+        <p>저장된 당첨번호를 기준으로 번호 출현 통계를 확인할 수 있습니다.</p>
+        <p>
+            <a href="<?=htmlspecialchars(G5_URL . '/app/stats.php', ENT_QUOTES, 'UTF-8')?>">
+                로또 통계 보기
+            </a>
+        </p>
+    </section>
+
+    <section style="margin-top:20px;padding:20px;border:1px solid #ddd;border-radius:12px;">
         <strong>앱 기능 준비 중</strong>
         <p>
             최근 당첨결과, 로또 통계, 내 조합,
