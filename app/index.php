@@ -38,6 +38,16 @@ $memberType = isset($member['mb_type'])
     </section>
 
     <section style="margin-top:20px;padding:20px;border:1px solid #ddd;border-radius:12px;">
+        <strong>로또 당첨결과</strong>
+        <p>최근 당첨번호와 회차별 당첨결과를 확인할 수 있습니다.</p>
+        <p>
+            <a href="<?=htmlspecialchars(G5_URL . '/app/results.php', ENT_QUOTES, 'UTF-8')?>">
+                당첨결과 보기
+            </a>
+        </p>
+    </section>
+
+    <section style="margin-top:20px;padding:20px;border:1px solid #ddd;border-radius:12px;">
         <strong>앱 기능 준비 중</strong>
         <p>
             최근 당첨결과, 로또 통계, 내 조합,
