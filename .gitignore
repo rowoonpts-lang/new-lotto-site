@@ -34,3 +34,6 @@ Oneshot2/log/*.log
 
 # Composer dependencies
 /vendor/
+
+# PWA Web Push VAPID secret
+data/lotto_push_config.php
