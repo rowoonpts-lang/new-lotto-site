@@ -3,6 +3,7 @@
 include_once("_common.php");
 include_once G5_PATH . "/include/lotto_sms.lib.php";
 include_once G5_PATH . "/include/lotto_sms_split.lib.php";
+include_once G5_PATH . "/include/lotto_push.lib.php";
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -181,9 +182,70 @@ if (trim((string) $target['mb_leave_date']) !== '') {
     lottoSmsPrepareResponse(false, '탈퇴 회원에게는 조합 문자를 발송할 수 없습니다.');
 }
 
+/*
+ * 문자와 앱 Push는 서로 독립적으로 처리한다.
+ *
+ * 문자번호/OShot 문제가 있더라도 앱 알림이 가능한 회원에게는
+ * Push를 먼저 별도로 시도한다.
+ */
+$pushCategory = $sendType === 'manual'
+    ? 'combination_manual'
+    : 'combination_resend';
+
+if ($sendType === 'manual') {
+    $pushBody =
+        $drawNo
+        . '회 추가 추천번호 '
+        . $manualCombinationCount
+        . '조합이 도착했습니다. 눌러서 확인해주세요.';
+} else {
+    $pushBody =
+        $drawNo
+        . '회 추천번호를 다시 보냈습니다. 눌러서 확인해주세요.';
+}
+
+$pushResult = lottoPushSendToMember(
+    $targetMbId,
+    'LottoGPT ' . $drawNo . '회 추천번호',
+    $pushBody,
+    '/app/?turn=' . $drawNo,
+    $pushCategory,
+    $drawNo,
+    $groupId
+);
+
+$pushStatus = isset($pushResult['status'])
+    ? trim((string) $pushResult['status'])
+    : '';
+
+$pushSentCount = isset($pushResult['sent_count'])
+    ? max(0, (int) $pushResult['sent_count'])
+    : 0;
+
+$pushFailedCount = isset($pushResult['failed_count'])
+    ? max(0, (int) $pushResult['failed_count'])
+    : 0;
+
+if (!empty($pushResult['success'])) {
+    $pushNote = ' 앱 알림도 발송했습니다.';
+} elseif (
+    $pushSentCount > 0
+    && $pushFailedCount > 0
+) {
+    $pushNote = ' 앱 알림은 일부 기기에만 발송되었습니다.';
+} elseif ($pushStatus === 'no_subscription') {
+    $pushNote = ' 앱 알림이 설정된 기기가 없어 Push는 건너뛰었습니다.';
+} else {
+    $pushNote = ' 앱 알림 발송에는 실패했습니다.';
+}
+
 $receiver = lottoSmsNormalizePhone($target['mb_hp']);
+
 if (strlen($receiver) < 10 || strlen($receiver) > 15) {
-    lottoSmsPrepareResponse(false, '회원의 휴대폰번호를 확인해주세요.');
+    lottoSmsPrepareResponse(
+        false,
+        '회원의 휴대폰번호를 확인해주세요.' . $pushNote
+    );
 }
 
 $smsConfig = lottoSmsGetConfig();
@@ -192,7 +254,10 @@ $sender = isset($smsConfig['sender_phone'])
     : '';
 
 if (strlen($sender) < 8 || strlen($sender) > 15) {
-    lottoSmsPrepareResponse(false, '설정관리의 문자 발신번호를 확인해주세요.');
+    lottoSmsPrepareResponse(
+        false,
+        '설정관리의 문자 발신번호를 확인해주세요.' . $pushNote
+    );
 }
 
 $queued = lottoSmsQueueOShotWithSplit(
@@ -218,11 +283,13 @@ $queued = lottoSmsQueueOShotWithSplit(
 );
 
 if (empty($queued['success'])) {
+    $smsError = isset($queued['error'])
+        ? (string) $queued['error']
+        : 'OShot 문자 큐 등록에 실패했습니다.';
+
     lottoSmsPrepareResponse(
         false,
-        isset($queued['error'])
-            ? (string) $queued['error']
-            : 'OShot 문자 큐 등록에 실패했습니다.'
+        $smsError . $pushNote
     );
 }
 
@@ -232,7 +299,10 @@ $partCount = isset($queued['part_count'])
     : 1;
 
 if ($status === 'already_queued') {
-    lottoSmsPrepareResponse(true, '이미 OShot 문자 큐에 등록되어 있습니다.');
+    lottoSmsPrepareResponse(
+        true,
+        '이미 OShot 문자 큐에 등록되어 있습니다.' . $pushNote
+    );
 }
 
 if ($partCount > 1) {
@@ -241,7 +311,11 @@ if ($partCount > 1) {
         'LMS 최대 길이를 초과하여 '
         . $partCount
         . '통으로 나누어 OShot 문자 큐에 등록했습니다.'
+        . $pushNote
     );
 }
 
-lottoSmsPrepareResponse(true, 'OShot 문자 큐에 등록했습니다.');
+lottoSmsPrepareResponse(
+    true,
+    'OShot 문자 큐에 등록했습니다.' . $pushNote
+);
