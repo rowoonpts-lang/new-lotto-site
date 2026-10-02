@@ -6,6 +6,7 @@ if (!defined('_GNUBOARD_')) {
 
 include_once G5_PATH . '/include/lotto_sms.lib.php';
 include_once G5_PATH . '/include/lotto_sms_split.lib.php';
+include_once G5_PATH . '/include/lotto_push.lib.php';
 
 function lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId)
 {
@@ -88,13 +89,9 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
         ? lottoSmsNormalizePhone($smsConfig['sender_phone'])
         : '';
 
-    if (strlen($sender) < 8 || strlen($sender) > 15) {
-        return array(
-            'success' => false,
-            'status' => 'invalid_sender',
-            'error' => '설정관리의 문자 발신번호를 확인해주세요.',
-        );
-    }
+    $senderValid =
+        strlen($sender) >= 8
+        && strlen($sender) <= 15;
 
     $dayColumns = array(
         1 => 'num_mon',
@@ -141,6 +138,11 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
     $failedCount = 0;
     $errors = array();
 
+    $pushSentCount = 0;
+    $pushSkippedCount = 0;
+    $pushFailedCount = 0;
+    $pushErrors = array();
+
     while ($memberRow = sql_fetch_array($result)) {
         $mbId = trim((string) $memberRow['mb_id']);
         $mbType = trim((string) $memberRow['mb_type']);
@@ -153,12 +155,6 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
 
         if (trim((string) $memberRow['mb_leave_date']) !== '') {
             $skippedCount++;
-            continue;
-        }
-
-        if (strlen($receiver) < 10 || strlen($receiver) > 15) {
-            $failedCount++;
-            $errors[] = $mbId . ': 휴대폰번호 오류';
             continue;
         }
 
@@ -211,6 +207,76 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
         $usageGroupId =
             lottoCombinationSmsGroupId($drawNo, $weekDay, $mbId);
 
+        /*
+         * SMS와 Push는 서로 독립적으로 처리한다.
+         *
+         * 통신사 필터링, 휴대폰번호 오류, OShot 큐 오류가 있어도
+         * 앱 알림이 가능한 회원에게는 Push를 별도로 시도한다.
+         *
+         * usage_group_id를 event key로 사용해 같은 회차/요일/회원의
+         * Push가 자동작업 재호출로 중복 발송되지 않도록 한다.
+         */
+        $pushResult = lottoPushSendToMember(
+            $mbId,
+            'LottoGPT ' . $drawNo . '회 추천번호',
+            $drawNo
+                . '회 추천번호 '
+                . $count
+                . '조합이 도착했습니다. 눌러서 확인해주세요.',
+            '/app/?turn=' . $drawNo,
+            'combination',
+            $drawNo,
+            $usageGroupId
+        );
+
+        $pushSentCount += isset($pushResult['sent_count'])
+            ? max(0, (int) $pushResult['sent_count'])
+            : 0;
+
+        $pushResultFailedCount = isset($pushResult['failed_count'])
+            ? max(0, (int) $pushResult['failed_count'])
+            : 0;
+
+        $pushStatus = isset($pushResult['status'])
+            ? trim((string) $pushResult['status'])
+            : '';
+
+        if ($pushStatus === 'no_subscription') {
+            $pushSkippedCount++;
+        } elseif (empty($pushResult['success'])) {
+            if ($pushResultFailedCount > 0) {
+                $pushFailedCount += $pushResultFailedCount;
+            } else {
+                $pushFailedCount++;
+            }
+
+            $pushErrors[] = $mbId . ': ' . (
+                isset($pushResult['error'])
+                    ? (string) $pushResult['error']
+                    : (
+                        $pushStatus !== ''
+                            ? 'Push 발송 실패 (' . $pushStatus . ')'
+                            : 'Push 발송 실패'
+                    )
+            );
+        }
+
+        /*
+         * 여기부터는 기존 SMS 처리다.
+         * Push 결과와 관계없이 기존 문자 발송 로직을 그대로 진행한다.
+         */
+        if (!$senderValid) {
+            $failedCount++;
+            $errors[] = $mbId . ': 설정관리의 문자 발신번호를 확인해주세요.';
+            continue;
+        }
+
+        if (strlen($receiver) < 10 || strlen($receiver) > 15) {
+            $failedCount++;
+            $errors[] = $mbId . ': 휴대폰번호 오류';
+            continue;
+        }
+
         $queued = lottoSmsQueueOShotWithSplit(
             $usageGroupId,
             $sender,
@@ -253,5 +319,9 @@ function lottoCombinationSmsQueueWeekday(DateTimeImmutable $now)
         'skipped_count' => $skippedCount,
         'failed_count' => $failedCount,
         'errors' => $errors,
+        'push_sent_count' => $pushSentCount,
+        'push_skipped_count' => $pushSkippedCount,
+        'push_failed_count' => $pushFailedCount,
+        'push_errors' => $pushErrors,
     );
 }
