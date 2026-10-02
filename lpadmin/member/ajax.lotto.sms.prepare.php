@@ -235,6 +235,11 @@ if (!empty($pushResult['success'])) {
     $pushNote = ' 앱 알림은 일부 기기에만 발송되었습니다.';
 } elseif ($pushStatus === 'no_subscription') {
     $pushNote = ' 앱 알림이 설정된 기기가 없어 Push는 건너뛰었습니다.';
+} elseif (
+    $pushSentCount === 0
+    && $pushFailedCount === 0
+) {
+    $pushNote = ' 앱 알림은 이미 발송되어 중복 발송하지 않았습니다.';
 } else {
     $pushNote = ' 앱 알림 발송에는 실패했습니다.';
 }
