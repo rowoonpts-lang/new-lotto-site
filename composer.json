@@ -1,6 +1,7 @@
 {
     "require": {
-        "minishlink/web-push": "^11.0"
+        "minishlink/web-push": "^11.0",
+        "guzzlehttp/guzzle": "^7.9"
     },
     "config": {
         "allow-plugins": {
