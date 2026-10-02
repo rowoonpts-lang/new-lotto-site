@@ -48,6 +48,8 @@ function lottoPushSubscriptionTokenIsValid($token, $expire = 7200)
     return hash_equals($expected, $hmac);
 }
 
+lottoAppResolvePaidMember();
+
 if (!$is_member) {
     lottoPushSubscriptionRespond(
         401,

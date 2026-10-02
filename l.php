@@ -1,6 +1,7 @@
 <?php
 
 include_once("./_common.php");
+include_once G5_PATH . '/include/lotto_app_access.lib.php';
 
 header('Content-Type: text/html; charset=utf-8');
 header('X-Robots-Tag: noindex, nofollow, noarchive', true);
@@ -26,7 +27,9 @@ $tokenHashSql = sql_real_escape_string($tokenHash);
 $linkRow = sql_fetch(
     "select l.mb_id,
             m.mb_name,
-            m.mb_leave_date
+            m.mb_type,
+            m.mb_leave_date,
+            m.mb_intercept_date
        from l_lotto_share_link l
        inner join g5_member m
          on m.mb_id = l.mb_id
@@ -43,6 +46,37 @@ if (empty($linkRow['mb_id'])) {
 if (trim((string) $linkRow['mb_leave_date']) !== '') {
     http_response_code(403);
     exit('사용할 수 없는 링크입니다.');
+}
+
+$appMember = array(
+    'mb_id' => isset($linkRow['mb_id'])
+        ? (string) $linkRow['mb_id']
+        : '',
+    'mb_type' => isset($linkRow['mb_type'])
+        ? (string) $linkRow['mb_type']
+        : '',
+);
+
+$appInterceptDate = isset($linkRow['mb_intercept_date'])
+    ? trim((string) $linkRow['mb_intercept_date'])
+    : '';
+
+$appAvailable = lottoAppIsPaidMember($appMember)
+    && (
+        $appInterceptDate === ''
+        || $appInterceptDate > date('Ymd', G5_SERVER_TIME)
+    );
+
+if (
+    $appAvailable
+    && lottoAppSetAccessCookie($token)
+) {
+    header(
+        'Location: '
+        . rtrim((string) G5_URL, '/')
+        . '/app/?install=1'
+    );
+    exit;
 }
 
 $mbIdSql = sql_real_escape_string($linkRow['mb_id']);

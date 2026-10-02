@@ -230,22 +230,64 @@ $totalWins = count($winningRows);
 <meta name="theme-color" content="#ffffff">
 <title>내 조합 - LottoGPT</title>
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    background: #f5f6f8;
+    background: #f4f6f9;
     color: #1f2937;
-    font-family: Arial, sans-serif;
+    font-family: Arial, "Apple SD Gothic Neo", sans-serif;
 }
-.app-shell {
-    max-width: 520px;
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, .97);
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.app-header-inner {
+    max-width: 640px;
     margin: 0 auto;
-    padding: 24px 18px 48px;
 }
-.app-back {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #374151;
+
+.app-brand {
+    padding: 14px 16px 10px;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.app-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid #f0f1f3;
+}
+
+.app-nav a {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    color: #60666d;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
     text-decoration: none;
+}
+
+.app-nav a.active {
+    color: #111827;
+    border-bottom: 3px solid #111827;
+}
+
+.app-shell {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px 14px 48px;
 }
 .app-card {
     margin-top: 16px;
@@ -337,13 +379,34 @@ body {
 </style>
 </head>
 <body>
+
+<header class="app-header">
+    <div class="app-header-inner">
+        <div class="app-brand">LottoGPT</div>
+
+        <nav class="app-nav" aria-label="회원앱 메뉴">
+            <a href="/app/">
+                추천번호
+            </a>
+
+            <a href="/app/results.php">
+                당첨결과
+            </a>
+
+            <a href="/app/stats.php">
+                통계
+            </a>
+
+            <a class="active" href="/app/my_lotto.php">
+                내 당첨
+            </a>
+        </nav>
+    </div>
+</header>
+
 <main class="app-shell">
 
-    <a class="app-back" href="<?=htmlspecialchars(G5_URL . '/app/', ENT_QUOTES, 'UTF-8')?>">
-        ← 회원앱 홈
-    </a>
-
-    <h1>내 조합</h1>
+    <h1>내 조합 · 내 당첨결과</h1>
 
     <section class="app-card">
         <div class="summary-grid">
