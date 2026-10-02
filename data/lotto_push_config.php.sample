@@ -1,0 +1,24 @@
+<?php
+
+if (!defined('_GNUBOARD_')) {
+    exit;
+}
+
+/*
+ * Copy this file to data/lotto_push_config.php on each environment.
+ * Never commit the real private key.
+ */
+define(
+    'LOTTO_PUSH_VAPID_SUBJECT',
+    'mailto:replace-with-real-contact@example.com'
+);
+
+define(
+    'LOTTO_PUSH_VAPID_PUBLIC_KEY',
+    'REPLACE_WITH_VAPID_PUBLIC_KEY'
+);
+
+define(
+    'LOTTO_PUSH_VAPID_PRIVATE_KEY',
+    'REPLACE_WITH_VAPID_PRIVATE_KEY'
+);
