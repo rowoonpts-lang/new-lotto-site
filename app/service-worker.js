@@ -19,10 +19,29 @@ self.addEventListener('fetch', function (event) {
 
 self.addEventListener('push', function (event) {
     var targetUrl = '/app/';
+    var title = 'LottoGPT';
+    var body =
+        '새로운 알림이 도착했습니다. 앱에서 확인해 주세요.';
 
     if (event.data) {
         try {
             var payload = event.data.json();
+
+            if (
+                payload
+                && typeof payload.title === 'string'
+                && payload.title.trim() !== ''
+            ) {
+                title = payload.title.trim();
+            }
+
+            if (
+                payload
+                && typeof payload.body === 'string'
+                && payload.body.trim() !== ''
+            ) {
+                body = payload.body.trim();
+            }
 
             if (
                 payload
@@ -48,9 +67,9 @@ self.addEventListener('push', function (event) {
 
     event.waitUntil(
         self.registration.showNotification(
-            'LottoGPT',
+            title,
             {
-                body: '새로운 알림이 도착했습니다. 앱에서 확인해 주세요.',
+                body: body,
                 icon: '/app/icons/icon-192.png',
                 badge: '/app/icons/icon-192.png',
                 data: {

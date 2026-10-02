@@ -352,6 +352,10 @@ body {
     background: #e5e7eb;
     color: #20252b;
 }
+
+.push-button + .push-button {
+    margin-top: 10px;
+}
 </style>
 </head>
 
@@ -521,6 +525,16 @@ body {
         >
             알림 끄기
         </button>
+
+        <button
+            type="button"
+            class="push-button secondary"
+            id="push-test"
+            disabled
+            hidden
+        >
+            테스트 알림 보내기
+        </button>
     </section>
 
 </main>
@@ -544,9 +558,11 @@ body {
         document.getElementById('ios-install-guide');
 
     var apiUrl = '/api/lotto/push_subscription.php';
+    var testApiUrl = '/api/lotto/push_test.php';
     var statusElement = document.getElementById('push-status');
     var enableButton = document.getElementById('push-enable');
     var disableButton = document.getElementById('push-disable');
+    var testButton = document.getElementById('push-test');
 
     function isStandalone() {
         return window.matchMedia(
@@ -671,6 +687,9 @@ body {
 
         disableButton.hidden = !isSubscribed;
         disableButton.disabled = !isSubscribed;
+
+        testButton.hidden = !isSubscribed;
+        testButton.disabled = !isSubscribed;
     }
 
     function urlBase64ToUint8Array(value) {
@@ -838,6 +857,54 @@ body {
             enableButton.disabled = false;
         }
     });
+
+    testButton.addEventListener(
+        'click',
+        async function () {
+            testButton.disabled = true;
+            setStatus('테스트 알림을 보내고 있습니다.');
+
+            try {
+                var config = await getApiConfig();
+
+                var response = await fetch(testApiUrl, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: config.token
+                    })
+                });
+
+                var result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(
+                        result.message
+                        || '테스트 알림을 보내지 못했습니다.'
+                    );
+                }
+
+                setStatus(
+                    result.message
+                    || '테스트 알림을 보냈습니다.'
+                );
+            } catch (error) {
+                console.error(error);
+
+                setStatus(
+                    error && error.message
+                        ? error.message
+                        : '테스트 알림을 보내지 못했습니다.'
+                );
+            } finally {
+                testButton.disabled = false;
+            }
+        }
+    );
 
     disableButton.addEventListener(
         'click',
