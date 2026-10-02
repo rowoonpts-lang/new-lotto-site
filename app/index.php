@@ -587,7 +587,9 @@ body {
             installButton.disabled = true;
 
             installMessage.textContent =
-                '앱 설치 준비 중입니다. 잠시 기다려주세요.';
+                '앱 설치 버튼을 준비하고 있습니다. '
+                + '버튼이 활성화되지 않으면 Chrome 메뉴의 '
+                + '앱 설치를 이용해주세요.';
         }
     }
 
@@ -629,23 +631,32 @@ body {
 
             installButton.disabled = true;
 
-            await deferredInstallPrompt.prompt();
+            try {
+                await deferredInstallPrompt.prompt();
 
-            var choice =
-                await deferredInstallPrompt.userChoice;
+                var choice =
+                    await deferredInstallPrompt.userChoice;
 
-            deferredInstallPrompt = null;
+                deferredInstallPrompt = null;
 
-            if (
-                choice
-                && choice.outcome === 'accepted'
-            ) {
+                if (
+                    choice
+                    && choice.outcome === 'accepted'
+                ) {
+                    installMessage.textContent =
+                        '앱을 설치하고 있습니다.';
+                } else {
+                    installMessage.textContent =
+                        '앱 설치가 취소되었습니다. 다시 시도할 수 있습니다.';
+                    updateInstallUi();
+                }
+            } catch (error) {
+                console.error(error);
+                deferredInstallPrompt = null;
+                installButton.disabled = false;
                 installMessage.textContent =
-                    '앱을 설치하고 있습니다.';
-            } else {
-                installMessage.textContent =
-                    '앱 설치가 취소되었습니다. 다시 시도할 수 있습니다.';
-                updateInstallUi();
+                    '설치창을 열지 못했습니다. '
+                    + 'Chrome 메뉴의 앱 설치를 이용해주세요.';
             }
         }
     );
@@ -739,10 +750,12 @@ body {
     }
 
     async function getRegistration() {
-        return navigator.serviceWorker.register(
+        await navigator.serviceWorker.register(
             '/app/service-worker.js',
             {scope: '/app/'}
         );
+
+        return navigator.serviceWorker.ready;
     }
 
     async function refreshPushStatus() {
