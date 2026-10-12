@@ -146,8 +146,8 @@ function lottoPushCreateSender(array $config)
     );
 
     $defaultOptions = array(
-        'TTL' => 300,
-        'urgency' => 'normal',
+        'TTL' => 86400,
+        'urgency' => 'high',
     );
 
     $client = new \GuzzleHttp\Client(
