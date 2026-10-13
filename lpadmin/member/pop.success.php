@@ -83,6 +83,75 @@
 		$turn = (int) $member_turns[0];
 	}
 
+	/*
+	 * 회원 당첨 이력은 현재 결과 처리 기준인 l_member_draw에서 조회한다.
+	 *
+	 * 기존 g5_member_etc.lucky1 ~ lucky5 값은 현재 결과 처리에서
+	 * 갱신하지 않으므로 배분당첨 화면의 집계 기준으로 사용하지 않는다.
+	 */
+	$winning_summary = array(
+		1 => array('count' => 0, 'draws' => array()),
+		2 => array('count' => 0, 'draws' => array()),
+		3 => array('count' => 0, 'draws' => array()),
+		4 => array('count' => 0, 'draws' => array()),
+		5 => array('count' => 0, 'draws' => array()),
+	);
+
+	$winning_result = sql_query(
+		"select
+			draw_no,
+			rank1_count,
+			rank2_count,
+			rank3_count,
+			rank4_count,
+			rank5_count
+		   from l_member_draw
+		  where mb_id = '{$safe_mb_id}'
+		    and (
+				rank1_count > 0
+				or rank2_count > 0
+				or rank3_count > 0
+				or rank4_count > 0
+				or rank5_count > 0
+		    )
+		  order by draw_no desc",
+		false
+	);
+
+	if ($winning_result === false) {
+		alert('회원 당첨이력을 조회하지 못했습니다.');
+		exit;
+	}
+
+	while ($winning_row = sql_fetch_array($winning_result)) {
+		$winning_draw_no = isset($winning_row['draw_no'])
+			? (int) $winning_row['draw_no']
+			: 0;
+
+		if ($winning_draw_no < 1) {
+			continue;
+		}
+
+		for ($rank = 1; $rank <= 5; $rank++) {
+			$rank_column = 'rank' . $rank . '_count';
+
+			$rank_count = isset($winning_row[$rank_column])
+				? (int) $winning_row[$rank_column]
+				: 0;
+
+			if ($rank_count < 1) {
+				continue;
+			}
+
+			$winning_summary[$rank]['count'] += $rank_count;
+
+			$winning_summary[$rank]['draws'][] = array(
+				'draw_no' => $winning_draw_no,
+				'count' => $rank_count,
+			);
+		}
+	}
+
 	$list = getLuckyNum($turn);
 	$luckAry = array($list['drwtNo1'], $list['drwtNo2'],$list['drwtNo3'],$list['drwtNo4'],$list['drwtNo5'],$list['drwtNo6']);
 	//print_r($luckAry);
@@ -111,11 +180,72 @@
 						</form>
 					</div>
 					<div class="col-6" style="padding:10px 20px 0px">
-						1등 당첨 : <?=number_format($row['lucky1'])?> /
-						2등 당첨 : <?=number_format($row['lucky2'])?> /
-						3등 당첨 : <?=number_format($row['lucky3'])?> /
-						4등 당첨 : <?=number_format($row['lucky4'])?> /
-						5등 당첨 : <?=number_format($row['lucky5'])?>
+						<div>
+							<?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+								<?=$rank?>등 당첨 :
+								<?php if ($winning_summary[$rank]['count'] > 0) { ?>
+								<button
+									type="button"
+									class="btn btn-link btn-sm p-0 winning-count-toggle"
+									data-target="winning-rank-<?=$rank?>"
+									style="vertical-align:baseline;"
+								>
+									<?=number_format($winning_summary[$rank]['count'])?>
+								</button>
+								<?php } else { ?>
+								0
+								<?php } ?>
+
+								<?php if ($rank < 5) { ?>
+								/
+								<?php } ?>
+							<?php } ?>
+						</div>
+
+						<?php for ($rank = 1; $rank <= 5; $rank++) { ?>
+							<?php if ($winning_summary[$rank]['count'] > 0) { ?>
+							<div
+								id="winning-rank-<?=$rank?>"
+								class="winning-draw-list mt-2 p-2 border rounded bg-light"
+								style="display:none;"
+							>
+								<strong><?=$rank?>등 당첨 회차 :</strong>
+
+								<?php foreach ($winning_summary[$rank]['draws'] as $winning_draw) { ?>
+									<?php
+									$winning_draw_no =
+										(int) $winning_draw['draw_no'];
+
+									$winning_draw_count =
+										(int) $winning_draw['count'];
+
+									$winning_draw_url =
+										'./pop.success.php?mb_id='
+										. urlencode(base64_encode($mb_id))
+										. '&turn='
+										. $winning_draw_no;
+									?>
+									<a
+										href="<?=htmlspecialchars(
+											$winning_draw_url,
+											ENT_QUOTES,
+											'UTF-8'
+										)?>"
+										class="badge <?=$turn === $winning_draw_no
+											? 'badge-primary'
+											: 'badge-light border'?> mr-1"
+										style="font-size:13px;"
+									>
+										<?=$winning_draw_no?>회<?php
+										if ($winning_draw_count > 1) {
+											echo ' (' . $winning_draw_count . '건)';
+										}
+										?>
+									</a>
+								<?php } ?>
+							</div>
+							<?php } ?>
+						<?php } ?>
 					</div>
                                         <div class="col-4" style="padding:10px 20px 0px">
                                                 <div class="d-flex justify-content-end">
@@ -139,6 +269,24 @@
                                                 </div>
                                         </div>
 				</div>
+
+				<script>
+				$(document).on(
+					'click',
+					'.winning-count-toggle',
+					function()
+					{
+						var targetId =
+							$(this).data('target');
+
+						$('.winning-draw-list')
+							.not('#' + targetId)
+							.hide();
+
+						$('#' + targetId).toggle();
+					}
+				);
+				</script>
 
 					<div class="row">
 						<div class="col-md-12 col-12">
