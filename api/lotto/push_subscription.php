@@ -184,6 +184,7 @@ $action = isset($payload['action'])
 if (
     $action !== 'subscribe'
     && $action !== 'unsubscribe'
+    && $action !== 'sync'
 ) {
     lottoPushSubscriptionRespond(
         400,
@@ -233,6 +234,40 @@ if ($mbId === '') {
 $mbIdSql = sql_real_escape_string($mbId);
 $endpointHash = hash('sha256', $endpoint);
 $endpointSql = sql_real_escape_string($endpoint);
+
+/*
+ * sync는 앱 실행 시 현재 브라우저 구독과 서버 상태를 맞추는 용도다.
+ *
+ * 서버에서 이미 비활성 처리된 endpoint는 자동으로 되살리지 않는다.
+ * 사용자가 직접 "알림 받기"를 눌렀을 때만 subscribe로 다시 활성화한다.
+ */
+if ($action === 'sync') {
+    $existingSubscription = sql_fetch(
+        "select
+            lps_id,
+            is_active
+         from l_push_subscription
+         where endpoint_hash = '{$endpointHash}'
+           and mb_id = '{$mbIdSql}'
+         limit 1",
+        false
+    );
+
+    if (
+        isset($existingSubscription['lps_id'])
+        && (int) $existingSubscription['lps_id'] > 0
+        && (int) $existingSubscription['is_active'] !== 1
+    ) {
+        lottoPushSubscriptionRespond(
+            409,
+            array(
+                'success' => false,
+                'status' => 'subscription_inactive',
+                'message' => '앱 알림 연결이 만료되었습니다. 다시 연결해주세요.',
+            )
+        );
+    }
+}
 
 if ($action === 'unsubscribe') {
     $updateResult = sql_query(
@@ -377,6 +412,8 @@ lottoPushSubscriptionRespond(
     200,
     array(
         'success' => true,
-        'status' => 'subscribed',
+        'status' => $action === 'sync'
+            ? 'synced'
+            : 'subscribed',
     )
 );

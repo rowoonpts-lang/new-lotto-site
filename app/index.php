@@ -741,7 +741,10 @@ body {
             endpoint: subscription.endpoint
         };
 
-        if (action === 'subscribe') {
+        if (
+            action === 'subscribe'
+            || action === 'sync'
+        ) {
             payload.keys = data.keys || {};
             payload.expirationTime =
                 typeof data.expirationTime === 'undefined'
@@ -762,10 +765,19 @@ body {
         var result = await response.json();
 
         if (!response.ok || !result.success) {
-            throw new Error(
+            var saveError = new Error(
                 result.message || '앱 알림 정보를 저장하지 못했습니다.'
             );
+
+            saveError.status =
+                result && result.status
+                    ? result.status
+                    : '';
+
+            throw saveError;
         }
+
+        return result;
     }
 
     async function getRegistration() {
@@ -794,13 +806,67 @@ body {
             var subscription =
                 await registration.pushManager.getSubscription();
 
-            if (subscription) {
-                setStatus('현재 앱 알림을 받고 있습니다.');
-                setButtons(true);
-            } else {
-                setStatus('앱 알림이 꺼져 있습니다.');
+            if (!subscription) {
+                if (Notification.permission === 'granted') {
+                    setStatus(
+                        '앱 알림 연결이 끊어졌습니다. '
+                        + '알림 받기를 눌러 다시 연결해주세요.'
+                    );
+                } else if (Notification.permission === 'denied') {
+                    setStatus(
+                        '휴대폰 설정에서 앱 알림 권한이 꺼져 있습니다.'
+                    );
+                } else {
+                    setStatus('앱 알림이 꺼져 있습니다.');
+                }
+
                 setButtons(false);
+                return;
             }
+
+            if (Notification.permission !== 'granted') {
+                setStatus(
+                    Notification.permission === 'denied'
+                        ? '휴대폰 설정에서 앱 알림 권한이 꺼져 있습니다.'
+                        : '앱 알림 권한을 허용해주세요.'
+                );
+
+                setButtons(false);
+                return;
+            }
+
+            var config = await getApiConfig();
+
+            try {
+                await saveSubscription(
+                    'sync',
+                    subscription,
+                    config.token
+                );
+            } catch (syncError) {
+                if (
+                    syncError
+                    && syncError.status === 'subscription_inactive'
+                ) {
+                    try {
+                        await subscription.unsubscribe();
+                    } catch (unsubscribeError) {
+                        console.error(unsubscribeError);
+                    }
+
+                    setStatus(
+                        '앱 알림 연결이 만료되었습니다. '
+                        + '알림 받기를 눌러 다시 연결해주세요.'
+                    );
+                    setButtons(false);
+                    return;
+                }
+
+                throw syncError;
+            }
+
+            setStatus('현재 앱 알림을 받고 있습니다.');
+            setButtons(true);
         } catch (error) {
             console.error(error);
             setStatus('앱 알림 상태를 확인하지 못했습니다.');
