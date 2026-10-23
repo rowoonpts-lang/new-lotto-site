@@ -826,6 +826,170 @@ function lottoSmsSyncCombinationResults()
         );
     }
 
+    /*
+     * OShot은 시간이 지난 메시지를
+     * OShotMSG_YYYYMM 월별 테이블로 이동한다.
+     *
+     * 현재 테이블에서 사라진 메시지 결과를
+     * 월별 보관 테이블에서도 확인할 수 있도록
+     * 실제 존재하는 보관 테이블 목록을 먼저 수집한다.
+     */
+    $archiveTables = array();
+
+    $archiveTableResult = sql_query(
+        "show tables",
+        false
+    );
+
+    if ($archiveTableResult === false) {
+        return array(
+            'success' => false,
+            'status' => 'oshot_archive_table_query_failed',
+            'error' => 'OShot 문자 보관 테이블 목록을 조회하지 못했습니다.',
+        );
+    }
+
+    while ($archiveTableRow = sql_fetch_array($archiveTableResult)) {
+        $archiveTableName = '';
+
+        foreach ($archiveTableRow as $key => $value) {
+            if (is_int($key)) {
+                continue;
+            }
+
+            $archiveTableName = trim((string) $value);
+            break;
+        }
+
+        if (
+            preg_match(
+                '/^OShotMSG_[0-9]{6}$/',
+                $archiveTableName
+            ) !== 1
+        ) {
+            continue;
+        }
+
+        $archiveTables[] = $archiveTableName;
+    }
+
+    rsort(
+        $archiveTables,
+        SORT_STRING
+    );
+
+    /*
+     * 현재 OShotMSG에서 사라진 대기 문자만 찾는다.
+     *
+     * 이 MsgID들에 대해서만 월별 보관 테이블을 조회하여
+     * 불필요하게 전체 보관 테이블을 읽지 않는다.
+     */
+    $missingMsgIds = array();
+
+    $missingResult = sql_query(
+        "select distinct h.oshot_msg_id
+           from l_sms_history h
+           left join OShotMSG o
+             on o.MsgID = h.oshot_msg_id
+          where h.send_category = 'combination'
+            and h.usage_group_id <> ''
+            and h.combination_count > 0
+            and h.usage_applied_at is null
+            and h.send_status = 'queued'
+            and h.oshot_msg_id is not null
+            and h.oshot_msg_id > 0
+            and o.MsgID is null",
+        false
+    );
+
+    if ($missingResult === false) {
+        return array(
+            'success' => false,
+            'status' => 'oshot_missing_result_query_failed',
+            'error' => 'OShot 보관 결과 조회 대상을 확인하지 못했습니다.',
+        );
+    }
+
+    while ($missingRow = sql_fetch_array($missingResult)) {
+        $msgId = isset($missingRow['oshot_msg_id'])
+            ? (int) $missingRow['oshot_msg_id']
+            : 0;
+
+        if ($msgId < 1) {
+            continue;
+        }
+
+        $missingMsgIds[$msgId] = $msgId;
+    }
+
+    /*
+     * MsgID별 보관 결과 캐시.
+     *
+     * 최신 월 테이블부터 조회한다.
+     * 같은 MsgID가 여러 테이블에서 발견되더라도
+     * 먼저 찾은 최신 결과를 사용한다.
+     */
+    $archiveResultByMsgId = array();
+
+    if (
+        !empty($missingMsgIds)
+        && !empty($archiveTables)
+    ) {
+        $msgIdList = implode(
+            ',',
+            array_map(
+                'intval',
+                array_values($missingMsgIds)
+            )
+        );
+
+        foreach ($archiveTables as $archiveTable) {
+            $archiveResult = sql_query(
+                "select
+                    MsgID,
+                    SendResult,
+                    SendDT,
+                    ResultMsg
+                 from `{$archiveTable}`
+                 where MsgID in ({$msgIdList})",
+                false
+            );
+
+            if ($archiveResult === false) {
+                return array(
+                    'success' => false,
+                    'status' => 'oshot_archive_result_query_failed',
+                    'error' => 'OShot 문자 보관 결과를 조회하지 못했습니다.',
+                );
+            }
+
+            while ($archiveRow = sql_fetch_array($archiveResult)) {
+                $msgId = isset($archiveRow['MsgID'])
+                    ? (int) $archiveRow['MsgID']
+                    : 0;
+
+                if (
+                    $msgId < 1
+                    || isset($archiveResultByMsgId[$msgId])
+                ) {
+                    continue;
+                }
+
+                $archiveResultByMsgId[$msgId] = array(
+                    'SendResult' => isset($archiveRow['SendResult'])
+                        ? $archiveRow['SendResult']
+                        : null,
+                    'SendDT' => isset($archiveRow['SendDT'])
+                        ? $archiveRow['SendDT']
+                        : null,
+                    'ResultMsg' => isset($archiveRow['ResultMsg'])
+                        ? $archiveRow['ResultMsg']
+                        : null,
+                );
+            }
+        }
+    }
+
     $result = sql_query(
         "select usage_group_id
            from l_sms_history
@@ -867,6 +1031,7 @@ function lottoSmsSyncCombinationResults()
                 h.draw_no,
                 h.combination_count,
                 h.oshot_msg_id,
+                o.MsgID as current_msg_id,
                 o.SendResult,
                 o.SendDT,
                 o.ResultMsg
@@ -893,6 +1058,34 @@ function lottoSmsSyncCombinationResults()
         $resultMessage = '';
 
         while ($history = sql_fetch_array($historyResult)) {
+            $historyMsgId = isset($history['oshot_msg_id'])
+                ? (int) $history['oshot_msg_id']
+                : 0;
+
+            $currentMsgId = isset($history['current_msg_id'])
+                ? (int) $history['current_msg_id']
+                : 0;
+
+            /*
+             * 현재 OShotMSG에 없을 때만
+             * 월별 보관 테이블의 실제 결과를 사용한다.
+             */
+            if (
+                $currentMsgId < 1
+                && $historyMsgId > 0
+                && isset($archiveResultByMsgId[$historyMsgId])
+            ) {
+                $archived =
+                    $archiveResultByMsgId[$historyMsgId];
+
+                $history['SendResult'] =
+                    $archived['SendResult'];
+                $history['SendDT'] =
+                    $archived['SendDT'];
+                $history['ResultMsg'] =
+                    $archived['ResultMsg'];
+            }
+
             $rows[] = $history;
 
             if (
@@ -936,7 +1129,7 @@ function lottoSmsSyncCombinationResults()
         }
 
         if ($hasFailure) {
-            sql_query(
+            $failedUpdated = sql_query(
                 "update l_sms_history
                     set
                         send_status = 'failed',
@@ -947,6 +1140,14 @@ function lottoSmsSyncCombinationResults()
                   where usage_group_id = '{$usageGroupIdSql}'",
                 false
             );
+
+            if ($failedUpdated === false) {
+                return array(
+                    'success' => false,
+                    'status' => 'history_failure_update_failed',
+                    'error' => '추천번호 문자 실패 이력을 저장하지 못했습니다.',
+                );
+            }
 
             $failedCount++;
             continue;
